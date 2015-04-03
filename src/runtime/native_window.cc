@@ -114,6 +114,14 @@ void NativeWindow::didProfileChanged(void* data,
   LoggerD("didProfileChanged");
 }
 
+Evas_Object* NativeWindow::evas_object() const {
+  return window_;
+}
+
+void NativeWindow::SetContent(Evas_Object* content) {
+  //TODO. swallow content into focus
+}
+
 
 
 } // namespace wrt

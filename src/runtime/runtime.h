@@ -7,8 +7,8 @@
 
 #include <app.h>
 
-#include "web_application.h"
 #include "native_window.h"
+#include "web_application.h"
 
 namespace wrt {
 
@@ -17,7 +17,15 @@ class Runtime {
   Runtime();
   virtual ~Runtime();
 
-  int Exec(int argc, char* argv[]);
+  virtual int Exec(int argc, char* argv[]);
+
+ protected:
+  virtual bool OnCreate();
+  virtual void OnTerminate();
+  virtual void OnPause();
+  virtual void OnResume();
+  virtual void OnAppControl(app_control_h app_control);
+
  private:
   static bool onCreate(void* data);
   static void onTerminate(void* data);

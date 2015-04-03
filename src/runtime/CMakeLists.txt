@@ -15,6 +15,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   ${WIN_PKG}
   elementary
   capi-appfw-application
+  chromium-efl
   REQUIRED
 )
 
@@ -36,6 +37,7 @@ SET(TARGET_RUNTIME_SRCS
   ${PROJECT_SOURCE_DIR}/src/runtime/native_app_window.cc
   ${PROJECT_SOURCE_DIR}/src/runtime/web_application.cc
   ${PROJECT_SOURCE_DIR}/src/runtime/runtime.cc
+  ${PROJECT_SOURCE_DIR}/src/runtime/web_view.cc
 )
 
 # Compiler Flags

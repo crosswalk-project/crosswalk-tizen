@@ -4,7 +4,6 @@
 
 #ifndef WRT_RUNTIME_NATIVE_WINDOW_H_
 #define WRT_RUNTIME_NATIVE_WINDOW_H_
-
 #include <Elementary.h>
 
 namespace wrt {
@@ -17,6 +16,8 @@ class NativeWindow {
   void Initialize();
 
   bool initialized() const { return initialized_; }
+  Evas_Object* evas_object() const;
+  void SetContent(Evas_Object* content);
 
  protected:
   virtual Evas_Object* createWindowInternal() = 0;

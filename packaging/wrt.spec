@@ -21,6 +21,9 @@ BuildRequires: pkgconfig(ecore-x)
 BuildRequires: pkgconfig(ecore-wayland)
 %endif
 
+#web-engine
+BuildRequires:  pkgconfig(chromium-efl)
+
 %description
 Runtime for Web Application
 

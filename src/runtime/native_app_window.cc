@@ -4,6 +4,8 @@
 
 #include "native_app_window.h"
 
+#include <Elementary.h>
+
 namespace wrt {
 
 NativeAppWindow::NativeAppWindow() {
