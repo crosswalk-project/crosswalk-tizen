@@ -15,6 +15,9 @@ OPTION(X11_SUPPORT "Support x11 for window manager" OFF)
 OPTION(WAYLAND_SUPPORT "Support wayland for window manager" OFF)
 
 # Compiler flags
+IF(NOT CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE "Release")
+ENDIF(NOT CMAKE_BUILD_TYPE)
 SET(CMAKE_C_FLAGS_PROFILING    "-O2")
 SET(CMAKE_CXX_FLAGS_PROFILING  "-O2 -std=c++0x")
 SET(CMAKE_C_FLAGS_DEBUG        "-O0 -g")
