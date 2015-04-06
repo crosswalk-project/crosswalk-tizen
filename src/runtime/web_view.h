@@ -16,17 +16,19 @@ class WebView {
  public:
   class EventListener {
    public:
-    virtual void OnLoadStart(WebView* view) {}
-    virtual void OnLoadProgress(WebView* view, double persent ) {}
-    virtual void OnLoadFinished(WebView* view) {}
-    virtual void OnRendered(WebView* view) {}
-    virtual void OnCreatedNewWebView(WebView* view, WebView* new_view) {}
-    virtual void OnClosedWebView(WebView* view) {}
-    virtual void OnCrashed(WebView* view) {}
-    virtual bool OnDidOpenWindow(WebView* view) { return true; }
+    virtual void OnLoadStart(WebView* /*view*/) {}
+    virtual void OnLoadProgress(WebView* /*view*/, double /*persent*/ ) {}
+    virtual void OnLoadFinished(WebView* /*view*/) {}
+    virtual void OnRendered(WebView* /*view*/) {}
+    virtual void OnCreatedNewWebView(WebView* /*view*/,
+                                     WebView* /*new_view*/) {}
+    virtual void OnClosedWebView(WebView* /*view*/) {}
+    virtual void OnCrashed(WebView* /*view*/) {}
+    virtual bool OnDidOpenWindow(WebView* /*view*/) { return true; }
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);
+  virtual ~WebView();
 
   void LoadUrl(const std::string& url);
   std::string GetUrl();
@@ -41,10 +43,12 @@ class WebView {
   Evas_Object* evas_object() const;
 
  private:
+  void OnRotation(int degree);
   void Initialize();
   NativeWindow* window_;
   Ewk_Context* context_;
   bool always_run_;
+  int rotation_handler_id_;
 };
 
 }  // namespace wrt

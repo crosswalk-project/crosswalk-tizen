@@ -18,11 +18,19 @@ namespace wrt {
 
 namespace {
   const char* kWRTEdjePath = "/usr/share/edje/wrt/Wrt.edj";
+  const char* kWinowRotationEventKey = "wm,rotation,changed";
+  const char* kWinowFocusedEventKey = "focused";
+  const char* kWinowUnfocusedEventKey = "unfocused";
 }  // namespace
+
 
 NativeWindow::NativeWindow()
     : initialized_(false),
-      window_(NULL) {
+      window_(NULL),
+      focus_(NULL),
+      content_(NULL),
+      rotation_(0),
+      handler_id_(0) {
 }
 
 NativeWindow::~NativeWindow() {
@@ -101,6 +109,43 @@ void NativeWindow::Initialize() {
   EVAS_SIZE_EXPAND_FILL(focus);
   elm_access_object_unregister(focus);
   evas_object_show(focus);
+  focus_ = focus;
+
+  // focus callback
+  auto focus_callback = [](void* user_data,
+                           Evas_Object*,
+                           void*) -> void {
+    NativeWindow* window = static_cast<NativeWindow*>(user_data);
+    window->DidFocusChanged(true);
+  };
+  auto unfocus_callback = [](void* user_data,
+                             Evas_Object*,
+                             void*) -> void {
+    NativeWindow* window = static_cast<NativeWindow*>(user_data);
+    window->DidFocusChanged(false);
+  };
+
+  evas_object_smart_callback_add(focus,
+                                 kWinowFocusedEventKey,
+                                 focus_callback,
+                                 this);
+  evas_object_smart_callback_add(focus,
+                                 kWinowUnfocusedEventKey,
+                                 unfocus_callback,
+                                 this);
+
+  // Rotation
+  auto rotation_callback = [](void* user_data,
+                              Evas_Object* obj,
+                              void*) -> void {
+      NativeWindow* window = static_cast<NativeWindow*>(user_data);
+      int degree = elm_win_rotation_get(obj);
+      window->DidRotation(degree);
+  };
+  evas_object_smart_callback_add(window_,
+                                 kWinowRotationEventKey,
+                                 rotation_callback,
+                                 this);
 
   initialized_ = true;
 }
@@ -121,9 +166,57 @@ Evas_Object* NativeWindow::evas_object() const {
 }
 
 void NativeWindow::SetContent(Evas_Object* content) {
-  // TODO(sngn.lee): swallow content into focus
+  // Remarks
+  // If any object was already set as a content object in the same part,
+  // the previous object will be deleted automatically with this call.
+  // If the content is NULL, this call will just delete the previous object.
+  // If the If you wish to preserve it,
+  // issue elm_object_part_content_unset() on it first.
+  elm_object_part_content_unset(focus_, "elm.swallow.content");
+  elm_object_part_content_set(focus_, "elm.swallow.content", content);
+  elm_object_focus_set(focus_, EINA_TRUE);
+  content_ = content;
 }
 
+void NativeWindow::DidRotation(int degree) {
+  rotation_ = degree;
+  auto it = handler_table_.begin();
+  for ( ; it != handler_table_.end(); ++it) {
+    it->second(degree);
+  }
+}
 
+void NativeWindow::DidFocusChanged(bool got) {
+  if (content_ != NULL) {
+    elm_object_focus_set(content_, got ? EINA_TRUE : EINA_FALSE);
+  }
+}
+
+int NativeWindow::AddRotationHandler(RotationHandler handler) {
+  int id = handler_id_++;
+  handler_table_[id] = handler;
+  return id;
+}
+
+void NativeWindow::RemoveRotationHandler(int id) {
+  handler_table_.erase(id);
+}
+
+int NativeWindow::rotation() const {
+  return rotation_;
+}
+
+void NativeWindow::SetRotationLock(int degree) {
+  rotation_ = degree%360;
+  elm_win_wm_rotation_preferred_rotation_set(window_, rotation_);
+}
+
+void NativeWindow::SetAutoRotation() {
+  if (elm_win_wm_rotation_supported_get(window_)) {
+    const int rotation[4] = {0, 90, 180, 270};
+    elm_win_wm_rotation_available_rotations_set(window_, rotation, 4);
+  }
+  rotation_ = elm_win_rotation_get(window_);
+}
 
 }  // namespace wrt

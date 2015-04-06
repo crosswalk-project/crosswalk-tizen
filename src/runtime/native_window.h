@@ -4,12 +4,16 @@
 
 #ifndef WRT_RUNTIME_NATIVE_WINDOW_H_
 #define WRT_RUNTIME_NATIVE_WINDOW_H_
+#include <functional>
+#include <map>
+
 #include <Elementary.h>
 
 namespace wrt {
 
 class NativeWindow {
  public:
+  typedef std::function<void(int)> RotationHandler;
   NativeWindow();
   virtual ~NativeWindow();
 
@@ -18,18 +22,30 @@ class NativeWindow {
   bool initialized() const { return initialized_; }
   Evas_Object* evas_object() const;
   void SetContent(Evas_Object* content);
+  void SetRotationLock(int degree);
+  void SetAutoRotation();
+  int AddRotationHandler(RotationHandler handler);
+  void RemoveRotationHandler(int id);
+  int rotation() const;
 
  protected:
   virtual Evas_Object* createWindowInternal() = 0;
-
 
  private:
   static void didDeleteRequested(void* data, Evas_Object* obj,
                                  void* event_info);
   static void didProfileChanged(void* data, Evas_Object* obj, void* event_info);
+  void DidRotation(int degree);
+  void DidFocusChanged(bool got);
+
 
   bool initialized_;
   Evas_Object* window_;
+  Evas_Object* focus_;
+  Evas_Object* content_;
+  int rotation_;
+  int handler_id_;
+  std::map<int, RotationHandler> handler_table_;
 };
 
 }  // namespace wrt

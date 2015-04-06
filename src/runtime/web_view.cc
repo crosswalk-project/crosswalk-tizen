@@ -4,6 +4,8 @@
 
 #include "runtime/web_view.h"
 
+#include <functional>
+
 #include "runtime/native_window.h"
 
 namespace wrt {
@@ -12,6 +14,14 @@ WebView::WebView(NativeWindow* window, Ewk_Context* context)
     : window_(window),
       context_(context),
       always_run_(false) {
+  rotation_handler_id_ = window->AddRotationHandler(
+                                    std::bind(&WebView::OnRotation,
+                                    this,
+                                    std::placeholders::_1));
+}
+
+WebView::~WebView() {
+  window_->RemoveRotationHandler(rotation_handler_id_);
 }
 
 void WebView::LoadUrl(const std::string& url) {
@@ -55,4 +65,9 @@ Evas_Object* WebView::evas_object() const {
   return NULL;
 }
 
+void WebView::OnRotation(int degree) {
+  // TOOD(sngn.lee): To be impelmented
+}
+
 }  // namespace wrt
+
