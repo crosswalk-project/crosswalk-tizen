@@ -17,7 +17,7 @@ std::string BaseName(const std::string& path);
 std::string DirName(const std::string& path);
 
 
-} //namespace utils
-} // namespace wrt
+}  // namespace utils
+}  // namespace wrt
 
-#endif // WRT_COMMON_FILE_UTILS_H_
+#endif  // WRT_COMMON_FILE_UTILS_H_

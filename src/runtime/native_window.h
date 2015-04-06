@@ -24,18 +24,15 @@ class NativeWindow {
 
 
  private:
-  static void didDeleteRequested(void* data, Evas_Object* obj, void* event_info);
+  static void didDeleteRequested(void* data, Evas_Object* obj,
+                                 void* event_info);
   static void didProfileChanged(void* data, Evas_Object* obj, void* event_info);
-
-
 
   bool initialized_;
   Evas_Object* window_;
-
-
 };
 
-} // namespace wrt
+}  // namespace wrt
 
 
-#endif // WRT_RUNTIME_NATIVE_WINDOW_H_
+#endif  // WRT_RUNTIME_NATIVE_WINDOW_H_

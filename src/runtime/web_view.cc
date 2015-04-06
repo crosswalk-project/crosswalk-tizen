@@ -2,23 +2,25 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "web_view.h"
+#include "runtime/web_view.h"
 
-#include "native_window.h"
+#include "runtime/native_window.h"
 
-using namespace std;
 namespace wrt {
 
-WebView::WebView(NativeWindow * window,Ewk_Context * context): window_(window), context_(context), always_run_(false) {
+WebView::WebView(NativeWindow* window, Ewk_Context* context)
+    : window_(window),
+      context_(context),
+      always_run_(false) {
 }
 
 void WebView::LoadUrl(const std::string& url) {
-  //TODO. To be implemented
+  // TODO(sngn.lee): To be implemented
 }
 
 void WebView::Suspend() {
   if (!always_run_) {
-    //suspend webview
+    // suspend webview
   }
   // change the visibility
 }
@@ -49,8 +51,8 @@ std::string WebView::GetUrl() {
 }
 
 Evas_Object* WebView::evas_object() const {
-  //TODO
+  // TODO(sngn.lee): To be implemented
   return NULL;
 }
 
-}
+}  // namespace wrt

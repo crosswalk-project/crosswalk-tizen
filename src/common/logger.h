@@ -26,4 +26,4 @@
 #define SLoggerW(fmt, args...) _LOGGER_SLOG(DLOG_WARN, fmt, ##args)
 #define SLoggerE(fmt, args...) _LOGGER_SLOG(DLOG_ERROR, fmt, ##args)
 
-#endif // WRT_COMMON_LOGGER_H_
+#endif  // WRT_COMMON_LOGGER_H_

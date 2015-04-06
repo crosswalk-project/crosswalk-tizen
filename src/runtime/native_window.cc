@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "native_window.h"
+#include "runtime/native_window.h"
 
 #if defined(HAVE_X11)
 #include <Ecore_X.h>
@@ -10,13 +10,15 @@
 #include <Ecore_Wayland.h>
 #endif
 
-#include "logger.h"
+#include <cstdint>
+
+#include "common/logger.h"
 
 namespace wrt {
 
 namespace {
   const char* kWRTEdjePath = "/usr/share/edje/wrt/Wrt.edj";
-} // namespace
+}  // namespace
 
 NativeWindow::NativeWindow()
     : initialized_(false),
@@ -27,7 +29,7 @@ NativeWindow::~NativeWindow() {
 }
 
 void NativeWindow::Initialize() {
-  unsigned long pid = getpid();
+  uint16_t pid = getpid();
 
   // window
   window_ = createWindowInternal();
@@ -88,7 +90,7 @@ void NativeWindow::Initialize() {
   Elm_Object_Item* navi_item = elm_naviframe_item_push(
       naviframe, NULL, NULL, NULL, main_layout, NULL);
   elm_naviframe_item_title_enabled_set(navi_item, EINA_FALSE, EINA_FALSE);
-  //elm_naviframe_item_pop_cb_set(navi_item, naviframeItemPopCallback, NULL);
+  // elm_naviframe_item_pop_cb_set(navi_item, naviframeItemPopCallback, NULL);
   evas_object_show(main_layout);
 
   // focus
@@ -119,9 +121,9 @@ Evas_Object* NativeWindow::evas_object() const {
 }
 
 void NativeWindow::SetContent(Evas_Object* content) {
-  //TODO. swallow content into focus
+  // TODO(sngn.lee): swallow content into focus
 }
 
 
 
-} // namespace wrt
+}  // namespace wrt

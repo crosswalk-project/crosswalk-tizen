@@ -16,14 +16,14 @@ class WebView {
  public:
   class EventListener {
    public:
-    virtual void OnLoadStart(WebView* view) {};
-    virtual void OnLoadProgress(WebView* view, double persent ) {};
-    virtual void OnLoadFinished(WebView* view) {};
-    virtual void OnRendered(WebView* view) {};
-    virtual void OnCreatedNewWebView(WebView* view, WebView* new_view) {};
-    virtual void OnClosedWebView(WebView* view) {};
-    virtual void OnCrashed(WebView* view) {};
-    virtual bool OnDidOpenWindow(WebView* view) { return true; };
+    virtual void OnLoadStart(WebView* view) {}
+    virtual void OnLoadProgress(WebView* view, double persent ) {}
+    virtual void OnLoadFinished(WebView* view) {}
+    virtual void OnRendered(WebView* view) {}
+    virtual void OnCreatedNewWebView(WebView* view, WebView* new_view) {}
+    virtual void OnClosedWebView(WebView* view) {}
+    virtual void OnCrashed(WebView* view) {}
+    virtual bool OnDidOpenWindow(WebView* view) { return true; }
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);
@@ -45,9 +45,8 @@ class WebView {
   NativeWindow* window_;
   Ewk_Context* context_;
   bool always_run_;
-
 };
 
-} // namespace wrt
+}  // namespace wrt
 
-#endif // WRT_RUNTIME_WEB_VIEW_H_
+#endif  // WRT_RUNTIME_WEB_VIEW_H_

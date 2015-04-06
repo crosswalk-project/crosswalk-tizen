@@ -7,8 +7,8 @@
 
 #include <app.h>
 
-#include "native_window.h"
-#include "web_application.h"
+#include "runtime/native_window.h"
+#include "runtime/web_application.h"
 
 namespace wrt {
 
@@ -39,6 +39,6 @@ class Runtime {
   NativeWindow* native_window_;
 };
 
-} // namespace wrt
+}  // namespace wrt
 
-#endif // WRT_RUNTIME_RUNTIME_H_
+#endif  // WRT_RUNTIME_RUNTIME_H_

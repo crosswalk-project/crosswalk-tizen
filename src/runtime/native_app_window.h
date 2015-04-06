@@ -5,7 +5,7 @@
 #ifndef WRT_RUNTIME_NATIVE_APP_WINDOW_H_
 #define WRT_RUNTIME_NATIVE_APP_WINDOW_H_
 
-#include "native_window.h"
+#include "runtime/native_window.h"
 
 namespace wrt {
 
@@ -14,9 +14,9 @@ class NativeAppWindow: public NativeWindow {
   NativeAppWindow();
   virtual ~NativeAppWindow();
  protected:
-  Evas_Object* createWindowInternal(); // override
+  Evas_Object* createWindowInternal();  // override
 };
 
-} // namespace wrt
+}  // namespace wrt
 
-#endif // WRT_RUNTIME_NATIVE_APP_WINDOW_H_
+#endif  // WRT_RUNTIME_NATIVE_APP_WINDOW_H_

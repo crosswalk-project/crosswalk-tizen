@@ -2,16 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "runtime.h"
+#include "runtime/runtime.h"
 
-#include "logger.h"
-#include "command_line.h"
-#include "native_app_window.h"
+#include <string>
+
+#include "common/logger.h"
+#include "runtime/command_line.h"
+#include "runtime/native_app_window.h"
 
 namespace wrt {
 
 Runtime::Runtime() {
-
 }
 
 Runtime::~Runtime() {
@@ -20,7 +21,7 @@ Runtime::~Runtime() {
   }
 }
 
-bool Runtime::OnCreate(){
+bool Runtime::OnCreate() {
   std::string appid = CommandLine::ForCurrentProcess()->appid();
   application_ = new WebApplication(appid);
   if (!application_) {
@@ -43,7 +44,7 @@ bool Runtime::onCreate(void* data) {
   return runtime->OnCreate();
 }
 
-void Runtime::OnTerminate(){
+void Runtime::OnTerminate() {
 }
 void Runtime::onTerminate(void* data) {
   Runtime* runtime = reinterpret_cast<Runtime*>(data);
@@ -54,7 +55,7 @@ void Runtime::onTerminate(void* data) {
   runtime->OnTerminate();
 }
 
-void Runtime::OnPause(){
+void Runtime::OnPause() {
   if (application_->initialized()) {
     application_->Suspend();
   }
@@ -69,7 +70,7 @@ void Runtime::onPause(void* data) {
   runtime->OnPause();
 }
 
-void Runtime::OnResume(){
+void Runtime::OnResume() {
   if (application_->initialized()) {
     application_->Resume();
   }
@@ -83,15 +84,15 @@ void Runtime::onResume(void* data) {
   runtime->OnResume();
 }
 
-void Runtime::OnAppControl(app_control_h app_control){
+void Runtime::OnAppControl(app_control_h app_control) {
   if (application_->initialized()) {
     // Process AppControl
     application_->AppControl();
   } else {
     application_->Launch();
   }
-
 }
+
 void Runtime::onAppControl(app_control_h app_control, void* data) {
   Runtime* runtime = reinterpret_cast<Runtime*>(data);
   if (!runtime) {
@@ -102,7 +103,7 @@ void Runtime::onAppControl(app_control_h app_control, void* data) {
 }
 
 int Runtime::Exec(int argc, char* argv[]) {
-  ui_app_lifecycle_callback_s ops = {0,};
+  ui_app_lifecycle_callback_s ops = {0, };
 
   ops.create = onCreate;
   ops.terminate = onTerminate;
@@ -120,10 +121,9 @@ void Runtime::createNativeWindow() {
   native_window_->Initialize();
 }
 
-} // namespace wrt
+}  // namespace wrt
 
 int main(int argc, char* argv[]) {
-
   // Initalize CommandLineParser
   wrt::CommandLine::Init(argc, argv);
 

@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "command_line.h"
+#include "runtime/command_line.h"
 
-#include "file_utils.h"
 #include <cstring>
+#include "common/file_utils.h"
 
 namespace wrt {
 
@@ -24,7 +24,7 @@ static bool IsValidOptionString(const char* argument) {
   }
 }
 
-} // namespace
+}  // namespace
 
 CommandLine* CommandLine::current_process_commandline_ = NULL;
 
@@ -107,4 +107,4 @@ CommandLine* CommandLine::ForCurrentProcess() {
   return current_process_commandline_;
 }
 
-} // namespace wrt
+}  // namespace wrt

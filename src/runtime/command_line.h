@@ -51,6 +51,6 @@ class CommandLine {
   char** argv_;
 };
 
-} // namespace wrt
+}  // namespace wrt
 
-#endif // WRT_RUNTIME_COMMAND_LINE_H_
+#endif  // WRT_RUNTIME_COMMAND_LINE_H_

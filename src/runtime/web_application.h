@@ -7,7 +7,7 @@
 
 #include <string>
 #include <list>
-#include "web_view.h"
+#include "runtime/web_view.h"
 
 class Ewk_Context;
 
@@ -16,7 +16,7 @@ class NativeWindow;
 
 class WebApplication : public WebView::EventListener {
  public:
-  WebApplication(const std::string& appid);
+  explicit WebApplication(const std::string& appid);
   virtual ~WebApplication();
 
   void AppControl();
@@ -40,10 +40,8 @@ class WebApplication : public WebView::EventListener {
   Ewk_Context* ewk_context_;
   NativeWindow* window_;
   std::list<WebView*> view_stack_;
-
 };
 
-} // namespace wrt
+}  // namespace wrt
 
-
-#endif // WRT_RUNTIME_WEB_APPLICATION_H_
+#endif  // WRT_RUNTIME_WEB_APPLICATION_H_

@@ -2,17 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef WRT_EXTENSION_EXTENSION_INSTANCE_H_
-#define WRT_EXTENSION_EXTENSION_INSTANCE_H_
+#ifndef WRT_EXTENSION_EXTENSION_MANAGER_H_
+#define WRT_EXTENSION_EXTENSION_MANAGER_H_
 
 namespace wrt {
 
-class ExtensionInstance {
+class ExtensionManager {
  public:
-  ExtensionInstance();
-  virtual ~ExtensionInstance();
+  ExtensionManager();
+  virtual ~ExtensionManager();
 };
 
 }  // namespace wrt
 
-#endif  // WRT_EXTENSION_EXTENSION_INSTANCE_H_
+#endif  // WRT_EXTENSION_EXTENSION_MANAGER_H_

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "native_app_window.h"
+#include "runtime/native_app_window.h"
 
 #include <Elementary.h>
 
@@ -20,4 +20,4 @@ Evas_Object* NativeAppWindow::createWindowInternal() {
 }
 
 
-} // namespace wrt
+}  // namespace wrt
