@@ -75,6 +75,11 @@ void WebApplication::Launch() {
   view->LoadUrl("index.html");
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
+
+  // TODO(sngn.lee): check the below code location.
+  // in Wearable, webkit can render contents before show window
+  // but Mobile, webkit can't render contents before show window
+  window_->Show();
 }
 
 void WebApplication::AppControl() {
@@ -159,6 +164,9 @@ void WebApplication::OnClosedWebView(WebView * view) {
 std::string WebApplication::GetDataPath() const {
   // TODO(sngn.lee): To be Implements
   return std::string("./");
+}
+
+void WebApplication::OnRendered(WebView* view) {
 }
 
 }  // namespace wrt

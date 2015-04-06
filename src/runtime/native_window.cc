@@ -219,4 +219,8 @@ void NativeWindow::SetAutoRotation() {
   rotation_ = elm_win_rotation_get(window_);
 }
 
+void NativeWindow::Show() {
+  evas_object_show(window_);
+}
+
 }  // namespace wrt

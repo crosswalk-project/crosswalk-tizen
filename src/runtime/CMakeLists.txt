@@ -16,6 +16,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   elementary
   capi-appfw-application
   chromium-efl
+  efl-assist
   REQUIRED
 )
 

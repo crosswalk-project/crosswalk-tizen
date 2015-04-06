@@ -4,8 +4,9 @@
 
 #ifndef WRT_RUNTIME_WEB_VIEW_H_
 #define WRT_RUNTIME_WEB_VIEW_H_
-#include <string>
 #include <Elementary.h>
+#include <efl_assist.h>
+#include <string>
 
 class Ewk_Context;
 
@@ -24,7 +25,12 @@ class WebView {
                                      WebView* /*new_view*/) {}
     virtual void OnClosedWebView(WebView* /*view*/) {}
     virtual void OnCrashed(WebView* /*view*/) {}
-    virtual bool OnDidOpenWindow(WebView* /*view*/) { return true; }
+    virtual bool OnDidOpenWindow(WebView* /*view*/,
+                                 const std::string& /*url*/) { return true; }
+    virtual bool OnDidNavigation(WebView* /*view*/,
+                                 const std::string& /*url*/) { return true; }
+    virtual void OnHardwareKey(WebView* /*void*/,
+                               const std::string& /*keyname*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);
@@ -43,10 +49,13 @@ class WebView {
   Evas_Object* evas_object() const;
 
  private:
+  void OnKeyEvent(Ea_Callback_Type key_type);
   void OnRotation(int degree);
   void Initialize();
   NativeWindow* window_;
   Ewk_Context* context_;
+  Evas_Object* ewk_view_;
+  EventListener* listener_;
   bool always_run_;
   int rotation_handler_id_;
 };

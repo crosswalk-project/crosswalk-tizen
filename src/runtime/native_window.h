@@ -27,6 +27,7 @@ class NativeWindow {
   int AddRotationHandler(RotationHandler handler);
   void RemoveRotationHandler(int id);
   int rotation() const;
+  void Show();
 
  protected:
   virtual Evas_Object* createWindowInternal() = 0;

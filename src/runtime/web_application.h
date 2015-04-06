@@ -30,6 +30,7 @@ class WebApplication : public WebView::EventListener {
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView * view);
+  virtual void OnRendered(WebView* view);
 
  private:
   void ClearViewStack();
