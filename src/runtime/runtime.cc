@@ -12,7 +12,8 @@
 
 namespace wrt {
 
-Runtime::Runtime() {
+Runtime::Runtime()
+    : application_(NULL) {
 }
 
 Runtime::~Runtime() {
