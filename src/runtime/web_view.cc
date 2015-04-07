@@ -205,6 +205,67 @@ void WebView::Initialize() {
                                  newwindow_decide_callback,
                                  this);
 
+  // callback for database quota exceeded
+  auto database_exceeded_callback = [](Evas_Object* view,
+                                       Ewk_Security_Origin* origin,
+                                       const char*,
+                                       uint64_t,
+                                       void*) -> Eina_Bool {
+    std::string protocol(ewk_security_origin_protocol_get(origin));
+    if (protocol == "file://" || protocol == "app://") {
+      // Allow for local origin
+      ewk_view_exceeded_database_quota_reply(view, EINA_TRUE);
+    } else {
+      // Deny for remote origin
+      ewk_view_exceeded_database_quota_reply(view, EINA_FALSE);
+    }
+    return EINA_TRUE;
+  };
+  ewk_view_exceeded_database_quota_callback_set(
+    ewk_view_,
+    database_exceeded_callback,
+    NULL);
+
+  // callback for indexed database quota exceeded
+  auto indexed_db_exceeded_callback = [](Evas_Object* view,
+                                       Ewk_Security_Origin* origin,
+                                       int64_t,
+                                       void*) -> Eina_Bool {
+    std::string protocol(ewk_security_origin_protocol_get(origin));
+    if (protocol == "file://" || protocol == "app://") {
+      // Allow for local origin
+      ewk_view_exceeded_indexed_database_quota_reply(view, EINA_TRUE);
+    } else {
+      // Deny for remote origin
+      ewk_view_exceeded_indexed_database_quota_reply(view, EINA_FALSE);
+    }
+    return EINA_TRUE;
+  };
+  ewk_view_exceeded_indexed_database_quota_callback_set(
+    ewk_view_,
+    indexed_db_exceeded_callback,
+    NULL);
+
+  // callback for localfile quota exceeded
+  auto localfile_exceeded_callback = [](Evas_Object* view,
+                                       Ewk_Security_Origin* origin,
+                                       int64_t,
+                                       void*) -> Eina_Bool {
+    std::string protocol(ewk_security_origin_protocol_get(origin));
+    if (protocol == "file://" || protocol == "app://") {
+      // Allow for local origin
+      ewk_view_exceeded_local_file_system_quota_reply(view, EINA_TRUE);
+    } else {
+      // Deny for remote origin
+      ewk_view_exceeded_local_file_system_quota_reply(view, EINA_FALSE);
+    }
+    return EINA_TRUE;
+  };
+  ewk_view_exceeded_local_file_system_quota_callback_set(
+    ewk_view_,
+    localfile_exceeded_callback,
+    NULL);
+
   ewk_view_orientation_send(ewk_view_, ToWebRotation(window_->rotation()));
   rotation_handler_id_ = window_->AddRotationHandler(
                                   std::bind(&WebView::OnRotation,
