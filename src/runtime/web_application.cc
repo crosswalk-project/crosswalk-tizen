@@ -10,6 +10,7 @@
 #include "runtime/native_window.h"
 #include "runtime/command_line.h"
 #include "runtime/web_view.h"
+#include "runtime/vibration_manager.h"
 
 namespace {
   const char* kAppControlEventScript = \
@@ -58,6 +59,18 @@ bool WebApplication::Initialize(NativeWindow* window) {
   ewk_cookie_manager_persistent_storage_set(
                                       cookie_manager, cookie_path.c_str(),
                                       EWK_COOKIE_PERSISTENT_STORAGE_SQLITE);
+
+  // vibration callback
+  auto vibration_start_callback = [](uint64_t ms, void*) {
+    platform::VibrationManager::GetInstance()->Start(static_cast<int>(ms));
+  };
+  auto vibration_stop_callback = [](void* /*user_data*/) {
+    platform::VibrationManager::GetInstance()->Stop();
+  };
+  ewk_context_vibration_client_callbacks_set(ewk_context_,
+                                             vibration_start_callback,
+                                             vibration_stop_callback,
+                                             NULL);
 
   // TODO(sngn.lee): Find the path of certificate file
   // ewk_context_certificate_file_set(ewk_context_, .... );

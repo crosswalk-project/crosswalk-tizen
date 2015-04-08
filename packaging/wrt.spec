@@ -15,6 +15,7 @@ BuildRequires: pkgconfig(dlog)
 BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(efl-assist)
+BuildRequires: pkgconfig(deviced)
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)
 %endif
