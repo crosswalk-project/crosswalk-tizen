@@ -4,8 +4,10 @@
 
 #ifndef WRT_RUNTIME_WEB_VIEW_H_
 #define WRT_RUNTIME_WEB_VIEW_H_
+
 #include <Elementary.h>
 #include <efl_assist.h>
+#include <ewk_ipc_message.h>
 #include <string>
 
 class Ewk_Context;
@@ -25,12 +27,14 @@ class WebView {
                                      WebView* /*new_view*/) {}
     virtual void OnClosedWebView(WebView* /*view*/) {}
     virtual void OnCrashed(WebView* /*view*/) {}
-    virtual bool OnDidOpenWindow(WebView* /*view*/,
-                                 const std::string& /*url*/) { return true; }
-    virtual bool OnDidNavigation(WebView* /*view*/,
-                                 const std::string& /*url*/) { return true; }
-    virtual void OnHardwareKey(WebView* /*void*/,
-                               const std::string& /*keyname*/) {}
+    virtual bool OnDidOpenWindow(
+        WebView* /*view*/, const std::string& /*url*/) { return true; }
+    virtual bool OnDidNavigation(
+        WebView* /*view*/, const std::string& /*url*/) { return true; }
+    virtual void OnHardwareKey(
+        WebView* /*view*/, const std::string& /*keyname*/) {}
+    virtual void OnReceivedWrtMessage(
+        WebView* /*view*/, const Ewk_IPC_Wrt_Message_Data& /*msg*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

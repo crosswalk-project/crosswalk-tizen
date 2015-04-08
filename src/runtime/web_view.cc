@@ -266,6 +266,22 @@ void WebView::Initialize() {
     localfile_exceeded_callback,
     NULL);
 
+  // wrt,message
+  auto wrt_message_callback = [](void* user_data,
+                                 Evas_Object*,
+                                 void* event_info) {
+    WebView* self = static_cast<WebView*>(user_data);
+    Ewk_IPC_Wrt_Message_Data* msg =
+        static_cast<Ewk_IPC_Wrt_Message_Data*>(event_info);
+    if (self->listener_)
+      self->listener_->OnReceivedWrtMessage(self, *msg);
+  };
+  evas_object_smart_callback_add(ewk_view_,
+                                 "wrt,message",
+                                 wrt_message_callback,
+                                 this);
+
+  // rotation support
   ewk_view_orientation_send(ewk_view_, ToWebRotation(window_->rotation()));
   rotation_handler_id_ = window_->AddRotationHandler(
                                   std::bind(&WebView::OnRotation,

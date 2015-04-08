@@ -40,7 +40,7 @@ void NativeWindow::Initialize() {
   uint16_t pid = getpid();
 
   // window
-  window_ = createWindowInternal();
+  window_ = CreateWindowInternal();
   elm_win_conformant_set(window_, EINA_TRUE);
   int w, h;
 #if defined(HAVE_X11)
@@ -56,9 +56,9 @@ void NativeWindow::Initialize() {
   evas_object_resize(window_, w, h);
   elm_win_autodel_set(window_, EINA_TRUE);
   evas_object_smart_callback_add(window_, "delete,request",
-                                 didDeleteRequested, this);
+                                 DidDeleteRequested, this);
   evas_object_smart_callback_add(window_, "profile,changed",
-                                 didProfileChanged, this);
+                                 DidProfileChanged, this);
 
   #define EVAS_SIZE_EXPAND_FILL(obj) \
     evas_object_size_hint_weight_set(obj, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND); \
@@ -150,13 +150,13 @@ void NativeWindow::Initialize() {
   initialized_ = true;
 }
 
-void NativeWindow::didDeleteRequested(void* /*data*/,
+void NativeWindow::DidDeleteRequested(void* /*data*/,
     Evas_Object* /*obj*/, void* /*event_info*/) {
   LoggerD("didDeleteRequested");
   elm_exit();
 }
 
-void NativeWindow::didProfileChanged(void* data,
+void NativeWindow::DidProfileChanged(void* data,
     Evas_Object* /*obj*/, void* /*event_info*/) {
   LoggerD("didProfileChanged");
 }
@@ -200,10 +200,6 @@ int NativeWindow::AddRotationHandler(RotationHandler handler) {
 
 void NativeWindow::RemoveRotationHandler(int id) {
   handler_table_.erase(id);
-}
-
-int NativeWindow::rotation() const {
-  return rotation_;
 }
 
 void NativeWindow::SetRotationLock(int degree) {

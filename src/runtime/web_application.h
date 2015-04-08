@@ -7,6 +7,7 @@
 
 #include <string>
 #include <list>
+
 #include "runtime/web_view.h"
 
 class Ewk_Context;
@@ -31,6 +32,8 @@ class WebApplication : public WebView::EventListener {
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView * view);
   virtual void OnRendered(WebView* view);
+  virtual void OnReceivedWrtMessage(WebView* view,
+                                    const Ewk_IPC_Wrt_Message_Data& message);
 
  private:
   void ClearViewStack();

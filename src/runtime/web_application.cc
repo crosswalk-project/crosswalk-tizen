@@ -162,11 +162,17 @@ void WebApplication::OnClosedWebView(WebView * view) {
 }
 
 std::string WebApplication::GetDataPath() const {
-  // TODO(sngn.lee): To be Implements
+  // TODO(sngn.lee): To be implemented
   return std::string("./");
 }
 
 void WebApplication::OnRendered(WebView* view) {
+}
+
+void WebApplication::OnReceivedWrtMessage(
+    WebView* view,
+    const Ewk_IPC_Wrt_Message_Data& message) {
+  // TODO(wy80.choi): To be implemented
 }
 
 }  // namespace wrt

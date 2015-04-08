@@ -26,16 +26,16 @@ class NativeWindow {
   void SetAutoRotation();
   int AddRotationHandler(RotationHandler handler);
   void RemoveRotationHandler(int id);
-  int rotation() const;
+  int rotation() const { return rotation_; }
   void Show();
 
  protected:
-  virtual Evas_Object* createWindowInternal() = 0;
+  virtual Evas_Object* CreateWindowInternal() = 0;
 
  private:
-  static void didDeleteRequested(void* data, Evas_Object* obj,
+  static void DidDeleteRequested(void* data, Evas_Object* obj,
                                  void* event_info);
-  static void didProfileChanged(void* data, Evas_Object* obj, void* event_info);
+  static void DidProfileChanged(void* data, Evas_Object* obj, void* event_info);
   void DidRotation(int degree);
   void DidFocusChanged(bool got);
 

@@ -14,7 +14,7 @@ class NativeAppWindow: public NativeWindow {
   NativeAppWindow();
   virtual ~NativeAppWindow();
  protected:
-  Evas_Object* createWindowInternal();  // override
+  Evas_Object* CreateWindowInternal();  // override
 };
 
 }  // namespace wrt
