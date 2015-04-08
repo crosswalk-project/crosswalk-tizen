@@ -37,8 +37,7 @@ WebView::WebView(NativeWindow* window, Ewk_Context* context)
     : window_(window),
       context_(context),
       ewk_view_(NULL),
-      listener_(NULL),
-      always_run_(false) {
+      listener_(NULL) {
   Initialize();
 }
 
@@ -51,31 +50,23 @@ void WebView::LoadUrl(const std::string& url) {
 }
 
 void WebView::Suspend() {
-  // change the visibility
-  ewk_view_visibility_set(ewk_view_, EINA_FALSE);
-
-  if (!always_run_) {
-    // suspend webview
-    ewk_view_suspend(ewk_view_);
-  }
+  // suspend webview
+  ewk_view_suspend(ewk_view_);
 }
 
 void WebView::Resume() {
-  if (!always_run_) {
-    // resume webview
-    ewk_view_resume(ewk_view_);
-  }
-  // change the visiblity
-  ewk_view_visibility_set(ewk_view_, EINA_TRUE);
+  // resume webview
+  ewk_view_resume(ewk_view_);
 }
 
 void WebView::Reload() {
   ewk_view_reload(ewk_view_);
 }
 
-void WebView::AlwaysRun(bool run) {
-  always_run_ = run;
+void WebView::SetVisibility(bool show) {
+  ewk_view_visibility_set(ewk_view_, show ? EINA_TRUE : EINA_FALSE);
 }
+
 
 bool WebView::EvalJavascript(const std::string& script) {
   return ewk_view_script_execute(ewk_view_, script.c_str(), NULL, NULL);

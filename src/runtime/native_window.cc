@@ -172,6 +172,7 @@ void NativeWindow::SetContent(Evas_Object* content) {
   // If the content is NULL, this call will just delete the previous object.
   // If the If you wish to preserve it,
   // issue elm_object_part_content_unset() on it first.
+  evas_object_show(content);
   elm_object_part_content_unset(focus_, "elm.swallow.content");
   elm_object_part_content_set(focus_, "elm.swallow.content", content);
   elm_object_focus_set(focus_, EINA_TRUE);
