@@ -92,7 +92,7 @@ void WebApplication::AppControl() {
     // Reset to context
     ClearViewStack();
     WebView* view = new WebView(window_, ewk_context_);
-    view->LoadUrl("index.html");
+    view->LoadUrl("file:///index.html");
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
   } else {
@@ -109,6 +109,7 @@ void WebApplication::SendAppControlEvent() {
 }
 
 void WebApplication::ClearViewStack() {
+  window_->SetContent(NULL);
   auto it = view_stack_.begin();
   while (it != view_stack_.end()) {
     (*it)->Suspend();
@@ -119,21 +120,33 @@ void WebApplication::ClearViewStack() {
 
 void WebApplication::Resume() {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
-    view_stack_.front()->Resume();
+    view_stack_.front()->SetVisibility(true);
+
+  // TODO(sngn.lee) : should be check the background support option
+  // if background suuport options was on, skip below code
+
+  auto it = view_stack_.begin();
+  for ( ; it != view_stack_.end(); ++it) {
+    (*it)->Resume();
+  }
 }
 
 void WebApplication::Suspend() {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
-    view_stack_.front()->Suspend();
+    view_stack_.front()->SetVisibility(false);
+
+  // TODO(sngn.lee) : should be check the background support option
+  // if background suuport options was on, skip below code
+  auto it = view_stack_.begin();
+  for ( ; it != view_stack_.end(); ++it) {
+    (*it)->Suspend();
+  }
 }
 
 void WebApplication::OnCreatedNewWebView(WebView* view, WebView* new_view) {
-  view->Suspend();
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
-    view_stack_.front()->Suspend();
+    view_stack_.front()->SetVisibility(false);
 
-  // TODO(sngn.lee): check the background support option
-  // new_view.AlwaysRun(false);
   view_stack_.push_front(new_view);
   window_->SetContent(new_view->evas_object());
 }
@@ -152,13 +165,14 @@ void WebApplication::OnClosedWebView(WebView * view) {
     }
   }
 
-  delete view;
-
   if (view_stack_.size() == 0) {
     // TODO(sngn.lee): terminate the webapp
   } else if (current != view_stack_.front()) {
+    view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
   }
+
+  delete view;
 }
 
 std::string WebApplication::GetDataPath() const {

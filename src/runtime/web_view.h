@@ -46,7 +46,7 @@ class WebView {
   void Suspend();
   void Resume();
   void Reload();
-  void AlwaysRun(bool run);
+  void SetVisibility(bool show);
   bool EvalJavascript(const std::string& script);
 
   void SetEventListener(EventListener* listener);
@@ -60,7 +60,6 @@ class WebView {
   Ewk_Context* context_;
   Evas_Object* ewk_view_;
   EventListener* listener_;
-  bool always_run_;
   int rotation_handler_id_;
 };
 
