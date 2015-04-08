@@ -35,6 +35,10 @@ class WebView {
         WebView* /*view*/, const std::string& /*keyname*/) {}
     virtual void OnReceivedWrtMessage(
         WebView* /*view*/, const Ewk_IPC_Wrt_Message_Data& /*msg*/) {}
+    virtual void OnOrientationLock(
+        WebView* /*view*/,
+        bool /*lock*/,
+        int /*preferred_rotation*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

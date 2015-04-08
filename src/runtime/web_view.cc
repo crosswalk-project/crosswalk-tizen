@@ -19,13 +19,20 @@ const char* kKeyNameMenu = "menu";
 
 static int ToWebRotation(int r) {
   switch (r) {
-    case 0:
-    case 180:
-      return r;
     case 90:
       return -90;
     case 270:
       return 90;
+  }
+  return r;
+}
+
+static int ToNativeRotation(int r) {
+  switch (r) {
+    case -90:
+      return 90;
+    case 90:
+      return 270;
   }
   return r;
 }
@@ -272,6 +279,23 @@ void WebView::Initialize() {
                                  "wrt,message",
                                  wrt_message_callback,
                                  this);
+
+  // Orientation lock callback
+  auto orientation_lock_callback = [](Evas_Object* o,
+                                      Eina_Bool need_lock,
+                                      int orientation,
+                                      void* user_data) -> Eina_Bool {
+    WebView* self = static_cast<WebView*>(user_data);
+    if (self->listener_) {
+      self->listener_->OnOrientationLock(self,
+                                         need_lock,
+                                         ToNativeRotation(orientation));
+    }
+    return EINA_TRUE;
+  };
+  ewk_view_orientation_lock_callback_set(ewk_view_,
+                                         orientation_lock_callback,
+                                         this);
 
   // rotation support
   ewk_view_orientation_send(ewk_view_, ToWebRotation(window_->rotation()));

@@ -183,10 +183,33 @@ std::string WebApplication::GetDataPath() const {
 void WebApplication::OnRendered(WebView* view) {
 }
 
+
 void WebApplication::OnReceivedWrtMessage(
     WebView* view,
     const Ewk_IPC_Wrt_Message_Data& message) {
   // TODO(wy80.choi): To be implemented
+}
+
+void WebApplication::OnOrientationLock(WebView* view,
+                                       bool lock,
+                                       int preferred_rotation) {
+  if (view_stack_.size() == 0)
+    return;
+
+  // Only top-most view can set the orientation relate operation
+  if (view_stack_.front() != view)
+    return;
+
+  // TODO(sngn.lee): check the orientaion setting
+  // if allow the auto orientation
+  // if (is not allow orientation) {
+  //   return;
+  // }
+  if ( lock ) {
+    window_->SetRotationLock(preferred_rotation);
+  } else {
+    window_->SetAutoRotation();
+  }
 }
 
 }  // namespace wrt

@@ -34,6 +34,9 @@ class WebApplication : public WebView::EventListener {
   virtual void OnRendered(WebView* view);
   virtual void OnReceivedWrtMessage(WebView* view,
                                     const Ewk_IPC_Wrt_Message_Data& message);
+  virtual void OnOrientationLock(WebView* view,
+                                 bool lock,
+                                 int preferred_rotation);
 
  private:
   void ClearViewStack();
