@@ -37,6 +37,7 @@ class WebApplication : public WebView::EventListener {
   virtual void OnOrientationLock(WebView* view,
                                  bool lock,
                                  int preferred_rotation);
+  virtual void OnHardwareKey(WebView* view, const std::string& keyname);
 
  private:
   void ClearViewStack();
