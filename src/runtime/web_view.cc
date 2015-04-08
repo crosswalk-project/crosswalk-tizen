@@ -43,6 +43,7 @@ WebView::WebView(NativeWindow* window, Ewk_Context* context)
 
 WebView::~WebView() {
   window_->RemoveRotationHandler(rotation_handler_id_);
+  evas_object_del(ewk_view_);
 }
 
 void WebView::LoadUrl(const std::string& url) {
