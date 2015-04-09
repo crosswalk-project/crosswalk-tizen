@@ -48,24 +48,7 @@ bool Runtime::OnCreate() {
   return true;
 }
 
-bool Runtime::onCreate(void* data) {
-  Runtime* runtime = reinterpret_cast<Runtime*>(data);
-  if (!runtime) {
-    LoggerE("Runtime has not been created.");
-    return false;
-  }
-  return runtime->OnCreate();
-}
-
 void Runtime::OnTerminate() {
-}
-void Runtime::onTerminate(void* data) {
-  Runtime* runtime = reinterpret_cast<Runtime*>(data);
-  if (!runtime) {
-    LoggerE("Runtime has not been created.");
-    return;
-  }
-  runtime->OnTerminate();
 }
 
 void Runtime::OnPause() {
@@ -74,27 +57,10 @@ void Runtime::OnPause() {
   }
 }
 
-void Runtime::onPause(void* data) {
-  Runtime* runtime = reinterpret_cast<Runtime*>(data);
-  if (!runtime) {
-    LoggerE("Runtime has not been created.");
-    return;
-  }
-  runtime->OnPause();
-}
-
 void Runtime::OnResume() {
   if (application_->initialized()) {
     application_->Resume();
   }
-}
-void Runtime::onResume(void* data) {
-  Runtime* runtime = reinterpret_cast<Runtime*>(data);
-  if (!runtime) {
-    LoggerE("Runtime has not been created.");
-    return;
-  }
-  runtime->OnResume();
 }
 
 void Runtime::OnAppControl(app_control_h app_control) {
@@ -106,23 +72,58 @@ void Runtime::OnAppControl(app_control_h app_control) {
   }
 }
 
-void Runtime::onAppControl(app_control_h app_control, void* data) {
-  Runtime* runtime = reinterpret_cast<Runtime*>(data);
-  if (!runtime) {
-    LoggerE("Runtime has not been created.");
-    return;
-  }
-  runtime->OnAppControl(app_control);
-}
-
 int Runtime::Exec(int argc, char* argv[]) {
   ui_app_lifecycle_callback_s ops = {0, };
 
-  ops.create = onCreate;
-  ops.terminate = onTerminate;
-  ops.pause = onPause;
-  ops.resume = onResume;
-  ops.app_control = onAppControl;
+  // onCreate
+  ops.create = [](void* data) -> bool {
+    Runtime* runtime = reinterpret_cast<Runtime*>(data);
+    if (!runtime) {
+      LoggerE("Runtime has not been created.");
+      return false;
+    }
+    return runtime->OnCreate();
+  };
+
+  // onTerminate
+  ops.terminate = [](void* data) -> void {
+    Runtime* runtime = reinterpret_cast<Runtime*>(data);
+    if (!runtime) {
+      LoggerE("Runtime has not been created.");
+      return;
+    }
+    runtime->OnTerminate();
+  };
+
+  // onPause
+  ops.pause = [](void* data) -> void {
+    Runtime* runtime = reinterpret_cast<Runtime*>(data);
+    if (!runtime) {
+      LoggerE("Runtime has not been created.");
+      return;
+    }
+    runtime->OnPause();
+  };
+
+  // onResume
+  ops.resume = [](void* data) -> void {
+    Runtime* runtime = reinterpret_cast<Runtime*>(data);
+    if (!runtime) {
+      LoggerE("Runtime has not been created.");
+      return;
+    }
+    runtime->OnResume();
+  };
+
+  // onAppControl
+  ops.app_control = [](app_control_h app_control, void* data) -> void {
+    Runtime* runtime = reinterpret_cast<Runtime*>(data);
+    if (!runtime) {
+      LoggerE("Runtime has not been created.");
+      return;
+    }
+    runtime->OnAppControl(app_control);
+  };
 
   return ui_app_main(argc, argv, &ops, this);
 }

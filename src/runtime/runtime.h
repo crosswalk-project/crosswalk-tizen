@@ -27,12 +27,6 @@ class Runtime {
   virtual void OnAppControl(app_control_h app_control);
 
  private:
-  static bool onCreate(void* data);
-  static void onTerminate(void* data);
-  static void onPause(void* data);
-  static void onResume(void* data);
-  static void onAppControl(app_control_h app_control, void* data);
-
   WebApplication* application_;
   NativeWindow* native_window_;
 };
