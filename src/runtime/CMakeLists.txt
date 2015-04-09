@@ -18,11 +18,16 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   elementary
   capi-appfw-application
   chromium-efl
+  manifest-parser
+  manifest-handlers
+  capi-appfw-package-manager
   efl-assist
   deviced
   capi-system-runtime-info
   REQUIRED
 )
+
+FIND_PACKAGE(Boost REQUIRED system filesystem)
 
 # Include Directories
 SET(TARGET_RUNTIME_INCS
@@ -33,6 +38,7 @@ SET(TARGET_RUNTIME_INCS
 # Libraries
 SET(TARGET_RUNTIME_LIBS
   ${TARGET_RUNTIME_DEPS_LIBRARIES}
+  ${Boost_LIBRARIES}
 )
 
 # Source Files
