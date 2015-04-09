@@ -18,6 +18,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   chromium-efl
   efl-assist
   deviced
+  cert-svc
   REQUIRED
 )
 

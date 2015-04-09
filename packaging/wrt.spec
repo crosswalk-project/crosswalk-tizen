@@ -16,6 +16,7 @@ BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(efl-assist)
 BuildRequires: pkgconfig(deviced)
+BuildRequires: pkgconfig(cert-svc)
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)
 %endif

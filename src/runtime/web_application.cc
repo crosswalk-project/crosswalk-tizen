@@ -4,6 +4,7 @@
 
 #include "runtime/web_application.h"
 
+#include <cert-service.h>
 #include <app.h>
 #include <ewk_chromium.h>
 #include <algorithm>
@@ -90,8 +91,11 @@ bool WebApplication::Initialize(NativeWindow* window) {
                                              vibration_stop_callback,
                                              NULL);
 
-  // TODO(sngn.lee): Find the path of certificate file
-  // ewk_context_certificate_file_set(ewk_context_, .... );
+  // Set certificate path
+  char* cert_path = cert_svc_get_certificate_crt_file_path();
+  if (cert_path != NULL) {
+    ewk_context_certificate_file_set(ewk_context_, cert_path);
+  }
 
   // TODO(sngn.lee): find the proxy url
   // ewk_context_proxy_uri_set(ewk_context_, ... );
