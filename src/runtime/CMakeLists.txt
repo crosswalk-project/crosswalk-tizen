@@ -17,6 +17,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   capi-appfw-application
   chromium-efl
   efl-assist
+  deviced
   REQUIRED
 )
 
@@ -39,6 +40,7 @@ SET(TARGET_RUNTIME_SRCS
   ${PROJECT_SOURCE_DIR}/src/runtime/web_application.cc
   ${PROJECT_SOURCE_DIR}/src/runtime/runtime.cc
   ${PROJECT_SOURCE_DIR}/src/runtime/web_view.cc
+  ${PROJECT_SOURCE_DIR}/src/runtime/vibration_manager.cc
 )
 
 # Compiler Flags
