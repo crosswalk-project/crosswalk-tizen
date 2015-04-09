@@ -4,8 +4,10 @@
 
 #include "runtime/web_application.h"
 
+#include <app.h>
 #include <ewk_chromium.h>
 #include <algorithm>
+#include <memory>
 
 #include "runtime/native_window.h"
 #include "runtime/command_line.h"
@@ -26,6 +28,9 @@ namespace wrt {
 WebApplication::WebApplication(const std::string& appid)
     : initialized_(false),
       appid_(appid), ewk_context_(ewk_context_new()) {
+  std::unique_ptr<char, decltype(std::free)*>
+    path {app_get_data_path(), std::free};
+  app_data_path_ = path.get();
 }
 
 WebApplication::~WebApplication() {
@@ -54,7 +59,7 @@ bool WebApplication::Initialize(NativeWindow* window) {
                                        EWK_COOKIE_ACCEPT_POLICY_ALWAYS);
 
   // set persistent storage path
-  std::string cookie_path = GetDataPath() + ".cookie";
+  std::string cookie_path = data_path() + ".cookie";
   ewk_cookie_manager_persistent_storage_set(
                                       cookie_manager, cookie_path.c_str(),
                                       EWK_COOKIE_PERSISTENT_STORAGE_SQLITE);
@@ -173,11 +178,6 @@ void WebApplication::OnClosedWebView(WebView * view) {
   }
 
   delete view;
-}
-
-std::string WebApplication::GetDataPath() const {
-  // TODO(sngn.lee): To be implemented
-  return std::string("./");
 }
 
 void WebApplication::OnRendered(WebView* view) {
