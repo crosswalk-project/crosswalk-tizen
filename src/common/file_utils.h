@@ -10,7 +10,7 @@
 namespace wrt {
 namespace utils {
 
-bool Exist(const std::string& path);
+bool Exists(const std::string& path);
 
 std::string BaseName(const std::string& path);
 

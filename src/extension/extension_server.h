@@ -5,25 +5,72 @@
 #ifndef WRT_EXTENSION_EXTENSION_SERVER_H_
 #define WRT_EXTENSION_EXTENSION_SERVER_H_
 
+#include <ewk_ipc_message.h>
+
 #include <string>
+#include <set>
+#include <map>
 #include <vector>
 
-#include "extensin/extension_manager.h"
+#include "extension/extension.h"
+
+class Ewk_Context;
 
 namespace wrt {
 
-class ExtensionServer {
+class ExtensionServer : public Extension::ExtensionDelegate {
  public:
-  ExtensionServer();
+  typedef std::vector<std::string> StringVector;
+
+  explicit ExtensionServer(Ewk_Context* ewk_context);
   virtual ~ExtensionServer();
 
-  // 'path' can indicate a file or a directory.
-  // if the 'path' indicate a directory, ExtensionServer will load all of
-  // extensions in the directory.
-  void AddExtensionPath(const std::string& path);
+  void Start();
+  void Start(const StringVector& paths);
+
+  void HandleWrtMessage(Ewk_IPC_Wrt_Message_Data* message);
+
  private:
-  std::vector<std::string> extension_paths_;
-  ExtensionManager extension_manager_;
+  void RegisterExtension(const std::string& path);
+  void RegisterSystemExtensions();
+  bool RegisterSymbols(Extension* extension);
+
+  void AddRuntimeVariable(const std::string& key, const std::string& value);
+  void GetRuntimeVariable(const char* key, char* value, size_t value_len);
+  void ClearRuntimeVariables();
+
+  void SendWrtMessage(const std::string& type);
+  void SendWrtMessage(const std::string& type, const std::string& id,
+                      const std::string& ref_id, const std::string& value);
+
+  void OnGetExtensions(const std::string& id);
+  void OnCreateInstance(const std::string& instance_id,
+                        const std::string& extension_name);
+  void OnDestroyInstance(const std::string& instance_id);
+  void OnSendSyncMessageToNative(const std::string& msg_id,
+                                 const std::string& instance_id,
+                                 const std::string& msg_body);
+  void OnPostMessageToNative(const std::string& instance_id,
+                             const std::string& msg_body);
+
+  void OnPostMessageToJS(const std::string& instance_id,
+                         const std::string& msg);
+  void OnSendSyncReplyToJS(const std::string& instance_id,
+                           const std::string& msg);
+
+  Ewk_Context* ewk_context_;
+
+  typedef std::set<std::string> StringSet;
+  StringSet extension_symbols_;
+
+  typedef std::map<std::string, std::string> StringMap;
+  StringMap runtime_variables_;
+
+  typedef std::map<std::string, Extension*> ExtensionMap;
+  ExtensionMap extensions_;
+
+  typedef std::map<std::string, ExtensionInstance*> InstanceMap;
+  InstanceMap instances_;
 };
 
 }  // namespace wrt

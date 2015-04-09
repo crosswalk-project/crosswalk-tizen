@@ -10,13 +10,13 @@
 #include <algorithm>
 #include <memory>
 
+#include "common/message_types.h"
 #include "runtime/native_window.h"
 #include "runtime/command_line.h"
 #include "runtime/web_view.h"
 #include "runtime/vibration_manager.h"
 
 namespace {
-
   // TODO(sngn.lee) : It should be declare in common header
   const char* kKeyNameBack = "back";
 
@@ -35,25 +35,35 @@ namespace {
         "\n"
         "for (var i=0; i < window.frames.length; i++)\n"
         "{ window.frames[i].document.dispatchEvent(__event); }";
-
 }  // namespace
 
 namespace wrt {
 
 WebApplication::WebApplication(const std::string& appid)
     : initialized_(false),
-      appid_(appid), ewk_context_(ewk_context_new()) {
+      appid_(appid),
+      ewk_context_(ewk_context_new()) {
+  // app_data_path
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
   app_data_path_ = path.get();
+
+  // extension_server
+  extension_server_ = new ExtensionServer(ewk_context_);
 }
 
 WebApplication::~WebApplication() {
   ewk_context_delete(ewk_context_);
+  if (extension_server_)
+    delete extension_server_;
 }
 
 bool WebApplication::Initialize(NativeWindow* window) {
   window_ = window;
+
+  // start extension server
+  if (extension_server_)
+    extension_server_->Start();
 
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
@@ -213,9 +223,22 @@ void WebApplication::OnRendered(WebView* view) {
 
 
 void WebApplication::OnReceivedWrtMessage(
-    WebView* view,
-    const Ewk_IPC_Wrt_Message_Data& message) {
-  // TODO(wy80.choi): To be implemented
+    WebView* /*view*/,
+    Ewk_IPC_Wrt_Message_Data* message) {
+
+  Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(message);
+
+  #define START_WITHS(x, s) (strncmp(x, s, strlen(s)) == 0)
+
+  if (START_WITHS(msg_type, message_types::kExtensionTypePrefix)) {
+    extension_server_->HandleWrtMessage(message);
+  }
+
+  // TODO(wy80.choi): handle other message type?
+  // changeUserAgent, clearAllCookie, GetWindowID, hide, exit, blockedUrl
+
+
+  #undef START_WITHS
 }
 
 void WebApplication::OnOrientationLock(WebView* view,

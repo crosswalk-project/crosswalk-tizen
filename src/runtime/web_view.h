@@ -34,7 +34,7 @@ class WebView {
     virtual void OnHardwareKey(
         WebView* /*view*/, const std::string& /*keyname*/) {}
     virtual void OnReceivedWrtMessage(
-        WebView* /*view*/, const Ewk_IPC_Wrt_Message_Data& /*msg*/) {}
+        WebView* /*view*/, Ewk_IPC_Wrt_Message_Data* /*msg*/) {}
     virtual void OnOrientationLock(
         WebView* /*view*/,
         bool /*lock*/,

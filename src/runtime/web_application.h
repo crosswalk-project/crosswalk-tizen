@@ -9,6 +9,7 @@
 #include <list>
 
 #include "runtime/web_view.h"
+#include "extension/extension_server.h"
 
 class Ewk_Context;
 
@@ -33,7 +34,7 @@ class WebApplication : public WebView::EventListener {
   virtual void OnClosedWebView(WebView * view);
   virtual void OnRendered(WebView* view);
   virtual void OnReceivedWrtMessage(WebView* view,
-                                    const Ewk_IPC_Wrt_Message_Data& message);
+                                    Ewk_IPC_Wrt_Message_Data* message);
   virtual void OnOrientationLock(WebView* view,
                                  bool lock,
                                  int preferred_rotation);
@@ -47,6 +48,7 @@ class WebApplication : public WebView::EventListener {
   std::string appid_;
   Ewk_Context* ewk_context_;
   NativeWindow* window_;
+  ExtensionServer* extension_server_;
   std::list<WebView*> view_stack_;
   std::string app_data_path_;
 };

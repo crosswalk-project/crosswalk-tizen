@@ -273,7 +273,7 @@ void WebView::Initialize() {
     Ewk_IPC_Wrt_Message_Data* msg =
         static_cast<Ewk_IPC_Wrt_Message_Data*>(event_info);
     if (self->listener_)
-      self->listener_->OnReceivedWrtMessage(self, *msg);
+      self->listener_->OnReceivedWrtMessage(self, msg);
   };
   evas_object_smart_callback_add(ewk_view_,
                                  "wrt,message",

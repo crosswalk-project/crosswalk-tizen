@@ -7,7 +7,8 @@ SET(TARGET_COMMON_STATIC_INCS
 )
 
 SET(TARGET_COMMON_STATIC_SRCS
-  ${PROJECT_SOURCE_DIR}/src/common/file_utils.cc
+  ${BASE_SRCDIR}/common/file_utils.cc
+  ${BASE_SRCDIR}/common/message_types.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_COMMON_STATIC_INCS})

@@ -11,7 +11,7 @@
 namespace wrt {
 namespace utils {
 
-bool Exist(const std::string& path) {
+bool Exists(const std::string& path) {
   return (access(path.c_str(), F_OK) != -1);
 }
 
