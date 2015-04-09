@@ -26,7 +26,7 @@ class WebApplication : public WebView::EventListener {
   void Suspend();
 
   bool Initialize(NativeWindow* window);
-  std::string GetDataPath() const;
+  std::string data_path() const { return app_data_path_; }
   bool initialized() const { return initialized_; }
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
@@ -48,6 +48,7 @@ class WebApplication : public WebView::EventListener {
   Ewk_Context* ewk_context_;
   NativeWindow* window_;
   std::list<WebView*> view_stack_;
+  std::string app_data_path_;
 };
 
 }  // namespace wrt
