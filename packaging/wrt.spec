@@ -11,6 +11,7 @@ URL:        N/A
 Source0:    %{name}-%{version}.tar.gz
 
 BuildRequires: cmake
+BuildRequires: edje-tools
 BuildRequires: pkgconfig(dlog)
 BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(capi-appfw-application)
@@ -55,10 +56,10 @@ Runtime for Web Application
 mkdir -p %{build_dir}
 cd %{build_dir}
 
-cmake .. \
-  -DCMAKE_BUILD_TYPE=%{?build_type:%build_type} \
-  -DX11_SUPPORT=%{enable_x11} \
-  -DWAYLAND_SUPPORT=%{enable_wayland}
+cmake .. -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+         -DCMAKE_BUILD_TYPE=%{?build_type:%build_type} \
+         -DX11_SUPPORT=%{enable_x11} \
+         -DWAYLAND_SUPPORT=%{enable_wayland}
 
 make %{?jobs:-j%jobs}
 
@@ -70,5 +71,5 @@ cd %{build_dir}
 rm -fr %{buildroot}
 
 %files
-/usr/local/bin/wrt
-
+%attr(755,root,root) %{_bindir}/wrt
+%attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj

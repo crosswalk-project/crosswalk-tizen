@@ -34,13 +34,13 @@ SET(TARGET_RUNTIME_LIBS
 
 # Source Files
 SET(TARGET_RUNTIME_SRCS
-  ${PROJECT_SOURCE_DIR}/src/runtime/command_line.cc
-  ${PROJECT_SOURCE_DIR}/src/runtime/native_window.cc
-  ${PROJECT_SOURCE_DIR}/src/runtime/native_app_window.cc
-  ${PROJECT_SOURCE_DIR}/src/runtime/web_application.cc
-  ${PROJECT_SOURCE_DIR}/src/runtime/runtime.cc
-  ${PROJECT_SOURCE_DIR}/src/runtime/web_view.cc
-  ${PROJECT_SOURCE_DIR}/src/runtime/vibration_manager.cc
+  ${BASE_SRCDIR}/runtime/command_line.cc
+  ${BASE_SRCDIR}/runtime/native_window.cc
+  ${BASE_SRCDIR}/runtime/native_app_window.cc
+  ${BASE_SRCDIR}/runtime/web_application.cc
+  ${BASE_SRCDIR}/runtime/runtime.cc
+  ${BASE_SRCDIR}/runtime/web_view.cc
+  ${BASE_SRCDIR}/runtime/vibration_manager.cc
 )
 
 # Compiler Flags
@@ -67,3 +67,19 @@ TARGET_LINK_LIBRARIES(${TARGET_RUNTIME}
 
 # Install
 INSTALL(TARGETS ${TARGET_RUNTIME} DESTINATION bin)
+
+# EDC Build
+ADD_CUSTOM_COMMAND(
+    OUTPUT ${BASE_SRCDIR}/runtime/wrt.edj
+    COMMAND edje_cc
+    ARGS  ${BASE_SRCDIR}/runtime/wrt.edc
+          ${BASE_SRCDIR}/runtime/wrt.edj
+    DEPENDS ${BASE_SRCDIR}/runtime/wrt.edc
+)
+ADD_CUSTOM_TARGET(WRT_EDJE ALL
+    DEPENDS ${BASE_SRCDIR}/runtime/wrt.edj
+)
+INSTALL(FILES
+    ${BASE_SRCDIR}/runtime/wrt.edj
+    DESTINATION share/edje/wrt/
+)

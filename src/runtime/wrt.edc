@@ -1,0 +1,446 @@
+collections {
+    group {
+        name: "web-application";
+        parts {
+            part {
+                name: "base";
+                scale: 1;
+                type: RECT;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 1;
+                    rel1 { relative: 0 0; }
+                    rel2 { relative: 1 1; }
+                    color: 0 0 0 255;
+                }
+                description {
+                    state: "transparent" 0.0;
+                    inherit: "default" 0.0;
+                    color: 0 0 0 0;
+                }
+            }
+            part {
+                name: "elm.swallow.content";
+                scale: 1;
+                type: SWALLOW;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 1;
+                    rel1 { relative: 0.0 0.0; to: base; }
+                    rel2 { relative: 1.0 1.0; to: base; }
+                    align: 0.0 0.0;
+
+                }
+                /* ratio 1x1 (only for gear3) */
+                description {
+                    state: "ratio1x1" 0.0;
+                    fixed: 1 1;
+                    aspect: 1 1;
+                    aspect_preference: BOTH;
+                    align: 0.5 0.5;
+                }
+            }
+            part {
+                name: "elm.swallow.progress";
+                scale: 1;
+                type: SWALLOW;
+                description {
+                    state: "default" 0.0;
+                    visible: 0;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 1.0 0.0; }
+                    align: 0.5 0.0;
+                }
+                description {
+                    state: "visible" 0.0;
+                    inherit: "default" 0.0;
+                    visible: 1;
+                }
+            }
+        }//end of parts
+        programs {
+            program { name: "show,progress";
+                signal: "show,progress,signal";
+                action: STATE_SET "visible" 0.0;
+                target: "elm.swallow.progress";
+            }
+            program { name: "hide,progress";
+                signal: "hide,progress,signal";
+                action: STATE_SET "default" 0.0;
+                target: "elm.swallow.progress";
+            }
+            program { name: "show,transparent";
+                signal: "show,transparent,signal";
+                action: STATE_SET "transparent" 0.0;
+                target: "base";
+            }
+            program { name: "hide,transparent";
+                signal: "hide,transparent,signal";
+                action: STATE_SET "default" 0.0;
+                target: "base";
+            }
+            /* Webview ratio control (for gear3) */
+            program { name: "1x1,ratio";
+                signal: "1x1,ratio,signal";
+                action: STATE_SET "ratio1x1" 0.0;
+                target: "elm.swallow.content";
+            }
+            program { name: "natural,ratio";
+                signal: "natural,ratio,signal";
+                action: STATE_SET "default" 0.0;
+                target: "elm.swallow.content";
+            }
+        }//end of programs
+    }//end of group
+
+    group {
+        name: "popupWithCheck";
+        parts {
+            part {
+                name: "pad_t";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.5 0.0;
+                    min: 16 0;
+                    fixed: 0 1;
+                    rel1 { relative: 1.0 0.0;to_x: "pad_l"; }
+                    rel2 { relative: 0.0 0.0;to_x: "pad_r"; }
+                }
+            }
+            part {
+                name: "pad_l";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    min: 16 0;
+                    max: 16 0;
+                    fixed: 1 0;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 0.0 1.0; }
+                    align: 0.0 0.0;
+                }
+            }
+            part {
+                name: "pad_r";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    min: 16 0;
+                    max: 16 0;
+                    fixed: 1 0;
+                    rel1 { relative: 1.0 0.0; }
+                    rel2 { relative: 1.0 1.0; }
+                    align: 1.0 0.0;
+                }
+            }
+            part {
+                name:"elm.swallow.label";
+                type: SWALLOW;
+                scale : 1;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 0;
+                    rel1 {
+                        relative: 1.0 1.0;
+                        to_x: "pad_l";
+                        to_y: "pad_t";
+                    }
+                    rel2 {
+                        relative: 0.0 0.0;
+                        to_x: "pad_r";
+                        to_y: "pad_b";
+                    }
+                }
+            }
+            part {
+                name: "bottom_pad";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 16;
+                    fixed: 0 1;
+                    rel1 { relative: 1.0 1.0; to_x: "pad_l"; }
+                    rel2 { relative: 0.0 1.0; to_x: "pad_r"; }
+                }
+            }
+            part {
+                name: "pad_b";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 44;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 0.0; to: "bottom_pad"; }
+                    rel2 { relative: 1.0 0.0; to: "bottom_pad"; }
+                }
+            }
+            part {
+                name: "end_field";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 40;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 1.0; to: "pad_b"; }
+                    rel2 { relative: 1.0 1.0; to: "pad_b"; }
+                }
+            }
+            part {
+                name: "elm.swallow.checkbox";
+                type: SWALLOW;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 1;
+                    align: 0.0 0.5;
+                    rel1.to: "end_field";
+                    rel2.to: "end_field";
+                }
+            }
+        } //end of parts
+    } //end of group
+
+    group {
+        name: "authRequestPopup";
+        parts {
+            part {
+                name: "pad_t";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.5 0.0;
+                    min: 0 32;
+                    fixed: 0 1;
+                    rel1 { relative: 1.0 0.0;to_x: "pad_l"; }
+                    rel2 { relative: 0.0 0.0;to_x: "pad_r"; }
+                }
+            }
+            part {
+                name: "pad_l";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    min: 26 0;
+                    max: 26 0;
+                    fixed: 1 0;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 0.0 1.0; }
+                    align: 0.0 0.0;
+                }
+            }
+            part {
+                name: "pad_r";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    min: 26 0;
+                    max: 26 0;
+                    fixed: 1 0;
+                    rel1 { relative: 1.0 0.0; }
+                    rel2 { relative: 1.0 1.0; }
+                    align: 1.0 0.0;
+                }
+            }
+            part {
+                name:"elm.swallow.label";
+                type: SWALLOW;
+                scale : 1;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 0;
+                    rel1 {
+                        relative: 1.0 1.0;
+                        to_x: "pad_l";
+                        to_y: "pad_t";
+                    }
+                    rel2 {
+                        relative: 0.0 0.0;
+                        to_x: "pad_r";
+                        to_y: "pad_b";
+                    }
+                }
+            }
+            part {
+                name: "bottom_pad";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 32;
+                    fixed: 0 1;
+                    rel1 { relative: 1.0 1.0; to_x: "pad_l"; }
+                    rel2 { relative: 0.0 1.0; to_x: "pad_r"; }
+                }
+            }
+            part {
+                name: "pad_b";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 200;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 0.1; to: "bottom_pad"; }
+                    rel2 { relative: 1.0 0.1; to: "bottom_pad"; }
+                }
+            }
+            part {
+                name: "pad_m1";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 32;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 0.0; to: "pad_b"; }
+                    rel2 { relative: 1.0 0.0; to: "pad_b"; }
+                }
+            }
+            part{
+                name:"elm.swallow.idtext";
+                type: TEXT;
+                scale : 1;
+                description {
+                    state: "default" 0.0;
+                    color: 168 168 168 255;
+                    text {
+                        font: "Tizen:style=Medium";
+                        size: 35;
+                        align: 0.0 0.5;
+                    }
+                    align: 0.0 0.0;
+                    min: 0 40;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 1.0; to: "pad_m1"; }
+                    rel2 { relative: 1.0 1.0; to: "pad_m1"; }
+                }
+            }
+            part {
+                name: "elm.swallow.idfield";
+                type: SWALLOW;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 0.0;
+                    min: 0 63;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 1.0; to: "elm.swallow.idtext"; }
+                    rel2 { relative: 1.0 1.0; to: "elm.swallow.idtext"; }
+                }
+            }
+            part {
+                name: "pad_m2";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 32;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 1.0; to: "elm.swallow.idfield"; }
+                    rel2 { relative: 1.0 1.0; to: "elm.swallow.idfield"; }
+                }
+            }
+            part{
+                name:"elm.swallow.pwtext";
+                type: TEXT;
+                scale : 1;
+                description {
+                    state: "default" 0.0;
+                    color: 168 168 168 255;
+                    text {
+                        font: "Tizen:style=Medium";
+                        size: 35;
+                        align: 0.0 0.5;
+                    }
+                    align: 0.0 0.0;
+                    min: 0 40;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 1.0; to: "pad_m2"; }
+                    rel2 { relative: 1.0 1.0; to: "pad_m2"; }
+                }
+            }
+            part {
+                name: "elm.swallow.pwfield";
+                type: SWALLOW;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 0.0;
+                    min: 0 63;
+                    fixed: 0 1;
+                    rel1 { relative: 0.0 1.0; to: "elm.swallow.pwtext"; }
+                    rel2 { relative: 1.0 1.0; to: "elm.swallow.pwtext"; }
+                }
+            }
+        } //end of parts
+    } //end of group
+
+    group { name: "elm/button/base/wrt";
+     #define BUTTON_HEIGHT 78.0
+     parts {
+        part { name: "bg";
+           type: RECT;
+           scale: 1;
+           description { state: "default" 0.0;
+              color: 0 0 0 0;
+              min: 0 BUTTON_HEIGHT;
+           }
+        }
+        part { name: "elm.text";
+           type: TEXTBLOCK;
+           mouse_events: 0;
+           scale: 1;
+           description { state: "default" 0.0;
+              text {
+                 min: 0 1;
+                 style: "button_general_text_normal";
+              }
+           }
+           description { state: "disabled" 0.0;
+              inherit: "default" 0.0;
+              text.style: "button_general_text_dim";
+           }
+           description { state: "pressed" 0.0;
+              inherit: "default" 0.0;
+              text.style: "button_general_text_press";
+           }
+        }
+        part { name: "elm.swallow.content";
+           clip_to: "elm.swallow.content.clip";
+           type: SWALLOW;
+           scale: 1;
+           description { state: "default" 0.0; }
+        }
+        part { name: "elm.swallow.content.clip";
+           type: RECT;
+           scale: 1;
+           description { state: "default" 0.0;
+              color_class: "F022L1i";
+           }
+           description { state: "disabled" 0.0;
+              inherit: "default" 0.0;
+              color_class: "F022L1iD";
+           }
+        }
+     }//end of part
+    }//end of group
+
+}//end of collection

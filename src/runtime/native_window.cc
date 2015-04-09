@@ -17,7 +17,7 @@
 namespace wrt {
 
 namespace {
-  const char* kWRTEdjePath = "/usr/share/edje/wrt/Wrt.edj";
+  const char* kWRTEdjePath = "/usr/share/edje/wrt/wrt.edj";
   const char* kWinowRotationEventKey = "wm,rotation,changed";
   const char* kWinowFocusedEventKey = "focused";
   const char* kWinowUnfocusedEventKey = "unfocused";
@@ -66,7 +66,7 @@ void NativeWindow::Initialize() {
 
   // background
   Evas_Object* bg = evas_object_rectangle_add(evas_object_evas_get(window_));
-  evas_object_color_set(bg, 0, 0, 0, 0);
+  evas_object_color_set(bg, 0, 0, 0, 255);
   EVAS_SIZE_EXPAND_FILL(bg);
   elm_win_resize_object_add(window_, bg);
   evas_object_render_op_set(bg, EVAS_RENDER_BLEND);
@@ -80,32 +80,16 @@ void NativeWindow::Initialize() {
 
   // top layout
   Evas_Object* top_layout = elm_layout_add(conformant);
-  elm_layout_theme_set(top_layout, "layout", "application", "default");
+  elm_layout_file_set(top_layout, kWRTEdjePath, "web-application");
   EVAS_SIZE_EXPAND_FILL(top_layout);
   elm_object_content_set(conformant, top_layout);
   evas_object_show(top_layout);
 
-  // naviframe
-  Evas_Object* naviframe = elm_naviframe_add(top_layout);
-  EVAS_SIZE_EXPAND_FILL(naviframe);
-  elm_object_part_content_set(top_layout, "elm.swallow.content", naviframe);
-  evas_object_show(naviframe);
-
-  // main layout
-  Evas_Object* main_layout = elm_layout_add(naviframe);
-  elm_layout_file_set(main_layout, kWRTEdjePath, "web-application");
-  EVAS_SIZE_EXPAND_FILL(main_layout);
-  Elm_Object_Item* navi_item = elm_naviframe_item_push(
-      naviframe, NULL, NULL, NULL, main_layout, NULL);
-  elm_naviframe_item_title_enabled_set(navi_item, EINA_FALSE, EINA_FALSE);
-  // elm_naviframe_item_pop_cb_set(navi_item, naviframeItemPopCallback, NULL);
-  evas_object_show(main_layout);
-
   // focus
-  Evas_Object* focus = elm_button_add(main_layout);
+  Evas_Object* focus = elm_button_add(top_layout);
   elm_theme_extension_add(NULL, kWRTEdjePath);
   elm_object_style_set(focus, "wrt");
-  elm_object_part_content_set(main_layout, "elm.swallow.content", focus);
+  elm_object_part_content_set(top_layout, "elm.swallow.content", focus);
   EVAS_SIZE_EXPAND_FILL(focus);
   elm_access_object_unregister(focus);
   evas_object_show(focus);
