@@ -33,8 +33,6 @@ class Runtime {
   static void onResume(void* data);
   static void onAppControl(app_control_h app_control, void* data);
 
-  void createNativeWindow();
-
   WebApplication* application_;
   NativeWindow* native_window_;
 };
