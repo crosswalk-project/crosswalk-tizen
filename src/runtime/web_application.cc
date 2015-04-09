@@ -54,16 +54,6 @@ WebApplication::~WebApplication() {
 bool WebApplication::Initialize(NativeWindow* window) {
   window_ = window;
 
-  char* chromium_arg_options[] = {
-    CommandLine::ForCurrentProcess()->argv()[0],
-    const_cast<char*>("--enable-file-cookies"),
-    const_cast<char*>("--allow-file-access-from-files"),
-    const_cast<char*>("--allow-universal-access-from-files")
-  };
-  const int chromium_arg_cnt =
-      sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);
-  ewk_set_arguments(chromium_arg_cnt, chromium_arg_options);
-
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
 
