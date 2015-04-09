@@ -12,6 +12,18 @@
 
 namespace wrt {
 
+namespace {
+
+static NativeWindow* CreateNativeWindow() {
+  // TODO(wy80.choi) : consider other type of native window.
+  NativeWindow* window = new NativeAppWindow();
+
+  window->Initialize();
+  return window;
+}
+
+}  // namespace
+
 Runtime::Runtime()
     : application_(NULL) {
 }
@@ -31,7 +43,7 @@ bool Runtime::OnCreate() {
   }
 
   // Process First Launch
-  createNativeWindow();
+  native_window_ = CreateNativeWindow();
   application_->Initialize(native_window_);
   return true;
 }
@@ -113,13 +125,6 @@ int Runtime::Exec(int argc, char* argv[]) {
   ops.app_control = onAppControl;
 
   return ui_app_main(argc, argv, &ops, this);
-}
-
-void Runtime::createNativeWindow() {
-  // TODO(wy80.choi) : consider other type of native window.
-  native_window_ = new NativeAppWindow();
-
-  native_window_->Initialize();
 }
 
 }  // namespace wrt
