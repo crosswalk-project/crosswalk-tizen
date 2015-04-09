@@ -12,6 +12,10 @@
 #include "runtime/web_view.h"
 
 namespace {
+
+  // TODO(sngn.lee) : It should be declare in common header
+  const char* kKeyNameBack = "back";
+
   const char* kAppControlEventScript = \
         "var __event = document.createEvent(\"CustomEvent\");\n"
         "__event.initCustomEvent(\"appcontrol\", true, true);\n"
@@ -19,7 +23,16 @@ namespace {
         "\n"
         "for (var i=0; i < window.frames.length; i++)\n"
         "{ window.frames[i].document.dispatchEvent(__event); }";
-}
+  const char* kBackKeyEventScript = \
+        "var __event = document.createEvent(\"CustomEvent\");\n"
+        "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
+        "__event.keyName = \"back\";\n"
+        "document.dispatchEvent(__event);\n"
+        "\n"
+        "for (var i=0; i < window.frames.length; i++)\n"
+        "{ window.frames[i].document.dispatchEvent(__event); }";
+
+}  // namespace
 
 namespace wrt {
 
@@ -209,6 +222,13 @@ void WebApplication::OnOrientationLock(WebView* view,
     window_->SetRotationLock(preferred_rotation);
   } else {
     window_->SetAutoRotation();
+  }
+}
+
+void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
+  // TODO(sngn.lee): Check the hw key event was enabled
+  if (true && kKeyNameBack == keyname) {
+    view->EvalJavascript(kBackKeyEventScript);
   }
 }
 
