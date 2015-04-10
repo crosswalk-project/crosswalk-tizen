@@ -193,6 +193,7 @@ void NativeWindow::SetRotationLock(int degree) {
 }
 
 void NativeWindow::SetAutoRotation() {
+  elm_win_wm_rotation_preferred_rotation_set(window_, -1);
   if (elm_win_wm_rotation_supported_get(window_)) {
     const int rotation[4] = {0, 90, 180, 270};
     elm_win_wm_rotation_available_rotations_set(window_, rotation, 4);
