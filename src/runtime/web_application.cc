@@ -15,6 +15,7 @@
 #include "runtime/command_line.h"
 #include "runtime/web_view.h"
 #include "runtime/vibration_manager.h"
+#include "common/logger.h"
 
 namespace {
   // TODO(sngn.lee) : It should be declare in common header
@@ -107,17 +108,20 @@ void WebApplication::Launch() {
   WebView* view = new WebView(window_, ewk_context_);
 
   // TODO(sngn.lee): Get the start file
-  view->LoadUrl("index.html");
+  view->LoadUrl("file:///index.html");
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
 
   // TODO(sngn.lee): below code only debug code
-  auto callback = [](void* data, Evas* e, Evas_Object* obj, void* eventInfo) -> void {
-    int x,y,w,h;
-    evas_object_geometry_get(obj, &x,&y,&w,&h);
-    fprintf(stderr,"resize ! (%d, %d, %d, %d)\n", x,y,w,h);
+  auto callback = [](void*, Evas*, Evas_Object* obj,
+                     void*) -> void {
+    int x, y, w, h;
+    evas_object_geometry_get(obj, &x, &y, &w, &h);
+    LoggerD("resize ! (%d, %d, %d, %d)\n", x, y, w, h);
   };
-  evas_object_event_callback_add(view->evas_object(), EVAS_CALLBACK_RESIZE, callback, NULL );
+  evas_object_event_callback_add(view->evas_object(),
+                                 EVAS_CALLBACK_RESIZE,
+                                 callback, NULL);
 
   // TODO(sngn.lee): check the below code location.
   // in Wearable, webkit can render contents before show window
@@ -218,9 +222,6 @@ void WebApplication::OnClosedWebView(WebView * view) {
   delete view;
 }
 
-void WebApplication::OnRendered(WebView* view) {
-}
-
 
 void WebApplication::OnReceivedWrtMessage(
     WebView* /*view*/,
@@ -269,5 +270,17 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
     view->EvalJavascript(kBackKeyEventScript);
   }
 }
+
+
+void WebApplication::OnLoadStart(WebView* view) {
+  LoggerD("LoadStart");
+}
+void WebApplication::OnLoadFinished(WebView* view) {
+  LoggerD("LoadFinished");
+}
+void WebApplication::OnRendered(WebView* view) {
+  LoggerD("Rendered");
+}
+
 
 }  // namespace wrt
