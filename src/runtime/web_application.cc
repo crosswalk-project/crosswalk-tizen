@@ -102,6 +102,7 @@ bool WebApplication::Initialize(NativeWindow* window) {
 void WebApplication::Launch() {
   initialized_ = true;
   WebView* view = new WebView(window_, ewk_context_);
+  view->SetEventListener(this);
 
   // TODO(sngn.lee): Get the start file
   view->LoadUrl("file:///index.html");

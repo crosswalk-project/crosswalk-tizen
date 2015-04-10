@@ -336,6 +336,10 @@ void WebView::OnKeyEvent(Ea_Callback_Type key_type) {
     listener_->OnHardwareKey(this, keyname);
 }
 
+void WebView::SetEventListener(EventListener* listener) {
+  listener_ = listener;
+}
+
 
 }  // namespace wrt
 
