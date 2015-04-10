@@ -73,6 +73,12 @@ void Runtime::OnAppControl(app_control_h app_control) {
   }
 }
 
+void Runtime::OnLanguageChanged(const std::string& language) {
+  if (application_) {
+    application_->OnLanguageChanged();
+  }
+}
+
 int Runtime::Exec(int argc, char* argv[]) {
   ui_app_lifecycle_callback_s ops = {0, };
 
@@ -125,6 +131,22 @@ int Runtime::Exec(int argc, char* argv[]) {
     }
     runtime->OnAppControl(app_control);
   };
+
+  // language changed callback
+  auto language_changed = [](app_event_info_h event_info, void *user_data) {
+    char* str;
+    if (app_event_get_language(event_info, &str) == 0 && str != NULL) {
+      std::string language = std::string(str);
+      std::free(str);
+      Runtime* runtime = reinterpret_cast<Runtime*>(user_data);
+      runtime->OnLanguageChanged(language);
+    }
+  };
+  app_event_handler_h ev_handle;
+  ui_app_add_event_handler(&ev_handle,
+                           APP_EVENT_LANGUAGE_CHANGED,
+                           language_changed,
+                           this);
 
   return ui_app_main(argc, argv, &ops, this);
 }
