@@ -4,6 +4,7 @@
 
 #include "runtime/runtime.h"
 
+#include <ewk_chromium.h>
 #include <string>
 
 #include "common/logger.h"
@@ -134,8 +135,19 @@ int main(int argc, char* argv[]) {
   // Initalize CommandLineParser
   wrt::CommandLine::Init(argc, argv);
 
+  ewk_init();
+  char* chromium_arg_options[] = {
+    argv[0],
+    const_cast<char*>("--enable-file-cookies"),
+    const_cast<char*>("--allow-file-access-from-files"),
+    const_cast<char*>("--allow-universal-access-from-files")
+  };
+  const int chromium_arg_cnt =
+      sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);
+  ewk_set_arguments(chromium_arg_cnt, chromium_arg_options);
+
   wrt::Runtime runtime;
   int ret = runtime.Exec(argc, argv);
-
+  ewk_shutdown();
   return ret;
 }
