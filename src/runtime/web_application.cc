@@ -101,6 +101,14 @@ void WebApplication::Launch() {
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
 
+  // TODO(sngn.lee): below code only debug code
+  auto callback = [](void* data, Evas* e, Evas_Object* obj, void* eventInfo) -> void {
+    int x,y,w,h;
+    evas_object_geometry_get(obj, &x,&y,&w,&h);
+    fprintf(stderr,"resize ! (%d, %d, %d, %d)\n", x,y,w,h);
+  };
+  evas_object_event_callback_add(view->evas_object(), EVAS_CALLBACK_RESIZE, callback, NULL );
+
   // TODO(sngn.lee): check the below code location.
   // in Wearable, webkit can render contents before show window
   // but Mobile, webkit can't render contents before show window
