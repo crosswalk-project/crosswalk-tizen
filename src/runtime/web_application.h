@@ -32,13 +32,17 @@ class WebApplication : public WebView::EventListener {
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView * view);
-  virtual void OnRendered(WebView* view);
   virtual void OnReceivedWrtMessage(WebView* view,
                                     Ewk_IPC_Wrt_Message_Data* message);
   virtual void OnOrientationLock(WebView* view,
                                  bool lock,
                                  int preferred_rotation);
   virtual void OnHardwareKey(WebView* view, const std::string& keyname);
+
+  virtual void OnLoadStart(WebView* view);
+  virtual void OnLoadFinished(WebView* view);
+  virtual void OnRendered(WebView* view);
+
 
  private:
   void ClearViewStack();
