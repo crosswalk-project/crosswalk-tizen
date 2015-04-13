@@ -155,7 +155,7 @@ void WebApplication::SendAppControlEvent() {
 void WebApplication::ClearViewStack() {
   window_->SetContent(NULL);
   auto it = view_stack_.begin();
-  while (it != view_stack_.end()) {
+  for ( ; it != view_stack_.end(); ++it) {
     (*it)->Suspend();
     delete *it;
   }
