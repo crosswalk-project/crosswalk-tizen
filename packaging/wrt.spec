@@ -12,6 +12,8 @@ Source0:    %{name}-%{version}.tar.gz
 
 BuildRequires: cmake
 BuildRequires: edje-tools
+BuildRequires: pkgconfig(appsvc)
+BuildRequires: pkgconfig(bundle)
 BuildRequires: pkgconfig(dlog)
 BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(capi-appfw-application)
