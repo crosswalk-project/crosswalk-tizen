@@ -29,5 +29,16 @@ bool EndsWith(const std::string& str, const std::string& sub) {
   return std::equal(sub.rbegin(), sub.rend(), str.rbegin());
 }
 
+std::string ReplaceAll(const std::string& replace,
+                       const std::string& from, const std::string& to) {
+  std::string str = replace;
+  int pos = str.find(from);
+  while (pos != std::string::npos) {
+    str.replace(pos, from.length(), to);
+    pos = str.find(from, pos+to.length());
+  }
+  return str;
+}
+
 }  // namespace utils
 }  // namespace wrt

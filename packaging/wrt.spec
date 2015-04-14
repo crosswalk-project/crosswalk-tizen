@@ -26,6 +26,7 @@ BuildRequires: pkgconfig(capi-system-runtime-info)
 BuildRequires: pkgconfig(cert-svc)
 BuildRequires: pkgconfig(uuid)
 BuildRequires: pkgconfig(gio-2.0)
+BuildRequires: pkgconfig(aul)
 BuildRequires: boost-devel
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)

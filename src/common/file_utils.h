@@ -16,6 +16,8 @@ std::string BaseName(const std::string& path);
 
 std::string DirName(const std::string& path);
 
+std::string SchemeName(const std::string& uri);
+
 
 }  // namespace utils
 }  // namespace wrt

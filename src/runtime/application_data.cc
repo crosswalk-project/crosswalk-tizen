@@ -72,6 +72,71 @@ ApplicationData::ApplicationData(const std::string& appid) : app_id_(appid) {
 
 ApplicationData::~ApplicationData() {}
 
+std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
+    ApplicationData::application_icons_info() const {
+  return application_icons_info_;
+}
+
+std::shared_ptr<const wgt::parse::AppWidgetInfo>
+    ApplicationData::app_widget_info() const {
+  return app_widget_info_;
+}
+
+std::shared_ptr<const wgt::parse::AppControlInfoList>
+    ApplicationData::app_control_info_list() const {
+  return app_control_info_list_;
+}
+
+std::shared_ptr<const wgt::parse::CategoryInfoList>
+    ApplicationData::category_info_list() const {
+  return category_info_list_;
+}
+
+std::shared_ptr<const wgt::parse::ImeInfo>
+    ApplicationData::ime_info() const {
+  return ime_info_;
+}
+
+std::shared_ptr<const wgt::parse::MetaDataInfo>
+    ApplicationData::meta_data_info() const {
+  return meta_data_info_;
+}
+
+std::shared_ptr<const wgt::parse::NavigationInfo>
+    ApplicationData::navigation_info() const {
+  return navigation_info_;
+}
+
+std::shared_ptr<const wgt::parse::PermissionsInfo>
+    ApplicationData::permissions_info() const {
+  return permissions_info_;
+}
+
+std::shared_ptr<const wgt::parse::ServiceList>
+    ApplicationData::service_list() const {
+  return service_list_;
+}
+
+std::shared_ptr<const wgt::parse::SettingInfo>
+    ApplicationData::setting_info() const {
+  return setting_info_;
+}
+
+std::shared_ptr<const wgt::parse::SplashScreenInfo>
+    ApplicationData::splash_screen_info() const {
+  return splash_screen_info_;
+}
+
+std::shared_ptr<const wgt::parse::TizenApplicationInfo>
+    ApplicationData::tizen_application_info() const {
+  return tizen_application_info_;
+}
+
+std::shared_ptr<const wgt::parse::WidgetInfo>
+    ApplicationData::widget_info() const {
+  return widget_info_;
+}
+
 bool ApplicationData::LoadManifestData() {
   if (config_xml_path_.empty()) {
     return false;

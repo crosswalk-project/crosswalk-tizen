@@ -31,62 +31,31 @@ class ApplicationData {
   ~ApplicationData();
 
   std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
-  application_icons_info() const {
-    return application_icons_info_;
-  }
-
-  std::shared_ptr<const wgt::parse::AppWidgetInfo> app_widget_info() const {
-    return app_widget_info_;
-  }
-
+    application_icons_info() const;
+  std::shared_ptr<const wgt::parse::AppWidgetInfo>
+    app_widget_info() const;
   std::shared_ptr<const wgt::parse::AppControlInfoList>
-  app_control_info() const {
-    return app_control_info_list_;
-  }
-
+    app_control_info_list() const;
   std::shared_ptr<const wgt::parse::CategoryInfoList>
-  category_info_list() const {
-    return category_info_list_;
-  }
-
-  std::shared_ptr<const wgt::parse::ImeInfo> ime_info() const {
-    return ime_info_;
-  }
-
-  std::shared_ptr<const wgt::parse::MetaDataInfo> meta_data_info() const {
-    return meta_data_info_;
-  }
-
-  std::shared_ptr<const wgt::parse::NavigationInfo> navigation_info() const {
-    return navigation_info_;
-  }
-
+    category_info_list() const;
+  std::shared_ptr<const wgt::parse::ImeInfo>
+    ime_info() const;
+  std::shared_ptr<const wgt::parse::MetaDataInfo>
+    meta_data_info() const;
+  std::shared_ptr<const wgt::parse::NavigationInfo>
+    navigation_info() const;
   std::shared_ptr<const wgt::parse::PermissionsInfo>
-  permissions_info() const {
-    return permissions_info_;
-  }
-
-  std::shared_ptr<const wgt::parse::ServiceList> service_list() const {
-    return service_list_;
-  }
-
-  std::shared_ptr<const wgt::parse::SettingInfo> setting_info() const {
-    return setting_info_;
-  }
-
+    permissions_info() const;
+  std::shared_ptr<const wgt::parse::ServiceList>
+    service_list() const;
+  std::shared_ptr<const wgt::parse::SettingInfo>
+    setting_info() const;
   std::shared_ptr<const wgt::parse::SplashScreenInfo>
-  splash_screen_info() const {
-    return splash_screen_info_;
-  }
-
+    splash_screen_info() const;
   std::shared_ptr<const wgt::parse::TizenApplicationInfo>
-  tizen_application_info() const {
-    return tizen_application_info_;
-  }
-
-  std::shared_ptr<const wgt::parse::WidgetInfo> widget_info() const {
-    return widget_info_;
-  }
+    tizen_application_info() const;
+  std::shared_ptr<const wgt::parse::WidgetInfo>
+    widget_info() const;
 
   std::string config_xml_path() const { return config_xml_path_; }
   const std::string pkg_root_path() const { return pkg_root_path_; }
@@ -98,20 +67,30 @@ class ApplicationData {
 
   std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
     application_icons_info_;
-  std::shared_ptr<const wgt::parse::AppWidgetInfo> app_widget_info_;
+  std::shared_ptr<const wgt::parse::AppWidgetInfo>
+    app_widget_info_;
   std::shared_ptr<const wgt::parse::AppControlInfoList>
     app_control_info_list_;
-  std::shared_ptr<const wgt::parse::CategoryInfoList> category_info_list_;
-  std::shared_ptr<const wgt::parse::ImeInfo> ime_info_;
-  std::shared_ptr<const wgt::parse::MetaDataInfo> meta_data_info_;
-  std::shared_ptr<const wgt::parse::NavigationInfo> navigation_info_;
-  std::shared_ptr<const wgt::parse::PermissionsInfo> permissions_info_;
-  std::shared_ptr<const wgt::parse::ServiceList> service_list_;
-  std::shared_ptr<const wgt::parse::SettingInfo> setting_info_;
-  std::shared_ptr<const wgt::parse::SplashScreenInfo> splash_screen_info_;
+  std::shared_ptr<const wgt::parse::CategoryInfoList>
+    category_info_list_;
+  std::shared_ptr<const wgt::parse::ImeInfo>
+    ime_info_;
+  std::shared_ptr<const wgt::parse::MetaDataInfo>
+    meta_data_info_;
+  std::shared_ptr<const wgt::parse::NavigationInfo>
+    navigation_info_;
+  std::shared_ptr<const wgt::parse::PermissionsInfo>
+    permissions_info_;
+  std::shared_ptr<const wgt::parse::ServiceList>
+    service_list_;
+  std::shared_ptr<const wgt::parse::SettingInfo>
+    setting_info_;
+  std::shared_ptr<const wgt::parse::SplashScreenInfo>
+    splash_screen_info_;
   std::shared_ptr<const wgt::parse::TizenApplicationInfo>
     tizen_application_info_;
-  std::shared_ptr<const wgt::parse::WidgetInfo> widget_info_;
+  std::shared_ptr<const wgt::parse::WidgetInfo>
+    widget_info_;
 
   std::string config_xml_path_;
   std::string pkg_root_path_;

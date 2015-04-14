@@ -13,6 +13,8 @@ namespace utils {
 std::string GenerateUUID();
 bool StartsWith(const std::string& str, const std::string& sub);
 bool EndsWith(const std::string& str, const std::string& sub);
+std::string ReplaceAll(const std::string& replace,
+                       const std::string& from, const std::string& to);
 
 }  // namespace utils
 }  // namespace wrt

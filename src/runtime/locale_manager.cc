@@ -47,12 +47,6 @@ void LocaleManager::SetDefaultLocale(const std::string& locale) {
   }
 }
 
-void LocaleManager::set_base_resource_path(const std::string& path) {
-  resource_base_path_ = path;
-  if (resource_base_path_[resource_base_path_.length()-1] != '/')
-    resource_base_path_ += "/";
-}
-
 void LocaleManager::UpdateSystemLocale() {
   char* str = NULL;
   if (RUNTIME_INFO_ERROR_NONE !=
@@ -88,80 +82,5 @@ void LocaleManager::UpdateSystemLocale() {
     system_locales_.push_back(default_locale_);
   }
 }
-
-bool LocaleManager::Exists(const std::string& path) {
-  auto find = file_existed_cache_.find(path);
-  if (find != file_existed_cache_.end())
-    return find->second;
-  return file_existed_cache_[path] = utils::Exists(path);
-}
-
-std::string LocaleManager::GetLocalizedPath(const std::string& origin) {
-  const char* FILE_SCHEME   = "file:///";
-  const char* APP_SCHEME     = "app://";
-  const char* LOCALE_PATH   = "locales/";
-  auto find = locale_cache_.find(origin);
-  if (find != locale_cache_.end()) {
-    return find->second;
-  }
-  std::string& result = locale_cache_[origin];
-  std::string url = origin;
-
-  std::string suffix;
-  size_t pos = url.find_first_of("#?");
-  if (pos != std::string::npos) {
-    suffix = url.substr(pos);
-    url.resize(pos);
-  }
-
-  if (url.compare(0, strlen(APP_SCHEME), APP_SCHEME) == 0) {
-    // remove "app://"
-    url.erase(0, strlen(APP_SCHEME));
-
-    // remove app id + /
-    std::string check = appid_+"/";
-    if (url.compare(0, check.length(), check) == 0) {
-      url.erase(0, check.length());
-    } else {
-      LoggerE("appid was invalid");
-      return result;
-    }
-  } else if (url.compare(0, strlen(FILE_SCHEME), FILE_SCHEME) == 0) {
-    // remove "file:///"
-    url.erase(0, strlen(FILE_SCHEME));
-  }
-
-  if (!url.empty() && url[url.length()-1] == '/') {
-      url.erase(url.length()-1, 1);
-  }
-
-  if (url.empty()) {
-    LoggerE("URL Localization error");
-    return result;
-  }
-
-  auto locales = system_locales_.begin();
-  for ( ; locales != system_locales_.end(); ++locales) {
-    // check ../locales/
-    std::string app_locale_path = resource_base_path_ + LOCALE_PATH;
-    if (!Exists(app_locale_path)) {
-      break;
-    }
-    std::string resource_path = app_locale_path + (*locales) + "/" + url;
-    if (Exists(resource_path)) {
-      result = resource_path + suffix;
-      return result;
-    }
-  }
-  std::string default_locale = resource_base_path_ + url;
-  if (Exists(default_locale)) {
-    result = default_locale + suffix;
-    return result;
-  }
-  result = url + suffix;
-  return result;
-}
-
-
 
 }  // namespace wrt

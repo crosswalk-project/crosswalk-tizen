@@ -25,6 +25,14 @@ std::string DirName(const std::string& path) {
   return std::string(p);
 }
 
+std::string SchemeName(const std::string& uri) {
+  int pos = uri.find(":");
+  if (pos != std::string::npos && pos < uri.length()) {
+    return std::string(uri.substr(0, pos));
+  } else {
+    return std::string();
+  }
+}
 
 }  // namespace utils
 }  // namespace wrt

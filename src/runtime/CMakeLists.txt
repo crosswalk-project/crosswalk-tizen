@@ -27,6 +27,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   efl-assist
   deviced
   capi-system-runtime-info
+  aul
   REQUIRED
 )
 
@@ -51,6 +52,7 @@ SET(TARGET_RUNTIME_SRCS
   ${BASE_SRCDIR}/runtime/native_window.cc
   ${BASE_SRCDIR}/runtime/native_app_window.cc
   ${BASE_SRCDIR}/runtime/web_application.cc
+  ${BASE_SRCDIR}/runtime/resource_manager.cc
   ${BASE_SRCDIR}/runtime/runtime.cc
   ${BASE_SRCDIR}/runtime/web_view.cc
   ${BASE_SRCDIR}/runtime/web_view_impl.cc
