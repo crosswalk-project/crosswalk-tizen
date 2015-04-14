@@ -39,6 +39,7 @@ class WebView {
         WebView* /*view*/,
         bool /*lock*/,
         int /*preferred_rotation*/) {}
+    virtual void OnConsoleMessage(const std::string& /*msg*/, int /*level*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

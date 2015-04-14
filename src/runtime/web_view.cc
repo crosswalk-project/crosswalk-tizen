@@ -6,6 +6,7 @@
 
 #include <ewk_chromium.h>
 #include <functional>
+#include <sstream>
 
 #include "runtime/native_window.h"
 
@@ -296,6 +297,31 @@ void WebView::Initialize() {
   ewk_view_orientation_lock_callback_set(ewk_view_,
                                          orientation_lock_callback,
                                          this);
+
+  auto console_message_callback = [](void* user_data,
+                                 Evas_Object*,
+                                 void* event_info) {
+    WebView* self = static_cast<WebView*>(user_data);
+    if (!self->listener_) {
+      return;
+    }
+    Ewk_Console_Message* msg = static_cast<Ewk_Console_Message*>(event_info);
+    unsigned int line_number = ewk_console_message_line_get(msg);
+
+    std::stringstream buf;
+    if (line_number) {
+        buf << ewk_console_message_source_get(msg) << ":";
+        buf << line_number << ":";
+    }
+    buf << ewk_console_message_text_get(msg);
+    int level = ewk_console_message_level_get(msg);
+    self->listener_->OnConsoleMessage(buf.str(), level);
+  };
+  // console log
+  evas_object_smart_callback_add(ewk_view_,
+                                 "console,message",
+                                 console_message_callback,
+                                 this);
 
   // rotation support
   ewk_view_orientation_send(ewk_view_, ToWebRotation(window_->rotation()));

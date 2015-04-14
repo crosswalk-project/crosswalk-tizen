@@ -39,6 +39,7 @@ class WebApplication : public WebView::EventListener {
                                  bool lock,
                                  int preferred_rotation);
   virtual void OnHardwareKey(WebView* view, const std::string& keyname);
+  virtual void OnConsoleMessage(const std::string& msg, int level);
 
   virtual void OnLoadStart(WebView* view);
   virtual void OnLoadFinished(WebView* view);

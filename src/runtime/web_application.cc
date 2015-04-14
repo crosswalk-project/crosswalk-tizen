@@ -20,6 +20,9 @@ namespace {
   // TODO(sngn.lee) : It should be declare in common header
   const char* kKeyNameBack = "back";
 
+  const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
+  const char* kConsoleMessageLogTag = "ConsoleMessage";
+
   const char* kAppControlEventScript = \
         "var __event = document.createEvent(\"CustomEvent\");\n"
         "__event.initCustomEvent(\"appcontrol\", true, true);\n"
@@ -278,6 +281,26 @@ void WebApplication::OnLanguageChanged() {
   auto it = view_stack_.begin();
   for ( ; it != view_stack_.end(); ++it) {
     (*it)->Reload();
+  }
+}
+
+void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
+  static bool enabled = (getenv(kConsoleLogEnableKey) != NULL);
+  // TODO(sngn.lee): check debug mode
+  if (true/*debug mode*/ || enabled) {
+    int dlog_level = DLOG_DEBUG;
+    switch (level) {
+      case EWK_CONSOLE_MESSAGE_LEVEL_WARNING:
+          dlog_level = DLOG_WARN;
+          break;
+      case EWK_CONSOLE_MESSAGE_LEVEL_ERROR:
+          dlog_level = DLOG_ERROR;
+          break;
+      default:
+          dlog_level = DLOG_DEBUG;
+          break;
+    }
+    LOG_(LOG_ID_MAIN, dlog_level, kConsoleMessageLogTag, "%s", msg.c_str());
   }
 }
 
