@@ -9,6 +9,7 @@
 #include <list>
 
 #include "runtime/web_view.h"
+#include "runtime/locale_manager.h"
 #include "extension/extension_server.h"
 
 class Ewk_Context;
@@ -42,7 +43,7 @@ class WebApplication : public WebView::EventListener {
   virtual void OnLoadStart(WebView* view);
   virtual void OnLoadFinished(WebView* view);
   virtual void OnRendered(WebView* view);
-
+  virtual void OnLanguageChanged();
 
  private:
   void ClearViewStack();
@@ -55,6 +56,7 @@ class WebApplication : public WebView::EventListener {
   ExtensionServer* extension_server_;
   std::list<WebView*> view_stack_;
   std::string app_data_path_;
+  LocaleManager locale_manager_;
 };
 
 }  // namespace wrt

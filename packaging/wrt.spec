@@ -17,6 +17,7 @@ BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(efl-assist)
 BuildRequires: pkgconfig(deviced)
+BuildRequires: pkgconfig(capi-system-runtime-info)
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)
 %endif

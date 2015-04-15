@@ -18,6 +18,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   chromium-efl
   efl-assist
   deviced
+  capi-system-runtime-info
   REQUIRED
 )
 
@@ -41,6 +42,7 @@ SET(TARGET_RUNTIME_SRCS
   ${BASE_SRCDIR}/runtime/runtime.cc
   ${BASE_SRCDIR}/runtime/web_view.cc
   ${BASE_SRCDIR}/runtime/vibration_manager.cc
+  ${BASE_SRCDIR}/runtime/locale_manager.cc
 )
 
 # Compiler Flags

@@ -6,6 +6,7 @@
 #define WRT_RUNTIME_RUNTIME_H_
 
 #include <app.h>
+#include <string>
 
 #include "runtime/native_window.h"
 #include "runtime/web_application.h"
@@ -25,6 +26,7 @@ class Runtime {
   virtual void OnPause();
   virtual void OnResume();
   virtual void OnAppControl(app_control_h app_control);
+  virtual void OnLanguageChanged(const std::string& language);
 
  private:
   WebApplication* application_;

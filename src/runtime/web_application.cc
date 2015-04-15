@@ -96,6 +96,10 @@ bool WebApplication::Initialize(NativeWindow* window) {
 
   // TODO(sngn.lee): find the proxy url
   // ewk_context_proxy_uri_set(ewk_context_, ... );
+
+  // TODO(sngn.lee): set default from config.xml
+  // locale_manager_.SetDefaultLocale(const  string & locale);
+
   return true;
 }
 
@@ -268,6 +272,14 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
   }
 }
 
+void WebApplication::OnLanguageChanged() {
+  locale_manager_.UpdateSystemLocale();
+  ewk_context_cache_clear(ewk_context_);
+  auto it = view_stack_.begin();
+  for ( ; it != view_stack_.end(); ++it) {
+    (*it)->Reload();
+  }
+}
 
 void WebApplication::OnLoadStart(WebView* view) {
   LoggerD("LoadStart");
@@ -278,6 +290,8 @@ void WebApplication::OnLoadFinished(WebView* view) {
 void WebApplication::OnRendered(WebView* view) {
   LoggerD("Rendered");
 }
+
+
 
 
 }  // namespace wrt
