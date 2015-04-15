@@ -79,6 +79,12 @@ void Runtime::OnLanguageChanged(const std::string& language) {
   }
 }
 
+void Runtime::OnLowMemory() {
+  if (application_) {
+    application_->OnLowMemory();
+  }
+}
+
 int Runtime::Exec(int argc, char* argv[]) {
   ui_app_lifecycle_callback_s ops = {0, };
 
@@ -133,7 +139,7 @@ int Runtime::Exec(int argc, char* argv[]) {
   };
 
   // language changed callback
-  auto language_changed = [](app_event_info_h event_info, void *user_data) {
+  auto language_changed = [](app_event_info_h event_info, void* user_data) {
     char* str;
     if (app_event_get_language(event_info, &str) == 0 && str != NULL) {
       std::string language = std::string(str);
@@ -142,10 +148,18 @@ int Runtime::Exec(int argc, char* argv[]) {
       runtime->OnLanguageChanged(language);
     }
   };
+  auto low_memory = [](app_event_info_h /*event_info*/, void* user_data) {
+    Runtime* runtime = reinterpret_cast<Runtime*>(user_data);
+    runtime->OnLowMemory();
+  };
   app_event_handler_h ev_handle;
   ui_app_add_event_handler(&ev_handle,
                            APP_EVENT_LANGUAGE_CHANGED,
                            language_changed,
+                           this);
+  ui_app_add_event_handler(&ev_handle,
+                           APP_EVENT_LOW_MEMORY,
+                           low_memory,
                            this);
 
   return ui_app_main(argc, argv, &ops, this);

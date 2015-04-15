@@ -27,6 +27,7 @@ class Runtime {
   virtual void OnResume();
   virtual void OnAppControl(app_control_h app_control);
   virtual void OnLanguageChanged(const std::string& language);
+  virtual void OnLowMemory();
 
  private:
   WebApplication* application_;

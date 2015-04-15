@@ -304,6 +304,11 @@ void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
   }
 }
 
+void WebApplication::OnLowMemory() {
+  ewk_context_cache_clear(ewk_context_);
+  ewk_context_notify_low_memory(ewk_context_);
+}
+
 void WebApplication::OnLoadStart(WebView* view) {
   LoggerD("LoadStart");
 }

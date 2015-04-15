@@ -45,6 +45,7 @@ class WebApplication : public WebView::EventListener {
   virtual void OnLoadFinished(WebView* view);
   virtual void OnRendered(WebView* view);
   virtual void OnLanguageChanged();
+  virtual void OnLowMemory();
 
  private:
   void ClearViewStack();
