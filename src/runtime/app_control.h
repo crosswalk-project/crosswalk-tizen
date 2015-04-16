@@ -16,6 +16,9 @@ class AppControl {
  public:
   explicit AppControl(app_control_h app_control);
   ~AppControl();
+  // disable copy
+  AppControl(const AppControl& src) = delete;
+  AppControl& operator=(const AppControl&) = delete;
 
   std::string operation() const;
   std::string mime() const;

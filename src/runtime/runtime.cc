@@ -6,10 +6,12 @@
 
 #include <ewk_chromium.h>
 #include <string>
+#include <memory>
 
 #include "common/logger.h"
 #include "runtime/command_line.h"
 #include "runtime/native_app_window.h"
+#include "runtime/app_control.h"
 
 namespace wrt {
 
@@ -65,11 +67,13 @@ void Runtime::OnResume() {
 }
 
 void Runtime::OnAppControl(app_control_h app_control) {
+  std::unique_ptr<AppControl> appcontrol(new AppControl(app_control));
+
   if (application_->initialized()) {
     // Process AppControl
-    application_->AppControl();
+    application_->AppControl(std::move(appcontrol));
   } else {
-    application_->Launch();
+    application_->Launch(std::move(appcontrol));
   }
 }
 

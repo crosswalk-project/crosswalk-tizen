@@ -7,6 +7,7 @@
 
 #include <string>
 #include <list>
+#include <memory>
 
 #include "runtime/web_view.h"
 #include "runtime/locale_manager.h"
@@ -16,14 +17,15 @@ class Ewk_Context;
 
 namespace wrt {
 class NativeWindow;
+class AppControl;
 
 class WebApplication : public WebView::EventListener {
  public:
   explicit WebApplication(const std::string& appid);
   virtual ~WebApplication();
 
-  void AppControl();
-  void Launch();
+  void AppControl(std::unique_ptr<wrt::AppControl> appcontrol);
+  void Launch(std::unique_ptr<wrt::AppControl> appcontrol);
   void Resume();
   void Suspend();
 

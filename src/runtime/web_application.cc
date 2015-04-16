@@ -15,6 +15,7 @@
 #include "runtime/web_view.h"
 #include "runtime/vibration_manager.h"
 #include "common/logger.h"
+#include "runtime/app_control.h"
 
 namespace {
   // TODO(sngn.lee) : It should be declare in common header
@@ -110,7 +111,7 @@ bool WebApplication::Initialize(NativeWindow* window) {
   return true;
 }
 
-void WebApplication::Launch() {
+void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   initialized_ = true;
   WebView* view = new WebView(window_, ewk_context_);
   view->SetEventListener(this);
@@ -137,7 +138,7 @@ void WebApplication::Launch() {
   window_->Show();
 }
 
-void WebApplication::AppControl() {
+void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
   // TODO(sngn.lee): find the app control url and the reset options
 
   // TODO(sngn.lee): Set the injected bundle into extension process
