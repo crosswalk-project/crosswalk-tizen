@@ -5,30 +5,23 @@
 #ifndef WRT_RUNTIME_APPLICATION_DATA_H_
 #define WRT_RUNTIME_APPLICATION_DATA_H_
 
+#include <manifest_handlers/application_icons_handler.h>
+#include <manifest_handlers/application_manifest_constants.h>
+#include <manifest_handlers/appwidget_handler.h>
+#include <manifest_handlers/app_control_handler.h>
+#include <manifest_handlers/category_handler.h>
+#include <manifest_handlers/ime_handler.h>
+#include <manifest_handlers/metadata_handler.h>
+#include <manifest_handlers/navigation_handler.h>
+#include <manifest_handlers/permissions_handler.h>
+#include <manifest_handlers/service_handler.h>
+#include <manifest_handlers/setting_handler.h>
+#include <manifest_handlers/splash_screen_handler.h>
+#include <manifest_handlers/tizen_application_handler.h>
+#include <manifest_handlers/widget_handler.h>
+
 #include <memory>
 #include <string>
-
-namespace wgt {
-
-namespace parse {
-
-class ApplicationIconsInfo;
-class AppWidgetInfo;
-struct AppControlInfoList;
-struct CategoryInfoList;
-class ImeInfo;
-class MetaDataInfo;
-class NavigationInfo;
-class PermissionsInfo;
-struct ServiceList;
-class SettingInfo;
-class SplashScreenInfo;
-class TizenApplicationInfo;
-class WidgetInfo;
-
-}  // namespace parse
-
-}  // namespace wgt
 
 namespace wrt {
 

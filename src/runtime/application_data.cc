@@ -5,22 +5,8 @@
 #include "runtime/application_data.h"
 
 #include <package_manager.h>
-#include <parser/manifest_parser.h>
-#include <parser/manifest_handler.h>
-#include <manifest_handlers/application_icons_handler.h>
-#include <manifest_handlers/application_manifest_constants.h>
-#include <manifest_handlers/appwidget_handler.h>
-#include <manifest_handlers/app_control_handler.h>
-#include <manifest_handlers/category_handler.h>
-#include <manifest_handlers/ime_handler.h>
-#include <manifest_handlers/metadata_handler.h>
-#include <manifest_handlers/navigation_handler.h>
-#include <manifest_handlers/permissions_handler.h>
-#include <manifest_handlers/service_handler.h>
-#include <manifest_handlers/setting_handler.h>
-#include <manifest_handlers/splash_screen_handler.h>
-#include <manifest_handlers/tizen_application_handler.h>
-#include <manifest_handlers/widget_handler.h>
+#include <manifest_parser/manifest_parser.h>
+#include <manifest_parser/manifest_handler.h>
 
 #include <vector>
 
