@@ -24,20 +24,24 @@ namespace {
   const char* kConsoleMessageLogTag = "ConsoleMessage";
 
   const char* kAppControlEventScript = \
+        "(function(){"
         "var __event = document.createEvent(\"CustomEvent\");\n"
         "__event.initCustomEvent(\"appcontrol\", true, true);\n"
         "document.dispatchEvent(__event);\n"
         "\n"
         "for (var i=0; i < window.frames.length; i++)\n"
-        "{ window.frames[i].document.dispatchEvent(__event); }";
+        "{ window.frames[i].document.dispatchEvent(__event); }"
+        "})()";
   const char* kBackKeyEventScript = \
+        "(function(){"
         "var __event = document.createEvent(\"CustomEvent\");\n"
         "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
         "__event.keyName = \"back\";\n"
         "document.dispatchEvent(__event);\n"
         "\n"
         "for (var i=0; i < window.frames.length; i++)\n"
-        "{ window.frames[i].document.dispatchEvent(__event); }";
+        "{ window.frames[i].document.dispatchEvent(__event); }"
+        "})()";
 }  // namespace
 
 namespace wrt {
