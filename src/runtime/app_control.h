@@ -31,6 +31,7 @@ class AppControl {
                     const std::vector<std::string>& value_array);
 
  private:
+  app_control_h app_control_;
   bundle* app_control_bundle_;
   bundle_raw* app_control_bundle_raw_;
   int app_control_bundle_raw_len_;

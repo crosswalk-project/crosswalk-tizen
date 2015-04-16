@@ -16,14 +16,15 @@ namespace {
 }  // namespace
 
 AppControl::AppControl(app_control_h app_control) {
-  app_control_to_bundle(app_control, &app_control_bundle_);
+  app_control_clone(&app_control_, app_control);
+  app_control_to_bundle(app_control_, &app_control_bundle_);
   bundle_encode(app_control_bundle_, &app_control_bundle_raw_,
                 &app_control_bundle_raw_len_);
 }
 
 AppControl::~AppControl() {
-  if (app_control_bundle_ != NULL) {
-    bundle_free(app_control_bundle_);
+  if (app_control_ != NULL) {
+    app_control_destroy(app_control_);
   }
   if (app_control_bundle_raw_ != NULL) {
     bundle_free_encoded_rawdata(&app_control_bundle_raw_);
