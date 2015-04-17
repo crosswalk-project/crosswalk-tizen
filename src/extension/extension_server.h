@@ -5,13 +5,13 @@
 #ifndef WRT_EXTENSION_EXTENSION_SERVER_H_
 #define WRT_EXTENSION_EXTENSION_SERVER_H_
 
-#include <ewk_ipc_message.h>
-
 #include <string>
 #include <set>
 #include <map>
 #include <vector>
 
+#include "common/dbus_server.h"
+#include "common/dbus_client.h"
 #include "extension/extension.h"
 
 class Ewk_Context;
@@ -22,13 +22,11 @@ class ExtensionServer : public Extension::ExtensionDelegate {
  public:
   typedef std::vector<std::string> StringVector;
 
-  explicit ExtensionServer(Ewk_Context* ewk_context);
+  explicit ExtensionServer(const std::string& appid);
   virtual ~ExtensionServer();
 
-  void Start();
-  void Start(const StringVector& paths);
-
-  void HandleWrtMessage(Ewk_IPC_Wrt_Message_Data* message);
+  bool Start();
+  bool Start(const StringVector& paths);
 
  private:
   void RegisterExtension(const std::string& path);
@@ -39,26 +37,14 @@ class ExtensionServer : public Extension::ExtensionDelegate {
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);
   void ClearRuntimeVariables();
 
-  void SendWrtMessage(const std::string& type);
-  void SendWrtMessage(const std::string& type, const std::string& id,
-                      const std::string& ref_id, const std::string& value);
+  void NotifyEPCreatedToRuntime();
+  void HandleDBusMethod(const std::string& method_name,
+                        GVariant* parameters,
+                        GDBusMethodInvocation* invocation);
 
-  void OnGetExtensions(const std::string& id);
-  void OnCreateInstance(const std::string& instance_id,
-                        const std::string& extension_name);
-  void OnDestroyInstance(const std::string& instance_id);
-  void OnSendSyncMessageToNative(const std::string& msg_id,
-                                 const std::string& instance_id,
-                                 const std::string& msg_body);
-  void OnPostMessageToNative(const std::string& instance_id,
-                             const std::string& msg_body);
-
-  void OnPostMessageToJS(const std::string& instance_id,
-                         const std::string& msg);
-  void OnSendSyncReplyToJS(const std::string& instance_id,
-                           const std::string& msg);
-
-  Ewk_Context* ewk_context_;
+  std::string app_uuid_;
+  DBusServer dbus_server_;
+  DBusClient dbus_runtime_client_;
 
   typedef std::set<std::string> StringSet;
   StringSet extension_symbols_;

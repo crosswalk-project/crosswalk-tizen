@@ -25,6 +25,7 @@ BuildRequires: pkgconfig(deviced)
 BuildRequires: pkgconfig(capi-system-runtime-info)
 BuildRequires: pkgconfig(cert-svc)
 BuildRequires: pkgconfig(uuid)
+BuildRequires: pkgconfig(gio-2.0)
 BuildRequires: boost-devel
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)
@@ -81,5 +82,6 @@ rm -fr %{buildroot}
 
 %files
 %attr(755,root,root) %{_bindir}/wrt
+%attr(755,root,root) %{_bindir}/wrt-extension
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
 %attr(644,root,root) %{_libdir}/libwrt-injected-bundle.so

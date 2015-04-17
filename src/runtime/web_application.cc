@@ -131,6 +131,13 @@ bool WebApplication::Initialize(
                                              vibration_stop_callback,
                                              NULL);
 
+  // send widget info to injected bundle
+  // TODO(wy80.choi): ewk_send_widget_info should be fixed to receive uuid of
+  // application instead of widget_id.
+  // Currently, uuid is passed as theme argument temporarily.
+
+  ewk_send_widget_info(ewk_context_, 1, 0.0, uuid_.c_str(), "");
+
   // TODO(sngn.lee): Find the path of certificate file
   // ewk_context_certificate_file_set(ewk_context_, .... );
 
