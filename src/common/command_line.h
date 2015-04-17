@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef WRT_RUNTIME_COMMAND_LINE_H_
-#define WRT_RUNTIME_COMMAND_LINE_H_
+#ifndef WRT_COMMON_COMMAND_LINE_H_
+#define WRT_COMMON_COMMAND_LINE_H_
 
 #include <string>
 #include <map>
@@ -53,4 +53,4 @@ class CommandLine {
 
 }  // namespace wrt
 
-#endif  // WRT_RUNTIME_COMMAND_LINE_H_
+#endif  // WRT_COMMON_COMMAND_LINE_H_

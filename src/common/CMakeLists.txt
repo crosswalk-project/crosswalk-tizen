@@ -9,6 +9,7 @@ SET(TARGET_COMMON_STATIC_INCS
 SET(TARGET_COMMON_STATIC_SRCS
   ${BASE_SRCDIR}/common/file_utils.cc
   ${BASE_SRCDIR}/common/message_types.cc
+  ${BASE_SRCDIR}/common/command_line.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_COMMON_STATIC_INCS})

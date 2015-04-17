@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "common/logger.h"
-#include "runtime/command_line.h"
+#include "common/command_line.h"
 #include "runtime/native_app_window.h"
 #include "runtime/app_control.h"
 

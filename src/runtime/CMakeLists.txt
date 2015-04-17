@@ -44,7 +44,6 @@ SET(TARGET_RUNTIME_LIBS
 # Source Files
 SET(TARGET_RUNTIME_SRCS
   ${BASE_SRCDIR}/runtime/app_control.cc
-  ${BASE_SRCDIR}/runtime/command_line.cc
   ${BASE_SRCDIR}/runtime/native_window.cc
   ${BASE_SRCDIR}/runtime/native_app_window.cc
   ${BASE_SRCDIR}/runtime/web_application.cc

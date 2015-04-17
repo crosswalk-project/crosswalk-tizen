@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "runtime/command_line.h"
+#include "common/command_line.h"
 
 #include <cstring>
 #include "common/file_utils.h"

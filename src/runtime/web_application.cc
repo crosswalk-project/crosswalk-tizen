@@ -10,8 +10,8 @@
 #include <memory>
 
 #include "common/message_types.h"
+#include "common/command_line.h"
 #include "runtime/native_window.h"
-#include "runtime/command_line.h"
 #include "runtime/web_view.h"
 #include "runtime/vibration_manager.h"
 #include "common/logger.h"
