@@ -49,16 +49,16 @@ static bool BundleAddDataArray(bundle* target, const std::string& key,
 AppControl::AppControl(app_control_h app_control) {
   app_control_clone(&app_control_, app_control);
   app_control_to_bundle(app_control_, &app_control_bundle_);
-  bundle_encode(app_control_bundle_, &app_control_bundle_raw_,
-                &app_control_bundle_raw_len_);
+}
+
+AppControl:: AppControl() {
+  app_control_create(&app_control_);
+  app_control_to_bundle(app_control_, &app_control_bundle_);
 }
 
 AppControl::~AppControl() {
   if (app_control_ != NULL) {
     app_control_destroy(app_control_);
-  }
-  if (app_control_bundle_raw_ != NULL) {
-    bundle_free_encoded_rawdata(&app_control_bundle_raw_);
   }
 }
 
@@ -72,6 +72,10 @@ std::string AppControl::operation() const {
   }
 }
 
+void AppControl::set_operation(const std::string& operation) {
+  appsvc_set_operation(app_control_bundle_, operation.c_str());
+}
+
 std::string AppControl::mime() const {
   const char* mime = appsvc_get_mime(app_control_bundle_);
 
@@ -80,6 +84,10 @@ std::string AppControl::mime() const {
   } else {
     return std::string();
   }
+}
+
+void AppControl::set_mime(const std::string& mime) {
+  appsvc_set_mime(app_control_bundle_, mime.c_str());
 }
 
 std::string AppControl::uri() const {
@@ -92,6 +100,10 @@ std::string AppControl::uri() const {
   }
 }
 
+void AppControl::set_uri(const std::string& uri) {
+  appsvc_set_uri(app_control_bundle_, uri.c_str());
+}
+
 std::string AppControl::category() const {
   const char* category = appsvc_get_category(app_control_bundle_);
 
@@ -100,6 +112,10 @@ std::string AppControl::category() const {
   } else {
     return std::string();
   }
+}
+
+void AppControl::set_category(const std::string& category) {
+  appsvc_set_category(app_control_bundle_, category.c_str());
 }
 
 std::string AppControl::data(const std::string& key) const {
@@ -126,9 +142,13 @@ std::vector<std::string> AppControl::data_array(const std::string& key) const {
   return data_vector;
 }
 
-std::string AppControl::encoded_bundle() const {
-  return std::string(reinterpret_cast<char*>(app_control_bundle_raw_),
-                     app_control_bundle_raw_len_);
+std::string AppControl::encoded_bundle() {
+  bundle_raw* encoded_data;
+  int len;
+  bundle_encode(app_control_bundle_, &encoded_data, &len);
+  std::unique_ptr<bundle_raw*, decltype(bundle_free_encoded_rawdata)*>
+    ptr { &encoded_data, bundle_free_encoded_rawdata};
+  return std::string(reinterpret_cast<char*>(encoded_data), len);
 }
 
 bool AppControl::IsDataArray(const std::string& key) {
@@ -169,6 +189,11 @@ bool AppControl::Reply(const std::map<std::string,
   bundle_free(result);
 
   return ret == APPSVC_RET_OK ? true : false;
+}
+
+bool AppControl::LaunchRequest() {
+  return (app_control_send_launch_request(app_control_, NULL, NULL) ==
+          APP_CONTROL_ERROR_NONE);
 }
 
 }  // namespace wrt
