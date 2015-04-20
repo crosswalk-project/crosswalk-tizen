@@ -10,7 +10,6 @@
 #include <memory>
 
 #include "runtime/web_view.h"
-#include "runtime/locale_manager.h"
 #include "extension/extension_server.h"
 
 class Ewk_Context;
@@ -18,10 +17,13 @@ class Ewk_Context;
 namespace wrt {
 class NativeWindow;
 class AppControl;
+class ApplicationData;
+class LocaleManager;
 
 class WebApplication : public WebView::EventListener {
  public:
   explicit WebApplication(const std::string& appid);
+  explicit WebApplication(std::unique_ptr<ApplicationData> app_data);
   virtual ~WebApplication();
 
   void AppControl(std::unique_ptr<wrt::AppControl> appcontrol);
@@ -60,7 +62,8 @@ class WebApplication : public WebView::EventListener {
   ExtensionServer* extension_server_;
   std::list<WebView*> view_stack_;
   std::string app_data_path_;
-  LocaleManager locale_manager_;
+  std::unique_ptr<LocaleManager> locale_manager_;
+  std::unique_ptr<ApplicationData> app_data_;
 };
 
 }  // namespace wrt

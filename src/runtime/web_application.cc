@@ -16,6 +16,8 @@
 #include "runtime/vibration_manager.h"
 #include "common/logger.h"
 #include "runtime/app_control.h"
+#include "runtime/locale_manager.h"
+#include "runtime/application_data.h"
 
 namespace {
   // TODO(sngn.lee) : It should be declare in common header
@@ -50,7 +52,24 @@ namespace wrt {
 WebApplication::WebApplication(const std::string& appid)
     : initialized_(false),
       appid_(appid),
-      ewk_context_(ewk_context_new()) {
+      ewk_context_(ewk_context_new()),
+      locale_manager_(new LocaleManager()),
+      app_data_(new ApplicationData(appid)) {
+  // app_data_path
+  std::unique_ptr<char, decltype(std::free)*>
+    path {app_get_data_path(), std::free};
+  app_data_path_ = path.get();
+
+  // extension_server
+  extension_server_ = new ExtensionServer(ewk_context_);
+}
+
+WebApplication::WebApplication(std::unique_ptr<ApplicationData> app_data)
+    : initialized_(false),
+      appid_(app_data->app_id()),
+      ewk_context_(ewk_context_new()),
+      locale_manager_(new LocaleManager()),
+      app_data_(std::move(app_data)) {
   // app_data_path
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
@@ -106,7 +125,7 @@ bool WebApplication::Initialize(NativeWindow* window) {
   // ewk_context_proxy_uri_set(ewk_context_, ... );
 
   // TODO(sngn.lee): set default from config.xml
-  // locale_manager_.SetDefaultLocale(const  string & locale);
+  // locale_manager_->SetDefaultLocale(const  string & locale);
 
   return true;
 }
@@ -179,8 +198,9 @@ void WebApplication::Resume() {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(true);
 
-  // TODO(sngn.lee) : should be check the background support option
-  // if background suuport options was on, skip below code
+  if (app_data_->setting_info()->background_support_enabled()) {
+    return;
+  }
 
   auto it = view_stack_.begin();
   for ( ; it != view_stack_.end(); ++it) {
@@ -192,8 +212,11 @@ void WebApplication::Suspend() {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(false);
 
-  // TODO(sngn.lee) : should be check the background support option
-  // if background suuport options was on, skip below code
+  if (app_data_->setting_info()->background_support_enabled()) {
+    LoggerD("gone background (backgroud support enabed)");
+    return;
+  }
+
   auto it = view_stack_.begin();
   for ( ; it != view_stack_.end(); ++it) {
     (*it)->Suspend();
@@ -262,11 +285,11 @@ void WebApplication::OnOrientationLock(WebView* view,
   if (view_stack_.front() != view)
     return;
 
-  // TODO(sngn.lee): check the orientaion setting
-  // if allow the auto orientation
-  // if (is not allow orientation) {
-  //   return;
-  // }
+  auto orientaion_setting = app_data_->setting_info()->screen_orientation();
+  if (orientaion_setting != wgt::parse::SettingInfo::AUTO) {
+    return;
+  }
+
   if ( lock ) {
     window_->SetRotationLock(preferred_rotation);
   } else {
@@ -275,14 +298,14 @@ void WebApplication::OnOrientationLock(WebView* view,
 }
 
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
-  // TODO(sngn.lee): Check the hw key event was enabled
-  if (true && kKeyNameBack == keyname) {
+  bool enabled = app_data_->setting_info()->hwkey_enabled();
+  if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
   }
 }
 
 void WebApplication::OnLanguageChanged() {
-  locale_manager_.UpdateSystemLocale();
+  locale_manager_->UpdateSystemLocale();
   ewk_context_cache_clear(ewk_context_);
   auto it = view_stack_.begin();
   for ( ; it != view_stack_.end(); ++it) {
