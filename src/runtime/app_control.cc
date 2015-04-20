@@ -13,6 +13,37 @@
 namespace wrt {
 
 namespace {
+static bool BundleAddData(bundle* target, const std::string& key,
+                          const std::string& value) {
+  int result = appsvc_add_data(target, key.c_str(), value.c_str());
+  if (result < 0) {
+    LoggerE("BundleAddData : appsvc_add_data fail");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+static bool BundleAddDataArray(bundle* target, const std::string& key,
+                               const std::vector<std::string>& value_array) {
+  int n = value_array.size();
+  std::vector<const char*> v;
+  std::for_each(value_array.begin(), value_array.end(),
+                [&v] (std::string str) {
+                  v.push_back(static_cast<const char*>(str.c_str()));
+                });
+
+  int result = appsvc_add_data_array(target, key.c_str(),
+                                     v.data(), n);
+  if (result < 0) {
+    LoggerE("BundleAddDataArray appsvc_add_data_array fail");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
 }  // namespace
 
 AppControl::AppControl(app_control_h app_control) {
@@ -105,32 +136,39 @@ bool AppControl::IsDataArray(const std::string& key) {
 }
 
 bool AppControl::AddData(const std::string& key, const std::string& value) {
-  int result = appsvc_add_data(app_control_bundle_, key.c_str(), value.c_str());
-  if (result < 0) {
-    LoggerE("AppControl::AddData Fail");
-    return false;
-  } else {
-    return true;
-  }
+  return BundleAddData(app_control_bundle_, key, value);
 }
+
+
 
 bool AppControl::AddDataArray(const std::string& key,
                               const std::vector<std::string>& value_array) {
-  int n = value_array.size();
-  std::vector<const char*> v;
-  std::for_each(value_array.begin(), value_array.end(),
-                [&v] (std::string str) {
-                  v.push_back(static_cast<const char*>(str.c_str()));
-                });
+  return BundleAddDataArray(app_control_bundle_, key, value_array);
+}
 
-  int result = appsvc_add_data_array(app_control_bundle_, key.c_str(),
-                                     v.data(), n);
-  if (result < 0) {
-    LoggerE("AppControl::AddDataArray Fail");
+
+bool AppControl::Reply(const std::map<std::string,
+                                      std::vector<std::string>>& data) {
+  bundle* result;
+  if (appsvc_create_result_bundle(app_control_bundle_,
+                                  &result) != APPSVC_RET_OK) {
+    LoggerE("AppControl::Reply Fail : fail to create result bundle");
     return false;
-  } else {
-    return true;
   }
+  auto it = data.begin();
+  for ( ; it != data.end(); ++it) {
+    const std::string& key = it->first;
+    if (it->second.size() == 1) {
+      BundleAddData(result, key, it->second[0]);
+    } else {
+      BundleAddDataArray(result, key, it->second);
+    }
+  }
+
+  int ret = appsvc_send_result(result, APPSVC_RES_OK);
+  bundle_free(result);
+
+  return ret == APPSVC_RET_OK ? true : false;
 }
 
 }  // namespace wrt

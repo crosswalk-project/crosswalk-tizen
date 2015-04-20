@@ -9,6 +9,7 @@
 #include <bundle.h>
 #include <string>
 #include <vector>
+#include <map>
 
 namespace wrt {
 
@@ -32,6 +33,7 @@ class AppControl {
   bool AddData(const std::string& key, const std::string& value);
   bool AddDataArray(const std::string& key,
                     const std::vector<std::string>& value_array);
+  bool Reply(const std::map<std::string, std::vector<std::string>>& data);
 
  private:
   app_control_h app_control_;
