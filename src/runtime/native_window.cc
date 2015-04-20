@@ -205,4 +205,12 @@ void NativeWindow::Show() {
   evas_object_show(window_);
 }
 
+void NativeWindow::Active() {
+  elm_win_activate(window_);
+}
+
+void NativeWindow::InActive() {
+  elm_win_lower(window_);
+}
+
 }  // namespace wrt

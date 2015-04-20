@@ -155,6 +155,7 @@ void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
     // Send Event
     SendAppControlEvent();
   }
+  window_->Active();
 }
 
 void WebApplication::SendAppControlEvent() {
