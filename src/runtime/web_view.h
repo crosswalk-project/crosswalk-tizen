@@ -40,6 +40,7 @@ class WebView {
         bool /*lock*/,
         int /*preferred_rotation*/) {}
     virtual void OnConsoleMessage(const std::string& /*msg*/, int /*level*/) {}
+    virtual bool OnContextMenuDisabled(WebView* /*view*/) { return false; }
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

@@ -50,6 +50,7 @@ class WebApplication : public WebView::EventListener {
   virtual void OnRendered(WebView* view);
   virtual void OnLanguageChanged();
   virtual void OnLowMemory();
+  virtual bool OnContextMenuDisabled(WebView* view);
 
  private:
   void ClearViewStack();

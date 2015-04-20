@@ -323,6 +323,35 @@ void WebView::Initialize() {
                                  console_message_callback,
                                  this);
 
+
+  auto custom_context_menu = [](void* user_data,
+                                Evas_Object*,
+                                void* event_info) {
+    Ewk_Context_Menu* contextmenu = static_cast<Ewk_Context_Menu*>(event_info);
+    WebView* self = static_cast<WebView*>(user_data);
+    bool disabled = false;
+    if (self->listener_ && self->listener_->OnContextMenuDisabled(self)) {
+      disabled = true;
+    }
+    int cnt = ewk_context_menu_item_count(contextmenu);
+    for (unsigned idx = cnt-1; idx > 0; --idx) {
+      auto* item = ewk_context_menu_nth_item_get(contextmenu, idx);
+      Ewk_Context_Menu_Item_Tag tag = ewk_context_menu_item_tag_get(item);
+      switch (tag) {
+        case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_IMAGE_IN_NEW_WINDOW:
+        case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_LINK_IN_NEW_WINDOW:
+        case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_FRAME_IN_NEW_WINDOW:
+        case EWK_CONTEXT_MENU_ITEM_TAG_SEARCH_WEB:
+        case EWK_CONTEXT_MENU_ITEM_TAG_DOWNLOAD_IMAGE_TO_DISK:
+          ewk_context_menu_item_remove(contextmenu, item);
+          break;
+        default:
+          if (disabled)
+            ewk_context_menu_item_remove(contextmenu, item);
+      }
+    }
+  };
+
   // rotation support
   ewk_view_orientation_send(ewk_view_, ToWebRotation(window_->rotation()));
   rotation_handler_id_ = window_->AddRotationHandler(

@@ -356,6 +356,10 @@ void WebApplication::OnLowMemory() {
   ewk_context_notify_low_memory(ewk_context_);
 }
 
+bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
+  return !app_data_->setting_info()->context_menu_enabled();
+}
+
 void WebApplication::OnLoadStart(WebView* view) {
   LoggerD("LoadStart");
 }
