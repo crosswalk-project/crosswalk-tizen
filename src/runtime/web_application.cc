@@ -8,6 +8,9 @@
 #include <ewk_chromium.h>
 #include <algorithm>
 #include <memory>
+#include <sstream>
+#include <vector>
+#include <map>
 
 #include "common/message_types.h"
 #include "common/command_line.h"
@@ -25,6 +28,10 @@ namespace {
 
   const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
   const char* kConsoleMessageLogTag = "ConsoleMessage";
+
+  const char* kDebugKey = "debug";
+  const char* kPortKey = "port";
+
 
   const char* kAppControlEventScript = \
         "(function(){"
@@ -54,7 +61,8 @@ WebApplication::WebApplication(const std::string& appid)
       appid_(appid),
       ewk_context_(ewk_context_new()),
       locale_manager_(new LocaleManager()),
-      app_data_(new ApplicationData(appid)) {
+      app_data_(new ApplicationData(appid)),
+      debug_mode_(false) {
   // app_data_path
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
@@ -69,7 +77,8 @@ WebApplication::WebApplication(std::unique_ptr<ApplicationData> app_data)
       appid_(app_data->app_id()),
       ewk_context_(ewk_context_new()),
       locale_manager_(new LocaleManager()),
-      app_data_(std::move(app_data)) {
+      app_data_(std::move(app_data)),
+      debug_mode_(false) {
   // app_data_path
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
@@ -151,6 +160,11 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
                                  EVAS_CALLBACK_RESIZE,
                                  callback, NULL);
 
+  if (appcontrol->data(kDebugKey) == "true") {
+    debug_mode_ = true;
+    LaunchInspector(appcontrol.get());
+  }
+
   // TODO(sngn.lee): check the below code location.
   // in Wearable, webkit can render contents before show window
   // but Mobile, webkit can't render contents before show window
@@ -173,6 +187,11 @@ void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
   } else {
     // Send Event
     SendAppControlEvent();
+  }
+
+  if (!debug_mode_ && appcontrol->data(kDebugKey) == "true") {
+    debug_mode_ = true;
+    LaunchInspector(appcontrol.get());
   }
   window_->Active();
 }
@@ -315,8 +334,7 @@ void WebApplication::OnLanguageChanged() {
 
 void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
   static bool enabled = (getenv(kConsoleLogEnableKey) != NULL);
-  // TODO(sngn.lee): check debug mode
-  if (true/*debug mode*/ || enabled) {
+  if (debug_mode_ || enabled) {
     int dlog_level = DLOG_DEBUG;
     switch (level) {
       case EWK_CONSOLE_MESSAGE_LEVEL_WARNING:
@@ -348,7 +366,14 @@ void WebApplication::OnRendered(WebView* view) {
   LoggerD("Rendered");
 }
 
-
-
+void WebApplication::LaunchInspector(wrt::AppControl* appcontrol) {
+  unsigned int port =
+    ewk_context_inspector_server_start(ewk_context_, 0);
+  std::stringstream ss;
+  ss << port;
+  std::map<std::string, std::vector<std::string>> data;
+  data[kPortKey] = { ss.str() };
+  appcontrol->Reply(data);
+}
 
 }  // namespace wrt

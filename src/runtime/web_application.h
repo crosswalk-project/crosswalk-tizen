@@ -54,6 +54,7 @@ class WebApplication : public WebView::EventListener {
  private:
   void ClearViewStack();
   void SendAppControlEvent();
+  void LaunchInspector(wrt::AppControl* appcontrol);
 
   bool initialized_;
   std::string appid_;
@@ -64,6 +65,7 @@ class WebApplication : public WebView::EventListener {
   std::string app_data_path_;
   std::unique_ptr<LocaleManager> locale_manager_;
   std::unique_ptr<ApplicationData> app_data_;
+  bool debug_mode_;
 };
 
 }  // namespace wrt
