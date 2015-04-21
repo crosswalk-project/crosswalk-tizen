@@ -217,7 +217,8 @@ void WebApplication::Resume() {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(true);
 
-  if (app_data_->setting_info()->background_support_enabled()) {
+  if (app_data_->setting_info() != NULL &&
+      app_data_->setting_info()->background_support_enabled()) {
     return;
   }
 
@@ -231,7 +232,8 @@ void WebApplication::Suspend() {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(false);
 
-  if (app_data_->setting_info()->background_support_enabled()) {
+  if (app_data_->setting_info() != NULL &&
+      app_data_->setting_info()->background_support_enabled()) {
     LoggerD("gone background (backgroud support enabed)");
     return;
   }
@@ -304,7 +306,10 @@ void WebApplication::OnOrientationLock(WebView* view,
   if (view_stack_.front() != view)
     return;
 
-  auto orientaion_setting = app_data_->setting_info()->screen_orientation();
+  auto orientaion_setting = app_data_->setting_info() != NULL ?
+                            app_data_->setting_info()->screen_orientation() :
+                            // TODO(sngn.lee): check default value
+                            wgt::parse::SettingInfo::AUTO;
   if (orientaion_setting != wgt::parse::SettingInfo::AUTO) {
     return;
   }
@@ -317,7 +322,9 @@ void WebApplication::OnOrientationLock(WebView* view,
 }
 
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
-  bool enabled = app_data_->setting_info()->hwkey_enabled();
+  bool enabled = app_data_->setting_info() != NULL ?
+                 app_data_->setting_info()->hwkey_enabled() :
+                 true;
   if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
   }
@@ -357,7 +364,9 @@ void WebApplication::OnLowMemory() {
 }
 
 bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
-  return !app_data_->setting_info()->context_menu_enabled();
+  return !(app_data_->setting_info() != NULL ?
+           app_data_->setting_info()->context_menu_enabled() :
+           true);
 }
 
 void WebApplication::OnLoadStart(WebView* view) {
