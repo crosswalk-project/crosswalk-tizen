@@ -8,6 +8,7 @@
 #include <string>
 #include <list>
 #include <memory>
+#include <functional>
 
 #include "runtime/web_view.h"
 #include "extension/extension_server.h"
@@ -34,6 +35,8 @@ class WebApplication : public WebView::EventListener {
   bool Initialize(NativeWindow* window);
   std::string data_path() const { return app_data_path_; }
   bool initialized() const { return initialized_; }
+  void set_terminator(std::function<void(void)> terminator)
+      { terminator_ = terminator; }
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView * view);
@@ -67,6 +70,7 @@ class WebApplication : public WebView::EventListener {
   std::unique_ptr<LocaleManager> locale_manager_;
   std::unique_ptr<ApplicationData> app_data_;
   bool debug_mode_;
+  std::function<void(void)> terminator_;
 };
 
 }  // namespace wrt

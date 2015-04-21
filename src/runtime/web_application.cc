@@ -62,7 +62,8 @@ WebApplication::WebApplication(const std::string& appid)
       ewk_context_(ewk_context_new()),
       locale_manager_(new LocaleManager()),
       app_data_(new ApplicationData(appid)),
-      debug_mode_(false) {
+      debug_mode_(false),
+      terminator_(NULL) {
   // app_data_path
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
@@ -78,7 +79,8 @@ WebApplication::WebApplication(std::unique_ptr<ApplicationData> app_data)
       ewk_context_(ewk_context_new()),
       locale_manager_(new LocaleManager()),
       app_data_(std::move(app_data)),
-      debug_mode_(false) {
+      debug_mode_(false),
+      terminator_(NULL) {
   // app_data_path
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
@@ -267,7 +269,9 @@ void WebApplication::OnClosedWebView(WebView * view) {
   }
 
   if (view_stack_.size() == 0) {
-    // TODO(sngn.lee): terminate the webapp
+    if (terminator_ != NULL) {
+      terminator_();
+    }
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());

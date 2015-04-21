@@ -44,6 +44,7 @@ bool Runtime::OnCreate() {
     LoggerE("WebApplication couldn't be created.");
     return false;
   }
+  application_->set_terminator([](){ ui_app_exit(); });
 
   // Process First Launch
   native_window_ = CreateNativeWindow();
