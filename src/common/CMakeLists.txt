@@ -2,13 +2,21 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+PKG_CHECK_MODULES(TARGET_COMMON_STATIC_DEPS
+  uuid
+  dlog
+  REQUIRED
+)
+
 SET(TARGET_COMMON_STATIC_INCS
   ${BASE_SRCDIR}
+  ${TARGET_COMMON_STATIC_DEPS_INCLUDE_DIRS}
 )
 
 SET(TARGET_COMMON_STATIC_SRCS
   ${BASE_SRCDIR}/common/file_utils.cc
   ${BASE_SRCDIR}/common/message_types.cc
+  ${BASE_SRCDIR}/common/string_utils.cc
   ${BASE_SRCDIR}/common/command_line.cc
 )
 
