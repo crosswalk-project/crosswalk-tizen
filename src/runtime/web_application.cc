@@ -60,21 +60,27 @@ namespace wrt {
 
 WebApplication::WebApplication(
     NativeWindow* window, const std::string& appid)
-    : launched_(false),
-      debug_mode_(false),
-      ewk_context_(NULL),
-      window_(NULL) {
-  std::unique_ptr<ApplicationData> appdata_ptr(new ApplicationData(appid));
-  Initialize(window, std::move(appdata_ptr));
+    : WebApplication(
+        window,
+        std::unique_ptr<ApplicationData>(new ApplicationData(appid))) {
 }
 
 WebApplication::WebApplication(
     NativeWindow* window, std::unique_ptr<ApplicationData> app_data)
     : launched_(false),
       debug_mode_(false),
-      ewk_context_(NULL),
-      window_(NULL) {
-  Initialize(window, std::move(app_data));
+      ewk_context_(ewk_context_new_with_injected_bundle_path(
+          kInjectedBundlePath)),
+      window_(window),
+      appid_(app_data->app_id()),
+      locale_manager_(new LocaleManager()),
+      app_data_(std::move(app_data)),
+      terminator_(NULL),
+      uuid_(utils::GenerateUUID()) {
+  std::unique_ptr<char, decltype(std::free)*>
+    path {app_get_data_path(), std::free};
+  app_data_path_ = path.get();
+  Initialize();
 }
 
 WebApplication::~WebApplication() {
@@ -82,29 +88,7 @@ WebApplication::~WebApplication() {
     ewk_context_delete(ewk_context_);
 }
 
-bool WebApplication::Initialize(
-    NativeWindow* window, std::unique_ptr<ApplicationData> app_data) {
-
-  // NativeWindow
-  window_ = window;
-
-  // Application Id / Data
-  appid_ = app_data->app_id();
-  app_data_ = std::move(app_data);
-  std::unique_ptr<char, decltype(std::free)*>
-    path {app_get_data_path(), std::free};
-  app_data_path_ = path.get();
-
-  // Ewk Context
-  ewk_context_ =
-      ewk_context_new_with_injected_bundle_path(kInjectedBundlePath);
-
-  // Locale Manager
-  locale_manager_ = std::unique_ptr<LocaleManager>(new LocaleManager());
-
-  // UUID
-  uuid_ = utils::GenerateUUID();
-
+bool WebApplication::Initialize() {
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
 

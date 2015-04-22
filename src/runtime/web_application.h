@@ -57,8 +57,7 @@ class WebApplication : public WebView::EventListener {
   std::string uuid() const { return uuid_; }
 
  private:
-  bool Initialize(NativeWindow* window,
-                  std::unique_ptr<ApplicationData> app_data);
+  bool Initialize();
 
   void ClearViewStack();
   void SendAppControlEvent();
@@ -70,11 +69,11 @@ class WebApplication : public WebView::EventListener {
   NativeWindow* window_;
   std::string appid_;
   std::string app_data_path_;
-  std::string uuid_;
   std::list<WebView*> view_stack_;
   std::unique_ptr<LocaleManager> locale_manager_;
   std::unique_ptr<ApplicationData> app_data_;
   std::function<void(void)> terminator_;
+  std::string uuid_;
 };
 
 }  // namespace wrt
