@@ -6,7 +6,6 @@
 #define WRT_RUNTIME_WEB_VIEW_H_
 
 #include <Elementary.h>
-#include <efl_assist.h>
 #include <ewk_ipc_message.h>
 #include <string>
 
@@ -14,6 +13,7 @@ class Ewk_Context;
 
 namespace wrt {
 class NativeWindow;
+class WebViewImpl;
 
 class WebView {
  public:
@@ -59,14 +59,7 @@ class WebView {
   Evas_Object* evas_object() const;
 
  private:
-  void OnKeyEvent(Ea_Callback_Type key_type);
-  void OnRotation(int degree);
-  void Initialize();
-  NativeWindow* window_;
-  Ewk_Context* context_;
-  Evas_Object* ewk_view_;
-  EventListener* listener_;
-  int rotation_handler_id_;
+  WebViewImpl* impl_;
 };
 
 }  // namespace wrt
