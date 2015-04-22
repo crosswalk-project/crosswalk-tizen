@@ -20,35 +20,32 @@ namespace {
 static NativeWindow* CreateNativeWindow() {
   // TODO(wy80.choi) : consider other type of native window.
   NativeWindow* window = new NativeAppWindow();
-
-  window->Initialize();
   return window;
 }
 
 }  // namespace
 
 Runtime::Runtime()
-    : application_(NULL) {
+    : application_(NULL),
+      native_window_(NULL) {
 }
 
 Runtime::~Runtime() {
   if (application_) {
     delete application_;
   }
+  if (native_window_) {
+    delete native_window_;
+  }
 }
 
 bool Runtime::OnCreate() {
   std::string appid = CommandLine::ForCurrentProcess()->appid();
-  application_ = new WebApplication(appid);
-  if (!application_) {
-    LoggerE("WebApplication couldn't be created.");
-    return false;
-  }
-  application_->set_terminator([](){ ui_app_exit(); });
 
   // Process First Launch
   native_window_ = CreateNativeWindow();
-  application_->Initialize(native_window_);
+  application_ = new WebApplication(native_window_, appid);
+  application_->set_terminator([](){ ui_app_exit(); });
   return true;
 }
 
@@ -56,13 +53,13 @@ void Runtime::OnTerminate() {
 }
 
 void Runtime::OnPause() {
-  if (application_->initialized()) {
+  if (application_->launched()) {
     application_->Suspend();
   }
 }
 
 void Runtime::OnResume() {
-  if (application_->initialized()) {
+  if (application_->launched()) {
     application_->Resume();
   }
 }
@@ -70,7 +67,7 @@ void Runtime::OnResume() {
 void Runtime::OnAppControl(app_control_h app_control) {
   std::unique_ptr<AppControl> appcontrol(new AppControl(app_control));
 
-  if (application_->initialized()) {
+  if (application_->launched()) {
     // Process AppControl
     application_->AppControl(std::move(appcontrol));
   } else {
@@ -173,7 +170,7 @@ int Runtime::Exec(int argc, char* argv[]) {
 }  // namespace wrt
 
 int main(int argc, char* argv[]) {
-  // Initalize CommandLineParser
+  // Initialize CommandLineParser
   wrt::CommandLine::Init(argc, argv);
 
   ewk_init();

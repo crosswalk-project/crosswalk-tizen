@@ -25,12 +25,12 @@ namespace {
 
 
 NativeWindow::NativeWindow()
-    : initialized_(false),
-      window_(NULL),
+    : window_(NULL),
       focus_(NULL),
       content_(NULL),
       rotation_(0),
       handler_id_(0) {
+  Initialize();
 }
 
 NativeWindow::~NativeWindow() {
@@ -130,8 +130,6 @@ void NativeWindow::Initialize() {
                                  kWinowRotationEventKey,
                                  rotation_callback,
                                  this);
-
-  initialized_ = true;
 }
 
 void NativeWindow::DidDeleteRequested(void* /*data*/,

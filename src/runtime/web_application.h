@@ -11,7 +11,6 @@
 #include <functional>
 
 #include "runtime/web_view.h"
-#include "extension/extension_server.h"
 
 class Ewk_Context;
 
@@ -23,8 +22,9 @@ class LocaleManager;
 
 class WebApplication : public WebView::EventListener {
  public:
-  explicit WebApplication(const std::string& appid);
-  explicit WebApplication(std::unique_ptr<ApplicationData> app_data);
+  explicit WebApplication(NativeWindow* window, const std::string& appid);
+  explicit WebApplication(NativeWindow* window,
+                          std::unique_ptr<ApplicationData> app_data);
   virtual ~WebApplication();
 
   void AppControl(std::unique_ptr<wrt::AppControl> appcontrol);
@@ -32,11 +32,10 @@ class WebApplication : public WebView::EventListener {
   void Resume();
   void Suspend();
 
-  bool Initialize(NativeWindow* window);
   std::string data_path() const { return app_data_path_; }
-  bool initialized() const { return initialized_; }
   void set_terminator(std::function<void(void)> terminator)
       { terminator_ = terminator; }
+  bool launched() const { return launched_; }
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView * view);
@@ -55,21 +54,26 @@ class WebApplication : public WebView::EventListener {
   virtual void OnLowMemory();
   virtual bool OnContextMenuDisabled(WebView* view);
 
+  std::string uuid() const { return uuid_; }
+
  private:
+  bool Initialize(NativeWindow* window,
+                  std::unique_ptr<ApplicationData> app_data);
+
   void ClearViewStack();
   void SendAppControlEvent();
   void LaunchInspector(wrt::AppControl* appcontrol);
 
-  bool initialized_;
-  std::string appid_;
+  bool launched_;
+  bool debug_mode_;
   Ewk_Context* ewk_context_;
   NativeWindow* window_;
-  ExtensionServer* extension_server_;
-  std::list<WebView*> view_stack_;
+  std::string appid_;
   std::string app_data_path_;
+  std::string uuid_;
+  std::list<WebView*> view_stack_;
   std::unique_ptr<LocaleManager> locale_manager_;
   std::unique_ptr<ApplicationData> app_data_;
-  bool debug_mode_;
   std::function<void(void)> terminator_;
 };
 

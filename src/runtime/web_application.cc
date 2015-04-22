@@ -12,12 +12,12 @@
 #include <vector>
 #include <map>
 
-#include "common/message_types.h"
+#include "common/logger.h"
 #include "common/command_line.h"
+#include "common/string_utils.h"
 #include "runtime/native_window.h"
 #include "runtime/web_view.h"
 #include "runtime/vibration_manager.h"
-#include "common/logger.h"
 #include "runtime/app_control.h"
 #include "runtime/locale_manager.h"
 #include "runtime/application_data.h"
@@ -32,6 +32,8 @@ namespace {
   const char* kDebugKey = "debug";
   const char* kPortKey = "port";
 
+  // TODO(wy80.choi): consider 64bits system.
+  const char* kInjectedBundlePath = "/usr/lib/libwrt-injected-bundle.so";
 
   const char* kAppControlEventScript = \
         "(function(){"
@@ -56,52 +58,52 @@ namespace {
 
 namespace wrt {
 
-WebApplication::WebApplication(const std::string& appid)
-    : initialized_(false),
-      appid_(appid),
-      ewk_context_(ewk_context_new()),
-      locale_manager_(new LocaleManager()),
-      app_data_(new ApplicationData(appid)),
+WebApplication::WebApplication(
+    NativeWindow* window, const std::string& appid)
+    : launched_(false),
       debug_mode_(false),
-      terminator_(NULL) {
-  // app_data_path
-  std::unique_ptr<char, decltype(std::free)*>
-    path {app_get_data_path(), std::free};
-  app_data_path_ = path.get();
-
-  // extension_server
-  extension_server_ = new ExtensionServer(ewk_context_);
+      ewk_context_(NULL),
+      window_(NULL) {
+  std::unique_ptr<ApplicationData> appdata_ptr(new ApplicationData(appid));
+  Initialize(window, std::move(appdata_ptr));
 }
 
-WebApplication::WebApplication(std::unique_ptr<ApplicationData> app_data)
-    : initialized_(false),
-      appid_(app_data->app_id()),
-      ewk_context_(ewk_context_new()),
-      locale_manager_(new LocaleManager()),
-      app_data_(std::move(app_data)),
+WebApplication::WebApplication(
+    NativeWindow* window, std::unique_ptr<ApplicationData> app_data)
+    : launched_(false),
       debug_mode_(false),
-      terminator_(NULL) {
-  // app_data_path
-  std::unique_ptr<char, decltype(std::free)*>
-    path {app_get_data_path(), std::free};
-  app_data_path_ = path.get();
-
-  // extension_server
-  extension_server_ = new ExtensionServer(ewk_context_);
+      ewk_context_(NULL),
+      window_(NULL) {
+  Initialize(window, std::move(app_data));
 }
 
 WebApplication::~WebApplication() {
-  ewk_context_delete(ewk_context_);
-  if (extension_server_)
-    delete extension_server_;
+  if (ewk_context_)
+    ewk_context_delete(ewk_context_);
 }
 
-bool WebApplication::Initialize(NativeWindow* window) {
+bool WebApplication::Initialize(
+    NativeWindow* window, std::unique_ptr<ApplicationData> app_data) {
+
+  // NativeWindow
   window_ = window;
 
-  // start extension server
-  if (extension_server_)
-    extension_server_->Start();
+  // Application Id / Data
+  appid_ = app_data->app_id();
+  app_data_ = std::move(app_data);
+  std::unique_ptr<char, decltype(std::free)*>
+    path {app_get_data_path(), std::free};
+  app_data_path_ = path.get();
+
+  // Ewk Context
+  ewk_context_ =
+      ewk_context_new_with_injected_bundle_path(kInjectedBundlePath);
+
+  // Locale Manager
+  locale_manager_ = std::unique_ptr<LocaleManager>(new LocaleManager());
+
+  // UUID
+  uuid_ = utils::GenerateUUID();
 
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
@@ -142,7 +144,6 @@ bool WebApplication::Initialize(NativeWindow* window) {
 }
 
 void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
-  initialized_ = true;
   WebView* view = new WebView(window_, ewk_context_);
   view->SetEventListener(this);
 
@@ -171,6 +172,8 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   // in Wearable, webkit can render contents before show window
   // but Mobile, webkit can't render contents before show window
   window_->Show();
+
+  launched_ = true;
 }
 
 void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
@@ -280,24 +283,11 @@ void WebApplication::OnClosedWebView(WebView * view) {
   delete view;
 }
 
-
 void WebApplication::OnReceivedWrtMessage(
     WebView* /*view*/,
     Ewk_IPC_Wrt_Message_Data* message) {
-
-  Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(message);
-
-  #define START_WITHS(x, s) (strncmp(x, s, strlen(s)) == 0)
-
-  if (START_WITHS(msg_type, message_types::kExtensionTypePrefix)) {
-    extension_server_->HandleWrtMessage(message);
-  }
-
-  // TODO(wy80.choi): handle other message type?
-  // changeUserAgent, clearAllCookie, GetWindowID, hide, exit, blockedUrl
-
-
-  #undef START_WITHS
+  // TODO(wy80.choi) : Handle messages from injected bundle?
+  // ex. SendRuntimeMessage to hide / exit application.
 }
 
 void WebApplication::OnOrientationLock(WebView* view,
