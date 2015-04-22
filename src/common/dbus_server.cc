@@ -34,7 +34,7 @@ static GVariant* OnGetProperty(GDBusConnection* /*connection*/,
                                const gchar* /*object_path*/,
                                const gchar* interface_name,
                                const gchar* property_name,
-                               GError** error,
+                               GError** /*error*/,
                                gpointer user_data) {
   DBusServer* self = reinterpret_cast<DBusServer*>(user_data);
   if (!self) {
@@ -59,7 +59,7 @@ static gboolean OnSetProperty(GDBusConnection* /*connection*/,
                               const gchar* interface_name,
                               const gchar* property_name,
                               GVariant* value,
-                              GError** error,
+                              GError** /*error*/,
                               gpointer user_data) {
   DBusServer* self = reinterpret_cast<DBusServer*>(user_data);
   if (!self) {
@@ -167,7 +167,9 @@ void DBusServer::Start(const std::string& name) {
   unlink(address.c_str());
   address = "unix:path=" + address;
 
-  // create new bus
+  // create new bus socket
+  // TODO(wy80.choi): bus socket (Address) should be removed gracefully
+  // when application is terminated.
   gchar* guid = g_dbus_generate_guid();
   server_ = g_dbus_server_new_sync(
                   address.c_str(), G_DBUS_SERVER_FLAGS_NONE,
@@ -184,6 +186,8 @@ void DBusServer::Start(const std::string& name) {
                    G_CALLBACK(OnClientRequest), this);
 
   g_dbus_server_start(server_);
+
+  LoggerD("DBusServer(%s) has been started.", address.c_str());
 }
 
 std::string DBusServer::GetClientAddress() const {

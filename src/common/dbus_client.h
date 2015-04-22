@@ -20,8 +20,8 @@ class DBusClient {
   bool Connect(const std::string& address);
   bool ConnectByName(const std::string& name);
 
-  GVariant* CallSync(const std::string& iface, const std::string& method,
-                     GVariant* parameters, const GVariantType* reply_type);
+  GVariant* Call(const std::string& iface, const std::string& method,
+                 GVariant* parameters, const GVariantType* reply_type);
  private:
   GDBusConnection* connection_;
 };

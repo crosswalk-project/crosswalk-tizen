@@ -1,0 +1,24 @@
+// Copyright 2015 Samsung Electronics Co, Ltd. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef WRT_COMMON_CONSTANTS_H_
+#define WRT_COMMON_CONSTANTS_H_
+
+namespace wrt {
+
+extern const char kSystemExtensionPath[];
+extern const char kExtensionPrefix[];
+extern const char kExtensionSuffix[];
+
+extern const char kDBusNameForRuntime[];
+extern const char kDBusInterfaceNameForRuntime[];
+extern const char kMethodNotifyEPCreated[];
+extern const char kMethodGetRuntimeVariable[];
+
+extern const char kDBusNameForExtension[];
+extern const char kDBusInterfaceNameForExtension[];
+
+}  // namespace wrt
+
+#endif  // WRT_COMMON_CONSTANTS_H_

@@ -41,22 +41,31 @@ bool DBusClient::Connect(const std::string& address) {
   return true;
 }
 
-GVariant* DBusClient::CallSync(const std::string& iface,
-                               const std::string& method,
-                               GVariant* parameters,
-                               const GVariantType* reply_type) {
+GVariant* DBusClient::Call(const std::string& iface,
+                           const std::string& method,
+                           GVariant* parameters,
+                           const GVariantType* reply_type) {
   if (!connection_) {
     return NULL;
   }
 
   GError *err = NULL;
-  GVariant* reply = g_dbus_connection_call_sync(
-      connection_, NULL, "/", iface.c_str(), method.c_str(), parameters,
-      reply_type, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &err);
-  if (!reply) {
-    LoggerE("Failed to CallSync : %s", err->message);
-    g_error_free(err);
+  GVariant* reply = NULL;
+
+  if (reply_type) {
+    reply = g_dbus_connection_call_sync(
+        connection_, NULL, "/", iface.c_str(), method.c_str(), parameters,
+        reply_type, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &err);
+    if (!reply) {
+      LoggerE("Failed to CallSync : %s", err->message);
+      g_error_free(err);
+    }
+  } else {
+    g_dbus_connection_call(
+        connection_, NULL, "/", iface.c_str(), method.c_str(), parameters,
+        NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
   }
+
   return reply;
 }
 

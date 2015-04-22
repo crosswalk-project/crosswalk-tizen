@@ -4,6 +4,7 @@
 
 # Dependencies
 PKG_CHECK_MODULES(TARGET_INJECTED_BUNDLE_DEPS REQUIRED
+  dlog
   elementary
   chromium-efl
 )
