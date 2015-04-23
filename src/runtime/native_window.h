@@ -17,6 +17,9 @@ class NativeWindow {
   NativeWindow();
   virtual ~NativeWindow();
 
+  void Initialize();
+
+  bool initialized() const { return initialized_; }
   Evas_Object* evas_object() const;
   void SetContent(Evas_Object* content);
   void SetRotationLock(int degree);
@@ -35,12 +38,11 @@ class NativeWindow {
   static void DidDeleteRequested(void* data, Evas_Object* obj,
                                  void* event_info);
   static void DidProfileChanged(void* data, Evas_Object* obj, void* event_info);
-
-  void Initialize();
-
   void DidRotation(int degree);
   void DidFocusChanged(bool got);
 
+
+  bool initialized_;
   Evas_Object* window_;
   Evas_Object* focus_;
   Evas_Object* content_;

@@ -34,6 +34,7 @@ static const char* kDBusIntrospectionXML =
 static NativeWindow* CreateNativeWindow() {
   // TODO(wy80.choi) : consider other type of native window.
   NativeWindow* window = new NativeAppWindow();
+  window->Initialize();
   return window;
 }
 
