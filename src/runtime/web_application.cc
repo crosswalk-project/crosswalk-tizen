@@ -21,6 +21,7 @@
 #include "runtime/app_control.h"
 #include "runtime/locale_manager.h"
 #include "runtime/application_data.h"
+#include "runtime/resource_manager.h"
 
 namespace {
   // TODO(sngn.lee) : It should be declare in common header
@@ -80,6 +81,11 @@ WebApplication::WebApplication(
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
   app_data_path_ = path.get();
+
+  resource_manager_.reset(
+      new ResourceManager(app_data_.get(), locale_manager_.get()));
+  resource_manager_->set_base_resource_path(
+      app_data_->pkg_root_path() + "/" + appid_ + "/");
   Initialize();
 }
 
@@ -135,11 +141,11 @@ bool WebApplication::Initialize() {
 }
 
 void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
+  resource_manager_->set_app_control(appcontrol.get());
   WebView* view = new WebView(window_, ewk_context_);
   view->SetEventListener(this);
 
-  // TODO(sngn.lee): Get the start file
-  view->LoadUrl("file:///index.html");
+  view->LoadUrl(resource_manager_->GetStartURL());
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
 
@@ -165,19 +171,19 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   window_->Show();
 
   launched_ = true;
+  received_appcontrol_ = std::move(appcontrol);
 }
 
 void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
-  // TODO(sngn.lee): find the app control url and the reset options
-
   // TODO(sngn.lee): Set the injected bundle into extension process
-
+  resource_manager_->set_app_control(appcontrol.get());
 
   if (true) {
     // Reset to context
     ClearViewStack();
     WebView* view = new WebView(window_, ewk_context_);
-    view->LoadUrl("file:///index.html");
+    view->SetEventListener(this);
+    view->LoadUrl(resource_manager_->GetStartURL());
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
   } else {
@@ -190,6 +196,7 @@ void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
     LaunchInspector(appcontrol.get());
   }
   window_->Active();
+  received_appcontrol_ = std::move(appcontrol);
 }
 
 void WebApplication::SendAppControlEvent() {

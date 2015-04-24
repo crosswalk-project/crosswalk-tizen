@@ -19,6 +19,7 @@ class NativeWindow;
 class AppControl;
 class ApplicationData;
 class LocaleManager;
+class ResourceManager;
 
 class WebApplication : public WebView::EventListener {
  public:
@@ -72,6 +73,8 @@ class WebApplication : public WebView::EventListener {
   std::list<WebView*> view_stack_;
   std::unique_ptr<LocaleManager> locale_manager_;
   std::unique_ptr<ApplicationData> app_data_;
+  std::unique_ptr<ResourceManager> resource_manager_;
+  std::unique_ptr<wrt::AppControl> received_appcontrol_;
   std::function<void(void)> terminator_;
   std::string uuid_;
 };
