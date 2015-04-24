@@ -267,7 +267,7 @@ void WebViewImpl::InitQuotaExceededCallback() {
                                        uint64_t,
                                        void*) -> Eina_Bool {
     std::string protocol(ewk_security_origin_protocol_get(origin));
-    if (protocol == "file://" || protocol == "app://") {
+    if (protocol == "file" || protocol == "app") {
       // Allow for local origin
       ewk_view_exceeded_database_quota_reply(view, EINA_TRUE);
     } else {
