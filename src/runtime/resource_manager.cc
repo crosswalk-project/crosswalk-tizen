@@ -18,11 +18,12 @@
 #include "runtime/application_data.h"
 #include "runtime/locale_manager.h"
 
+using wgt::parse::AppControlInfo;
+
 namespace wrt {
 
 namespace {
 
-using namespace wgt::parse;
 typedef std::vector<AppControlInfo> AppControlList;
 
 // Scheme type
@@ -163,6 +164,7 @@ ResourceManager::ResourceManager(ApplicationData* application_data,
 }
 
 std::string ResourceManager::GetDefaultOrEmpty() {
+  using wgt::parse::AppWidgetVector;
   std::string default_src;
 
   // TODO(yons.kim): tizen content src
