@@ -21,6 +21,7 @@ SET(TARGET_COMMON_STATIC_SRCS
   ${BASE_SRCDIR}/common/command_line.cc
   ${BASE_SRCDIR}/common/dbus_server.cc
   ${BASE_SRCDIR}/common/dbus_client.cc
+  ${BASE_SRCDIR}/common/profiler.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_COMMON_STATIC_INCS})

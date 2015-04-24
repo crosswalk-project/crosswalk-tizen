@@ -7,6 +7,7 @@
 #include <string>
 
 #include "common/logger.h"
+#include "bundle/extension_renderer_controller.h"
 
 extern "C" void DynamicSetWidgetInfo(int widget_id) {
   LoggerD("InjectedBundle::DynamicSetWidgetInfo !!");
@@ -20,11 +21,21 @@ extern "C" void DynamicPluginStartSession(int widget_id,
                                           const char* theme,
                                           const char* base_url) {
   LoggerD("InjectedBundle::DynamicPluginStartSession !!");
+
+  wrt::ExtensionRendererController& controller =
+      wrt::ExtensionRendererController::GetInstance();
+  // TODO(wy80.choi): Temporarily, uuid is passed as theme arguments.
+  controller.InitializeExtensions(theme);
+  controller.DidCreateScriptContext(context);
 }
 
 extern "C" void DynamicPluginStopSession(
     int widget_id, v8::Handle<v8::Context> context) {
   LoggerD("InjectedBundle::DynamicPluginStopSession !!");
+
+  wrt::ExtensionRendererController& controller =
+      wrt::ExtensionRendererController::GetInstance();
+  controller.WillReleaseScriptContext(context);
 }
 
 extern "C" void DynamicUrlParsing(

@@ -5,6 +5,9 @@
 # Dependencies
 PKG_CHECK_MODULES(TARGET_INJECTED_BUNDLE_DEPS REQUIRED
   dlog
+  glib-2.0
+  gio-2.0
+  uuid
   elementary
   chromium-efl
 )
@@ -23,6 +26,10 @@ SET(TARGET_INJECTED_BUNDLE_LIBS
 # Source Files
 SET(TARGET_INJECTED_BUNDLE_SRCS
   ${BASE_SRCDIR}/bundle/injected_bundle.cc
+  ${BASE_SRCDIR}/bundle/extension_renderer_controller.cc
+  ${BASE_SRCDIR}/bundle/extension_client.cc
+  ${BASE_SRCDIR}/bundle/extension_module.cc
+  ${BASE_SRCDIR}/bundle/module_system.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_INJECTED_BUNDLE_INCS})
@@ -49,3 +56,18 @@ INSTALL(TARGETS ${TARGET_INJECTED_BUNDLE}
 )
 
 
+# Build Executable for Test
+SET(TARGET_EXTENSION_TEST "wrt-extension-client-test")
+INCLUDE_DIRECTORIES(
+  ${BASE_SRCDIR}
+  ${TARGET_INJECTED_BUNDLE_INCS})
+ADD_EXECUTABLE(${TARGET_EXTENSION_TEST}
+  ${BASE_SRCDIR}/bundle/extension_client.cc
+  ${BASE_SRCDIR}/bundle/extension_client_test.cc)
+TARGET_LINK_LIBRARIES(${TARGET_EXTENSION_TEST}
+  ${TARGET_COMMON_STATIC}
+  ${TARGET_INJECTED_BUNDLE_LIBS}
+  "-ldl"
+)
+
+INSTALL(TARGETS ${TARGET_EXTENSION_TEST} DESTINATION bin)

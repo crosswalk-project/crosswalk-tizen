@@ -33,14 +33,33 @@ class ExtensionServer : public Extension::ExtensionDelegate {
   void RegisterSystemExtensions();
   bool RegisterSymbols(Extension* extension);
 
-  void AddRuntimeVariable(const std::string& key, const std::string& value);
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);
-  void ClearRuntimeVariables();
 
   void NotifyEPCreatedToRuntime();
-  void HandleDBusMethod(const std::string& method_name,
+
+  void HandleDBusMethod(GDBusConnection* connection,
+                        const std::string& method_name,
                         GVariant* parameters,
                         GDBusMethodInvocation* invocation);
+
+  void OnGetExtensions(GDBusMethodInvocation* invocation);
+  void OnCreateInstance(GDBusConnection* connection,
+                        const std::string& extension_name,
+                        GDBusMethodInvocation* invocation);
+  void OnDestroyInstance(const std::string& instance_id,
+                         GDBusMethodInvocation* invocation);
+  void OnSendSyncMessage(const std::string& instance_id,
+                         const std::string& msg,
+                         GDBusMethodInvocation* invocation);
+  void OnPostMessage(const std::string& instance_id,
+                     const std::string& msg);
+
+  void SyncReplyCallback(const std::string& reply,
+                         GDBusMethodInvocation* invocation);
+
+  void PostMessageToJSCallback(GDBusConnection* connection,
+                               const std::string& instance_id,
+                               const std::string& msg);
 
   std::string app_uuid_;
   DBusServer dbus_server_;
@@ -48,9 +67,6 @@ class ExtensionServer : public Extension::ExtensionDelegate {
 
   typedef std::set<std::string> StringSet;
   StringSet extension_symbols_;
-
-  typedef std::map<std::string, std::string> StringMap;
-  StringMap runtime_variables_;
 
   typedef std::map<std::string, Extension*> ExtensionMap;
   ExtensionMap extensions_;

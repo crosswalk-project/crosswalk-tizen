@@ -31,7 +31,8 @@ class Runtime {
   virtual void OnLowMemory();
 
  private:
-  void HandleDBusMethod(const std::string& method_name,
+  void HandleDBusMethod(GDBusConnection* connection,
+                        const std::string& method_name,
                         GVariant* parameters,
                         GDBusMethodInvocation* invocation);
 

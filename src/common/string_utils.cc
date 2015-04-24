@@ -4,8 +4,12 @@
 
 #include "common/string_utils.h"
 
+#include <time.h>
+#include <math.h>
 #include <uuid/uuid.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <algorithm>
 
 namespace wrt {
@@ -38,6 +42,15 @@ std::string ReplaceAll(const std::string& replace,
     pos = str.find(from, pos+to.length());
   }
   return str;
+}
+
+std::string GetCurrentMilliSeconds() {
+  std::ostringstream ss;
+  struct timespec spec;
+  clock_gettime(CLOCK_REALTIME, &spec);
+  ss << spec.tv_sec << "." <<
+     std::setw(3) << std::setfill('0') << (round(spec.tv_nsec / 1.0e6));
+  return ss.str();
 }
 
 }  // namespace utils

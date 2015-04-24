@@ -11,6 +11,7 @@
 #include "common/logger.h"
 #include "common/constants.h"
 #include "common/file_utils.h"
+#include "common/string_utils.h"
 #include "extension/extension.h"
 
 namespace wrt {
@@ -25,23 +26,24 @@ const char kDBusIntrospectionXML[] =
   "    </method>"
   "    <method name='CreateInstance'>"
   "      <arg name='extension_name' type='s' direction='in' />"
-  "      <arg name='instance_id' type='s' direction='in' />"
+  "      <arg name='instance_id' type='s' direction='out' />"
   "    </method>"
   "    <method name='DestroyInstance'>"
   "      <arg name='instance_id' type='s' direction='in' />"
+  "      <arg name='instance_id' type='s' direction='out' />"
   "    </method>"
-  "    <method name='CallASync'>"
+  "    <method name='PostMessage'>"
   "      <arg name='instance_id' type='s' direction='in' />"
-  "      <arg name='body' type='s' direction='in' />"
+  "      <arg name='msg' type='s' direction='in' />"
   "    </method>"
-  "    <method name='CallSync'>"
+  "    <method name='SendSyncMessage'>"
   "      <arg name='instance_id' type='s' direction='in' />"
-  "      <arg name='body' type='s' direction='in' />"
+  "      <arg name='msg' type='s' direction='in' />"
   "      <arg name='reply' type='s' direction='out' />"
   "    </method>"
   "    <signal name='OnMessageToJS'>"
   "      <arg name='instance_id' type='s' />"
-  "      <arg name='body' type='s' />"
+  "      <arg name='msg' type='s' />"
   "    </signal>"
   "  </interface>"
   "</node>";
@@ -81,10 +83,11 @@ bool ExtensionServer::Start(const StringVector& paths) {
   using std::placeholders::_1;
   using std::placeholders::_2;
   using std::placeholders::_3;
+  using std::placeholders::_4;
   dbus_server_.SetIntrospectionXML(kDBusIntrospectionXML);
   dbus_server_.SetMethodCallback(
       kDBusInterfaceNameForExtension,
-      std::bind(&ExtensionServer::HandleDBusMethod, this, _1, _2, _3));
+      std::bind(&ExtensionServer::HandleDBusMethod, this, _1, _2, _3, _4));
   dbus_server_.Start(app_uuid_ + "." + std::string(kDBusNameForExtension));
 
   // Send 'ready' signal to Injected Bundle.
@@ -97,6 +100,7 @@ void ExtensionServer::RegisterExtension(const std::string& path) {
   Extension* ext = new Extension(path, this);
   if (!ext->Initialize() || !RegisterSymbols(ext)) {
     delete ext;
+    return;
   }
   extensions_[ext->name()] = ext;
 }
@@ -142,21 +146,9 @@ bool ExtensionServer::RegisterSymbols(Extension* extension) {
   return true;
 }
 
-void ExtensionServer::AddRuntimeVariable(const std::string& key,
-    const std::string& value) {
-  runtime_variables_.insert(std::make_pair(key, value));
-}
-
-void ExtensionServer::ClearRuntimeVariables() {
-  runtime_variables_.clear();
-}
-
 void ExtensionServer::GetRuntimeVariable(const char* key, char* value,
     size_t value_len) {
-  auto it = runtime_variables_.find(key);
-  if (it != runtime_variables_.end()) {
-    strncpy(value, it->second.c_str(), value_len);
-  }
+  // TODO(wy80.choi): DBus Call to Runtime to get runtime variable
 }
 
 void ExtensionServer::NotifyEPCreatedToRuntime() {
@@ -166,11 +158,176 @@ void ExtensionServer::NotifyEPCreatedToRuntime() {
       NULL);
 }
 
-void ExtensionServer::HandleDBusMethod(const std::string& method_name,
+void ExtensionServer::HandleDBusMethod(GDBusConnection* connection,
+                                       const std::string& method_name,
                                        GVariant* parameters,
                                        GDBusMethodInvocation* invocation) {
-  // TODO(wy80.choi): Handle DBus Method Calls from InjectedBundle
+  LoggerD("HandleDBusMethod (%s)", method_name.c_str());
+
+  if (method_name == kMethodGetExtensions) {
+    OnGetExtensions(invocation);
+  } else if (method_name == kMethodCreateInstance) {
+    gchar* extension_name;
+    g_variant_get(parameters, "(&s)", &extension_name);
+    OnCreateInstance(connection, extension_name, invocation);
+  } else if (method_name == kMethodDestroyInstance) {
+    gchar* instance_id;
+    g_variant_get(parameters, "(&s)", &instance_id);
+    OnDestroyInstance(instance_id, invocation);
+  } else if (method_name == kMethodSendSyncMessage) {
+    gchar* instance_id;
+    gchar* msg;
+    g_variant_get(parameters, "(&s&s)", &instance_id, &msg);
+    OnSendSyncMessage(instance_id, msg, invocation);
+  } else if (method_name == kMethodPostMessage) {
+    gchar* instance_id;
+    gchar* msg;
+    g_variant_get(parameters, "(&s&s)", &instance_id, &msg);
+    OnPostMessage(instance_id, msg);
+  }
 }
 
+void ExtensionServer::OnGetExtensions(GDBusMethodInvocation* invocation) {
+  GVariantBuilder builder;
+  g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
+
+  // build an array of extensions
+  auto it = extensions_.begin();
+  for ( ; it != extensions_.end(); ++it) {
+    Extension* ext = it->second;
+    // open container for extension
+    g_variant_builder_open(&builder, G_VARIANT_TYPE("(ssas)"));
+    g_variant_builder_add(&builder, "s", ext->name().c_str());
+    g_variant_builder_add(&builder, "s", ext->javascript_api().c_str());
+    // open container for entry_point
+    g_variant_builder_open(&builder, G_VARIANT_TYPE("as"));
+    auto it_entry = ext->entry_points().begin();
+    for ( ; it_entry != ext->entry_points().end(); ++it_entry) {
+      g_variant_builder_add(&builder, "s", (*it_entry).c_str());
+    }
+    // close container('as') for entry_point
+    g_variant_builder_close(&builder);
+    // close container('(ssas)') for extension
+    g_variant_builder_close(&builder);
+  }
+  GVariant* reply = g_variant_builder_end(&builder);
+  g_dbus_method_invocation_return_value(
+      invocation, g_variant_new_tuple(&reply, 1));
+}
+
+void ExtensionServer::OnCreateInstance(
+    GDBusConnection* connection, const std::string& extension_name,
+    GDBusMethodInvocation* invocation) {
+  std::string instance_id = utils::GenerateUUID();
+
+  // find extension with given the extension name
+  auto it = extensions_.find(extension_name);
+  if (it == extensions_.end()) {
+    LoggerE("Failed to find extension [%s]", extension_name.c_str());
+    g_dbus_method_invocation_return_error(
+        invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
+        "Not found extension %s", extension_name.c_str());
+    return;
+  }
+
+  // create instance
+  ExtensionInstance* instance = it->second->CreateInstance();
+  if (!instance) {
+    LoggerE("Failed to create instance of extension [%s]",
+            extension_name.c_str());
+    g_dbus_method_invocation_return_error(
+        invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
+        "Failed to create instance of extension %s", extension_name.c_str());
+    return;
+  }
+
+  // set callbacks
+  using std::placeholders::_1;
+  instance->SetSendSyncReplyCallback(
+      std::bind(&ExtensionServer::SyncReplyCallback, this, _1, invocation));
+  instance->SetPostMessageCallback(
+      std::bind(&ExtensionServer::PostMessageToJSCallback,
+                this, connection, instance_id, _1));
+
+  instances_[instance_id] = instance;
+  g_dbus_method_invocation_return_value(
+      invocation, g_variant_new("(s)", instance_id.c_str()));
+}
+
+void ExtensionServer::OnDestroyInstance(
+    const std::string& instance_id, GDBusMethodInvocation* invocation) {
+  // find instance with the given instance id
+  auto it = instances_.find(instance_id);
+  if (it == instances_.end()) {
+    LoggerE("Failed to find instance [%s]", instance_id.c_str());
+    g_dbus_method_invocation_return_error(
+        invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
+        "Not found instance %s", instance_id.c_str());
+    return;
+  }
+
+  // destroy the instance
+  ExtensionInstance* instance = it->second;
+  delete instance;
+
+  instances_.erase(it);
+
+  g_dbus_method_invocation_return_value(
+      invocation, g_variant_new("(s)", instance_id.c_str()));
+}
+
+void ExtensionServer::OnSendSyncMessage(
+    const std::string& instance_id, const std::string& msg,
+    GDBusMethodInvocation* invocation) {
+  // find instance with the given instance id
+  auto it = instances_.find(instance_id);
+  if (it == instances_.end()) {
+    LoggerE("Failed to find instance [%s]", instance_id.c_str());
+    g_dbus_method_invocation_return_error(
+        invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
+        "Not found instance %s", instance_id.c_str());
+    return;
+  }
+
+  ExtensionInstance* instance = it->second;
+  instance->HandleSyncMessage(msg);
+
+  // reponse will be sent by SyncReplyCallback()
+}
+
+// async
+void ExtensionServer::OnPostMessage(
+    const std::string& instance_id, const std::string& msg) {
+  auto it = instances_.find(instance_id);
+  if (it == instances_.end()) {
+    LoggerE("Failed to find instance [%s]", instance_id.c_str());
+    return;
+  }
+
+  ExtensionInstance* instance = it->second;
+  instance->HandleMessage(msg);
+}
+
+void ExtensionServer::SyncReplyCallback(
+    const std::string& reply, GDBusMethodInvocation* invocation) {
+  g_dbus_method_invocation_return_value(
+      invocation, g_variant_new("(s)", reply.c_str()));
+}
+
+void ExtensionServer::PostMessageToJSCallback(
+    GDBusConnection* connection, const std::string& instance_id,
+    const std::string& msg) {
+  if (!connection || g_dbus_connection_is_closed(connection)) {
+    LoggerE("Client connection is closed already.");
+    return;
+  }
+
+  dbus_server_.SendSignal(connection,
+                          kDBusInterfaceNameForExtension,
+                          kSignalOnMessageToJS,
+                          g_variant_new("(ss)",
+                                        instance_id.c_str(),
+                                        msg.c_str()));
+}
 
 }  // namespace wrt
