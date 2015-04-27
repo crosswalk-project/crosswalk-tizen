@@ -57,5 +57,12 @@ Evas_Object* WebView::evas_object() const {
   return impl_->evas_object();
 }
 
-}  // namespace wrt
+void WebView::SetAppInfo(const std::string& app_name,
+                         const std::string& version) {
+  impl_->SetAppInfo(app_name, version);
+}
 
+void WebView::SetUserAgent(const std::string& user_agent) {
+  impl_->SetUserAgent(user_agent.c_str());
+}
+}  // namespace wrt

@@ -465,6 +465,13 @@ void WebViewImpl::SetEventListener(WebView::EventListener* listener) {
   listener_ = listener;
 }
 
+void WebViewImpl::SetAppInfo(const std::string& app_name,
+                             const std::string& version) {
+  std::string ua = app_name + "/" + version;
+  ewk_view_application_name_for_user_agent_set(ewk_view_, ua.c_str());
+}
+void WebViewImpl::SetUserAgent(const std::string& user_agent) {
+  ewk_view_user_agent_set(ewk_view_, user_agent.c_str());
+}
+
 }  // namespace wrt
-
-
