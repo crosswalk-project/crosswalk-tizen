@@ -168,7 +168,6 @@ bool WebApplication::Initialize() {
 }
 
 void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
-  resource_manager_->set_app_control(appcontrol.get());
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
 
@@ -183,8 +182,9 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
 
   // view->LoadUrl("file:///home/owner/apps_rw/33CFo0eFJe/"
   //               "33CFo0eFJe.annex/index.html");
-  view->LoadUrl(resource_manager_->GetStartURL());
-
+  std::unique_ptr<ResourceManager::Resource> res =
+    resource_manager_->GetStartResource(appcontrol.get());
+  view->LoadUrl(res->uri());
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
 
@@ -215,15 +215,16 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
 
 void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
   // TODO(sngn.lee): Set the injected bundle into extension process
-  resource_manager_->set_app_control(appcontrol.get());
 
-  if (true) {
+  std::unique_ptr<ResourceManager::Resource> res =
+    resource_manager_->GetStartResource(appcontrol.get());
+  if (res->should_reset()) {
     // Reset to context
     ClearViewStack();
     WebView* view = new WebView(window_, ewk_context_);
     SetupWebView(view);
 
-    view->LoadUrl(resource_manager_->GetStartURL());
+    view->LoadUrl(res->uri());
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
   } else {

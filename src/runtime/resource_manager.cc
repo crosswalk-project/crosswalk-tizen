@@ -156,6 +156,38 @@ static std::string InsertPrefixPath(const std::string& start_uri) {
 
 }  // namespace
 
+ResourceManager::Resource::Resource(const std::string& uri)
+  : uri_(uri), should_reset_(true) {}
+
+ResourceManager::Resource::Resource(const std::string& uri,
+                                    const std::string& mime)
+  : uri_(uri), mime_(mime), should_reset_(true) {}
+
+ResourceManager::Resource::Resource(const std::string& uri,
+                                    const std::string& mime, bool should_reset)
+  : uri_(uri), mime_(mime), should_reset_(should_reset) {}
+
+ResourceManager::Resource::Resource(const ResourceManager::Resource& res) {
+  *this = res;
+}
+
+ResourceManager::Resource& ResourceManager::Resource::operator=(
+    const ResourceManager::Resource& res) {
+  this->uri_ = res.uri();
+  this->mime_ = res.mime();
+  this->should_reset_ = res.should_reset();
+  return *this;
+}
+
+bool ResourceManager::Resource::operator==(const Resource& res) {
+  if (this->uri_ == res.uri() && this->mime_ == res.mime()
+     && this->should_reset_ == res.should_reset()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 ResourceManager::ResourceManager(ApplicationData* application_data,
                                  LocaleManager* locale_manager)
     : application_data_(application_data), locale_manager_(locale_manager) {
@@ -212,15 +244,16 @@ std::string ResourceManager::GetMatchedSrcOrUri(
   return GetDefaultOrEmpty();
 }
 
-std::string ResourceManager::GetStartURL() {
-  std::string operation = app_control_->operation();
+std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
+    const AppControl* app_control) {
+  std::string operation = app_control->operation();
   if (operation.empty()) {
     LoggerE("operation(mandatory) is NULL");
-    return GetDefaultOrEmpty();
+    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
   }
 
-  std::string mime = app_control_->mime();
-  std::string uri = app_control_->uri();
+  std::string mime = app_control->mime();
+  std::string uri = app_control->uri();
   if (mime.empty() && !uri.empty()) {
     mime = GetMimeFromUri(uri);
   }
@@ -232,7 +265,7 @@ std::string ResourceManager::GetStartURL() {
 
   if (application_data_ == NULL ||
       application_data_->app_control_info_list() == NULL) {
-    return GetDefaultOrEmpty();
+    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
   }
 
   AppControlList app_control_list =
@@ -243,12 +276,15 @@ std::string ResourceManager::GetStartURL() {
     AppControlList::const_iterator iter =
       CompareMimeAndUri(app_control_list, mime, uri);
     if (iter != app_control_list.end()) {
-      return GetMatchedSrcOrUri(*iter);
+      // TODO(jh5.cho) : following comment will be added after SRPOL implement
+      return std::unique_ptr<Resource>(
+        new Resource(GetMatchedSrcOrUri(*iter), iter->mime()
+                   /*, iter->should_reset()*/));
     } else {
-      return GetDefaultOrEmpty();
+    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
     }
   } else {
-    return GetDefaultOrEmpty();
+    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
   }
 }
 

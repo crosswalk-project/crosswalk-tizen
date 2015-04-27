@@ -7,6 +7,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 namespace wgt {
 
@@ -26,6 +27,32 @@ class AppControl;
 
 class ResourceManager {
  public:
+  class Resource {
+   public:
+    explicit Resource(const std::string& uri);
+    Resource(const std::string& uri, const std::string& mime);
+    Resource(const std::string& uri, const std::string& mime,
+             bool should_reset);
+    Resource(const Resource& res);
+    ~Resource() {}
+
+    Resource& operator=(const Resource& res);
+    bool operator==(const Resource& res);
+
+    void set_uri(const std::string& uri) { uri_ = uri; }
+    void set_mime(const std::string& mime) { mime_ = mime; }
+    void set_should_reset(bool should_reset) { should_reset_ = should_reset; }
+
+    std::string uri() const { return uri_; }
+    std::string mime() const { return mime_; }
+    bool should_reset() const { return should_reset_; }
+
+   private:
+    std::string uri_;
+    std::string mime_;
+    bool should_reset_;
+  };
+
   ResourceManager(ApplicationData* application_data,
                   LocaleManager* locale_manager);
   ~ResourceManager() {}
@@ -33,14 +60,9 @@ class ResourceManager {
   // input : file:///..... , app://[appid]/....
   // output : /[system path]/.../locales/.../
   std::string GetLocalizedPath(const std::string& origin);
-  std::string GetStartURL();
+  std::unique_ptr<Resource> GetStartResource(const AppControl* app_control);
 
   void set_base_resource_path(const std::string& base_path);
-  void set_app_control(AppControl* app_control) {
-    app_control_ = app_control;
-  }
-
-  const AppControl* app_control() const { return app_control_; }
 
  private:
   std::string GetMatchedSrcOrUri(const wgt::parse::AppControlInfo&);
@@ -55,7 +77,6 @@ class ResourceManager {
 
   ApplicationData* application_data_;
   LocaleManager* locale_manager_;
-  AppControl* app_control_;
 };
 
 }  // namespace wrt
