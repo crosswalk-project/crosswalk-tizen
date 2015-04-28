@@ -137,13 +137,28 @@ bool WebApplication::Initialize() {
   // TODO(sngn.lee): set default from config.xml
   // locale_manager_->SetDefaultLocale(const  string & locale);
 
+  // TODO(sngn.lee): Download interface
+  // ewk_context_did_start_download_callback_set
+
+  // TODO(sngn.lee): always enable "mediastream,record"
+  // TODO(sngn.lee): always enable "encrypted,database"
+  // TODO(sngn.lee): check csp element in config.xml and enable - "csp"
+  // TODO(sngn.lee): Check Backround support and enable - "visibility,suspend"
+  // TODO(sngn.lee): Check Backround support and enable - "background,music"
+  // TODO(sngn.lee): Check setting rotation value and enable "rotation,lock"
+  // TODO(sngn.lee): always enable "fullscreen"
+  // TODO(sngn.lee): check "sound-mode":"exclusive" - in tizen:setting
+  //                 and enable - "sound,mode"
+  // TODO(sngn.lee): check "background-vibration":"enable" - in tizen:setting
+  //                 and enable - "background,vibration"
+
   return true;
 }
 
 void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   resource_manager_->set_app_control(appcontrol.get());
   WebView* view = new WebView(window_, ewk_context_);
-  view->SetEventListener(this);
+  SetupWebView(view);
 
   view->LoadUrl(resource_manager_->GetStartURL());
   view_stack_.push_front(view);
@@ -182,7 +197,8 @@ void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
     // Reset to context
     ClearViewStack();
     WebView* view = new WebView(window_, ewk_context_);
-    view->SetEventListener(this);
+    SetupWebView(view);
+
     view->LoadUrl(resource_manager_->GetStartURL());
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
@@ -251,6 +267,7 @@ void WebApplication::OnCreatedNewWebView(WebView* view, WebView* new_view) {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(false);
 
+  SetupWebView(new_view);
   view_stack_.push_front(new_view);
   window_->SetContent(new_view->evas_object());
 }
@@ -380,5 +397,18 @@ void WebApplication::LaunchInspector(wrt::AppControl* appcontrol) {
   data[kPortKey] = { ss.str() };
   appcontrol->Reply(data);
 }
+
+void WebApplication::SetupWebView(WebView* view) {
+  view->SetEventListener(this);
+  // TODO(sngn.lee): set UserAgent to WebView
+  // TODO(sngn.lee): set CSP
+}
+
+bool OnDidNavigation(WebView* view, const std::string& url) {
+  // TODO(sngn.lee): scheme handling
+  // except(file , http, https, app) pass to appcontrol and return false
+  return true;
+}
+
 
 }  // namespace wrt

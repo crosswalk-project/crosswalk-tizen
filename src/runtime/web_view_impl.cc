@@ -95,6 +95,19 @@ void WebViewImpl::Initialize() {
   InitCustomContextMenuCallback();
   InitRotationCallback();
 
+  // TODO(sngn.lee): "request,certificate,confirm" certification popup
+  // TODO(sngn.lee): ewk_view_notification_permission_callback_set
+  // TODO(sngn.lee): "notification,show"
+  // TODO(sngn.lee): "notification,cancel"
+  // TODO(sngn.lee): "create,window"
+  // TODO(sngn.lee): "close,window"
+  // TODO(sngn.lee): "fullscreen,enterfullscreen"
+  // TODO(sngn.lee): "fullscreen,exitfullscreen"
+  // TODO(sngn.lee): "protocolhandler,registration,requested"
+  //                  custom protocol handler
+  // TODO(sngn.lee): ewk_view_geolocation_permission_callback_set
+  // TODO(sngn.lee): ewk_view_user_media_permission_callback_set
+
   // Show webview
   evas_object_show(ewk_view_);
 }
@@ -260,6 +273,9 @@ void WebViewImpl::InitPolicyDecideCallback() {
 }
 
 void WebViewImpl::InitQuotaExceededCallback() {
+  // TODO(sngn.lee): Need callback interface - OnQutaExceed
+  // check http://tizen.org/privilege/unlimitedstorage
+
   // callback for database quota exceeded
   auto database_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,

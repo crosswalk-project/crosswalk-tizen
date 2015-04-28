@@ -54,6 +54,8 @@ class WebApplication : public WebView::EventListener {
   virtual void OnLanguageChanged();
   virtual void OnLowMemory();
   virtual bool OnContextMenuDisabled(WebView* view);
+  virtual bool OnDidNavigation(WebView* view, const std::string& url);
+
 
   std::string uuid() const { return uuid_; }
 
@@ -63,6 +65,7 @@ class WebApplication : public WebView::EventListener {
   void ClearViewStack();
   void SendAppControlEvent();
   void LaunchInspector(wrt::AppControl* appcontrol);
+  void SetupWebView(WebView* view);
 
   bool launched_;
   bool debug_mode_;

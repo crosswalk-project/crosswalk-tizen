@@ -30,6 +30,7 @@ class NativeWindow {
   void Show();
   void Active();
   void InActive();
+  // TODO(sngn.lee): FullScreen(bool enable);
 
  protected:
   virtual Evas_Object* CreateWindowInternal() = 0;
