@@ -186,11 +186,11 @@ std::string ResourceManager::GetDefaultOrEmpty() {
   // if there is no content src, find reserved index files
   for (auto& start_file : kDefaultStartFiles) {
     if (utils::Exists(resource_base_path_ + start_file)) {
-      default_src = resource_base_path_ + start_file;
+      default_src = start_file;
     }
   }
 
-  return default_src;
+  return InsertPrefixPath(default_src);
 }
 
 std::string ResourceManager::GetMatchedSrcOrUri(
