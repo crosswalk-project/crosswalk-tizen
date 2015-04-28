@@ -30,6 +30,8 @@ class ApplicationData {
   explicit ApplicationData(const std::string& appid);
   ~ApplicationData();
 
+  bool LoadManifestData();
+
   std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
     application_icons_info() const;
   std::shared_ptr<const wgt::parse::AppWidgetInfo>
@@ -57,14 +59,11 @@ class ApplicationData {
   std::shared_ptr<const wgt::parse::WidgetInfo>
     widget_info() const;
 
-  std::string config_xml_path() const { return config_xml_path_; }
-  const std::string pkg_root_path() const { return pkg_root_path_; }
+  const std::string application_path() const { return application_path_; }
   const std::string pkg_id() const { return pkg_id_; }
   const std::string app_id() const { return app_id_; }
 
  private:
-  bool LoadManifestData();
-
   std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
     application_icons_info_;
   std::shared_ptr<const wgt::parse::AppWidgetInfo>
@@ -92,8 +91,7 @@ class ApplicationData {
   std::shared_ptr<const wgt::parse::WidgetInfo>
     widget_info_;
 
-  std::string config_xml_path_;
-  std::string pkg_root_path_;
+  std::string application_path_;
   std::string pkg_id_;
   std::string app_id_;
 };

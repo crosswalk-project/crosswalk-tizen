@@ -13,6 +13,7 @@
 #include "common/command_line.h"
 #include "runtime/native_app_window.h"
 #include "runtime/app_control.h"
+#include "runtime/application_data.h"
 
 namespace wrt {
 
@@ -72,8 +73,13 @@ bool Runtime::OnCreate() {
   std::string appid = CommandLine::ForCurrentProcess()->appid();
 
   // Process First Launch
+  std::unique_ptr<ApplicationData> appdata(new ApplicationData(appid));
+  if (!appdata->LoadManifestData()) {
+    return false;
+  }
+
   native_window_ = CreateNativeWindow();
-  application_ = new WebApplication(native_window_, appid);
+  application_ = new WebApplication(native_window_, std::move(appdata));
   application_->set_terminator([](){ ui_app_exit(); });
 
   // Start DBus Server for Runtime

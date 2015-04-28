@@ -10,6 +10,9 @@
 
 #include <vector>
 
+#include "common/logger.h"
+#include "common/file_utils.h"
+
 namespace wrt {
 
 namespace {
@@ -59,15 +62,9 @@ ApplicationData::ApplicationData(const std::string& appid) : app_id_(appid) {
   pkg_id_ = GetPackageIdByAppId(appid);
 
   if (!pkg_id_.empty()) {
-    pkg_root_path_ = GetPackageRootPath(pkg_id_);
+    application_path_ = GetPackageRootPath(pkg_id_) + kPathSeparator +
+                        appid + kPathSeparator;
   }
-
-  if (!pkg_root_path_.empty()) {
-    config_xml_path_ = pkg_root_path_ + kPathSeparator +
-                       app_id_ + kPathSeparator + kConfigXml;
-  }
-
-  LoadManifestData();
 }
 
 ApplicationData::~ApplicationData() {}
@@ -138,7 +135,10 @@ std::shared_ptr<const wgt::parse::WidgetInfo>
 }
 
 bool ApplicationData::LoadManifestData() {
-  if (config_xml_path_.empty()) {
+  std::string config_xml_path(application_path_ + kConfigXml);
+  if (!utils::Exists(config_xml_path)) {
+    LoggerE("Failed to load manifest data. : No such file '%s'",
+            config_xml_path.c_str());
     return false;
   }
 
@@ -178,10 +178,12 @@ bool ApplicationData::LoadManifestData() {
   registry.reset(new parser::ManifestHandlerRegistry(handlers));
 
   parser::ManifestParser manifest_parser(std::move(registry));
-  if (!manifest_parser.ParseManifest(config_xml_path_)) {
+  if (!manifest_parser.ParseManifest(config_xml_path)) {
     for (auto iter = handlers.begin(); iter != handlers.end(); ++iter) {
       delete *iter;
     }
+    LoggerE("Failed to load manifest data. : %s",
+            manifest_parser.GetErrorMessage().c_str());
     return false;
   }
 
