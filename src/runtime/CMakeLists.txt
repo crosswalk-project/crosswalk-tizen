@@ -28,6 +28,7 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   deviced
   capi-system-runtime-info
   aul
+  ecore
   REQUIRED
 )
 

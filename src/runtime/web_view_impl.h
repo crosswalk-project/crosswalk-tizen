@@ -51,6 +51,7 @@ class WebViewImpl {
   void InitConsoleMessageCallback();
   void InitCustomContextMenuCallback();
   void InitRotationCallback();
+  void InitWindowCreateCallback();
 
   NativeWindow* window_;
   Ewk_Context* context_;

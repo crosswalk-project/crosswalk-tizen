@@ -5,6 +5,7 @@
 #include "runtime/web_application.h"
 
 #include <app.h>
+#include <Ecore.h>
 #include <ewk_chromium.h>
 #include <algorithm>
 #include <memory>
@@ -295,7 +296,12 @@ void WebApplication::OnClosedWebView(WebView * view) {
     window_->SetContent(view_stack_.front()->evas_object());
   }
 
-  delete view;
+  // Delete after the callback context(for ewk view) was not used
+  ecore_idler_add([](void* view) {
+      WebView* obj = static_cast<WebView*>(view);
+      delete view;
+      return EINA_FALSE;
+    }, view);
 }
 
 void WebApplication::OnReceivedWrtMessage(
@@ -404,7 +410,7 @@ void WebApplication::SetupWebView(WebView* view) {
   // TODO(sngn.lee): set CSP
 }
 
-bool OnDidNavigation(WebView* view, const std::string& url) {
+bool WebApplication::OnDidNavigation(WebView* view, const std::string& url) {
   // TODO(sngn.lee): scheme handling
   // except(file , http, https, app) pass to appcontrol and return false
   return true;

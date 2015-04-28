@@ -94,6 +94,7 @@ void WebViewImpl::Initialize() {
   InitConsoleMessageCallback();
   InitCustomContextMenuCallback();
   InitRotationCallback();
+  InitWindowCreateCallback();
 
   // TODO(sngn.lee): "request,certificate,confirm" certification popup
   // TODO(sngn.lee): ewk_view_notification_permission_callback_set
@@ -446,6 +447,40 @@ void WebViewImpl::InitRotationCallback() {
                                   std::bind(&WebViewImpl::OnRotation,
                                   this,
                                   std::placeholders::_1));
+}
+
+void WebViewImpl::InitWindowCreateCallback() {
+  auto create_callback = [](void* user_data,
+                            Evas_Object*,
+                            void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_) {
+      return;
+    }
+    WebView* new_view = new WebView(self->window_, self->context_);
+    self->listener_->OnCreatedNewWebView(self->view_, new_view);
+  };
+
+  auto close_callback = [](void* user_data,
+                            Evas_Object*,
+                            void*) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_) {
+      return;
+    }
+    self->listener_->OnClosedWebView(self->view_);
+  };
+  evas_object_smart_callback_add(ewk_view_,
+                                 "create,window",
+                                 create_callback,
+                                 this);
+  evas_object_smart_callback_add(ewk_view_,
+                                 "close,window",
+                                 close_callback,
+                                 this);
+
+  smart_callbacks_["create,window"] = create_callback;
+  smart_callbacks_["close,window"] = close_callback;
 }
 
 std::string WebViewImpl::GetUrl() {

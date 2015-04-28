@@ -27,6 +27,7 @@ BuildRequires: pkgconfig(cert-svc)
 BuildRequires: pkgconfig(uuid)
 BuildRequires: pkgconfig(gio-2.0)
 BuildRequires: pkgconfig(aul)
+BuildRequires: pkgconfig(ecore)
 BuildRequires: boost-devel
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)
