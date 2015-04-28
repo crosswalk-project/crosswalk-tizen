@@ -9,11 +9,16 @@
 #include <gio/gio.h>
 
 #include <string>
+#include <functional>
+#include <map>
 
 namespace wrt {
 
 class DBusClient {
  public:
+  typedef std::function<void(const std::string& signal,
+                             GVariant* parameters)> SignalCallback;
+
   DBusClient();
   virtual ~DBusClient();
 
@@ -22,8 +27,14 @@ class DBusClient {
 
   GVariant* Call(const std::string& iface, const std::string& method,
                  GVariant* parameters, const GVariantType* reply_type);
+
+  void SetSignalCallback(const std::string& iface, SignalCallback func);
+  SignalCallback GetSignalCallback(const std::string& iface);
+
  private:
   GDBusConnection* connection_;
+  guint signal_subscription_id_;
+  std::map<std::string, SignalCallback> signal_callbacks_;
 };
 
 }  // namespace wrt

@@ -15,6 +15,7 @@ bool StartsWith(const std::string& str, const std::string& sub);
 bool EndsWith(const std::string& str, const std::string& sub);
 std::string ReplaceAll(const std::string& replace,
                        const std::string& from, const std::string& to);
+std::string GetCurrentMilliSeconds();
 
 }  // namespace utils
 }  // namespace wrt

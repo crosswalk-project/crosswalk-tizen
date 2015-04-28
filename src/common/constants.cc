@@ -17,5 +17,11 @@ const char kMethodGetRuntimeVariable[] = "GetRuntimeVariable";
 
 const char kDBusNameForExtension[] = "Extension";
 const char kDBusInterfaceNameForExtension[] = "org.tizen.wrt.Extension";
+const char kMethodGetExtensions[] = "GetExtensions";
+const char kMethodCreateInstance[] = "CreateInstance";
+const char kMethodDestroyInstance[] = "DestroyInstance";
+const char kMethodSendSyncMessage[] = "SendSyncMessage";
+const char kMethodPostMessage[] = "PostMessage";
+const char kSignalOnMessageToJS[] = "OnMessageToJS";
 
 }  // namespace wrt

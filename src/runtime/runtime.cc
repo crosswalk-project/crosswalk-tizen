@@ -81,9 +81,10 @@ bool Runtime::OnCreate() {
   using std::placeholders::_1;
   using std::placeholders::_2;
   using std::placeholders::_3;
+  using std::placeholders::_4;
   dbus_server_.SetIntrospectionXML(kDBusIntrospectionXML);
   dbus_server_.SetMethodCallback(kDBusInterfaceNameForRuntime,
-    std::bind(&Runtime::HandleDBusMethod, this, _1, _2, _3));
+    std::bind(&Runtime::HandleDBusMethod, this, _1, _2, _3, _4));
   dbus_server_.Start(application_->uuid() +
                      "." + std::string(kDBusNameForRuntime));
 
@@ -131,7 +132,8 @@ void Runtime::OnLowMemory() {
   }
 }
 
-void Runtime::HandleDBusMethod(const std::string& method_name,
+void Runtime::HandleDBusMethod(GDBusConnection* connection,
+                               const std::string& method_name,
                                GVariant* parameters,
                                GDBusMethodInvocation* invocation) {
   if (method_name == kMethodNotifyEPCreated) {

@@ -10,7 +10,7 @@ namespace wrt {
 
 namespace {
 
-static void OnMethodCall(GDBusConnection* /*connection*/,
+static void OnMethodCall(GDBusConnection* connection,
                          const gchar* /*sender*/,
                          const gchar* /*object_path*/,
                          const gchar* interface_name,
@@ -25,11 +25,11 @@ static void OnMethodCall(GDBusConnection* /*connection*/,
   }
   auto callback = self->GetMethodCallback(interface_name);
   if (callback) {
-    callback(method_name, parameters, invocation);
+    callback(connection, method_name, parameters, invocation);
   }
 }
 
-static GVariant* OnGetProperty(GDBusConnection* /*connection*/,
+static GVariant* OnGetProperty(GDBusConnection* connection,
                                const gchar* /*sender*/,
                                const gchar* /*object_path*/,
                                const gchar* interface_name,
@@ -47,13 +47,13 @@ static GVariant* OnGetProperty(GDBusConnection* /*connection*/,
 
   GVariant* ret = NULL;
   if (callback) {
-    ret = callback(property_name);
+    ret = callback(connection, property_name);
   }
 
   return ret;
 }
 
-static gboolean OnSetProperty(GDBusConnection* /*connection*/,
+static gboolean OnSetProperty(GDBusConnection* connection,
                               const gchar* /*sender*/,
                               const gchar* /*object_path*/,
                               const gchar* interface_name,
@@ -72,7 +72,7 @@ static gboolean OnSetProperty(GDBusConnection* /*connection*/,
 
   gboolean ret = FALSE;
   if (callback) {
-    if (callback(property_name, value)) {
+    if (callback(connection, property_name, value)) {
       ret = TRUE;
     }
   }
@@ -204,6 +204,22 @@ void DBusServer::SetIntrospectionXML(const std::string& xml) {
   }
 }
 
+void DBusServer::SendSignal(GDBusConnection* connection,
+                            const std::string& iface,
+                            const std::string& signal_name,
+                            GVariant* parameters) {
+  GError* err = NULL;
+  gboolean ret = g_dbus_connection_emit_signal(
+      connection, NULL, "/",
+      iface.c_str(), signal_name.c_str(),
+      parameters, &err);
+  if (!ret) {
+    LoggerE("Failed to emit signal : '%s.%s'",
+            iface.c_str(), signal_name.c_str());
+    g_error_free(err);
+  }
+}
+
 void DBusServer::SetPeerCredentialsCallback(PeerCredentialsCallback func) {
   peer_credentials_callback_ = func;
 }
@@ -223,19 +239,23 @@ void DBusServer::SetPropertySetter(
   property_setters_[iface] = func;
 }
 
-DBusServer::PeerCredentialsCallback DBusServer::GetPeerCredentialsCallback() const {
+DBusServer::PeerCredentialsCallback
+DBusServer::GetPeerCredentialsCallback() const {
   return peer_credentials_callback_;
 }
 
-DBusServer::MethodCallback DBusServer::GetMethodCallback(const std::string& iface) {
+DBusServer::MethodCallback
+DBusServer::GetMethodCallback(const std::string& iface) {
   return method_callbacks_[iface];
 }
 
-DBusServer::PropertySetter DBusServer::GetPropertySetter(const std::string& iface) {
+DBusServer::PropertySetter
+DBusServer::GetPropertySetter(const std::string& iface) {
   return property_setters_[iface];
 }
 
-DBusServer::PropertyGetter DBusServer::GetPropertyGetter(const std::string& iface) {
+DBusServer::PropertyGetter
+DBusServer::GetPropertyGetter(const std::string& iface) {
   return property_getters_[iface];
 }
 

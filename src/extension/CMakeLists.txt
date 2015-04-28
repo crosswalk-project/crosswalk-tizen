@@ -4,6 +4,7 @@
 
 # Dependencies
 PKG_CHECK_MODULES(TARGET_EXTENSION_DEPS
+  uuid
   dlog
   glib-2.0
   gio-2.0

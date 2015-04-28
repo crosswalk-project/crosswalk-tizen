@@ -16,13 +16,17 @@ namespace wrt {
 class DBusServer {
  public:
   typedef std::function<bool(GCredentials* creds)> PeerCredentialsCallback;
-  typedef std::function<void(const std::string& method_name,
+  typedef std::function<void(GDBusConnection* connection,
+                             const std::string& method_name,
                              GVariant* parameters,
                              GDBusMethodInvocation* invocation)> MethodCallback;
-  typedef std::function<GVariant*(const gchar*)> PropertyGetter;
-  typedef std::function<bool(const gchar*, GVariant*)> PropertySetter;
+  typedef std::function<GVariant*(GDBusConnection* connection,
+                                  const gchar* property)> PropertyGetter;
+  typedef std::function<bool(GDBusConnection* connection,
+                             const gchar* property,
+                             GVariant* value)> PropertySetter;
 
-  explicit DBusServer();
+  DBusServer();
   virtual ~DBusServer();
 
   void Start(const std::string& name);
@@ -32,6 +36,10 @@ class DBusServer {
   void SetIntrospectionXML(const std::string& xml);
   GDBusNodeInfo* GetIntrospectionNodeInfo() const { return node_info_; }
 
+  void SendSignal(GDBusConnection* connection,
+                  const std::string& iface, const std::string& signal_name,
+                  GVariant* parameters);
+
   void SetPeerCredentialsCallback(PeerCredentialsCallback func);
   void SetMethodCallback(const std::string& iface, MethodCallback func);
   void SetPropertyGetter(const std::string& iface, PropertyGetter func);
@@ -40,6 +48,7 @@ class DBusServer {
   MethodCallback GetMethodCallback(const std::string& iface);
   PropertySetter GetPropertySetter(const std::string& iface);
   PropertyGetter GetPropertyGetter(const std::string& iface);
+
  private:
   GDBusServer* server_;
   GDBusNodeInfo* node_info_;
