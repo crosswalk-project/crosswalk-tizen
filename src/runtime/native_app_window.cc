@@ -15,7 +15,7 @@ NativeAppWindow::~NativeAppWindow() {
 }
 
 Evas_Object* NativeAppWindow::CreateWindowInternal() {
-  elm_config_preferred_engine_set("opengl_x11");
+  elm_config_accel_preference_set("opengl");
   return elm_win_add(NULL, "wrt-widget", ELM_WIN_BASIC);
 }
 

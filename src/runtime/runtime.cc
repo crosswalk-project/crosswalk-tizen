@@ -126,7 +126,7 @@ void Runtime::OnAppControl(app_control_h app_control) {
   }
 }
 
-void Runtime::OnLanguageChanged(const std::string& language) {
+void Runtime::OnLanguageChanged(const std::string& /*language*/) {
   if (application_) {
     application_->OnLanguageChanged();
   }
@@ -138,10 +138,10 @@ void Runtime::OnLowMemory() {
   }
 }
 
-void Runtime::HandleDBusMethod(GDBusConnection* connection,
+void Runtime::HandleDBusMethod(GDBusConnection* /*connection*/,
                                const std::string& method_name,
-                               GVariant* parameters,
-                               GDBusMethodInvocation* invocation) {
+                               GVariant* /*parameters*/,
+                               GDBusMethodInvocation* /*invocation*/) {
   if (method_name == kMethodNotifyEPCreated) {
     // TODO(wy80.choi): send signal to injected bundle to make connection
     // between injected bundle and extension process
@@ -152,7 +152,7 @@ void Runtime::HandleDBusMethod(GDBusConnection* connection,
 }
 
 int Runtime::Exec(int argc, char* argv[]) {
-  ui_app_lifecycle_callback_s ops = {0, };
+  ui_app_lifecycle_callback_s ops = {NULL, NULL, NULL, NULL, NULL};
 
   // onCreate
   ops.create = [](void* data) -> bool {

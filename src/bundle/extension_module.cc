@@ -317,7 +317,6 @@ void ExtensionModule::PostMessageCallback(
     return;
   }
 
-  v8::Handle<v8::Context> context = info.GetIsolate()->GetCurrentContext();
   v8::String::Utf8Value value(info[0]->ToString());
 
   // CHECK(module->instance_id_);
@@ -336,7 +335,6 @@ void ExtensionModule::SendSyncMessageCallback(
     return;
   }
 
-  v8::Handle<v8::Context> context = info.GetIsolate()->GetCurrentContext();
   v8::String::Utf8Value value(info[0]->ToString());
 
   // CHECK(module->instance_id_);

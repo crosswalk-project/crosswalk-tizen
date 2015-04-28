@@ -68,7 +68,7 @@ void ExtensionClient::DestroyInstance(const std::string& instance_id) {
 
 void ExtensionClient::PostMessageToNative(
     const std::string& instance_id, const std::string& msg) {
-  GVariant* value = dbus_extension_client_.Call(
+  dbus_extension_client_.Call(
       kDBusInterfaceNameForExtension, kMethodPostMessage,
       g_variant_new("(ss)", instance_id.c_str(), msg.c_str()),
       NULL);

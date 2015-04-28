@@ -342,7 +342,7 @@ void WebViewImpl::InitIPCMessageCallback() {
 
 void WebViewImpl::InitOrientaionLockCallback() {
   // Orientation lock callback
-  auto orientation_lock_callback = [](Evas_Object* o,
+  auto orientation_lock_callback = [](Evas_Object*,
                                       Eina_Bool need_lock,
                                       int orientation,
                                       void* user_data) -> Eina_Bool {

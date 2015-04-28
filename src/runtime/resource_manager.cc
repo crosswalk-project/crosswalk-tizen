@@ -29,9 +29,10 @@ typedef std::vector<AppControlInfo> AppControlList;
 // Scheme type
 const char* kSchemeTypeApp = "app://";
 const char* kSchemeTypeFile = "file://";
-const char* kSchemeTypeHttp = "http://";
-const char* kSchemeTypeHttps = "https://";
-const char* kSchemeTypeWidget = "widget://";
+// TODO(wy80.choi): comment out below unused const variables if needed.
+// const char* kSchemeTypeHttp = "http://";
+// const char* kSchemeTypeHttps = "https://";
+// const char* kSchemeTypeWidget = "widget://";
 
 // Default Start Files
 const char* kDefaultStartFiles[] = {
