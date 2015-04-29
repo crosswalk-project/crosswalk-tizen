@@ -8,7 +8,6 @@
 #include <app.h>
 #include <string>
 
-#include "common/dbus_server.h"
 #include "runtime/native_window.h"
 #include "runtime/web_application.h"
 
@@ -31,14 +30,8 @@ class Runtime {
   virtual void OnLowMemory();
 
  private:
-  void HandleDBusMethod(GDBusConnection* connection,
-                        const std::string& method_name,
-                        GVariant* parameters,
-                        GDBusMethodInvocation* invocation);
-
   WebApplication* application_;
   NativeWindow* native_window_;
-  DBusServer dbus_server_;
 };
 
 }  // namespace wrt

@@ -19,38 +19,11 @@ namespace wrt {
 
 namespace {
 
-static const char* kDBusIntrospectionXML =
-  "<node>"
-  "  <interface name='org.tizen.wrt.Runtime'>"
-  "    <method name='NotifyEPCreated'>"
-  "      <arg name='status' type='s' direction='in'/>"
-  "    </method>"
-  "    <method name='GetRuntimeVariable'>"
-  "      <arg name='key' type='s' direction='in' />"
-  "      <arg name='value' type='s' direction='out' />"
-  "    </method>"
-  "  </interface>"
-  "</node>";
-
 static NativeWindow* CreateNativeWindow() {
   // TODO(wy80.choi) : consider other type of native window.
   NativeWindow* window = new NativeAppWindow();
   window->Initialize();
   return window;
-}
-
-static void ExecExtensionProcess(const std::string& uuid) {
-  pid_t pid = -1;
-  if ((pid = fork()) < 0) {
-    LoggerE("Failed to fork child process for extension process.");
-  }
-
-  if (pid == 0) {
-    // TODO(wy80.choi): wrt-extension should be merged to this runtime exec.
-    // It should be changed to "/usr/bin/wrt --extension-process"
-    execl("/usr/bin/wrt-extension",
-          "/usr/bin/wrt-extension", uuid.c_str(), NULL);
-  }
 }
 
 }  // namespace
@@ -82,21 +55,6 @@ bool Runtime::OnCreate() {
   application_ = new WebApplication(native_window_, std::move(appdata));
   application_->set_terminator([](){ ui_app_exit(); });
 
-  // Start DBus Server for Runtime
-  // TODO(wy80.choi): Should I add PeerCredentials checker?
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-  using std::placeholders::_3;
-  using std::placeholders::_4;
-  dbus_server_.SetIntrospectionXML(kDBusIntrospectionXML);
-  dbus_server_.SetMethodCallback(kDBusInterfaceNameForRuntime,
-    std::bind(&Runtime::HandleDBusMethod, this, _1, _2, _3, _4));
-  dbus_server_.Start(application_->uuid() +
-                     "." + std::string(kDBusNameForRuntime));
-
-  // Launch Extension Process
-  ExecExtensionProcess(application_->uuid());
-
   return true;
 }
 
@@ -117,9 +75,7 @@ void Runtime::OnResume() {
 
 void Runtime::OnAppControl(app_control_h app_control) {
   std::unique_ptr<AppControl> appcontrol(new AppControl(app_control));
-
   if (application_->launched()) {
-    // Process AppControl
     application_->AppControl(std::move(appcontrol));
   } else {
     application_->Launch(std::move(appcontrol));
@@ -135,19 +91,6 @@ void Runtime::OnLanguageChanged(const std::string& /*language*/) {
 void Runtime::OnLowMemory() {
   if (application_) {
     application_->OnLowMemory();
-  }
-}
-
-void Runtime::HandleDBusMethod(GDBusConnection* /*connection*/,
-                               const std::string& method_name,
-                               GVariant* /*parameters*/,
-                               GDBusMethodInvocation* /*invocation*/) {
-  if (method_name == kMethodNotifyEPCreated) {
-    // TODO(wy80.choi): send signal to injected bundle to make connection
-    // between injected bundle and extension process
-    LoggerD("Call!!!! NotifyEPCreated!");
-  } else if (method_name == kMethodGetRuntimeVariable) {
-    // TODO(wy80.choi): return runtime variable
   }
 }
 

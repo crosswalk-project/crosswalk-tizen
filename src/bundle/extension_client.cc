@@ -46,6 +46,7 @@ std::string ExtensionClient::CreateInstance(
   std::string ret(instance_id);
   handlers_[ret] = handler;
 
+  g_variant_unref(value);
   return ret;
 }
 
@@ -64,6 +65,8 @@ void ExtensionClient::DestroyInstance(const std::string& instance_id) {
   if (it != handlers_.end()) {
     handlers_.erase(it);
   }
+
+  g_variant_unref(value);
 }
 
 void ExtensionClient::PostMessageToNative(
@@ -89,7 +92,10 @@ std::string ExtensionClient::SendSyncMessageToNative(
   gchar* reply;
   g_variant_get(value, "(&s)", &reply);
 
-  return std::string(reply);
+  std::string ret(reply);
+  g_variant_unref(value);
+
+  return ret;
 }
 
 void ExtensionClient::Initialize(const std::string& uuid) {
@@ -132,6 +138,8 @@ void ExtensionClient::Initialize(const std::string& uuid) {
     }
     extension_apis_.insert(std::make_pair(std::string(name), code));
   }
+
+  g_variant_unref(value);
 }
 
 void ExtensionClient::HandleSignal(

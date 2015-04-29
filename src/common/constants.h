@@ -11,8 +11,8 @@ extern const char kSystemExtensionPath[];
 extern const char kExtensionPrefix[];
 extern const char kExtensionSuffix[];
 
-extern const char kDBusNameForRuntime[];
-extern const char kDBusInterfaceNameForRuntime[];
+extern const char kDBusNameForApplication[];
+extern const char kDBusInterfaceNameForApplication[];
 extern const char kMethodNotifyEPCreated[];
 extern const char kMethodGetRuntimeVariable[];
 

@@ -10,8 +10,8 @@ const char kSystemExtensionPath[] = "/usr/lib/tizen-extensions-crosswalk";
 const char kExtensionPrefix[] = "lib";
 const char kExtensionSuffix[] = ".so";
 
-const char kDBusNameForRuntime[] = "Runtime";
-const char kDBusInterfaceNameForRuntime[] = "org.tizen.wrt.Runtime";
+const char kDBusNameForApplication[] = "Application";
+const char kDBusInterfaceNameForApplication[] = "org.tizen.wrt.Application";
 const char kMethodNotifyEPCreated[] = "NotifyEPCreated";
 const char kMethodGetRuntimeVariable[] = "GetRuntimeVariable";
 

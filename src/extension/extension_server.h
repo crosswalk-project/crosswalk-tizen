@@ -35,7 +35,7 @@ class ExtensionServer : public Extension::ExtensionDelegate {
 
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);
 
-  void NotifyEPCreatedToRuntime();
+  void NotifyEPCreatedToApplication();
 
   void HandleDBusMethod(GDBusConnection* connection,
                         const std::string& method_name,
@@ -63,7 +63,7 @@ class ExtensionServer : public Extension::ExtensionDelegate {
 
   std::string app_uuid_;
   DBusServer dbus_server_;
-  DBusClient dbus_runtime_client_;
+  DBusClient dbus_application_client_;
 
   typedef std::set<std::string> StringSet;
   StringSet extension_symbols_;

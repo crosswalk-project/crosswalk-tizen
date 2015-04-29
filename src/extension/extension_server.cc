@@ -72,10 +72,10 @@ bool ExtensionServer::Start(const StringVector& paths) {
     }
   }
 
-  // Connect to DBusServer for Runtime
-  if (!dbus_runtime_client_.ConnectByName(
-          app_uuid_ + "." + std::string(kDBusNameForRuntime))) {
-    LoggerE("Failed to connect to the dbus server for Runtime.");
+  // Connect to DBusServer for Application of Runtime
+  if (!dbus_application_client_.ConnectByName(
+          app_uuid_ + "." + std::string(kDBusNameForApplication))) {
+    LoggerE("Failed to connect to the dbus server for Application.");
     return false;
   }
 
@@ -91,7 +91,7 @@ bool ExtensionServer::Start(const StringVector& paths) {
   dbus_server_.Start(app_uuid_ + "." + std::string(kDBusNameForExtension));
 
   // Send 'ready' signal to Injected Bundle.
-  NotifyEPCreatedToRuntime();
+  NotifyEPCreatedToApplication();
 
   return true;
 }
@@ -146,14 +146,27 @@ bool ExtensionServer::RegisterSymbols(Extension* extension) {
   return true;
 }
 
-void ExtensionServer::GetRuntimeVariable(const char* /*key*/, char* /*value*/,
-    size_t /*value_len*/) {
-  // TODO(wy80.choi): DBus Call to Runtime to get runtime variable
+void ExtensionServer::GetRuntimeVariable(const char* key, char* value,
+    size_t value_len) {
+  GVariant* ret = dbus_application_client_.Call(
+      kDBusInterfaceNameForApplication, kMethodGetRuntimeVariable,
+      g_variant_new("(s)", key), G_VARIANT_TYPE("(s)"));
+
+  if (!ret) {
+    LoggerE("Failed to get runtime variable from Application. (%s)", key);
+    return;
+  }
+
+  gchar* v;
+  g_variant_get(ret, "(&s)", &v);
+  strncpy(value, v, value_len);
+
+  g_variant_unref(ret);
 }
 
-void ExtensionServer::NotifyEPCreatedToRuntime() {
-  dbus_runtime_client_.Call(
-      kDBusInterfaceNameForRuntime, kMethodNotifyEPCreated,
+void ExtensionServer::NotifyEPCreatedToApplication() {
+  dbus_application_client_.Call(
+      kDBusInterfaceNameForApplication, kMethodNotifyEPCreated,
       g_variant_new("(s)", dbus_server_.GetClientAddress().c_str()),
       NULL);
 }

@@ -14,6 +14,7 @@
 #include <map>
 
 #include "common/logger.h"
+#include "common/constants.h"
 #include "common/command_line.h"
 #include "common/string_utils.h"
 #include "runtime/native_window.h"
@@ -25,53 +26,64 @@
 #include "runtime/resource_manager.h"
 
 namespace {
-  // TODO(sngn.lee) : It should be declare in common header
-  const char* kKeyNameBack = "back";
+// TODO(sngn.lee) : It should be declare in common header
+const char* kKeyNameBack = "back";
 
-  const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
-  const char* kConsoleMessageLogTag = "ConsoleMessage";
+const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
+const char* kConsoleMessageLogTag = "ConsoleMessage";
 
-  const char* kDebugKey = "debug";
-  const char* kPortKey = "port";
+const char* kDebugKey = "debug";
+const char* kPortKey = "port";
 
-  // TODO(wy80.choi): consider 64bits system.
-  const char* kInjectedBundlePath = "/usr/lib/libwrt-injected-bundle.so";
+// TODO(wy80.choi): consider 64bits system.
+const char* kInjectedBundlePath = "/usr/lib/libwrt-injected-bundle.so";
+const char* kDBusIntrospectionXML =
+    "<node>"
+    "  <interface name='org.tizen.wrt.Application'>"
+    "    <method name='NotifyEPCreated'>"
+    "      <arg name='status' type='s' direction='in'/>"
+    "    </method>"
+    "    <method name='GetRuntimeVariable'>"
+    "      <arg name='key' type='s' direction='in' />"
+    "      <arg name='value' type='s' direction='out' />"
+    "    </method>"
+    "  </interface>"
+    "</node>";
+const char* kAppControlEventScript = \
+    "(function(){"
+    "var __event = document.createEvent(\"CustomEvent\");\n"
+    "__event.initCustomEvent(\"appcontrol\", true, true);\n"
+    "document.dispatchEvent(__event);\n"
+    "\n"
+    "for (var i=0; i < window.frames.length; i++)\n"
+    "{ window.frames[i].document.dispatchEvent(__event); }"
+    "})()";
+const char* kBackKeyEventScript = \
+    "(function(){"
+    "var __event = document.createEvent(\"CustomEvent\");\n"
+    "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
+    "__event.keyName = \"back\";\n"
+    "document.dispatchEvent(__event);\n"
+    "\n"
+    "for (var i=0; i < window.frames.length; i++)\n"
+    "{ window.frames[i].document.dispatchEvent(__event); }"
+    "})()";
+const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
+const char* kFullscreenFeature = "fullscreen";
+const char* kNotificationPrivilege =
+    "http://tizen.org/privilege/notification";
+const char* kLocationPrivilege =
+    "http://tizen.org/privilege/location";
+const char* kStoragePrivilege =
+    "http://tizen.org/privilege/unlimitedstorage";
 
-  const char* kAppControlEventScript = \
-        "(function(){"
-        "var __event = document.createEvent(\"CustomEvent\");\n"
-        "__event.initCustomEvent(\"appcontrol\", true, true);\n"
-        "document.dispatchEvent(__event);\n"
-        "\n"
-        "for (var i=0; i < window.frames.length; i++)\n"
-        "{ window.frames[i].document.dispatchEvent(__event); }"
-        "})()";
-  const char* kBackKeyEventScript = \
-        "(function(){"
-        "var __event = document.createEvent(\"CustomEvent\");\n"
-        "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
-        "__event.keyName = \"back\";\n"
-        "document.dispatchEvent(__event);\n"
-        "\n"
-        "for (var i=0; i < window.frames.length; i++)\n"
-        "{ window.frames[i].document.dispatchEvent(__event); }"
-        "})()";
-  const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
-  const char* kFullscreenFeature = "fullscreen";
-  const char* kNotificationPrivilege =
-      "http://tizen.org/privilege/notification";
-  const char* kLocationPrivilege =
-      "http://tizen.org/privilege/location";
-  const char* kStoragePrivilege =
-      "http://tizen.org/privilege/unlimitedstorage";
-
-  const char* kVisibilitySuspendFeature = "visibility,suspend";
-  const char* kMediastreamRecordFeature = "mediastream,record";
-  const char* kEncryptedDatabaseFeature = "encrypted,database";
-  const char* kRotationLockFeature = "rotation,lock";
-  const char* kBackgroundMusicFeature = "background,music";
-  const char* kSoundModeFeature = "sound,mode";
-  const char* kBackgroundVibrationFeature = "background,vibration";
+const char* kVisibilitySuspendFeature = "visibility,suspend";
+const char* kMediastreamRecordFeature = "mediastream,record";
+const char* kEncryptedDatabaseFeature = "encrypted,database";
+const char* kRotationLockFeature = "rotation,lock";
+const char* kBackgroundMusicFeature = "background,music";
+const char* kSoundModeFeature = "sound,mode";
+const char* kBackgroundVibrationFeature = "background,vibration";
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -85,6 +97,20 @@ bool FindPrivilege(wrt::ApplicationData* app_data,
   }
   return false;
 }
+
+void ExecExtensionProcess(const std::string& uuid) {
+  pid_t pid = -1;
+  if ((pid = fork()) < 0) {
+    LoggerE("Failed to fork child process for extension process.");
+  }
+  if (pid == 0) {
+    // TODO(wy80.choi): wrt-extension should be merged to this runtime exec.
+    // It should be changed to "/usr/bin/wrt --extension-process"
+    execl("/usr/bin/wrt-extension",
+          "/usr/bin/wrt-extension", uuid.c_str(), NULL);
+  }
+}
+
 }  // namespace
 
 namespace wrt {
@@ -97,10 +123,10 @@ WebApplication::WebApplication(
           kInjectedBundlePath)),
       window_(window),
       appid_(app_data->app_id()),
+      app_uuid_(utils::GenerateUUID()),
       locale_manager_(new LocaleManager()),
       app_data_(std::move(app_data)),
-      terminator_(NULL),
-      uuid_(utils::GenerateUUID()) {
+      terminator_(NULL) {
   std::unique_ptr<char, decltype(std::free)*>
     path {app_get_data_path(), std::free};
   app_data_path_ = path.get();
@@ -208,6 +234,22 @@ bool WebApplication::Initialize() {
 }
 
 void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
+  // Start DBus Server for Runtime
+  // TODO(wy80.choi): Should I add PeerCredentials checker?
+  using std::placeholders::_1;
+  using std::placeholders::_2;
+  using std::placeholders::_3;
+  using std::placeholders::_4;
+  dbus_server_.SetIntrospectionXML(kDBusIntrospectionXML);
+  dbus_server_.SetMethodCallback(kDBusInterfaceNameForApplication,
+    std::bind(&WebApplication::HandleDBusMethod, this, _1, _2, _3, _4));
+  dbus_server_.Start(app_uuid_ +
+                     "." + std::string(kDBusNameForApplication));
+
+  // Execute ExtensionProcess
+  ExecExtensionProcess(app_uuid_);
+
+  // Setup View
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
 
@@ -220,10 +262,11 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   //                     elm_theme_get(NULL),
   //                    uuid_.c_str());
 
-  // view->LoadUrl("file:///home/owner/apps_rw/33CFo0eFJe/"
-  //               "33CFo0eFJe.annex/index.html");
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
+  // TODO(wy80.choi): temporary comment for test, remove it later.
+  // view->LoadUrl("file:///home/owner/apps_rw/33CFo0eFJe/"
+  //               "33CFo0eFJe.annex/index.html");
   view->LoadUrl(res->uri());
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
@@ -363,7 +406,7 @@ void WebApplication::OnClosedWebView(WebView * view) {
   // Delete after the callback context(for ewk view) was not used
   ecore_idler_add([](void* view) {
       WebView* obj = static_cast<WebView*>(view);
-      delete view;
+      delete obj;
       return EINA_FALSE;
     }, view);
 }
@@ -545,6 +588,28 @@ void WebApplication::OnQuotaExceed(
   // TODO(sngn.lee): create popup and show
 }
 
-
+void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
+                                      const std::string& method_name,
+                                      GVariant* parameters,
+                                      GDBusMethodInvocation* invocation) {
+  if (method_name == kMethodNotifyEPCreated) {
+    // TODO(wy80.choi): send signal to injected bundle to make connection
+    // between injected bundle and extension process
+    LoggerD("Call!!!! NotifyEPCreated!");
+  } else if (method_name == kMethodGetRuntimeVariable) {
+    gchar* key;
+    std::string value;
+    g_variant_get(parameters, "(&s)", &key);
+    if (g_strcmp0(key, "runtime_name") == 0) {
+      value = std::string("wrt");
+    } else if (g_strcmp0(key, "app_id") == 0) {
+      value = appid_;
+    } else if (g_strcmp0(key, "encoded_bundle") == 0) {
+      value = received_appcontrol_->encoded_bundle();
+    }
+    g_dbus_method_invocation_return_value(
+          invocation, g_variant_new("(s)", value.c_str()));
+  }
+}
 
 }  // namespace wrt
