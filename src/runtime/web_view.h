@@ -47,6 +47,10 @@ class WebView {
         WebView* /*view*/,
         const std::string& /*url*/,
         std::function<void(bool)> /*result_handler*/) {}
+    virtual void OnGeolocationPermissionRequest(
+        WebView* /*view*/,
+        const std::string& /*url*/,
+        std::function<void(bool)> /*result_handler*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

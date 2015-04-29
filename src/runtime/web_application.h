@@ -59,6 +59,10 @@ class WebApplication : public WebView::EventListener {
       WebView* view,
       const std::string& url,
       std::function<void(bool)> result_handler);
+  virtual void OnGeolocationPermissionRequest(
+      WebView* view,
+      const std::string& url,
+      std::function<void(bool)> result_handler);
 
 
   std::string uuid() const { return uuid_; }

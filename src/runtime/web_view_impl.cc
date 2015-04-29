@@ -99,13 +99,13 @@ void WebViewImpl::Initialize() {
   InitWindowCreateCallback();
   InitFullscreenCallback();
   InitNotificationPermissionCallback();
+  InitGeolocationPermissionCallback();
 
   // TODO(sngn.lee): "request,certificate,confirm" certification popup
   // TODO(sngn.lee): "notification,show"
   // TODO(sngn.lee): "notification,cancel"
   // TODO(sngn.lee): "protocolhandler,registration,requested"
   //                  custom protocol handler
-  // TODO(sngn.lee): ewk_view_geolocation_permission_callback_set
   // TODO(sngn.lee): ewk_view_user_media_permission_callback_set
 
   // Show webview
@@ -140,6 +140,10 @@ void WebViewImpl::Deinitialize() {
       NULL,
       NULL);
   ewk_view_notification_permission_callback_set(
+      ewk_view_,
+      NULL,
+      NULL);
+  ewk_view_geolocation_permission_callback_set(
       ewk_view_,
       NULL,
       NULL);
@@ -549,6 +553,43 @@ void WebViewImpl::InitNotificationPermissionCallback() {
                                                 this);
 }
 
+void WebViewImpl::InitGeolocationPermissionCallback() {
+  auto permission_callback = [](
+      Evas_Object*,
+      Ewk_Geolocation_Permission_Request* request,
+      void* user_data) {
+    LoggerD("Geolocation Permission Request");
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (self == NULL || self->listener_ == NULL) {
+      ewk_geolocation_permission_reply(request, EINA_FALSE);
+      return EINA_TRUE;
+    }
+    ewk_geolocation_permission_request_suspend(request);
+
+    const Ewk_Security_Origin* ewk_origin =
+        ewk_geolocation_permission_request_origin_get(request);
+    auto result_handler = [request](bool result) {
+      LoggerD("Geolocation Permission Result : %d", result);
+      ewk_geolocation_permission_reply(request, result);
+    };
+
+    std::stringstream url;
+    url << ewk_security_origin_protocol_get(ewk_origin)
+        << "://"
+        << ewk_security_origin_host_get(ewk_origin)
+        << ":"
+        << ewk_security_origin_port_get(ewk_origin);
+
+    self->listener_->OnGeolocationPermissionRequest(
+        self->view_,
+        url.str(),
+        result_handler);
+    return EINA_TRUE;
+  };
+  ewk_view_geolocation_permission_callback_set(ewk_view_,
+                                               permission_callback,
+                                               this);
+}
 
 std::string WebViewImpl::GetUrl() {
   return std::string(ewk_view_url_get(ewk_view_));

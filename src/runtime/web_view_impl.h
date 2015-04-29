@@ -54,6 +54,7 @@ class WebViewImpl {
   void InitWindowCreateCallback();
   void InitFullscreenCallback();
   void InitNotificationPermissionCallback();
+  void InitGeolocationPermissionCallback();
 
   NativeWindow* window_;
   Ewk_Context* context_;

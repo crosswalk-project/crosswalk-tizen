@@ -60,6 +60,8 @@ namespace {
   const char* kFullscreenFeature = "fullscreen";
   const char* kNotificationPrivilege =
       "http://tizen.org/privilege/notification";
+  const char* kLocationPrivilege =
+      "http://tizen.org/privilege/location";
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -450,6 +452,30 @@ void WebApplication::OnNotificationPermissionRequest(
   // Remote Domain: Popup user prompt.
   if (utils::StartsWith(url, "file://") &&
       FindPrivilege(app_data_.get(), kNotificationPrivilege)) {
+    result_handler(true);
+    return;
+  }
+
+  // TODO(sngn.lee): create popup and show
+}
+
+void WebApplication::OnGeolocationPermissionRequest(
+    WebView* view,
+    const std::string& url,
+    std::function<void(bool)> result_handler) {
+  // TODO(sngn.lee): check from DB url was already allowed
+  // if(check already allow or denied) {
+  //   result_handler(true);
+  //   return;
+  // }
+  // Local Domain: Grant permission if defined, otherwise block execution.
+  // Remote Domain: Popup user prompt if defined, otherwise block execution.
+  if (!FindPrivilege(app_data_.get(), kLocationPrivilege)) {
+    result_handler(false);
+    return;
+  }
+
+  if (utils::StartsWith(url, "file://")) {
     result_handler(true);
     return;
   }
