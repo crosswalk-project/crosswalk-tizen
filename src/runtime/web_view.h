@@ -8,6 +8,7 @@
 #include <Elementary.h>
 #include <ewk_ipc_message.h>
 #include <string>
+#include <functional>
 
 class Ewk_Context;
 
@@ -41,6 +42,11 @@ class WebView {
         int /*preferred_rotation*/) {}
     virtual void OnConsoleMessage(const std::string& /*msg*/, int /*level*/) {}
     virtual bool OnContextMenuDisabled(WebView* /*view*/) { return false; }
+
+    virtual void OnNotificationPermissionRequest(
+        WebView* /*view*/,
+        const std::string& /*url*/,
+        std::function<void(bool)> /*result_handler*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

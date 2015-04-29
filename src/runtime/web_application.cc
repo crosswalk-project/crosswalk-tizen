@@ -56,9 +56,10 @@ namespace {
         "for (var i=0; i < window.frames.length; i++)\n"
         "{ window.frames[i].document.dispatchEvent(__event); }"
         "})()";
-
   const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
   const char* kFullscreenFeature = "fullscreen";
+  const char* kNotificationPrivilege =
+      "http://tizen.org/privilege/notification";
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -72,7 +73,6 @@ bool FindPrivilege(wrt::ApplicationData* app_data,
   }
   return false;
 }
-
 }  // namespace
 
 namespace wrt {
@@ -436,6 +436,27 @@ bool WebApplication::OnDidNavigation(WebView* view, const std::string& url) {
   // except(file , http, https, app) pass to appcontrol and return false
   return true;
 }
+
+void WebApplication::OnNotificationPermissionRequest(
+    WebView* view,
+    const std::string& url,
+    std::function<void(bool)> result_handler) {
+  // TODO(sngn.lee): check from DB url was already allowed
+  // if(check already allow or denied) {
+  //   result_handler(true);
+  //   return;
+  // }
+  // Local Domain: Grant permission if defined, otherwise Popup user prompt.
+  // Remote Domain: Popup user prompt.
+  if (utils::StartsWith(url, "file://") &&
+      FindPrivilege(app_data_.get(), kNotificationPrivilege)) {
+    result_handler(true);
+    return;
+  }
+
+  // TODO(sngn.lee): create popup and show
+}
+
 
 
 }  // namespace wrt

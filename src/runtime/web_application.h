@@ -55,6 +55,11 @@ class WebApplication : public WebView::EventListener {
   virtual bool OnContextMenuDisabled(WebView* view);
   virtual bool OnDidNavigation(WebView* view, const std::string& url);
 
+  virtual void OnNotificationPermissionRequest(
+      WebView* view,
+      const std::string& url,
+      std::function<void(bool)> result_handler);
+
 
   std::string uuid() const { return uuid_; }
 

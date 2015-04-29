@@ -53,6 +53,7 @@ class WebViewImpl {
   void InitRotationCallback();
   void InitWindowCreateCallback();
   void InitFullscreenCallback();
+  void InitNotificationPermissionCallback();
 
   NativeWindow* window_;
   Ewk_Context* context_;
