@@ -213,4 +213,9 @@ void NativeWindow::InActive() {
   elm_win_lower(window_);
 }
 
+void NativeWindow::FullScreen(bool enable) {
+  elm_win_indicator_opacity_set(window_,
+      enable ? ELM_WIN_INDICATOR_TRANSPARENT : ELM_WIN_INDICATOR_OPAQUE);
+}
+
 }  // namespace wrt

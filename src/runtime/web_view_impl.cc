@@ -46,7 +46,8 @@ WebViewImpl::WebViewImpl(WebView* view,
       context_(context),
       ewk_view_(NULL),
       listener_(NULL),
-      view_(view) {
+      view_(view),
+      fullscreen_(false) {
   Initialize();
 }
 
@@ -95,6 +96,7 @@ void WebViewImpl::Initialize() {
   InitCustomContextMenuCallback();
   InitRotationCallback();
   InitWindowCreateCallback();
+  InitFullscreenCallback();
 
   // TODO(sngn.lee): "request,certificate,confirm" certification popup
   // TODO(sngn.lee): ewk_view_notification_permission_callback_set
@@ -102,8 +104,6 @@ void WebViewImpl::Initialize() {
   // TODO(sngn.lee): "notification,cancel"
   // TODO(sngn.lee): "create,window"
   // TODO(sngn.lee): "close,window"
-  // TODO(sngn.lee): "fullscreen,enterfullscreen"
-  // TODO(sngn.lee): "fullscreen,exitfullscreen"
   // TODO(sngn.lee): "protocolhandler,registration,requested"
   //                  custom protocol handler
   // TODO(sngn.lee): ewk_view_geolocation_permission_callback_set
@@ -483,6 +483,34 @@ void WebViewImpl::InitWindowCreateCallback() {
   smart_callbacks_["close,window"] = close_callback;
 }
 
+void WebViewImpl::InitFullscreenCallback() {
+  auto enter_callback = [](void* user_data,
+                            Evas_Object*,
+                            void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    self->fullscreen_ = true;
+    self->window_->FullScreen(true);
+  };
+  auto exit_callback =  [](void* user_data,
+                            Evas_Object*,
+                            void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    self->fullscreen_ = false;
+    self->window_->FullScreen(false);
+  };
+  evas_object_smart_callback_add(ewk_view_,
+                                 "fullscreen,enterfullscreen",
+                                 enter_callback,
+                                 this);
+  evas_object_smart_callback_add(ewk_view_,
+                                 "fullscreen,exitfullscreen",
+                                 exit_callback,
+                                 this);
+  smart_callbacks_["fullscreen,enterfullscreen"] = enter_callback;
+  smart_callbacks_["fullscreen,exitfullscreen"] = exit_callback;
+}
+
+
 std::string WebViewImpl::GetUrl() {
   return std::string(ewk_view_url_get(ewk_view_));
 }
@@ -498,6 +526,10 @@ void WebViewImpl::OnRotation(int degree) {
 void WebViewImpl::OnKeyEvent(Ea_Callback_Type key_type) {
   std::string keyname;
   if (key_type == EA_CALLBACK_BACK) {
+    if (fullscreen_) {
+      ewk_view_fullscreen_exit(ewk_view_);
+      return;
+    }
     if (EINA_TRUE == ewk_view_text_selection_clear(ewk_view_)) {
       return;
     }

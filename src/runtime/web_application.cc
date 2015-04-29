@@ -56,6 +56,23 @@ namespace {
         "for (var i=0; i < window.frames.length; i++)\n"
         "{ window.frames[i].document.dispatchEvent(__event); }"
         "})()";
+
+  const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
+  const char* kFullscreenFeature = "fullscreen";
+
+bool FindPrivilege(wrt::ApplicationData* app_data,
+                   const std::string& privilege) {
+  if (app_data->permissions_info().get() == NULL)
+    return false;
+  auto it = app_data->permissions_info()->GetAPIPermissions().begin();
+  auto end = app_data->permissions_info()->GetAPIPermissions().end();
+  for ( ; it != end; ++it) {
+    if (*it == privilege)
+      return true;
+  }
+  return false;
+}
+
 }  // namespace
 
 namespace wrt {
@@ -114,6 +131,11 @@ bool WebApplication::Initialize() {
                                              vibration_start_callback,
                                              vibration_stop_callback,
                                              NULL);
+  if (FindPrivilege(app_data_.get(), kFullscreenPrivilege)) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kFullscreenFeature,
+                                                true);
+  }
 
 
 
@@ -135,7 +157,6 @@ bool WebApplication::Initialize() {
   // TODO(sngn.lee): Check Backround support and enable - "visibility,suspend"
   // TODO(sngn.lee): Check Backround support and enable - "background,music"
   // TODO(sngn.lee): Check setting rotation value and enable "rotation,lock"
-  // TODO(sngn.lee): always enable "fullscreen"
   // TODO(sngn.lee): check "sound-mode":"exclusive" - in tizen:setting
   //                 and enable - "sound,mode"
   // TODO(sngn.lee): check "background-vibration":"enable" - in tizen:setting

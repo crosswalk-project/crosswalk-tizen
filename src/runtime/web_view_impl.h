@@ -52,6 +52,7 @@ class WebViewImpl {
   void InitCustomContextMenuCallback();
   void InitRotationCallback();
   void InitWindowCreateCallback();
+  void InitFullscreenCallback();
 
   NativeWindow* window_;
   Ewk_Context* context_;
@@ -60,6 +61,7 @@ class WebViewImpl {
   int rotation_handler_id_;
   WebView* view_;
   std::map<const std::string, Evas_Smart_Cb> smart_callbacks_;
+  bool fullscreen_;
 };
 }  // namespace wrt
 
