@@ -140,7 +140,7 @@ void NativeWindow::DidDeleteRequested(void* /*data*/,
   elm_exit();
 }
 
-void NativeWindow::DidProfileChanged(void* data,
+void NativeWindow::DidProfileChanged(void* /*data*/,
     Evas_Object* /*obj*/, void* /*event_info*/) {
   LoggerD("didProfileChanged");
 }

@@ -146,8 +146,8 @@ bool ExtensionServer::RegisterSymbols(Extension* extension) {
   return true;
 }
 
-void ExtensionServer::GetRuntimeVariable(const char* key, char* value,
-    size_t value_len) {
+void ExtensionServer::GetRuntimeVariable(const char* /*key*/, char* /*value*/,
+    size_t /*value_len*/) {
   // TODO(wy80.choi): DBus Call to Runtime to get runtime variable
 }
 

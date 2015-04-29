@@ -26,7 +26,7 @@ std::string DirName(const std::string& path) {
 }
 
 std::string SchemeName(const std::string& uri) {
-  int pos = uri.find(":");
+  size_t pos = uri.find(":");
   if (pos != std::string::npos && pos < uri.length()) {
     return std::string(uri.substr(0, pos));
   } else {

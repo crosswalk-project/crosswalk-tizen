@@ -264,7 +264,7 @@ void WebApplication::Suspend() {
   }
 }
 
-void WebApplication::OnCreatedNewWebView(WebView* view, WebView* new_view) {
+void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(false);
 
@@ -306,7 +306,7 @@ void WebApplication::OnClosedWebView(WebView * view) {
 
 void WebApplication::OnReceivedWrtMessage(
     WebView* /*view*/,
-    Ewk_IPC_Wrt_Message_Data* message) {
+    Ewk_IPC_Wrt_Message_Data* /*message*/) {
   // TODO(wy80.choi) : Handle messages from injected bundle?
   // ex. SendRuntimeMessage to hide / exit application.
 }
@@ -384,13 +384,13 @@ bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
            true);
 }
 
-void WebApplication::OnLoadStart(WebView* view) {
+void WebApplication::OnLoadStart(WebView* /*view*/) {
   LoggerD("LoadStart");
 }
-void WebApplication::OnLoadFinished(WebView* view) {
+void WebApplication::OnLoadFinished(WebView* /*view*/) {
   LoggerD("LoadFinished");
 }
-void WebApplication::OnRendered(WebView* view) {
+void WebApplication::OnRendered(WebView* /*view*/) {
   LoggerD("Rendered");
 }
 

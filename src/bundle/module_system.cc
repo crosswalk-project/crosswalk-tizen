@@ -25,23 +25,6 @@ const int kModuleSystemEmbedderDataIndex = 8;
 // pointer back to XWalkExtensionModule.
 const char* kWrtModuleSystem = "kWrtModuleSystem";
 
-ModuleSystem* GetModuleSystem(
-    const v8::FunctionCallbackInfo<v8::Value>& info) {
-  v8::Isolate* isolate = info.GetIsolate();
-  v8::HandleScope handle_scope(isolate);
-
-  v8::Handle<v8::Object> data = info.Data().As<v8::Object>();
-  v8::Handle<v8::Value> module_system =
-      data->Get(v8::String::NewFromUtf8(isolate, kWrtModuleSystem));
-  if (module_system.IsEmpty() || module_system->IsUndefined()) {
-    LoggerE("ModuleSystem is not defined.");
-    return NULL;
-  }
-
-  return static_cast<ModuleSystem*>(
-      module_system.As<v8::External>()->Value());
-}
-
 }  // namespace
 
 ModuleSystem::ModuleSystem(v8::Handle<v8::Context> context) {

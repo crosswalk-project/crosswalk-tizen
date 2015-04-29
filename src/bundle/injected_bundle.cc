@@ -9,28 +9,28 @@
 #include "common/logger.h"
 #include "bundle/extension_renderer_controller.h"
 
-extern "C" void DynamicSetWidgetInfo(int widget_id) {
+extern "C" void DynamicSetWidgetInfo(int /*widget_id*/) {
   LoggerD("InjectedBundle::DynamicSetWidgetInfo !!");
 }
 
-extern "C" void DynamicPluginStartSession(int widget_id,
+extern "C" void DynamicPluginStartSession(int /*widget_id*/,
                                           v8::Handle<v8::Context> context,
-                                          int routing_handle,
-                                          double scale,
-                                          const char* encoded_bundle,
-                                          const char* theme,
-                                          const char* base_url) {
+                                          int /*routing_handle*/,
+                                          double /*scale*/,
+                                          const char* uuid,
+                                          const char* /*theme*/,
+                                          const char* /*base_url*/) {
   LoggerD("InjectedBundle::DynamicPluginStartSession !!");
 
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();
   // TODO(wy80.choi): Temporarily, uuid is passed as theme arguments.
-  controller.InitializeExtensions(theme);
+  controller.InitializeExtensions(uuid);
   controller.DidCreateScriptContext(context);
 }
 
 extern "C" void DynamicPluginStopSession(
-    int widget_id, v8::Handle<v8::Context> context) {
+    int /*widget_id*/, v8::Handle<v8::Context> context) {
   LoggerD("InjectedBundle::DynamicPluginStopSession !!");
 
   wrt::ExtensionRendererController& controller =
@@ -39,15 +39,16 @@ extern "C" void DynamicPluginStopSession(
 }
 
 extern "C" void DynamicUrlParsing(
-    std::string* old_url, std::string* new_url, int widget_id) {
+    std::string* old_url, std::string* new_url, int /*widget_id*/) {
   LoggerD("InjectedBundle::DynamicUrlParsing !!");
+  *new_url = *old_url;
 }
 
-extern "C" void DynamicDatabaseAttach(int attach) {
+extern "C" void DynamicDatabaseAttach(int /*attach*/) {
   LoggerD("InjectedBundle::DynamicDatabaseAttach !!");
 }
 
-extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
+extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& /*data*/) {
   LoggerD("InjectedBundle::DynamicOnIPCMessage !!");
 }
 
