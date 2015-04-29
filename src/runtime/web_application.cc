@@ -61,13 +61,6 @@ namespace {
 namespace wrt {
 
 WebApplication::WebApplication(
-    NativeWindow* window, const std::string& appid)
-    : WebApplication(
-        window,
-        std::unique_ptr<ApplicationData>(new ApplicationData(appid))) {
-}
-
-WebApplication::WebApplication(
     NativeWindow* window, std::unique_ptr<ApplicationData> app_data)
     : launched_(false),
       debug_mode_(false),
@@ -86,7 +79,7 @@ WebApplication::WebApplication(
   resource_manager_.reset(
       new ResourceManager(app_data_.get(), locale_manager_.get()));
   resource_manager_->set_base_resource_path(
-      app_data_->pkg_root_path() + "/" + appid_ + "/");
+      app_data_->application_path());
   Initialize();
 }
 
@@ -122,12 +115,7 @@ bool WebApplication::Initialize() {
                                              vibration_stop_callback,
                                              NULL);
 
-  // send widget info to injected bundle
-  // TODO(wy80.choi): ewk_send_widget_info should be fixed to receive uuid of
-  // application instead of widget_id.
-  // Currently, uuid is passed as theme argument temporarily.
 
-  ewk_send_widget_info(ewk_context_, 1, 0.0, uuid_.c_str(), "");
 
   // TODO(sngn.lee): Find the path of certificate file
   // ewk_context_certificate_file_set(ewk_context_, .... );
@@ -161,7 +149,19 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
 
+  // send widget info to injected bundle
+  // TODO(wy80.choi): ewk_send_widget_info should be fixed to receive uuid of
+  // application instead of widget_id.
+  // Currently, uuid is passed as encoded_bundle argument temporarily.
+  // ewk_send_widget_info(ewk_context_, 1,
+  //                     elm_config_scale_get(),
+  //                     elm_theme_get(NULL),
+  //                    uuid_.c_str());
+
+  // view->LoadUrl("file:///home/owner/apps_rw/33CFo0eFJe/"
+  //               "33CFo0eFJe.annex/index.html");
   view->LoadUrl(resource_manager_->GetStartURL());
+
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
 

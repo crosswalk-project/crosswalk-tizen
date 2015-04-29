@@ -170,15 +170,20 @@ std::string ResourceManager::GetDefaultOrEmpty() {
   // TODO(yons.kim): tizen content src
 
   // content src
-  const AppWidgetVector app_widgets =
-    application_data_->app_widget_info()->app_widgets();
-  for (auto iter = app_widgets.begin();
-       iter != app_widgets.end(); ++iter) {
-    if (iter->id == appid_) {
-      default_src = iter->content_src;
-      break;
+  auto app_widget_info = application_data_->app_widget_info();
+  if (app_widget_info) {
+    const AppWidgetVector app_widgets = app_widget_info->app_widgets();
+    for (auto iter = app_widgets.begin();
+         iter != app_widgets.end(); ++iter) {
+      if (iter->id == appid_) {
+        default_src = iter->content_src;
+        break;
+      }
     }
+  } else {
+    LoggerW("AppWidgetInfo is NULL.");
   }
+
   if (!default_src.empty()) {
     return InsertPrefixPath(default_src);
   }

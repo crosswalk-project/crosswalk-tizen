@@ -23,9 +23,8 @@ class ResourceManager;
 
 class WebApplication : public WebView::EventListener {
  public:
-  explicit WebApplication(NativeWindow* window, const std::string& appid);
-  explicit WebApplication(NativeWindow* window,
-                          std::unique_ptr<ApplicationData> app_data);
+  WebApplication(NativeWindow* window,
+                 std::unique_ptr<ApplicationData> app_data);
   virtual ~WebApplication();
 
   void AppControl(std::unique_ptr<wrt::AppControl> appcontrol);
