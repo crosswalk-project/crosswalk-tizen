@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "অনুমতি"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ডাউনলোড আৰম্ভ কৰি থকা হৈছে..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "এই ছাইটৰ প্ৰতিৰক্ষা প্ৰমাণ পত্ৰৰ সৈতে সমস্যা আছে৷"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "বাতিল কৰক"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "বিলোপ কৰক"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "ডিফ'ল্টলৈ পুনঃছেট কৰক"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ৱেবছাইট ছেটিংছ"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ব্যৱহাৰকৰ্তাৰ নাম"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "প্ৰামাণিকৰণৰ প্ৰয়োজন৷"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "পাছৱৰ্ড"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "পাছৱৰ্ড"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ৱেব অধিসূচনা"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "আপোনাৰ অৱস্থানলৈ প্ৰৱেশৰ অনুমতি দিবলৈ চাইটসমূহক অনুমতি দিয়ক৷"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s)-এ অফলাইনত ব্যৱহাৰ কৰিবৰ বাবে এক বৃহৎ পৰিমাণৰ ডাটা আপোনাৰ ডিভাইচত সংৰক্ষণ কৰিবলৈ চেষ্টা কৰিছে৷"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s)-এ অফলাইনত ব্যৱহাৰ কৰিবৰ বাবে ডাটা সংগ্ৰহ কৰি ৰাখিবলৈ অনুমতি বিচাৰি অনুৰোধ জনাইছে৷"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s)-এ আপোনাৰ অৱস্থানলৈ প্ৰৱেশৰ অনুমতি বিচাৰি অনুৰোধ জনাইছে৷"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s)-এ অধিসূচনাসমূহ দেখুৱাবলৈ অনুৰোধ জনাইছে৷"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s)-এ আপোনাৰ কেমেৰা ব্যৱহাৰ কৰিবলৈ অনুমতি বিচাৰি অনুৰোধ জনাইছে৷"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "সম্পূৰ্ণ স্ক্ৰীণ"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ঠিক"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "অৱস্থান প্ৰৱেশসমূহ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "অধিসূচনাসমূহ প্ৰদৰ্শন কৰিবৰ বাবে এই চাইটটো অনুমতি দিয়ে৷"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "খালী"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "স্বয়ং সতেজ"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ব্যৱহাৰকাৰীৰ অৱস্থানলৈ প্ৰৱেশ"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ৱেব ডাটা ব্যৱহাৰ/সংগ্ৰহণ কৰক"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ব্যৱহাৰকাৰী মিডিয়া ব্যৱহাৰ কৰক"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "আপোনাৰ অৱস্থান তথ্যলৈ প্ৰৱেশ কৰিবলৈ এই চাইটটোক অনুমতি দিয়ে৷"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "আপোনাৰ ডিভাইচৰ বৃহৎ পৰিমাণৰ ডাটা সংৰক্ষণ কৰিবৰ বাবে এই চাইটটোক অনুমতি দিয়ে৷"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ডিচপ্লেক সম্পূৰ্ণ স্ক্ৰীণলৈ সলনি কৰিবৰ বাবে এই চাইটোক অনুমতি দিয়ে৷"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "আপোনাৰ ডিভাইচটোত মিডিয়া ফাইলসমূহ ব্যৱহাৰ কৰিবৰ বাবে অনুমতি দিয়ে৷"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ছেটিংছ > সাধাৰণ > এপ্লিকেশ্বন প্ৰৱন্ধন কৰক > সকলো লৈ গৈ ডি'ফল্ট এপ ছেটিংছ পৰিষ্কাৰ কৰক৷"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "অবৰোধিত"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "অগ্ৰাধিকাৰ মনত ৰাখক৷"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "প্ৰমাণপত্ৰ তথ্য"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "লগইন"
+

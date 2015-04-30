@@ -46,3 +46,5 @@ SET(TARGET_INJECTED_BUNDLE "wrt-injected-bundle")
 
 # Sub Directories
 ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(po)
+ADD_SUBDIRECTORY(tests)

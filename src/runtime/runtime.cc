@@ -18,6 +18,9 @@ namespace wrt {
 
 namespace {
 
+const char* kTextLocalePath = "/usr/share/locale";
+const char* kTextDomainWrt = "wrt";
+
 static NativeWindow* CreateNativeWindow() {
   // TODO(wy80.choi) : consider other type of native window.
   NativeWindow* window = new NativeAppWindow();
@@ -54,6 +57,9 @@ bool Runtime::OnCreate() {
   application_ = new WebApplication(native_window_, std::move(appdata));
   application_->set_terminator([](){ ui_app_exit(); });
 
+  setlocale(LC_ALL, "");
+  bindtextdomain(kTextDomainWrt, kTextLocalePath);
+
   return true;
 }
 
@@ -81,9 +87,10 @@ void Runtime::OnAppControl(app_control_h app_control) {
   }
 }
 
-void Runtime::OnLanguageChanged(const std::string& /*language*/) {
+void Runtime::OnLanguageChanged(const std::string& language) {
   if (application_) {
     application_->OnLanguageChanged();
+    elm_language_set(language.c_str());
   }
 }
 

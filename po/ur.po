@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "اجازت دیں"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ڈاؤن لوڈ شروع کررہا ہے..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "اس سائٹ کے لئے سلامتی کی سند میں مسائل ہیں"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "منسوخ"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "مٹانا"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "فطری پر پھر سیٹ کریں"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ویب سائٹ سیٹنگز"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "استمعال کنندہ کا نام"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "اتھینٹیکیشن ضروری۔"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "پاس ورڈ"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "پاس ورڈ"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ویب اعلامیہ"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "سائٹوں کو اجازت دیں کہ آپ کے محل وقوع پر رسائی کی درخواست کریں"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) آف لائن استعمال کے لئے آپ کے آلہ پر ڈیٹا کی ایک بڑی مقدار ذخیرہ کرنے کی کوشش کررہا ہے"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) آف لائن استعمال کے لئے آپ کے آلہ پر ڈیٹا ذخیرہ کرنے کی اجازت کی درخواست کررہا ہے"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) آپ کے محل وقوع پر رسائی کرنے کی اجازت کی درخواست کررہا ہے"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) اعلانات دکھانے کی اجازت کی درخواست کررہا ہے"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) آپ کا کیمرہ استعمال کرنے کی اجازت کی درخواست کررہا ہے"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "فل سکرین"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ٹھیک ہے"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "محل وقوع تک رسائی"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "اس سائٹ کو اعلانات ڈسپلے کرنے کی اجازت دیتا ہے۔"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "خالی"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "خودکار تازہ کریں"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "صارف محل وقوع رسائی کریں"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "استعمال/ویب ڈیٹا ذخیرہ کریں"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "صارف میڈیا استعمال کریں"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "اس سائٹ کو اپنی محل وقوع معلومات پر رسائی کرنے کی اجازت دیتا ہے۔"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "اس سائٹ کو آپ کے آلہ پر ڈیٹا کی ایک بڑی مقدار محفوظ کرنے کی اجازت دیتا ہے۔"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "اس سائٹ کو ڈسپلے کو پوری اسکرین پر تبدیل کرنے کی اجازت دیتا ہے۔"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "اس سائٹ کو آپ کے آلہ پر ذخیرہ کردہ میڈیا فائلیں استعمال کرنے کی اجازت دیتا ہے۔"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "طے شدہ ایپلیکیشن سیٹنگز کو یہاں جا کر صاف کریں سیٹنگز > عمومی > ایپلیکیشنز بندوبست کریں > تمام"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "انکار کریں"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ترجیح یاد رکھیں"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "سند کی معلومات"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "لاگ ان"
+

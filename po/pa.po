@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "ਆਗਿਆ ਦਿਉ"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ਡਾਉਨਲੋਡ ਸ਼ੁਰੂ ਹੋ ਰਿਹਾ ਹੈ..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "ਇਸ ਸਾਈਟ ਦੇ ਲਈ ਸੁਰੱਖਿਆ ਪ੍ਰਮਾਣਪਤੱਰ ਵਿੱਚ ਸਮੱਸਿਆਵਾਂ ਹਨ।"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ਰੱਦ ਕਰੋ"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "ਮਿਟਾਓ"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "ਡਿਫਾੱਲਟ ਤੇ ਰੀਸੈੱਟ ਕਰੋ"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ਵੈੱਬਸਾਈਟ ਸੈੱਟਿੰਗਸ"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ਉਪਯੋਗਕਰਤਾ ਨਾਂ"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ਪ੍ਰਮਾਣੀਕਰਨ ਦੀ ਲੋੜ ਹੈ।"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "ਪਾਸਵਰਡ"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "ਪਾਸਵਰਡ"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ਵੈੱਬ ਸੂਚਨਾ"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "ਸਾਈਟਸ ਨੂੰ ਤੁਹਾਡੇ ਸਥਾਨ ਨੂੰ ਐਕਸੈੱਸ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿਓ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) ਔਫਲਾਈਨ ਉਪਯੋਗ ਲਈ ਤੁਹਾਡੇ ਡਿਵਾਈਸ 'ਤੇ ਵੱਡੀ ਮਾਤਰਾ ਵਿੱਚ ਡੈਟਾ ਸੰਭਾਲਣ ਦਾ ਯਤਨ ਕਰ ਰਿਹਾ ਹੈ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) ਔਫਲਾਈਨ ਉਪਯੋਗ ਵਾਸਤੇ ਤੁਹਾਡੇ ਡਿਵਾਈਸ 'ਤੇ ਡੈਟਾ ਸੰਭਾਲਣ ਦੀ ਆਗਿਆ ਲੈਣ ਲਈ ਬੇਨਤੀ ਕਰ ਰਿਹਾ ਹੈ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) ਤੁਹਾਡੀ ਸਥਿਤੀ 'ਤੇ ਐਕਸੈੱਸ ਕਰਨ ਦੀ ਆਗਿਆ ਲੈਣ ਲਈ ਬੇਨਤੀ ਕਰ ਰਿਹਾ ਹੈ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) ਸੂਚਨਾਵਾਂ ਦਿਖਾਉਣ ਦੀ ਆਗਿਆ ਲੈਣ ਲਈ ਬੇਨਤੀ ਕਰ ਰਿਹਾ ਹੈ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) ਤੁਹਾਡੇ ਕੈਮਰੇ ਦਾ ਉਪਯੋਗ ਕਰਨ ਦੀ ਆਗਿਆ ਲੈਣ ਲਈ ਬੇਨਤੀ ਕਰ ਰਿਹਾ ਹੈ।"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "ਪੂਰਨ ਸਕ੍ਰੀਨ"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ਓਕੇ"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "ਸਥਾਨ ਐਕਸੈੱਸ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "ਇਸ ਸਾਈਟ ਨੂੰ ਸੂਚਨਾਵਾਂ ਪ੍ਰਦਰਸ਼ਿਤ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿਉ।"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ਖਾਲੀ"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "ਸਵੈ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ਉਪਯੋਗਕਰਤਾ ਦਾ ਸਥਾਨ ਐਕਸੈੱਸ ਕਰੋ"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ਵੈੱਬ ਡੈਟਾ ਉਪਯੋਗ/ਸਟੋਰ ਕਰੋ"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ਉਪਯੋਗਕਰਤਾ ਮੀਡੀਆ ਉਪਯੋਗ ਕਰੋ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "ਇਸ ਸਾਈਟ ਨੂੰ ਤੁਹਾਡੀ ਸਥਾਨ ਦੀ ਜਾਣਕਾਰੀ ਐਕਸੈੱਸ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿਉ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "ਇਸ ਸਾਈਟ ਨੂੰ ਤੁਹਾਡੇ ਡਿਵਾਈਸ ਤੇ ਵੱਡੀ ਮਾਤਰਾ ਵਿੱਚ ਡੈਟਾ ਸੁਰੱਖਿਅਤ ਕਰਨ ਦੀ ਆਗਿਆ ਦਿਉ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ਇਸ ਸਾਈਟ ਨੂੰ ਪ੍ਰਦਰਸ਼ਨ ਨੂੰ ਪੂਰੀ ਸਕ੍ਰੀਨ ਵਿੱਚ ਬਦਲਣ ਦੀ ਆਗਿਆ ਦਿਉ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "ਇਸ ਸਾਈਟ ਨੂੰ ਤੁਹਾਡੇ ਡਿਵਾਈਸ ਤੇ ਸਟੋਰ ਕੀਤੀ ਮੀਡੀਆ ਫਾਈਲਾਂ ਨੂੰ ਉਪਯੋਗ ਕਰਨ ਦਈ ਆਗਿਆ ਦਿਉ।"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ਸੈੱਟਿੰਗਸ > ਸਧਾਰਨ > ਅਨੁਪ੍ਰਯੋਗ ਪ੍ਰਬੰਧਕ > ਸਾਰੇ ਤੇ ਜਾ ਕੇ ਡਿਫਾੱਲਟ ਅਨੁਪ੍ਰਯੋਗ ਸੈੱਟਿੰਗਸ ਨੂੰ ਹਟਾਓ।"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "ਅਸਵੀਕਾਰ"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ਤਰਜੀਹ ਨੂੰ ਯਾਦ ਰੱਖੋ।"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "ਪ੍ਰਮਾਣਪੱਤਰ ਜਾਣਕਾਰੀ"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ਲੌਗਇਨ"
+

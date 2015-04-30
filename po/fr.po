@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Autoriser"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Début du téléchargement..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Problèmes avec le certificat de sécurité de ce site"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Annuler"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Supprimer"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Restaurer valeurs par défaut"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Paramètres des sites Web"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Nom d'utilisateur"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Authentification obligatoire"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Mot de passe"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Mot de passe"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Notification Web"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Autoriser les sites à demander l'accès à votre position."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) tente d'enregistrer une grande quantité de données sur votre appareil pour une utilisation hors-ligne."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) demande l'autorisation d'enregistrer des données sur votre appareil pour une utilisation hors-ligne."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) demande l'autorisation de se connecter pour connaître votre position."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) demande l'autorisation de consulter les notifications."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) demande l'autorisation d'utiliser votre appareil photo."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Plein écran"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Accès à la position"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Autorise ce site à afficher les notifications."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Vide"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Actualisation automatique"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Accéder à la position de l'utilisateur"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Utiliser/stocker les données Web"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Utiliser les réseaux sociaux de l'utilisateur"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Autorise ce site à accéder à vos informations de localisation."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Autorise ce site à enregistrer une grande quantité de données sur votre appareil."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Autorise ce site à afficher le mode plein écran."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Autorise ce site à utiliser les fichiers multimédia stockés sur votre appareil."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Effacez les paramètres par défaut des applications en accédant à Paramètres > Général > Gérer les applications > Toutes."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Refuser"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Mémoriser la préférence."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Infos sur le certificat"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Connexion"
+

@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "ခြင့္ျပဳပါ"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "လႊဲေျပာင္းကူးယူမႈစတင္ေနပါသည္.."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "ဤဆိုက္အတြက္ လံုျခံဳေရး ေအာင္လက္မွတ္ႏွင့္ပတ္သက္၍ ျပသာနာမ်ား ရွိေနပါသည္။"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ပယ္ဖ်က္"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "ဖ်က္"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "ႀကိဳတင္စီစဥ္ထားမႈသုိ႔ ျပန္လည္သတ္မွတ္ပါ"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ဝက္ဆိုက္ သတ္မွတ္ခ်က္မ်ား"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "သုံးစြဲသူ အမည္"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Authentication required."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "စကား၀ွက္"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "စကား၀ွက္"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ဝဘ္ အေၾကာင္းၾကားစာ"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "ဆိုက္မ်ားကို သင့္တည္ေနရာသို႔ ဝင္ေရာက္ရန္ ေမတၱာရပ္ခံခြင့္ျပဳပါ။"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "အြန္လိုင္းသံုးရန္ သင့္ကိရိယာေပၚတြင္ %1$s (%2$s) က ေဒတာ အေျမာက္အမ်ား သိုေလွာင္ရန္ ၾကိဳးပမ္းေနသည္။"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ေအာ့ဖ္လိုင္း သံုးရန္ သင့္ကိရိယာေပၚ ေဒတာသိုေလွာင္ရန္ %1$s (%2$s) က အခြင့္ေတာင္းခံေနသည္။"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "သင့္တည္ေနရာကို ဝင္ေရာက္ရန္ %1$s (%2$s) က အခြင့္ေတာင္းခံေနသည္။"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "အသိေပးခ်က္မ်ား ျပရန္ %1$s (%2$s) က အခြင့္ေတာင္းခံေနသည္။"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "သင့္ ကင္မရာသံုးရန္ %1$s (%2$s) က အခြင့္ေတာင္းခံေနသည္။"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "ဖန္သားျပင္ အျပည့္"
+
+msgid "IDS_BR_SK_OK"
+msgstr "အုိေက"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "တည္ေနရာ ဝင္ေရာက္မႈ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "ဤဆိုက္အား အသိေပးခ်က္မ်ား ျပသရန္ ခြင့္ျပဳပါ။"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "အားလုံးရွင္းထုတ္ပစ္ၿပီး"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "အလိုလို လန္းဆန္းျခင္း"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "သံုးသူ တည္ေနရာ ဝင္ေရာက္ပါ"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ဝဘ္ေဒတာ သံုးပါ/သိမ္းပါ"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "သင့္မီဒီယာ သံုးပါ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "ဤဆိုက္အား သင့္တည္ေနရာ အခ်က္အလက္သို႔ ဝင္ေရာက္ရန္ ခြင့္ျပဳပါ။"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "ဤဆိုက္အား သင့္ကိရိယာေပၚမွာ ၾကီးမားသည့္ေဒတာ သိမ္းထားရန္ ခြင့္ျပဳပါ။"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ဤဆိုက္အား ျပသခ်က္ကို ဖန္သားျပင္အျပည့္သို ႔ေျပာင္းရန္ ခြင့္ျပဳပါ။"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "ဤဆိုက္အား သင့္ကိရိယာေပၚမွာ မီဒီယာဖိုင္မ်ား သိမ္းထားရန္ ခြင့္ျပဳပါ။"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ဆက္တင္မ်ား > အေထြေထြ > အပလီေကးရွင္းမ်ား စီမံပါ > အားလံုး သို႔သြားျပီး အသင့္သြင္းထားသည့္ အက္ပ္ဆက္တင္မ်ား ရွင္းပါ။"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "ျငင္းဆိုပါ"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ပိုမိုႏွစ္သက္မႈမ်ားကို မွတ္ထားပါ"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "ဆာတီဖီကိတ္ အင္ဖို"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ေလာ့အင္"
+

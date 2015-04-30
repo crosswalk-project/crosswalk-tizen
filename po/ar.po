@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "السماح"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "جاري بدء التنزيل..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "توجد مشاكل في شهادة الأمان الخاصة بهذا الموقع."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "إلغاء"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "مسح"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "إعادة الضبط إلى الافتراضي"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "إعدادات موقع الويب"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "اسم المستخدم"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "مطلوب التوثيق."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "كلمة المرور"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "كلمة المرور"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "إخطار الويب"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "السماح للمواقع بطلب الوصول إلى موقعك."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "توجد محاولة من %1$s (%2$s) لتخزين كمية كبيرة من البيانات على جهازك للاستخدام عند عدم الاتصال بالإنترنت"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "يوجد طلب من ‎%1$s (%2$s)‎ للحصول على إذن من أجل تخزين بيانات على جهازك للاستخدام عند عدم الاتصال بالإنترنت"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "يوجد طلب من %1$s (%2$s) للحصول على إذن من أجل الوصول إلى موقعك"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "يوجد طلب من %1$s (%2$s) للحصول على إذن من أجل عرض الإخطارات"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "يوجد طلب من %1$s (%2$s) للحصول على إذن من أجل استخدام الكاميرا"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "الشاشة كاملة"
+
+msgid "IDS_BR_SK_OK"
+msgstr "موافق"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "الوصول للموقع"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "يسمح لهذا الموقع بعرض الإخطارات."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "خالي"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "تحديث تلقائي"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "الوصول لموقع المستخدم"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "إستخدام/حفظ بيانات الويب"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "إستخدام وسائط المستخدم"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "يسمح لهذا الموقع بالوصول إلى معلومات موقعك."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "يسمح لهذا الموقع بحفظ مجموعة كبيرة من البيانات على جهازك."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "يسمح لهذا الموقع بتغيير العرض إلى ملء الشاشة."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "يسمح لهذا الموقع باستخدام ملفات الوسائط المخزنة على الجهاز."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "إلغاء تحديد إعدادات التطبيق الافتراضية من خلال الانتقال إلى الضبط > عام > إدارة التطبيقات > الكل."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "رفض"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "تذكر الأفضلية."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "معلومات الشهادة"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "تسجيل الدخول"
+

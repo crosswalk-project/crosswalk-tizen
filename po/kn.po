@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "ಅನುಮತಿಸು"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ಡೌನ್‌ಲೋಡ್ ಆರಂಭಿಸುತ್ತಿದೆ..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "ಈ ಸೈಟಿನ ಸುರಕ್ಷತಾ ಪ್ರಮಾಣಪತ್ರದ ಜೊತೆ ಸಮಸ್ಯೆಗಳಿವೆ."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ರದ್ದು"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "ಅಳಿಸು"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "ಡೀಫಾಲ್ಟ್‌ಗೆ ಮರುಹೊಂದಿಸಿ"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ವೆಬ್‌ಸೈಟ್ ಸಂಯೋಜನೆಗಳು"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ಬಳಕೆದಾರರಹೆಸರು"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ಪ್ರಮಾಣೀಕರಣ ಅಗತ್ಯವಿದೆ."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "ಪಾಸ್‌ವರ್ಡ್"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "ಪಾಸ್‌ವರ್ಡ್"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ವೆಬ್ ಪ್ರಕಟಣೆಗಳು"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "ನಿಮ್ಮ ಸ್ಥಾನಕ್ಕೆ ಪ್ರವೇಶ ಕೋರಲು ಸೈಟ್‌ಗಳಿಗೆ ಅನುಮತಿಸಿ."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ಆಫ್‌ಲೈನ್ ಬಳಕೆಗಾಗಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ದೊಡ್ಡ ಪ್ರಮಾಣದ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸಲು %1$s (%2$s) ಪ್ರಯತ್ನಿಸುತ್ತಿದೆ."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ಆಫ್‌ಲೈನ್ ಬಳಕೆಗಾಗಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಡೇಟಾ ಸಂಗ್ರಹಿಸಲು ಅನುಮತಿಯನ್ನು %1$s (%2$s) ವಿನಂತಿಸುತ್ತಿದೆ."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "ನಿಮ್ಮ ಸ್ಥಳವನ್ನು ಪ್ರವೇಶಿಸಲು %1$s (%2$s) ವಿನಂತಿಸುತ್ತಿದೆ."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "ಪ್ರಕಟಣೆಗಳನ್ನು ತೋರಿಸಲು ಅನುಮತಿಯನ್ನು %1$s (%2$s) ವಿನಂತಿಸುತ್ತಿದೆ."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "ನಿಮ್ಮ ಕ್ಯಾಮರಾ ಬಳಸಲು ಅನುಮತಿಯನ್ನು %1$s (%2$s) ವಿನಂತಿಸುತ್ತಿದೆ."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "ಪೂರ್ಣ ಪರದೆ"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ಸರಿ"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "ಸ್ಥಳ ಪ್ರವೇಶ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "ಪ್ರಕಟಣೆಗಳನ್ನು ಪ್ರದರ್ಶಿಸಲು ಈ ಸೈಟ್‌ಗೆ ಅನುಮತಿಸುತ್ತದೆ."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ಖಾಲಿ"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "ಸ್ವಯಂ ರಿಫ್ರೆಶ್"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ಬಳಕೆದಾರ ಸ್ಥಳ ಪ್ರವೇಶಿಸಿ"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ವೆಬ್ ಡೇಟಾ ಬಳಸಿ/ಸಂಗ್ರಹಿಸಿ"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ಬಳಕೆದಾರ ಮೀಡಿಯಾ ಬಳಸಿ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "ನಿಮ್ಮ ಸ್ಥಳೀಯ ಮಾಹಿತಿಯನ್ನು ಪ್ರವೇಶಿಸಲು ಈ ಸೈಟ್‌ಗೆ ಅನುಮತಿಸುತ್ತದೆ."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ದೊಡ್ಡ ಮೊತ್ತದ ಡೇಟಾ ಉಳಿಸಲು ಈ ಸೈಟ್‌ಗೆ ಅನುಮತಿಸುತ್ತದೆ."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ಪೂರ್ಣ ಸ್ಕ್ರೀನ್‌ಗೆ ಪ್ರದರ್ಶನವನ್ನು ಬದಲಾಯಿಸಲು ಈ ಸೈಟ್‌ಗೆ ಅನುಮತಿಸುತ್ತದೆ."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಸಂಗ್ರಹಿಸಲಾಗಿರುವ ಮೀಡಿಯಾ ಫೈಲ್‌ಗಳನ್ನು ಬಳಸಲು ಈ ಸೈಟ್‌ಗೆ ಅನುಮತಿಸುತ್ತದೆ."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ಸಂಯೋಜನೆ‌ಗಳು > ಸಾಮಾನ್ಯ > ಅನ್ವಹಿಸುವಿಕೆಗಳನ್ನು ನಿರ್ವಹಿಸು > ಎಲ್ಲಾ ಇಲ್ಲಿಗೆ ಹೋಗುವ ಮೂಲಕ ಡೀಫಾಲ್ಟ್ ಅನ್ವಹಿಸುವಿಕೆ ಸಂಯೋಜನೆಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "ನಿರಾಕರಿಸು"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ಇಚ್ಛೆ ನೆನಪಿಡಿ."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "ಪ್ರಮಾಣಪತ್ರ ಮಾಹಿತಿ"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ಲಾಗಿನ್"
+

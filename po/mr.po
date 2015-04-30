@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "अनुमती द्या"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "डाऊनलोड सुरू करीत आहे..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "या संकेतस्थळाच्या सुरक्षा प्रमाणपत्रा बाबत समस्या आहेत."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "रद्द"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "हटवा"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "डिफॉल्टमध्ये पुन्हा मांडणी करा."
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "वेबसाईट सेटिंग्स"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "वापरकर्त्याचे नाव"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "प्रमाणीकरण आवश्यक."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "पासवर्ड"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "पासवर्ड"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "वेब अधिसूचना"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "आपल्या स्थानामधे प्रवेश करण्यासाठी साइट्स अनुमती द्या."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) ऑफलाइन वापरासाठी आपल्‍या उपकरणवर डेटाची मोठी राशी संग्रहित करण्‍याचा प्रयत्‍न करत आहे."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) ऑफलाइन वापरासाठी आपल्‍या उपकरणवर डेटा संग्रहित करण्‍याकरिता परवानगीची विनंती करत आहे."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) आपले स्‍थान ऍक्‍सेस करण्‍याकरिता परवानगीसाठी विनंती करत आहे."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) अधिसूचना दर्शविण्‍याकरिता परवानगीची विनंती करत आहे."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) आपला कॅमेरा वापरण्‍याकरिता परवानगीसाठी विनंती करत आहे."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "पूर्ण स्क्रीन"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ठीक"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "स्‍थान प्रवेश"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "ह्या साइटला अधिसूचना प्रदर्शित करण्‍याची अनुमती देते."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "रिकामा"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "स्‍वयं रिफ्रेश"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "प्रयोक्ता स्‍थान ऍक्‍सेस करा"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "वेब डेटा वापरा/संग्रहित करा"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "प्रयोक्‍ता मीडिया वापरा"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "आपली स्‍थान माहिती ऍक्‍सेस करण्‍यासाठी ह्या साइटला अनुमती देते."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "आपल्‍या उपकरणावर डेटाची अधिक मात्रा जतन करण्‍यासाठी ह्या साइटला अनुमती देते."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ह्या साइटला संपूर्ण स्‍क्रीनवर प्रदर्शन बदलण्‍याची अनुमती देते."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "आपल्‍या उपकरणावर जतन केलेल्‍या मिडिया फाइल्‍स वापरण्‍यासाठी ह्या साइटला अनुमती देते."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "सेटिंग्स > सामान्‍य > अनुप्रयोग व्यवस्थापित करा > सर्व वर जाऊन डीफॉल्ट अनुप्रयोग सेटिंग्स साफ करा."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "नकार द्या"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "प्राधान्य लक्षात ठेवा."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "प्रमाणपत्र माहिती"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "लॉगिन"
+

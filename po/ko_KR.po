@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "허용"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "다운로드를 시작하는 중..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "URL을 검색하거나 입력하세요"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "취소"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "삭제"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "기본 설정으로 초기화"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "웹사이트 설정"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "사용자 이름"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "인증이 필요합니다."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "비밀번호"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "비밀번호"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "웹 알림"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "웹사이트에서 내 위치정보 수집을 요청할 수 있도록 허용합니다."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s(%2$s)에서 오프라인에서 사용할 수 있도록 용량이 큰 데이터를 내 디바이스에 저장하려고 합니다."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s(%2$s)에서 오프라인에서 사용할 수 있도록 디바이스에 데이터를 저장할 수 있는 권한을 요청합니다."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s(%2$s)에서 내 위치정보 접근 권한을 요청합니다."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s(%2$s)에서 알림 표시 권한을 요청합니다."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s(%2$s)에서 카메라 사용 권한을 요청합니다."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "전체 화면"
+
+msgid "IDS_BR_SK_OK"
+msgstr "확인"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "위치정보 사용"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "이 사이트가 알림을 표시할 수 있도록 허용합니다."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "비어 있음"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "자동 새로고침"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "사용자 위치정보 접근"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "웹 데이터 사용 및 저장"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "사용자 미디어 사용"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "이 사이트에서 내 위치정보에 접근할 수 있도록 허용합니다."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "이 사이트가 디바이스에 용량이 큰 데이터를 저장할 수 있도록 허용합니다."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "이 사이트에서 화면을 전체 화면으로 변경할 수 있도록 허용합니다."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "이 사이트가 디바이스에 저장된 멀티미디어 파일을 사용할 수 있도록 허용합니다."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "[설정] > [일반] > [애플리케이션 관리] > [전체]에서 기본 애플리케이션 설정을 삭제하세요."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "거부"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "설정을 기억합니다."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "인증서 정보"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "로그인"
+

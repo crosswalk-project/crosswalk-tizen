@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Bolehkan"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Mulai mendownload..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Sertifikat keamanan situs ini bermasalah."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Batal"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Hapus"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Reset ke default"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Pengaturan situs web"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Nama pemakai"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Autentikasi diperlukan."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Kata sandi"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Kata sandi"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Notifikasi web"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Membolehkan situs untuk meminta akses ke lokasi Anda."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) mencoba menyimpan jumlah data yang besar di perangkat untuk penggunaan offline."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) meminta izin menyimpan data di perangkat Anda untuk penggunaan offline."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) meminta izin untuk mengakses lokasi Anda."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) meminta izin memperlihatkan notifikasi."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) meminta izin untuk menggunakan kamera Anda."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Layar penuh"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Akses lokasi"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Izinkan situs ini untuk menampilkan notifikasi."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Kosong"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Segarkan Otomatis"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Akses lokasi pengguna"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Gunakan/simpan data web"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Gunakan media pengguna"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Izinkan situs ini untuk mengakses informasi lokasi Anda."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Izinkan situs ini untuk menyimpan data dalam jumlah besar di perangkat Anda."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Izinkan situs ini untuk mengubah tampilan ke layar penuh."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Izinkan situs ini untuk menggunakan file media yang disimpan di perangkat Anda."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Hapus pengaturan aplikasi default dengan masuk ke Pengaturan > Umum > Kelola aplikasi > Semua."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Deny"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Ingat preferensi."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Info sertifikat"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Masuk"
+

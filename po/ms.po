@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Benarkan"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Memulakan muat turun..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Terdapat masalah dengan sijil keselamatan untuk tapak ini."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Batal"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Padam"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Tetap semula ke lalai"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Aturan laman web"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Nama pengguna"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Pengesahan Diperlukan."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Kata laluan"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Kata laluan"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Pemberitahuan web"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Benarkan tapak meminta capaian ke lokasi anda."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) cuba menyimpan sejumlah besar data pada peranti anda untuk kegunaan luar talian."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) meminta kebenaran menyimpan data pada peranti anda untuk kegunaan luar talian."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) meminta kebenaran mencapai lokasi anda."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) meminta kebenaran menunjukkan pemberitahuan."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) meminta kebenaran menggunakan kamera anda."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Skrin penuh"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Capaian lokasi"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Membenarkan tapak ini untuk memaparkan pemberitahuan."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Kosong"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Auto muat semula"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Mencapai lokasi pengguna"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Guna/simpan data web"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Guna media pengguna"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Membenarkan tapak ini untuk mencapai maklumat lokasi."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Membenarkan tapak ini menjimatkan jumlah data yang banyak pada peranti anda."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Membenarkan tapak ini untuk mengubah paparan ke skrin penuh."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Membenarkan tapak ini untuk menggunakan fail media yang disimpan dalam peranti anda."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Kosongkan aturan aplikasi lalai dengan pergi ke Aturan > Am > Uruskan aplikasi > Semua."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Nafi"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Ingat keutamaan."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Maklumat sijil"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Log masuk"
+

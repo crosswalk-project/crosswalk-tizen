@@ -443,4 +443,82 @@ collections {
      }//end of part
     }//end of group
 
+    group {
+        name: "PopupCommon";
+        parts {
+            part {
+                name: "pad_t";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.5 0.0;
+                    min: 0 20;
+                    fixed: 0 1;
+                    rel1 { relative: 1.0 0.0;to_x: "pad_l"; }
+                    rel2 { relative: 0.0 0.0;to_x: "pad_r"; }
+                }
+            }
+            part {
+                name: "pad_l";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    min: 15 0;
+                    max: 15 0;
+                    fixed: 1 0;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 0.0 1.0; }
+                    align: 0.0 0.0;
+                }
+            }
+            part {
+                name: "pad_r";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    min: 15 0;
+                    max: 15 0;
+                    fixed: 1 0;
+                    rel1 { relative: 1.0 0.0; }
+                    rel2 { relative: 1.0 1.0; }
+                    align: 1.0 0.0;
+                }
+            }
+            part {
+                name: "pad_b";
+                type: SPACER;
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    align: 0.0 1.0;
+                    min: 0 20;
+                    fixed: 0 1;
+                    rel1 { relative: 1.0 1.0;to_x: "pad_l"; }
+                    rel2 { relative: 0.0 1.0;to_x: "pad_r"; }
+                }
+            }
+            part {
+                name:"elm.swallow.body";
+                type: SWALLOW;
+                scale : 1.0;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 0;
+                    rel1 {
+                        relative: 1.0 1.0;
+                        to_x: "pad_l";
+                        to_y: "pad_t";
+                    }
+                    rel2 {
+                        relative: 0.0 0.0;
+                        to_x: "pad_r";
+                        to_y: "pad_b";
+                    }
+                }
+            }
+        } //end of parts
+    } //end of group
 }//end of collection

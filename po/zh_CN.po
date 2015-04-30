@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "允许"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "正在开始下载..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "此站点的安全证书存在问题。"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "取消"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "删除"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "重置为默认值"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "网站设置"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "用户名"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "需要认证"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "密码"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "密码"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "网络通知"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "允许网站请求访问您的位置"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) 正在尝试在您的设备上存储大量数据用于离线使用。"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) 正在请求许可在您的设备上存储数据用于离线使用。"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) 正在请求许可访问您的位置。"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) 正在请求许可显示通知。"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) 正在请求许可使用您的相机。"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "全屏显示"
+
+msgid "IDS_BR_SK_OK"
+msgstr "确定"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "位置访问"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "请允许此站点显示通知。"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "空白"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "自动刷新"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "访问用户位置"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "使用/存储网络数据"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "使用用户媒体"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "请允许此站点访问您的位置数据。"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "请允许此站点保存您设备上的大量数据。"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "请允许此站点更改为全屏显示。"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "请允许此站点使用储存在您设备上的媒体文件。"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "通过进入设定 > 一般 > 管理应用程序 > 全部清除默认应用程序设置。"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "拒绝"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "记住首选项。"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "证书信息"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "登录"
+

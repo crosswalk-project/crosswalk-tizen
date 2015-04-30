@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Permitir"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Iniciando download..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Existem problemas com o certificado de segurança para este site."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Cancelar"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Apagar"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Restaurar padrão"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Configurações de site da Internet"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Usuário"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Autenticação solicitada."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Senha"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Senha"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Aviso da web"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Permitir que os sites peçam o acesso à sua localização."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) está tentando armazenar uma grande quantidade de dados no seu dispositivo para uso offline."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) está solicitando permissão para armazenar dados no seu dispositivo para uso offline."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) está solicitando permissão para acessar sua localização."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) está solicitando permissão para exibir notificações."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) está solicitando permissão para usar a câmera."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Tela cheia"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Acesso à localização"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Permite que este site exiba notificações."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Vazio"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Atualizar automaticamente"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Acesso à localização do usuário"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Usar/armazenar dados da web"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Usar mídia do usuário"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Permite que este site acesse informações da sua localização."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Permite que este site salve uma grande quantidade de dados no seu dispositivo."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Permite que este site altere a exibição para tela cheia."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Permite que este site use os arquivos de mídia armazenados no seu dispositivo."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Apagar as configurações padrão do aplicativo indo para Configurações > Gerais > Gerenciar aplicativos > Todos."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Declinar"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Lembrar preferência."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Info do certificado"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Início de sessão"
+

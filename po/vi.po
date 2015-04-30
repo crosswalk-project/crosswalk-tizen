@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Cho phép"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Đang bắt đầu tải về..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Có vấn đề về chứng chỉ bảo mật cho site này."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Thoát"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Xóa"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Đặt lại về mặc định"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Cài đặt website"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Tên người dùng"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Yêu cầu xác thực."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Mật mã"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Mật mã"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Thông báo web"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Cho phép site yêu cầu truy nhập vị trí của bạn."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) đang cố gắng lưu trữ một lượng lớn dữ liệu vào thiết bị để sử dụng offline."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) đang yêu cầu lưu trữ dữ liệu trên thiết bị của bạn để dùng offline."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) đang yêu cầu quyền truy cập vị trí của bạn."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) đang yêu cầu quyền hiển thị thông báo."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) đang yêu cầu quyền sử dụng máy ảnh của bạn."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Toàn màn hình"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Truy cập vị trí"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Cho phép trang này hiển thị thông báo."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Trống"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Tự động làm mới"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Truy cập vị trí người dùng"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Sử dụng/lưu trữ dữ liệu web"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Sử dụng media của người dùng"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Cho phép trang này truy cập thông tin vị trí của bạn."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Cho phép trang này lưu số lượng lớn dữ liệu trên thiết bị."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Cho phép trang này chuyển sang hiển thị toàn màn hình."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Cho phép trang này sử dụng file media lưu trên thiết bị."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Xóa cài đặt ứng dụng mặc định bằng cách vào Cài đặt > Cài đặt chung > Quản lý ứng dụng > Tất cả."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Từ chối"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Nhớ Cài đặt sở thích."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Thông tin chứng nhận"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Đăng nhập"
+

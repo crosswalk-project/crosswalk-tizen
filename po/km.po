@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "អនុញ្ញាត"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "កំពុង​ចាប់​ផ្ដើម​ទាញ​យក..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "មាន​បញ្ហា​ជាមួយ​វិញ្ញាបនបត្រ​សន្តិសុខ​សម្រាប់​វិបសៃ​នេះ។"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ចោល"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "លុប"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "កំណត់​ទៅ​លំនាំដើម"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ការកំណត់​វិបសៃ"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ឈ្មោះ​អ្នកប្រើ"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ត្រូវការ​ការផ្ទៀងផ្ទាត់​ភាពពិត។"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "ពាក្យ​សម្ងាត់"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "ពាក្យ​សម្ងាត់"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ការ​ជូន​ដំណឹង​វិប"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "អនុញ្ញាត​ឲ្យ​វិបសៃ​ស្នើ​ការចូលប្រើ​ទីកន្លែង​របស់​អ្នក។"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) កំពុង​ព្យាយាម​រក្សាទុក​បរិមាណ​ទិន្នន័យ​ជាច្រើន​លើ​ឧបករណ៍​របស់​អ្នក​សម្រាប់​ការប្រើ​ក្រៅ​បណ្ដាញ។"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) កំពុង​ស្នើ​ការអនុញ្ញាត​រក្សាទុក​ទិន្នន័យ​លើ​ឧបករណ៍​របស់​អ្នក​សម្រាប់​ការប្រើ​ក្រៅ​បណ្ដាញ។"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) កំពុង​ស្នើ​ការអនុញ្ញាត​ចូលប្រើ​ទីកន្លែង​របស់​អ្នក។"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) កំពុង​ស្នើ​ការអនុញ្ញាត​បង្ហាញ​ការជូនដំណឹង។"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) កំពុង​ស្នើ​ការអនុញ្ញាត​ប្រើ​កាមេរ៉ា​របស់​អ្នក។"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "ពេញ​អេក្រង់"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ព្រម"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "ការចូលប្រើ​ទីកន្លែង"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "អនុញ្ញាត​ឲ្យ​វិបសៃ​នេះ​បង្ហាញ​ការជូនដំណឹង។"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ទទេ"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "ស្វ័យ​ធ្វើ​ឲ្យ​ស្រស់"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ចូលប្រើ​ទីកន្លែង​អ្នកប្រើប្រាស់"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ប្រើ/រក្សាទុក​ទិន្នន័យ​វិប"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ប្រើ​មេឌៀ​អ្នកប្រើប្រាស់"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "អនុញ្ញាត​ឲ្យ​វិបសៃ​នេះ​ចូលប្រើ​ព័ត៌មាន​ទីកន្លែង​របស់​អ្នក។"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "អនុញ្ញាត​ឲ្យ​វិបសៃ​នេះ​រក្សាទុក​បរិមាណ​ទិន្នន័យ​ច្រើន​លើ​ឧបករណ៍​របស់​អ្នក។"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "អនុញ្ញាត​ឲ្យ​វិបសៃ​នេះ​ប្ដូរ​ការបង្ហាញ​ទៅ​ពេញអេក្រង់។"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "អនុញ្ញាត​ឲ្យ​វិបសៃ​នេះ​ប្រើ​ឯកសារ​មេឌៀ​ដែល​បាន​រក្សាទុក​លើ​ឧបករណ៍​របស់​អ្នក។"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ជម្រះ​ការកំណត់​កម្មវិធី​លំនាំដើម ដោយ​ការចូលទៅ ការកំណត់ > ទូទៅ > គ្រប់គ្រង​កម្មវិធី > ទាំងអស់។"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Deny"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ចងចាំ​ចំណូលចិត្ត។"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "ព័ត៌មាន​វិញ្ញាបនបត្រ"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ចុះ​ឈ្មោះ​ចូល"
+

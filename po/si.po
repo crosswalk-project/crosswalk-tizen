@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "ඉඩ දෙන්න"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "බාගැනුම අරඹමින්..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "මෙම අඩවිය සඳහා ආරක්ෂණ සහතිකයේ ප්‍රශ්න පවතී."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "අව. කර."
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "මකන්න"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "පෙරනිමියට නැවත සකසන්න"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "වෙබ්අඩවි සැකසුම්"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "භාවිතා කරනනාගේ නම"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "සත්‍යාපනය අවශ්‍යයයි."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "මුරපදය"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "මුරපදය"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "වෙබ් දැනුම්දීම"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "ඔබගේ පිහිටීමට ප්‍රවේශ වීමට ඉල්ලීමට අඩවි වලට අචසර දෙන්න."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) නොබැඳි භාවිතය සඳහා ඔබගේ උපාංගය මත විශාල දත්ත ප්‍රමාණයක් ගබඩා කිරීමට උත්සාහ කරමින් සිටී."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) නොබැඳි භාවිතය සඳහා ඔබගේ උපාංගය මත දත්ත ගබඩා කිරීමට අවසරය ඉල්ලමින් සිටී."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) ඔබගේ පිහිටීම වෙත ප්‍රවේශ වීමට අවසර ඉල්ලමින් සිටී."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) දැනුම්දීම් පෙන්වීමට අවසර ඉල්ලමින් සිටී."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) ඔබගේ කැමරාව භාවිතා කිරීමට අවසරය ඉල්ලමින් සිටී."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "සම්පූර්ණ තිරය"
+
+msgid "IDS_BR_SK_OK"
+msgstr "හරි"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "පිහිටීම් ප්‍රවේශය"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "දැනුම්දීම් සංදර්ශනය කිරීමට මෙම අඩවියට ඉඩ දෙයි."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "හිස්"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "ස්වයංව නැවුම් කරන්න"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "පරිශීලක පිහිටීම ප්‍රවේශ වන්න"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "වෙබ දත්ත භාවිතා කරන්න/ගබඩා කරන්න"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "පරිශීලක මාධ්‍යය භාවිතා කරන්න"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "ඔබගේ පිහිටීම් තොරතුරු ප්‍රවේශ වීමට මෙම අඩවියට ඉඩ දෙයි."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "ඔබගේ උපාංගය මත විශාල දත්ත ප්‍රමාණයක් සුරැකීමට මෙම අඩවියට ඉඩ දෙයි."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "පුන් තිරය වෙත සංදර්ශනය වෙනස් කිරීමට මෙම අඩවියට ඉඩ දෙයි."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "ඔබගේ උපාංගය මත ගබඩා කර ඇති මාධ්‍ය ගොනු භාවිතා කිරීමට මෙම අඩවියට ඉඩ දෙයි."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "සැකසුම් > සාමාන්‍ය > යෙදුම් කළමනාකරණය කරන්න > සියලු වෙත යාමෙන් පෙරනිමි යෙදුම් සැකසුම් හිස් කරන්න."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "ප්‍රතික්ෂේප කරන්න"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "කැමැත්ත මතක තබා ගන්න."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "සහතික තොරතුරු"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ඇතුළු වන්න"
+

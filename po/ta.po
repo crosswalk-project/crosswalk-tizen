@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "அனுமதி"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "பதிவிறக்கம் துவங்குகிறது..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "இந்த இணையதளத்திற்கான பாதுகாப்பு சான்றிதழில் சில சிக்கல்கள் உள்ளன."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ரத்து"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "நீக்கு"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "டீஃபால்ட்டிற்கு ரீசெட் செய்க"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "இணைய அமைவுகள்"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "பயனர் பெயர்"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "அங்கீகரிப்பு தேவை."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "கடவுச்சொல்"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "கடவுச்சொல்"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "இணைய அறிவிப்பு"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "உங்கள் இடத்தின் அணுகலை கோருவதற்கு தளங்களை அனுமதிக்கவும்."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) ஆஃப்லைன் உபயோகத்திற்காக உங்கள் சாதனத்தில் அதிகளவு தரவுகளைச் சேமிக்க முயற்சிக்கிறது."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) ஆஃப்லைன் உபயோகத்திற்காக உங்கள் சாதனத்தில் தரவுகளைச் சேமிக்க அனுமதி கோருகிறது."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) உங்கள் இருப்பிடத்தை அணுக அனுமதி கோருகிறது."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) அறிவிக்கைகளைக் காட்டுவதற்கு அனுமதி கோருகிறது."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) உங்கள் கேமராவை உபயோகிக்க அனுமதி கோருகிறது."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "முழு திரை"
+
+msgid "IDS_BR_SK_OK"
+msgstr "சரி"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "இருப்பிட அணுகல்"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "அறிவிப்புகளைக் காண்பிக்க இந்தத் தளத்தை அனுமதிக்கிறது."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "காலி"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "தானியங்கு புதுப்பிப்பு"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "பயனர் இருப்பிடத்தை அணுகுதல்"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "வலை தரவைப் பயன்படுத்தவும்/சேமிக்கவும்"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "பயனர் ஊடகம் பயன்படுத்துக"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "உங்கள் இருப்பிட விபரம் அணுக இந்தத் தளத்தை அனுமதிக்கிறது."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "உங்கள் சாதனத்தில் பெரிய அளவிலான தரவைச் சேமிக்கவென இந்தத் தளத்தை அனுமதிக்கிறது."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "காட்சியை முழுத் திரைக்கு மாற்ற இந்தத் தளத்தை அனுமதிக்கிறது."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "உங்கள் சாதனத்தில் சேமிக்கப்பட்டுள்ள ஊடக கோப்புகளைப் பயன்படுத்த இந்தத் தளத்தை அனுமதிக்கிறது."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "அமைவுகள் > பொது > பயன்பாடுகளை நிர்வகிக்கவும் சென்று அனைத்தையும் டீஃபால்ட்டை நிலைக்கு மாற்றவும்."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "மறுக்கவும்"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "முன்னுரிமையை நினைவுகொள்."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "சான்றிதழ் விவரம்"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "உள்நுழை"
+

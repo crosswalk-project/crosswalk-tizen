@@ -1,0 +1,108 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "ଅନୁମତି"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ଡାଉନ୍‌ଲୋଡ୍‌ ଆରମ୍ଭ କରୁଛି..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "ଏହି ସାଇଟ୍ ପାଇଁ ସୁରକ୍ଷା ସାର୍ଟିଫିକେଟ୍ ସହିତ ଅସୁବିଧା ଅଛି।"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ବାତିଲ୍"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "ବିଲୋପ"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "ଡିଫଲ୍ଟକୁ ପୁନଃସେଟ୍"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ୱେବସାଇଟ୍ ସେଟିଂସ୍"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ଉପଭୋକ୍ତାନାମ"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ପ୍ରାମାଣିକରଣ ଆବଶ୍ୟକ।"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "ପାସୱାର୍ଡ୍"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "ପାସୱାର୍ଡ୍"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ୱେବ୍ ବିଜ୍ଞପ୍ତି"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "ଆପଣଙ୍କ ସ୍ଥାନ ଆକସେସ୍ ପାଇଁ ସାଇଟଗୁଡିକୁ ଅନୁରୋଧ ଅନୁମତି କରେ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ଅଫ୍‌ଲାଇନ୍ ବ୍ୟବହାର ପାଇଁ %1$s (%2$s) ଆପଣଙ୍କ ଡିଭାଇସ୍‌ରେ ଏକ ବୃହତ୍ ପରିମାଣର ଡାଟା ଷ୍ଟୋର୍ କରିବାକୁ ଉଦ୍ୟମ କରୁଛି।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ଅଫ୍‌ଲାଇନ୍ ବ୍ୟବହାର ପାଇଁ %1$s (%2$s) ଆପଣଙ୍କ ଡିଭାଇସ୍‌ରେ ଡାଟା ଷ୍ଟୋର୍ କରିବାକୁ ଅନୁରୋଧ କରୁଛି।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "ଆପଣଙ୍କ ଅବସ୍ଥାନ ପ୍ରବେଶ କରିବାକୁ %1$s (%2$s) ଅନୁମତି ଅନୁରୋଧ କରୁଛି।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "ବିଜ୍ଞପ୍ତି ଦେଖାଇବାକୁ %1$s (%2$s) ଅନୁମତି ଅନୁରୋଧ କରୁଛି।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "ଆପଣଙ୍କ କ୍ୟାମେରା ବ୍ୟବହାର କରିବାକୁ %1$s (%2$s) ଅନୁମତି ଅନୁରୋଧ କରୁଛି।"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "ପୂର୍ଣ୍ଣ ପରଦା"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ଓକେ"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "ଅବସ୍ଥାନ ଆକସେସ୍"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "ବିଜ୍ଞପ୍ତି ପ୍ରଦର୍ଶନ କରିବାକୁ ଏହି ସାଇଟ୍‌କୁ ଅନୁମତି ଦିଏ।"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ଖାଲି"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "ସ୍ଵତଃ ସତେଜ"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ଉପଭୋକ୍ତାଙ୍କ ଅବସ୍ଥାନ ଆକସେସ୍ କରନ୍ତୁ"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ୱେବ୍ ଡାଟା ବ୍ୟବହାର/ଷ୍ଟୋର୍ କରନ୍ତୁ"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ଉପଭୋକ୍ତା ମିଡିଆ ବ୍ୟବହାର କରନ୍ତୁ"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "ଆପଣଙ୍କ ଅବସ୍ଥାନ ସୂଚନା ଆକସେସ୍ କରିବାକୁ ଏହି ସାଇ‌ଟ୍‌କୁ ଅନୁମତି ଦିଏ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "ଆପଣଙ୍କ ଡିଭାଇସ୍‌ରେ ବହୁତ ପରିମାଣର ଡାଟା ସଞ୍ଚୟ କରିବାକୁ ଏହି ସାଇଟ୍‌କୁ ଅନୁମତି ଦିଏ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ପ୍ରଦର୍ଶନ ପୂର୍ଣ୍ଣ ସ୍କ୍ରିନ୍‌କୁ ପରିବର୍ତ୍ତନ କରିବାକୁ ଏହି ସାଇଟ୍‌କୁ ଅନୁମତି ଦିଏ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "ଆପଣଙ୍କ ଡିଭାଇସ୍‌ରେ ସଞ୍ଚିତ ଥିବା ମିଡିଆ ଫାଇଲ୍‌‌ଗୁଡିକ ବ୍ୟବହାର କରିବାକୁ ଏହି ସାଇଟ୍‌କୁ ଅନୁମତି ଦିଏ।"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ସେଟିଂସ୍ > ସାର୍ବଜନୀନ > ଆପ୍ଲିକେସନ୍ ପରିଚାଳନା > ସମସ୍ତକୁ ଯାଇ ଡିଫଲ୍ଟ ଆପ୍ଲିକେସନ୍ ସେଟିଂସ୍ ଖାଲି କରନ୍ତୁ।"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "ଅଗ୍ରାହ୍ୟ"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ଅଗ୍ରାଧିକାର ମନେ ରଖନ୍ତୁ।"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "ସାର୍ଟିଫିକେଟ୍ ସୂଚନା"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ଲଗଇନ୍"
+
