@@ -289,61 +289,91 @@ void WebViewImpl::InitQuotaExceededCallback() {
                                        Ewk_Security_Origin* origin,
                                        const char*,
                                        uint64_t,
-                                       void*) -> Eina_Bool {
-    std::string protocol(ewk_security_origin_protocol_get(origin));
-    if (protocol == "file" || protocol == "app") {
-      // Allow for local origin
-      ewk_view_exceeded_database_quota_reply(view, EINA_TRUE);
-    } else {
-      // Deny for remote origin
-      ewk_view_exceeded_database_quota_reply(view, EINA_FALSE);
-    }
+                                       void* user_data) -> Eina_Bool {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (self == NULL || self->listener_ == NULL)
+      return EINA_TRUE;
+
+    auto result_handler = [view](bool result) {
+      LoggerD("database quota Permission Result : %d", result);
+      ewk_view_exceeded_database_quota_reply(view, result);
+    };
+    std::stringstream url;
+    url << ewk_security_origin_protocol_get(origin)
+        << "://"
+        << ewk_security_origin_host_get(origin)
+        << ":"
+        << ewk_security_origin_port_get(origin);
+    self->listener_->OnQuotaExceed(
+        self->view_,
+        url.str(),
+        result_handler);
     return EINA_TRUE;
   };
   ewk_view_exceeded_database_quota_callback_set(
     ewk_view_,
     database_exceeded_callback,
-    NULL);
+    this);
 
   // callback for indexed database quota exceeded
   auto indexed_db_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
                                        int64_t,
-                                       void*) -> Eina_Bool {
-    std::string protocol(ewk_security_origin_protocol_get(origin));
-    if (protocol == "file://" || protocol == "app://") {
-      // Allow for local origin
-      ewk_view_exceeded_indexed_database_quota_reply(view, EINA_TRUE);
-    } else {
-      // Deny for remote origin
-      ewk_view_exceeded_indexed_database_quota_reply(view, EINA_FALSE);
-    }
+                                       void* user_data) -> Eina_Bool {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (self == NULL || self->listener_ == NULL)
+      return EINA_TRUE;
+
+    auto result_handler = [view](bool result) {
+      LoggerD("indexed db quota Permission Result : %d", result);
+      ewk_view_exceeded_indexed_database_quota_reply(view, result);
+    };
+    std::stringstream url;
+    url << ewk_security_origin_protocol_get(origin)
+        << "://"
+        << ewk_security_origin_host_get(origin)
+        << ":"
+        << ewk_security_origin_port_get(origin);
+    self->listener_->OnQuotaExceed(
+        self->view_,
+        url.str(),
+        result_handler);
     return EINA_TRUE;
   };
   ewk_view_exceeded_indexed_database_quota_callback_set(
     ewk_view_,
     indexed_db_exceeded_callback,
-    NULL);
+    this);
 
   // callback for localfile quota exceeded
   auto localfile_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
                                        int64_t,
-                                       void*) -> Eina_Bool {
-    std::string protocol(ewk_security_origin_protocol_get(origin));
-    if (protocol == "file://" || protocol == "app://") {
-      // Allow for local origin
-      ewk_view_exceeded_local_file_system_quota_reply(view, EINA_TRUE);
-    } else {
-      // Deny for remote origin
-      ewk_view_exceeded_local_file_system_quota_reply(view, EINA_FALSE);
-    }
+                                       void* user_data) -> Eina_Bool {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (self == NULL || self->listener_ == NULL)
+      return EINA_TRUE;
+
+    auto result_handler = [view](bool result) {
+      LoggerD("local file quota Permission Result : %d", result);
+      ewk_view_exceeded_local_file_system_quota_reply(view, result);
+    };
+    std::stringstream url;
+    url << ewk_security_origin_protocol_get(origin)
+        << "://"
+        << ewk_security_origin_host_get(origin)
+        << ":"
+        << ewk_security_origin_port_get(origin);
+    self->listener_->OnQuotaExceed(
+        self->view_,
+        url.str(),
+        result_handler);
     return EINA_TRUE;
   };
   ewk_view_exceeded_local_file_system_quota_callback_set(
     ewk_view_,
     localfile_exceeded_callback,
-    NULL);
+    this);
 }
 
 void WebViewImpl::InitIPCMessageCallback() {

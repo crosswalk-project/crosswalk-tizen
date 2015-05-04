@@ -62,6 +62,8 @@ namespace {
       "http://tizen.org/privilege/notification";
   const char* kLocationPrivilege =
       "http://tizen.org/privilege/location";
+  const char* kStoragePrivilege =
+      "http://tizen.org/privilege/unlimitedstorage";
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -477,6 +479,27 @@ void WebApplication::OnGeolocationPermissionRequest(
   }
 
   if (utils::StartsWith(url, "file://")) {
+    result_handler(true);
+    return;
+  }
+
+  // TODO(sngn.lee): create popup and show
+}
+
+
+void WebApplication::OnQuotaExceed(
+    WebView* view,
+    const std::string& url,
+    std::function<void(bool)> result_handler) {
+  // TODO(sngn.lee): check from DB url was already allowed
+  // if(check already allow or denied) {
+  //   result_handler(true);
+  //   return;
+  // }
+  // Local Domain: Grant permission if defined, otherwise Popup user prompt.
+  // Remote Domain: Popup user prompt.
+  if (utils::StartsWith(url, "file://") &&
+      FindPrivilege(app_data_.get(), kStoragePrivilege)) {
     result_handler(true);
     return;
   }
