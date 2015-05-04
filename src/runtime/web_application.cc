@@ -65,6 +65,14 @@ namespace {
   const char* kStoragePrivilege =
       "http://tizen.org/privilege/unlimitedstorage";
 
+  const char* kVisibilitySuspendFeature = "visibility,suspend";
+  const char* kMediastreamRecordFeature = "mediastream,record";
+  const char* kEncryptedDatabaseFeature = "encrypted,database";
+  const char* kRotationLockFeature = "rotation,lock";
+  const char* kBackgroundMusicFeature = "background,music";
+  const char* kSoundModeFeature = "sound,mode";
+  const char* kBackgroundVibrationFeature = "background,vibration";
+
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
   if (app_data->permissions_info().get() == NULL)
@@ -141,7 +149,46 @@ bool WebApplication::Initialize() {
                                                 true);
   }
 
+  if (app_data_->setting_info() != NULL &&
+      app_data_->setting_info()->background_support_enabled()) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kVisibilitySuspendFeature,
+                                                true);
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kBackgroundMusicFeature,
+                                                true);
+  }
+  ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                              kMediastreamRecordFeature,
+                                              true);
+  ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                              kEncryptedDatabaseFeature,
+                                              true);
+  if (app_data_->setting_info() != NULL &&
+      app_data_->setting_info()->screen_orientation()
+      == wgt::parse::SettingInfo::AUTO) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kRotationLockFeature,
+                                                true);
+  }
 
+  // TODO(sngn.lee): check "sound-mode":"exclusive" - in tizen:setting
+  //                 and enable - "sound,mode"
+  if (app_data_->setting_info() != NULL &&
+      false/*"sound-mode":"exclusive"*/) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kSoundModeFeature,
+                                                true);
+  }
+
+  // TODO(sngn.lee): check "background-vibration":"enable" - in tizen:setting
+  //                 and enable - "background,vibration"
+  if (app_data_->setting_info() != NULL &&
+      false/*background-vibration":"enable"*/) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kBackgroundVibrationFeature,
+                                                true);
+  }
 
   // TODO(sngn.lee): Find the path of certificate file
   // ewk_context_certificate_file_set(ewk_context_, .... );
@@ -155,16 +202,7 @@ bool WebApplication::Initialize() {
   // TODO(sngn.lee): Download interface
   // ewk_context_did_start_download_callback_set
 
-  // TODO(sngn.lee): always enable "mediastream,record"
-  // TODO(sngn.lee): always enable "encrypted,database"
   // TODO(sngn.lee): check csp element in config.xml and enable - "csp"
-  // TODO(sngn.lee): Check Backround support and enable - "visibility,suspend"
-  // TODO(sngn.lee): Check Backround support and enable - "background,music"
-  // TODO(sngn.lee): Check setting rotation value and enable "rotation,lock"
-  // TODO(sngn.lee): check "sound-mode":"exclusive" - in tizen:setting
-  //                 and enable - "sound,mode"
-  // TODO(sngn.lee): check "background-vibration":"enable" - in tizen:setting
-  //                 and enable - "background,vibration"
 
   return true;
 }
