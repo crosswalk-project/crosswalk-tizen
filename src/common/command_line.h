@@ -26,9 +26,11 @@ class CommandLine {
   bool HasOptionName(const std::string& option_name);
   // Get the option's value
   std::string GetOptionValue(const std::string& option_name);
+  // Get command string include options and arguments
+  std::string GetCommandString();
 
-  const std::string appid() const { return appid_; }
-  const std::string program() const { return program_; }
+  std::string appid() const { return appid_; }
+  std::string program() const { return program_; }
   const OptionMap& options() const { return options_; }
   const Arguments& arguments() const { return arguments_; }
   char** argv() const { return argv_; }
@@ -38,7 +40,7 @@ class CommandLine {
   CommandLine(int argc, char* argv[]);
   virtual ~CommandLine();
 
-  void AppendOption(const char* argument);
+  void AppendOption(const char* value);
 
   // The singleton CommandLine instance of current process
   static CommandLine* current_process_commandline_;

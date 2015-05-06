@@ -9,11 +9,10 @@
 #include <memory>
 
 #include "common/logger.h"
-#include "common/constants.h"
 #include "common/command_line.h"
-#include "runtime/native_app_window.h"
 #include "common/app_control.h"
 #include "common/application_data.h"
+#include "runtime/native_app_window.h"
 
 namespace wrt {
 
@@ -175,24 +174,3 @@ int Runtime::Exec(int argc, char* argv[]) {
 }
 
 }  // namespace wrt
-
-int main(int argc, char* argv[]) {
-  // Initialize CommandLineParser
-  wrt::CommandLine::Init(argc, argv);
-
-  ewk_init();
-  char* chromium_arg_options[] = {
-    argv[0],
-    const_cast<char*>("--enable-file-cookies"),
-    const_cast<char*>("--allow-file-access-from-files"),
-    const_cast<char*>("--allow-universal-access-from-files")
-  };
-  const int chromium_arg_cnt =
-      sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);
-  ewk_set_arguments(chromium_arg_cnt, chromium_arg_options);
-
-  wrt::Runtime runtime;
-  int ret = runtime.Exec(argc, argv);
-  ewk_shutdown();
-  return ret;
-}

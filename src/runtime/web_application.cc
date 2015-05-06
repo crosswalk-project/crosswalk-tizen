@@ -25,6 +25,8 @@
 #include "common/application_data.h"
 #include "common/resource_manager.h"
 
+namespace wrt {
+
 namespace {
 // TODO(sngn.lee) : It should be declare in common header
 const char* kKeyNameBack = "back";
@@ -104,10 +106,11 @@ void ExecExtensionProcess(const std::string& uuid) {
     LoggerE("Failed to fork child process for extension process.");
   }
   if (pid == 0) {
-    // TODO(wy80.choi): wrt-extension should be merged to this runtime exec.
-    // It should be changed to "/usr/bin/wrt --extension-process"
-    execl("/usr/bin/wrt-extension",
-          "/usr/bin/wrt-extension", uuid.c_str(), NULL);
+    CommandLine* cmd = CommandLine::ForCurrentProcess();
+    std::string switch_ext("--");
+    switch_ext.append(kSwitchExtensionServer);
+    execl(cmd->program().c_str(),
+          cmd->program().c_str(), switch_ext.c_str(), uuid.c_str(), NULL);
   }
 }
 
@@ -119,8 +122,6 @@ static void SendDownloadRequest(const std::string& url) {
 }
 
 }  // namespace
-
-namespace wrt {
 
 WebApplication::WebApplication(
     NativeWindow* window, std::unique_ptr<ApplicationData> app_data)

@@ -50,6 +50,7 @@ class DBusServer {
   PropertyGetter GetPropertyGetter(const std::string& iface);
 
  private:
+  std::string address_path_;
   GDBusServer* server_;
   GDBusNodeInfo* node_info_;
 

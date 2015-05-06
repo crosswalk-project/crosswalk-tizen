@@ -154,18 +154,24 @@ DBusServer::~DBusServer() {
   if (server_) {
     g_object_unref(server_);
   }
+
+  if (!address_path_.empty()) {
+    unlink(address_path_.c_str());
+  }
 }
 
 void DBusServer::Start(const std::string& name) {
   GError* err = NULL;
 
-  std::string address(g_get_user_runtime_dir());
-  address.append("/.");
-  address.append(name);
-
+  address_path_.clear();
+  address_path_.append(g_get_user_runtime_dir());
+  address_path_.append("/.");
+  address_path_.append(name);
   // unlink existing bus address
-  unlink(address.c_str());
-  address = "unix:path=" + address;
+  unlink(address_path_.c_str());
+
+  std::string address("unix:path=");
+  address.append(address_path_);
 
   // create new bus socket
   // TODO(wy80.choi): bus socket (Address) should be removed gracefully

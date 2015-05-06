@@ -5,6 +5,9 @@
 #include "extension/extension_server.h"
 
 #include <glob.h>
+#include <glib.h>
+#include <glib-unix.h>
+
 #include <string>
 #include <vector>
 
@@ -12,6 +15,7 @@
 #include "common/constants.h"
 #include "common/file_utils.h"
 #include "common/string_utils.h"
+#include "common/command_line.h"
 #include "extension/extension.h"
 
 namespace wrt {
@@ -62,16 +66,6 @@ bool ExtensionServer::Start() {
 }
 
 bool ExtensionServer::Start(const StringVector& paths) {
-  // Register system extensions to support Tizen Device APIs
-  RegisterSystemExtensions();
-
-  // Register user extensions
-  for (auto it = paths.begin(); it != paths.end(); ++it) {
-    if (utils::Exists(*it)) {
-      RegisterExtension(*it);
-    }
-  }
-
   // Connect to DBusServer for Application of Runtime
   if (!dbus_application_client_.ConnectByName(
           app_uuid_ + "." + std::string(kDBusNameForApplication))) {
@@ -89,6 +83,16 @@ bool ExtensionServer::Start(const StringVector& paths) {
       kDBusInterfaceNameForExtension,
       std::bind(&ExtensionServer::HandleDBusMethod, this, _1, _2, _3, _4));
   dbus_server_.Start(app_uuid_ + "." + std::string(kDBusNameForExtension));
+
+  // Register system extensions to support Tizen Device APIs
+  RegisterSystemExtensions();
+
+  // Register user extensions
+  for (auto it = paths.begin(); it != paths.end(); ++it) {
+    if (utils::Exists(*it)) {
+      RegisterExtension(*it);
+    }
+  }
 
   // Send 'ready' signal to Injected Bundle.
   NotifyEPCreatedToApplication();
@@ -341,6 +345,50 @@ void ExtensionServer::PostMessageToJSCallback(
                           g_variant_new("(ss)",
                                         instance_id.c_str(),
                                         msg.c_str()));
+}
+
+// static
+bool ExtensionServer::StartExtensionProcess() {
+  GMainLoop* loop;
+
+  loop = g_main_loop_new(NULL, FALSE);
+
+  // Register Quit Signal Handlers
+  auto quit_callback = [](gpointer data) -> gboolean {
+    GMainLoop* loop = reinterpret_cast<GMainLoop*>(data);
+    g_main_loop_quit(loop);
+    return false;
+  };
+  g_unix_signal_add(SIGINT, quit_callback, loop);
+  g_unix_signal_add(SIGTERM, quit_callback, loop);
+
+  CommandLine* cmd = CommandLine::ForCurrentProcess();
+
+  // TODO(wy80.choi): Receive extension paths for user defined extensions.
+
+  // Receive AppID from arguments.
+  if (cmd->arguments().size() < 1) {
+    LoggerE("uuid is required.");
+    return false;
+  }
+  std::string uuid = cmd->arguments()[0];
+
+  // Start ExtensionServer
+  ExtensionServer server(uuid);
+  if (!server.Start()) {
+    LoggerE("Failed to start extension server.");
+    return false;
+  }
+
+  LoggerI("extension process has been started.");
+
+  g_main_loop_run(loop);
+
+  LoggerI("extension process is exiting.");
+
+  g_main_loop_unref(loop);
+
+  return true;
 }
 
 }  // namespace wrt

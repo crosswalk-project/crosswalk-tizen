@@ -41,7 +41,7 @@ ENDIF(WAYLAND_SUPPORT)
 # Targets names
 SET(TARGET_RUNTIME  "wrt")
 SET(TARGET_COMMON_STATIC "wrt-common-static")
-SET(TARGET_EXTENSION "wrt-extension")
+SET(TARGET_EXTENSION_STATIC "wrt-extension-static")
 SET(TARGET_INJECTED_BUNDLE "wrt-injected-bundle")
 
 # Sub Directories

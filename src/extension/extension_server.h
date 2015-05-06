@@ -25,6 +25,8 @@ class ExtensionServer : public Extension::ExtensionDelegate {
   explicit ExtensionServer(const std::string& appid);
   virtual ~ExtensionServer();
 
+  static bool StartExtensionProcess();
+
   bool Start();
   bool Start(const StringVector& paths);
 

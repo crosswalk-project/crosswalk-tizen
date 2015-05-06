@@ -40,15 +40,16 @@ CommandLine::CommandLine(int argc, char* argv[])
   }
 
   // Parse program name and appid from argv_ or arguments_
+  program_ = std::string(argv[0]);
   if (argc > 0) {
-    program_ = utils::BaseName(argv[0]);
-    if (program_ == kRuntimeName) {
+    std::string tmp = utils::BaseName(argv[0]);
+    if (tmp == kRuntimeName) {
       if (arguments_.size() > 0) {
         // Suppose that appid is at the first of arguments_
         appid_ = arguments_[0];
       }
     } else {
-      appid_ = program_;
+      appid_ = tmp;
     }
   }
 }
@@ -56,8 +57,8 @@ CommandLine::CommandLine(int argc, char* argv[])
 CommandLine::~CommandLine() {
 }
 
-void CommandLine::AppendOption(const char* argument) {
-  std::string option_string(argument);
+void CommandLine::AppendOption(const char* value) {
+  std::string option_string(value);
   std::string option_name;
   std::string option_value;
 
@@ -85,6 +86,26 @@ std::string CommandLine::GetOptionValue(const std::string& option_name) {
   } else {
     return std::string();
   }
+}
+
+std::string CommandLine::GetCommandString() {
+  std::string result;
+  result.append(program_);
+  result.append(" ");
+  for (auto& it : options_) {
+    result.append(kOptionPrefix);
+    result.append(it.first);
+    if (!it.second.empty()) {
+      result.append(kOptionValueSeparator);
+      result.append(it.second);
+    }
+    result.append(" ");
+  }
+  for (auto& it : arguments_) {
+    result.append(it);
+    result.append(" ");
+  }
+  return result;
 }
 
 // static

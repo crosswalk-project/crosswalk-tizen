@@ -10,6 +10,7 @@ namespace wrt {
 extern const char kSystemExtensionPath[];
 extern const char kExtensionPrefix[];
 extern const char kExtensionSuffix[];
+extern const char kSwitchExtensionServer[];
 
 extern const char kDBusNameForApplication[];
 extern const char kDBusInterfaceNameForApplication[];
