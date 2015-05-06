@@ -55,6 +55,14 @@ class WebView {
         WebView* /*view*/,
         const std::string& /*url*/,
         std::function<void(bool)> /*result_handler*/) {}
+    virtual void OnAuthenticationRequest(
+        WebView* /*view*/,
+        const std::string& /*url*/,
+        const std::string& /*message*/,
+        std::function<void(bool /*submit*/,
+                           const std::string& /*id*/,
+                           const std::string& /*password*/)
+                     > /*result_handler*/) {}
   };
 
   WebView(wrt::NativeWindow* window, Ewk_Context* context);

@@ -100,6 +100,7 @@ void WebViewImpl::Initialize() {
   InitFullscreenCallback();
   InitNotificationPermissionCallback();
   InitGeolocationPermissionCallback();
+  InitAuthenticationCallback();
 
   // TODO(sngn.lee): "request,certificate,confirm" certification popup
   // TODO(sngn.lee): "notification,show"
@@ -619,6 +620,48 @@ void WebViewImpl::InitGeolocationPermissionCallback() {
   ewk_view_geolocation_permission_callback_set(ewk_view_,
                                                permission_callback,
                                                this);
+}
+
+void WebViewImpl::InitAuthenticationCallback() {
+  auto auth_callback = [](void* user_data,
+                          Evas_Object*,
+                          void* event_info) {
+    LoggerD("Authentication Request");
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    Ewk_Auth_Challenge* auth_challenge =
+        static_cast<Ewk_Auth_Challenge*>(event_info);
+
+    if (self == NULL || self->listener_ == NULL) {
+      ewk_auth_challenge_credential_cancel(auth_challenge);
+      return;
+    }
+    auto result_handler = [auth_challenge](bool submit,
+                                    const std::string& id,
+                                    const std::string& password) {
+      LoggerD("Authentication Result : submit %d", submit);
+      if (!submit) {
+        ewk_auth_challenge_credential_cancel(auth_challenge);
+        return;
+      }
+      ewk_auth_challenge_credential_use(auth_challenge,
+                                        id.c_str(),
+                                        password.c_str());
+    };
+    ewk_auth_challenge_suspend(auth_challenge);
+    const char* message =
+        ewk_auth_challenge_realm_get(auth_challenge);
+    std::string url = self->GetUrl();
+    self->listener_->OnAuthenticationRequest(self->view_,
+                                             url,
+                                             message,
+                                             result_handler);
+  };
+  // "authentication,challenge"
+  evas_object_smart_callback_add(ewk_view_,
+                                 "authentication,challenge",
+                                 auth_callback,
+                                 this);
+  smart_callbacks_["authentication,challenge"] = auth_callback;
 }
 
 std::string WebViewImpl::GetUrl() {

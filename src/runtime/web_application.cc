@@ -600,6 +600,19 @@ void WebApplication::OnQuotaExceed(
   // TODO(sngn.lee): create popup and show
 }
 
+void WebApplication::OnAuthenticationRequest(
+      WebView* view,
+      const std::string& url,
+      const std::string& message,
+      std::function<void(bool submit,
+                         const std::string& id,
+                         const std::string& password)
+                   > result_handler) {
+  // TODO(sngn.lee): create popup and show
+  result_handler(false, "", "");
+}
+
+
 void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
                                       const std::string& method_name,
                                       GVariant* parameters,
