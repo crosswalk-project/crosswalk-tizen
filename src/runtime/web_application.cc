@@ -111,6 +111,13 @@ void ExecExtensionProcess(const std::string& uuid) {
   }
 }
 
+static void SendDownloadRequest(const std::string& url) {
+  wrt::AppControl request;
+  request.set_operation(APP_CONTROL_OPERATION_DOWNLOAD);
+  request.set_uri(url);
+  request.LaunchRequest();
+}
+
 }  // namespace
 
 namespace wrt {
@@ -169,6 +176,14 @@ bool WebApplication::Initialize() {
                                              vibration_start_callback,
                                              vibration_stop_callback,
                                              NULL);
+
+  auto download_callback = [](const char* downloadUrl, void* data) {
+    SendDownloadRequest(downloadUrl);
+  };
+  ewk_context_did_start_download_callback_set(ewk_context_,
+                                              download_callback,
+                                              this);
+
   if (FindPrivilege(app_data_.get(), kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kFullscreenFeature,
@@ -224,9 +239,6 @@ bool WebApplication::Initialize() {
 
   // TODO(sngn.lee): set default from config.xml
   // locale_manager_->SetDefaultLocale(const  string & locale);
-
-  // TODO(sngn.lee): Download interface
-  // ewk_context_did_start_download_callback_set
 
   // TODO(sngn.lee): check csp element in config.xml and enable - "csp"
 
