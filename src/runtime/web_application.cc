@@ -256,22 +256,25 @@ bool WebApplication::Initialize() {
                                                 true);
   }
 
-  // TODO(sngn.lee): check "sound-mode":"exclusive" - in tizen:setting
-  //                 and enable - "sound,mode"
   if (app_data_->setting_info() != NULL &&
-      false/*"sound-mode":"exclusive"*/) {
+      app_data_->setting_info()->sound_mode()
+      == wgt::parse::SettingInfo::SoundMode::EXCLUSIVE) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kSoundModeFeature,
                                                 true);
   }
 
-  // TODO(sngn.lee): check "background-vibration":"enable" - in tizen:setting
-  //                 and enable - "background,vibration"
   if (app_data_->setting_info() != NULL &&
-      false/*background-vibration":"enable"*/) {
+      app_data_->setting_info()->background_vibration()) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kBackgroundVibrationFeature,
                                                 true);
+  }
+
+  if (app_data_->widget_info() != NULL &&
+      !app_data_->widget_info()->default_locale().empty()) {
+    locale_manager_->SetDefaultLocale(
+        app_data_->widget_info()->default_locale());
   }
 
   // TODO(sngn.lee): Find the path of certificate file
@@ -280,8 +283,6 @@ bool WebApplication::Initialize() {
   // TODO(sngn.lee): find the proxy url
   // ewk_context_proxy_uri_set(ewk_context_, ... );
 
-  // TODO(sngn.lee): set default from config.xml
-  // locale_manager_->SetDefaultLocale(const  string & locale);
 
   // TODO(sngn.lee): check csp element in config.xml and enable - "csp"
 
