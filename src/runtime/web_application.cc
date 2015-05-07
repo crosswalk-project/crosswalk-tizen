@@ -207,7 +207,7 @@ bool WebApplication::Initialize() {
                                               true);
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->screen_orientation()
-      == wgt::parse::SettingInfo::AUTO) {
+      == wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kRotationLockFeature,
                                                 true);
@@ -443,8 +443,8 @@ void WebApplication::OnOrientationLock(WebView* view,
   auto orientaion_setting = app_data_->setting_info() != NULL ?
                             app_data_->setting_info()->screen_orientation() :
                             // TODO(sngn.lee): check default value
-                            wgt::parse::SettingInfo::AUTO;
-  if (orientaion_setting != wgt::parse::SettingInfo::AUTO) {
+                            wgt::parse::SettingInfo::ScreenOrientation::AUTO;
+  if (orientaion_setting != wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
     return;
   }
 
