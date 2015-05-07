@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "runtime/resource_manager.h"
+#include "common/resource_manager.h"
 
 #include <stdio.h>
 #include <aul.h>
@@ -14,9 +14,9 @@
 #include "common/logger.h"
 #include "common/file_utils.h"
 #include "common/string_utils.h"
-#include "runtime/app_control.h"
-#include "runtime/application_data.h"
-#include "runtime/locale_manager.h"
+#include "common/app_control.h"
+#include "common/application_data.h"
+#include "common/locale_manager.h"
 
 using wgt::parse::AppControlInfo;
 

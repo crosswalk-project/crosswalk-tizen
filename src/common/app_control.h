@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef WRT_RUNTIME_APP_CONTROL_H_
-#define WRT_RUNTIME_APP_CONTROL_H_
+#ifndef WRT_COMMON_APP_CONTROL_H_
+#define WRT_COMMON_APP_CONTROL_H_
 
 #include <app_control.h>
 #include <bundle.h>
@@ -48,4 +48,4 @@ class AppControl {
 
 }  // namespace wrt
 
-#endif  // WRT_RUNTIME_APP_CONTROL_H_
+#endif  // WRT_COMMON_APP_CONTROL_H_

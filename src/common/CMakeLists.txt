@@ -6,6 +6,12 @@ PKG_CHECK_MODULES(TARGET_COMMON_STATIC_DEPS
   uuid
   gio-2.0
   dlog
+  capi-appfw-package-manager
+  capi-system-runtime-info
+  aul
+  appsvc
+  manifest-parser
+  manifest-handlers
   REQUIRED
 )
 
@@ -22,9 +28,16 @@ SET(TARGET_COMMON_STATIC_SRCS
   ${BASE_SRCDIR}/common/dbus_server.cc
   ${BASE_SRCDIR}/common/dbus_client.cc
   ${BASE_SRCDIR}/common/profiler.cc
+  ${BASE_SRCDIR}/common/resource_manager.cc
+  ${BASE_SRCDIR}/common/application_data.cc
+  ${BASE_SRCDIR}/common/app_control.cc
+  ${BASE_SRCDIR}/common/locale_manager.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_COMMON_STATIC_INCS})
 ADD_LIBRARY(${TARGET_COMMON_STATIC} STATIC
   ${TARGET_COMMON_STATIC_SRCS}
+)
+TARGET_LINK_LIBRARIES(${TARGET_COMMON_STATIC}
+  ${TARGET_COMMON_STATIC_DEPS_LIBRARIES}
 )

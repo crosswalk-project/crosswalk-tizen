@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef WRT_RUNTIME_APPLICATION_DATA_H_
-#define WRT_RUNTIME_APPLICATION_DATA_H_
+#ifndef WRT_COMMON_APPLICATION_DATA_H_
+#define WRT_COMMON_APPLICATION_DATA_H_
 
 #include <manifest_handlers/application_icons_handler.h>
 #include <manifest_handlers/application_manifest_constants.h>
@@ -98,4 +98,4 @@ class ApplicationData {
 
 }  // namespace wrt
 
-#endif  // WRT_RUNTIME_APPLICATION_DATA_H_
+#endif  // WRT_COMMON_APPLICATION_DATA_H_

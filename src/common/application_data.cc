@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "runtime/application_data.h"
+#include "common/application_data.h"
 
 #include <package_manager.h>
 #include <manifest_parser/manifest_parser.h>

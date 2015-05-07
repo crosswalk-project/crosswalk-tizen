@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "runtime/app_control.h"
+#include "common/app_control.h"
 
 #include <appsvc.h>
 #include <algorithm>

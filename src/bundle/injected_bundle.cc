@@ -7,6 +7,7 @@
 #include <string>
 
 #include "common/logger.h"
+#include "common/string_utils.h"
 #include "bundle/extension_renderer_controller.h"
 
 extern "C" void DynamicSetWidgetInfo(int /*widget_id*/) {
@@ -19,8 +20,12 @@ extern "C" void DynamicPluginStartSession(int /*widget_id*/,
                                           double /*scale*/,
                                           const char* uuid,
                                           const char* /*theme*/,
-                                          const char* /*base_url*/) {
+                                          const char* base_url) {
   LoggerD("InjectedBundle::DynamicPluginStartSession !!");
+  if (base_url == NULL || wrt::utils::StartsWith(base_url, "http")) {
+    LoggerD("External url not allowed plugin loading.");
+    return;
+  }
 
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();

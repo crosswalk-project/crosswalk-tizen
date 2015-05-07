@@ -12,8 +12,8 @@
 #include "common/constants.h"
 #include "common/command_line.h"
 #include "runtime/native_app_window.h"
-#include "runtime/app_control.h"
-#include "runtime/application_data.h"
+#include "common/app_control.h"
+#include "common/application_data.h"
 
 namespace wrt {
 

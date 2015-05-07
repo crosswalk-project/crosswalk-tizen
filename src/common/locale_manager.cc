@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "runtime/locale_manager.h"
+#include "common/locale_manager.h"
 
 #include <runtime_info.h>
 #include <memory>

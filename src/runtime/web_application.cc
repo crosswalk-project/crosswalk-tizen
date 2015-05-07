@@ -20,10 +20,10 @@
 #include "runtime/native_window.h"
 #include "runtime/web_view.h"
 #include "runtime/vibration_manager.h"
-#include "runtime/app_control.h"
-#include "runtime/locale_manager.h"
-#include "runtime/application_data.h"
-#include "runtime/resource_manager.h"
+#include "common/app_control.h"
+#include "common/locale_manager.h"
+#include "common/application_data.h"
+#include "common/resource_manager.h"
 
 namespace {
 // TODO(sngn.lee) : It should be declare in common header

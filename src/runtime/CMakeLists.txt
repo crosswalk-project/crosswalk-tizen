@@ -14,20 +14,13 @@ PKG_CHECK_MODULES(TARGET_RUNTIME_DEPS
   glib-2.0
   gio-2.0
   uuid
-  appsvc
-  bundle
   dlog
   ${WIN_PKG}
   elementary
   capi-appfw-application
   chromium-efl
-  manifest-parser
-  manifest-handlers
-  capi-appfw-package-manager
   efl-assist
   deviced
-  capi-system-runtime-info
-  aul
   ecore
   REQUIRED
 )
@@ -48,17 +41,13 @@ SET(TARGET_RUNTIME_LIBS
 
 # Source Files
 SET(TARGET_RUNTIME_SRCS
-  ${BASE_SRCDIR}/runtime/app_control.cc
-  ${BASE_SRCDIR}/runtime/application_data.cc
   ${BASE_SRCDIR}/runtime/native_window.cc
   ${BASE_SRCDIR}/runtime/native_app_window.cc
   ${BASE_SRCDIR}/runtime/web_application.cc
-  ${BASE_SRCDIR}/runtime/resource_manager.cc
   ${BASE_SRCDIR}/runtime/runtime.cc
   ${BASE_SRCDIR}/runtime/web_view.cc
   ${BASE_SRCDIR}/runtime/web_view_impl.cc
   ${BASE_SRCDIR}/runtime/vibration_manager.cc
-  ${BASE_SRCDIR}/runtime/locale_manager.cc
 )
 
 # Compiler Flags
