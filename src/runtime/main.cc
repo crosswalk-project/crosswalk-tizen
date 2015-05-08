@@ -17,14 +17,14 @@ int main(int argc, char* argv[]) {
   wrt::CommandLine* cmd = wrt::CommandLine::ForCurrentProcess();
   if (cmd->HasOptionName(wrt::kSwitchExtensionServer)) {
     // If cmd has the switch '--extension-server', run as extension server.
-    LoggerI("Extension server process has been created.");
+    LOGGER(INFO) << "Extension server process has been created.";
     if (!wrt::ExtensionServer::StartExtensionProcess()) {
-      LoggerE("Failed to start extension server.");
+      LOGGER(ERROR) << "Failed to start extension server.";
       exit(EXIT_FAILURE);
     }
   } else {
-    // Default dehavior, run as runtime.
-    LoggerI("Runtime process has been created.");
+    // Default behavior, run as runtime.
+    LOGGER(INFO) << "Runtime process has been created.";
     ewk_init();
     char* chromium_arg_options[] = {
       argv[0],

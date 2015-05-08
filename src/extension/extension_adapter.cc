@@ -34,7 +34,7 @@ XW_Instance ExtensionAdapter::GetNextXWInstance() {
 void ExtensionAdapter::RegisterExtension(Extension* extension) {
   XW_Extension xw_extension = extension->xw_extension_;
   if (!(xw_extension > 0 && xw_extension < next_xw_extension_)) {
-    LoggerW("xw_extension (%d) is invalid.", xw_extension);
+    LOGGER(WARN) << "xw_extension (" << xw_extension << ") is invalid.";
     return;
   }
   if (extension_map_.find(xw_extension) == extension_map_.end())
@@ -44,7 +44,7 @@ void ExtensionAdapter::RegisterExtension(Extension* extension) {
 void ExtensionAdapter::UnregisterExtension(Extension* extension) {
   XW_Extension xw_extension = extension->xw_extension_;
   if (!(xw_extension > 0 && xw_extension < next_xw_extension_)) {
-    LoggerW("xw_extension (%d) is invalid.", xw_extension);
+    LOGGER(WARN) << "xw_extension (" << xw_extension << ") is invalid.";
     return;
   }
   if (extension_map_.find(xw_extension) != extension_map_.end())
@@ -54,7 +54,7 @@ void ExtensionAdapter::UnregisterExtension(Extension* extension) {
 void ExtensionAdapter::RegisterInstance(ExtensionInstance* instance) {
   XW_Instance xw_instance = instance->xw_instance_;
   if (!(xw_instance > 0 && xw_instance < next_xw_instance_)) {
-    LoggerW("xw_instance (%d) is invalid.", xw_instance);
+    LOGGER(WARN) << "xw_instance (" << xw_instance << ") is invalid.";
     return;
   }
   if (instance_map_.find(xw_instance) == instance_map_.end())
@@ -64,7 +64,7 @@ void ExtensionAdapter::RegisterInstance(ExtensionInstance* instance) {
 void ExtensionAdapter::UnregisterInstance(ExtensionInstance* instance) {
   XW_Instance xw_instance = instance->xw_instance_;
   if (!(xw_instance > 0 && xw_instance < next_xw_instance_)) {
-    LoggerW("xw_instance (%d) is invalid.", xw_instance);
+    LOGGER(WARN) << "xw_instance (" << xw_instance << ") is invalid.";
     return;
   }
   if (instance_map_.find(xw_instance) != instance_map_.end())
@@ -123,7 +123,7 @@ const void* ExtensionAdapter::GetInterface(const char* name) {
     return &permissionsInterface1;
   }
 
-  LoggerW("Interface '%s' is not supported.", name);
+  LOGGER(WARN) << "Interface '" << name << "' is not supported.";
   return NULL;
 }
 
@@ -146,7 +146,7 @@ ExtensionInstance* ExtensionAdapter::GetExtensionInstance(
 
 #define CHECK(x, xw) \
   if (!x) { \
-    LoggerW("Ignoring call. Invalid %s = %d", #xw, xw); \
+    LOGGER(WARN) << "Ignoring call. Invalid " << #xw << " = " << xw; \
     return; \
   }
 
@@ -270,5 +270,8 @@ int ExtensionAdapter::PermissionsRegisterPermissions(XW_Extension xw_extension,
   else
     return XW_ERROR;
 }
+
+#undef CHECK
+#undef RETURN_IF_INITIALIZED
 
 }  // namespace wrt

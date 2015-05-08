@@ -100,7 +100,7 @@ int Runtime::Exec(int argc, char* argv[]) {
   ops.create = [](void* data) -> bool {
     Runtime* runtime = reinterpret_cast<Runtime*>(data);
     if (!runtime) {
-      LoggerE("Runtime has not been created.");
+      LOGGER(ERROR) << "Runtime has not been created.";
       return false;
     }
     return runtime->OnCreate();
@@ -110,7 +110,7 @@ int Runtime::Exec(int argc, char* argv[]) {
   ops.terminate = [](void* data) -> void {
     Runtime* runtime = reinterpret_cast<Runtime*>(data);
     if (!runtime) {
-      LoggerE("Runtime has not been created.");
+      LOGGER(ERROR) << "Runtime has not been created.";
       return;
     }
     runtime->OnTerminate();
@@ -120,7 +120,7 @@ int Runtime::Exec(int argc, char* argv[]) {
   ops.pause = [](void* data) -> void {
     Runtime* runtime = reinterpret_cast<Runtime*>(data);
     if (!runtime) {
-      LoggerE("Runtime has not been created.");
+      LOGGER(ERROR) << "Runtime has not been created.";
       return;
     }
     runtime->OnPause();
@@ -130,7 +130,7 @@ int Runtime::Exec(int argc, char* argv[]) {
   ops.resume = [](void* data) -> void {
     Runtime* runtime = reinterpret_cast<Runtime*>(data);
     if (!runtime) {
-      LoggerE("Runtime has not been created.");
+      LOGGER(ERROR) << "Runtime has not been created.";
       return;
     }
     runtime->OnResume();
@@ -140,7 +140,7 @@ int Runtime::Exec(int argc, char* argv[]) {
   ops.app_control = [](app_control_h app_control, void* data) -> void {
     Runtime* runtime = reinterpret_cast<Runtime*>(data);
     if (!runtime) {
-      LoggerE("Runtime has not been created.");
+      LOGGER(ERROR) << "Runtime has not been created.";
       return;
     }
     runtime->OnAppControl(app_control);

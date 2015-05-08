@@ -42,7 +42,7 @@ bool VibrationImpl::Initialize() {
 
   int ret = haptic_open(HAPTIC_DEVICE_0, &handle_);
   if (ret != HAPTIC_ERROR_NONE) {
-    LoggerE("Fail to open haptic device");
+    LOGGER(ERROR) << "Fail to open haptic device";
     handle_ = 0;
     return false;
   }

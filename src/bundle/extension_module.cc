@@ -261,8 +261,8 @@ void ExtensionModule::LoadExtensionCode(v8::Handle<v8::Context> context) {
   v8::Handle<v8::Value> result = RunString(wrapped_api_code, &exception);
 
   if (!result->IsFunction()) {
-    LoggerE("Couldn't load JS API code for %s: %s",
-            extension_name_.c_str(), exception.c_str());
+    LOGGER(ERROR) << "Couldn't load JS API code for "
+                  << extension_name_ << " : " << exception;
     return;
   }
   v8::Handle<v8::Function> callable_api_code =
@@ -280,8 +280,8 @@ void ExtensionModule::LoadExtensionCode(v8::Handle<v8::Context> context) {
   try_catch.SetVerbose(true);
   callable_api_code->Call(context->Global(), argc, argv);
   if (try_catch.HasCaught()) {
-    LoggerE("Exception while loading JS API code for %s: %s",
-            extension_name_.c_str(), ExceptionToString(try_catch).c_str());
+    LOGGER(ERROR) << "Exception while loading JS API code for "
+                  << extension_name_ << " : " << ExceptionToString(try_catch);
   }
 }
 
@@ -303,8 +303,8 @@ void ExtensionModule::HandleMessageFromNative(const std::string& msg) {
   v8::TryCatch try_catch;
   message_listener->Call(context->Global(), 1, args);
   if (try_catch.HasCaught())
-    LoggerE("Exception when running message listener: %s",
-            ExceptionToString(try_catch).c_str());
+    LOGGER(ERROR) << "Exception when running message listener: "
+                  << ExceptionToString(try_catch);
 }
 
 // static
@@ -360,7 +360,7 @@ void ExtensionModule::SetMessageListenerCallback(
   }
 
   if (!info[0]->IsFunction() && !info[0]->IsUndefined()) {
-    LoggerE("Trying to set message listener with invalid value.");
+    LOGGER(ERROR) << "Trying to set message listener with invalid value.";
     result.Set(false);
     return;
   }
@@ -384,7 +384,7 @@ ExtensionModule* ExtensionModule::GetExtensionModule(
   v8::Local<v8::Value> module =
       data->Get(v8::String::NewFromUtf8(isolate, kWrtExtensionModule));
   if (module.IsEmpty() || module->IsUndefined()) {
-    LoggerE("Trying to use extension from already destroyed context!");
+    LOGGER(ERROR) << "Trying to use extension from already destroyed context!";
     return NULL;
   }
   // CHECK(module->IsExternal());

@@ -69,7 +69,7 @@ bool ExtensionServer::Start(const StringVector& paths) {
   // Connect to DBusServer for Application of Runtime
   if (!dbus_application_client_.ConnectByName(
           app_uuid_ + "." + std::string(kDBusNameForApplication))) {
-    LoggerE("Failed to connect to the dbus server for Application.");
+    LOGGER(ERROR) << "Failed to connect to the dbus server for Application.";
     return false;
   }
 
@@ -127,16 +127,16 @@ bool ExtensionServer::RegisterSymbols(Extension* extension) {
   std::string name = extension->name();
 
   if (extension_symbols_.find(name) != extension_symbols_.end()) {
-    LoggerW("Ignoring extension with name already registred. '%s'",
-            name.c_str());
+    LOGGER(WARN) << "Ignoring extension with name already registred. '"
+                 << name << "'";
     return false;
   }
 
   Extension::StringVector entry_points = extension->entry_points();
   for (auto it = entry_points.begin(); it != entry_points.end(); ++it) {
     if (extension_symbols_.find(*it) != extension_symbols_.end()) {
-      LoggerW("Ignoring extension with entry_point already registred. '%s'",
-              (*it).c_str());
+      LOGGER(WARN) << "Ignoring extension with entry_point already registred. '"
+                   << (*it) << "'";
       return false;
     }
   }
@@ -157,7 +157,8 @@ void ExtensionServer::GetRuntimeVariable(const char* key, char* value,
       g_variant_new("(s)", key), G_VARIANT_TYPE("(s)"));
 
   if (!ret) {
-    LoggerE("Failed to get runtime variable from Application. (%s)", key);
+    LOGGER(ERROR) << "Failed to get runtime variable from Application. ("
+                  << key << ")";
     return;
   }
 
@@ -179,8 +180,6 @@ void ExtensionServer::HandleDBusMethod(GDBusConnection* connection,
                                        const std::string& method_name,
                                        GVariant* parameters,
                                        GDBusMethodInvocation* invocation) {
-  LoggerD("HandleDBusMethod (%s)", method_name.c_str());
-
   if (method_name == kMethodGetExtensions) {
     OnGetExtensions(invocation);
   } else if (method_name == kMethodCreateInstance) {
@@ -240,7 +239,7 @@ void ExtensionServer::OnCreateInstance(
   // find extension with given the extension name
   auto it = extensions_.find(extension_name);
   if (it == extensions_.end()) {
-    LoggerE("Failed to find extension [%s]", extension_name.c_str());
+    LOGGER(ERROR) << "Failed to find extension '" << extension_name << "'";
     g_dbus_method_invocation_return_error(
         invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
         "Not found extension %s", extension_name.c_str());
@@ -250,8 +249,8 @@ void ExtensionServer::OnCreateInstance(
   // create instance
   ExtensionInstance* instance = it->second->CreateInstance();
   if (!instance) {
-    LoggerE("Failed to create instance of extension [%s]",
-            extension_name.c_str());
+    LOGGER(ERROR) << "Failed to create instance of extension '"
+                  << extension_name << "'";
     g_dbus_method_invocation_return_error(
         invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
         "Failed to create instance of extension %s", extension_name.c_str());
@@ -276,7 +275,7 @@ void ExtensionServer::OnDestroyInstance(
   // find instance with the given instance id
   auto it = instances_.find(instance_id);
   if (it == instances_.end()) {
-    LoggerE("Failed to find instance [%s]", instance_id.c_str());
+    LOGGER(ERROR) << "Failed to find instance '" << instance_id << "'";
     g_dbus_method_invocation_return_error(
         invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
         "Not found instance %s", instance_id.c_str());
@@ -299,7 +298,7 @@ void ExtensionServer::OnSendSyncMessage(
   // find instance with the given instance id
   auto it = instances_.find(instance_id);
   if (it == instances_.end()) {
-    LoggerE("Failed to find instance [%s]", instance_id.c_str());
+    LOGGER(ERROR) << "Failed to find instance '" << instance_id << "'";
     g_dbus_method_invocation_return_error(
         invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
         "Not found instance %s", instance_id.c_str());
@@ -317,7 +316,7 @@ void ExtensionServer::OnPostMessage(
     const std::string& instance_id, const std::string& msg) {
   auto it = instances_.find(instance_id);
   if (it == instances_.end()) {
-    LoggerE("Failed to find instance [%s]", instance_id.c_str());
+    LOGGER(ERROR) << "Failed to find instance '" << instance_id << "'";
     return;
   }
 
@@ -335,7 +334,7 @@ void ExtensionServer::PostMessageToJSCallback(
     GDBusConnection* connection, const std::string& instance_id,
     const std::string& msg) {
   if (!connection || g_dbus_connection_is_closed(connection)) {
-    LoggerE("Client connection is closed already.");
+    LOGGER(ERROR) << "Client connection is closed already.";
     return;
   }
 
@@ -368,7 +367,7 @@ bool ExtensionServer::StartExtensionProcess() {
 
   // Receive AppID from arguments.
   if (cmd->arguments().size() < 1) {
-    LoggerE("uuid is required.");
+    LOGGER(ERROR) << "uuid is required.";
     return false;
   }
   std::string uuid = cmd->arguments()[0];
@@ -376,15 +375,15 @@ bool ExtensionServer::StartExtensionProcess() {
   // Start ExtensionServer
   ExtensionServer server(uuid);
   if (!server.Start()) {
-    LoggerE("Failed to start extension server.");
+    LOGGER(ERROR) << "Failed to start extension server.";
     return false;
   }
 
-  LoggerI("extension process has been started.");
+  LOGGER(INFO) << "extension process has been started.";
 
   g_main_loop_run(loop);
 
-  LoggerI("extension process is exiting.");
+  LOGGER(INFO) << "extension process is exiting.";
 
   g_main_loop_unref(loop);
 

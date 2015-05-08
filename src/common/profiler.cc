@@ -10,8 +10,8 @@
 namespace wrt {
 
 void PrintProfileLog(const char* func, const char* tag) {
-  LoggerD("[PROF] [%s] %s:%s", utils::GetCurrentMilliSeconds().c_str(),
-                               func, tag);
+  LOGGER(DEBUG) << "[PROF] [" << utils::GetCurrentMilliSeconds() << "] "
+                << func << ":" << tag;
 }
 
 }  // namespace wrt

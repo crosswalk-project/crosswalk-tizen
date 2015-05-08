@@ -77,19 +77,19 @@ void ModuleSystem::RegisterExtensionModule(
     const std::vector<std::string>& entry_points) {
   const std::string& extension_name = module->extension_name();
   if (ContainsEntryPoint(extension_name)) {
-    LoggerE("Can't register Extension Module named for extension "
-            "'%s' in the Module System because name was already registered.",
-            extension_name.c_str());
+    LOGGER(ERROR) << "Can't register Extension Module named for extension '"
+                  << extension_name << "' in the Module System because name "
+                  << " was already registered.";
     return;
   }
 
   std::vector<std::string>::const_iterator it = entry_points.begin();
   for (; it != entry_points.end(); ++it) {
     if (ContainsEntryPoint(*it)) {
-      LoggerE("Can't register Extension Module named for extension "
-              "'%s' in the Module System because another extension "
-              "has the entry point '%s'.",
-              extension_name.c_str(), (*it).c_str());
+      LOGGER(ERROR) << "Can't register Extension Module named for extension '"
+                    << extension_name << "' in the Module System because "
+                    << "another extension has the entry point '"
+                    << (*it) << "'.";
       return;
     }
   }
@@ -182,8 +182,8 @@ bool ModuleSystem::SetTrampolineAccessorForEntryPoint(
   v8::Handle<v8::Value> value =
       EnsureTargetObjectForTrampoline(context, path, &error);
   if (value->IsUndefined()) {
-    LoggerE("Error installing trampoline for %s: %s.",
-            entry_point.c_str(), error.c_str());
+    LOGGER(ERROR) << "Error installing trampoline for " << entry_point
+                  << " : " << error;
     return false;
   }
 
@@ -213,8 +213,8 @@ bool ModuleSystem::DeleteAccessorForEntryPoint(
   std::string error;
   v8::Handle<v8::Value> value = GetObjectForPath(context, path, &error);
   if (value->IsUndefined()) {
-    LoggerE("Error retrieving object for %s: %s.",
-            entry_point.c_str(), error.c_str());
+    LOGGER(ERROR) << "Error retrieving object for " << entry_point
+                  << " : " << error;
     return false;
   }
 
@@ -230,7 +230,7 @@ bool ModuleSystem::InstallTrampoline(v8::Handle<v8::Context> context,
   bool ret = SetTrampolineAccessorForEntryPoint(context, entry->name,
                                                 entry_ptr);
   if (!ret) {
-    LoggerE("Error installing trampoline for '%s'.", entry->name.c_str());
+    LOGGER(ERROR) << "Error installing trampoline for " << entry->name;
     return false;
   }
 
@@ -239,7 +239,7 @@ bool ModuleSystem::InstallTrampoline(v8::Handle<v8::Context> context,
     ret = SetTrampolineAccessorForEntryPoint(context, *it, entry_ptr);
     if (!ret) {
       // TODO(vcgomes): Remove already added trampolines when it fails.
-      LoggerE("Error installing trampoline for '%s'.", entry->name.c_str());
+      LOGGER(ERROR) << "Error installing trampoline for " << entry->name;
       return false;
     }
   }
@@ -416,8 +416,8 @@ void ModuleSystem::EnsureExtensionNamespaceIsReadOnly(
   std::string error;
   v8::Handle<v8::Value> value = GetObjectForPath(context, path, &error);
   if (value->IsUndefined()) {
-    LoggerE("Error retrieving object for %s: %s.",
-            extension_name.c_str(), error.c_str());
+    LOGGER(ERROR) << "Error retrieving object for " << extension_name << " : "
+                  << error;
     return;
   }
 

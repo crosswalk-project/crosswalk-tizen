@@ -20,7 +20,7 @@ static void OnMethodCall(GDBusConnection* connection,
                          gpointer user_data) {
   DBusServer* self = reinterpret_cast<DBusServer*>(user_data);
   if (!self) {
-    LoggerE("DBusServer is NULL.");
+    LOGGER(ERROR) << "DBusServer is NULL.";
     return;
   }
   auto callback = self->GetMethodCallback(interface_name);
@@ -38,7 +38,7 @@ static GVariant* OnGetProperty(GDBusConnection* connection,
                                gpointer user_data) {
   DBusServer* self = reinterpret_cast<DBusServer*>(user_data);
   if (!self) {
-    LoggerE("DBusServer is NULL.");
+    LOGGER(ERROR) << "DBusServer is NULL.";
     return NULL;
   }
 
@@ -63,7 +63,7 @@ static gboolean OnSetProperty(GDBusConnection* connection,
                               gpointer user_data) {
   DBusServer* self = reinterpret_cast<DBusServer*>(user_data);
   if (!self) {
-    LoggerE("DBusServer is NULL.");
+    LOGGER(ERROR) << "DBusServer is NULL.";
     return FALSE;
   }
 
@@ -111,13 +111,13 @@ static gboolean OnClientRequest(GDBusServer* /*dbus_server*/,
         self->GetPeerCredentialsCallback();
     if (callback && !callback(
         g_dbus_connection_get_peer_credentials(connection))) {
-      LoggerW("Invalid peer credentials");
+      LOGGER(WARN) << "Invalid peer credentials.";
       g_dbus_connection_close_sync(connection, NULL, NULL);
     }
 
     GDBusNodeInfo* node_info = self->GetIntrospectionNodeInfo();
     if (!node_info) {
-      LoggerE("Introspection is not set.");
+      LOGGER(ERROR) << "Introspection is not set.";
       return TRUE;
     }
 
@@ -132,7 +132,7 @@ static gboolean OnClientRequest(GDBusServer* /*dbus_server*/,
                           NULL,
                           &err);
     if (reg_id == 0) {
-      LoggerE("Failed to register object : %s", err->message);
+      LOGGER(ERROR) << "Failed to register object : " << err->message;
       g_error_free(err);
     }
   }
@@ -182,7 +182,7 @@ void DBusServer::Start(const std::string& name) {
                   guid, NULL, NULL, &err);
   g_free(guid);
   if (!server_) {
-    LoggerE("Failed to create dbus server : %s", err->message);
+    LOGGER(ERROR) << "Failed to create dbus server : " << err->message;
     g_error_free(err);
     return;
   }
@@ -192,8 +192,6 @@ void DBusServer::Start(const std::string& name) {
                    G_CALLBACK(OnClientRequest), this);
 
   g_dbus_server_start(server_);
-
-  LoggerD("DBusServer(%s) has been started.", address.c_str());
 }
 
 std::string DBusServer::GetClientAddress() const {
@@ -204,8 +202,8 @@ void DBusServer::SetIntrospectionXML(const std::string& xml) {
   GError* err = NULL;
   node_info_ = g_dbus_node_info_new_for_xml(xml.c_str(), &err);
   if (!node_info_) {
-    LoggerE("Failed to create node info from introspection xml : %s",
-            err->message);
+    LOGGER(ERROR) << "Failed to create node info from introspection xml : "
+                  << err->message;
     g_error_free(err);
   }
 }
@@ -220,8 +218,8 @@ void DBusServer::SendSignal(GDBusConnection* connection,
       iface.c_str(), signal_name.c_str(),
       parameters, &err);
   if (!ret) {
-    LoggerE("Failed to emit signal : '%s.%s'",
-            iface.c_str(), signal_name.c_str());
+    LOGGER(ERROR) << "Failed to emit signal : '"
+                  << iface << '.' << signal_name << "'";
     g_error_free(err);
   }
 }

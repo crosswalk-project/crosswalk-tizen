@@ -53,8 +53,8 @@ bool DBusClient::Connect(const std::string& address) {
       G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT,
       NULL, NULL, &err);
   if (!connection_) {
-    LoggerE("Failed to connect to bus address %s : %s",
-           address.c_str(), err->message);
+    LOGGER(ERROR) << "Failed to connect to bus address " << address
+                  << " : " << err->message;
     g_error_free(err);
     return false;
   }
@@ -82,7 +82,7 @@ GVariant* DBusClient::Call(const std::string& iface,
         connection_, NULL, "/", iface.c_str(), method.c_str(), parameters,
         reply_type, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &err);
     if (!reply) {
-      LoggerE("Failed to CallSync : %s", err->message);
+      LOGGER(ERROR) << "Failed to CallSync : " << err->message;
       g_error_free(err);
     }
   } else {

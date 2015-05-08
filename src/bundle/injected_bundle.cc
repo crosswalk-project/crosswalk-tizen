@@ -11,7 +11,7 @@
 #include "bundle/extension_renderer_controller.h"
 
 extern "C" void DynamicSetWidgetInfo(int /*widget_id*/) {
-  LoggerD("InjectedBundle::DynamicSetWidgetInfo !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!";
 }
 
 extern "C" void DynamicPluginStartSession(int /*widget_id*/,
@@ -21,9 +21,9 @@ extern "C" void DynamicPluginStartSession(int /*widget_id*/,
                                           const char* uuid,
                                           const char* /*theme*/,
                                           const char* base_url) {
-  LoggerD("InjectedBundle::DynamicPluginStartSession !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!";
   if (base_url == NULL || wrt::utils::StartsWith(base_url, "http")) {
-    LoggerD("External url not allowed plugin loading.");
+    LOGGER(ERROR) << "External url not allowed plugin loading.";
     return;
   }
 
@@ -36,7 +36,7 @@ extern "C" void DynamicPluginStartSession(int /*widget_id*/,
 
 extern "C" void DynamicPluginStopSession(
     int /*widget_id*/, v8::Handle<v8::Context> context) {
-  LoggerD("InjectedBundle::DynamicPluginStopSession !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStopSession !!";
 
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();
@@ -45,18 +45,18 @@ extern "C" void DynamicPluginStopSession(
 
 extern "C" void DynamicUrlParsing(
     std::string* old_url, std::string* new_url, int /*widget_id*/) {
-  LoggerD("InjectedBundle::DynamicUrlParsing !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!";
   *new_url = *old_url;
 }
 
 extern "C" void DynamicDatabaseAttach(int /*attach*/) {
-  LoggerD("InjectedBundle::DynamicDatabaseAttach !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!";
 }
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& /*data*/) {
-  LoggerD("InjectedBundle::DynamicOnIPCMessage !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicOnIPCMessage !!";
 }
 
 extern "C" void DynamicPreloading() {
-  LoggerD("InjectedBundle::DynamicPreloading !!");
+  LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
 }

@@ -41,17 +41,16 @@ bool Extension::Initialize() {
 
   void* handle = dlopen(library_path_.c_str(), RTLD_LAZY);
   if (!handle) {
-    LoggerE("Error loading extension '%s' : %s",
-            library_path_.c_str(), dlerror());
+    LOGGER(ERROR) << "Error loading extension '"
+                  << library_path_ << "' : " << dlerror();
     return false;
   }
 
   XW_Initialize_Func initialize = reinterpret_cast<XW_Initialize_Func>(
       dlsym(handle, "XW_Initialize"));
   if (!initialize) {
-    LoggerE(
-        "Error loading extension '%s' : couldn't get XW_Initialize function",
-        library_path_.c_str());
+    LOGGER(ERROR) << "Error loading extension '" << library_path_
+                  << "' : couldn't get XW_Initialize function.";
     dlclose(handle);
     return false;
   }
@@ -62,9 +61,8 @@ bool Extension::Initialize() {
 
   int ret = initialize(xw_extension_, ExtensionAdapter::GetInterface);
   if (ret != XW_OK) {
-    LoggerE(
-        "Error loading extension '%s' : XW_Initialize() returned error value.",
-        library_path_.c_str());
+    LOGGER(ERROR) << "Error loading extension '" << library_path_
+                  << "' : XW_Initialize() returned error value.";
     dlclose(handle);
     return false;
   }

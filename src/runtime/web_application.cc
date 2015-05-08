@@ -103,7 +103,7 @@ bool FindPrivilege(wrt::ApplicationData* app_data,
 void ExecExtensionProcess(const std::string& uuid) {
   pid_t pid = -1;
   if ((pid = fork()) < 0) {
-    LoggerE("Failed to fork child process for extension process.");
+    LOGGER(ERROR) << "Failed to fork child process for extension process.";
   }
   if (pid == 0) {
     CommandLine* cmd = CommandLine::ForCurrentProcess();
@@ -289,7 +289,8 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
                      void*) -> void {
     int x, y, w, h;
     evas_object_geometry_get(obj, &x, &y, &w, &h);
-    LoggerD("resize ! (%d, %d, %d, %d)\n", x, y, w, h);
+    LOGGER(DEBUG) << "resize ! ("
+                  << x << ", " << y << ", " << w << ", " << h << ")";
   };
   evas_object_event_callback_add(view->evas_object(),
                                  EVAS_CALLBACK_RESIZE,
@@ -374,7 +375,7 @@ void WebApplication::Suspend() {
 
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->background_support_enabled()) {
-    LoggerD("gone background (backgroud support enabed)");
+    LOGGER(DEBUG) << "gone background (backgroud support enabed)";
     return;
   }
 
@@ -505,13 +506,13 @@ bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
 }
 
 void WebApplication::OnLoadStart(WebView* /*view*/) {
-  LoggerD("LoadStart");
+  LOGGER(DEBUG) << "LoadStart";
 }
 void WebApplication::OnLoadFinished(WebView* /*view*/) {
-  LoggerD("LoadFinished");
+  LOGGER(DEBUG) << "LoadFinished";
 }
 void WebApplication::OnRendered(WebView* /*view*/) {
-  LoggerD("Rendered");
+  LOGGER(DEBUG) << "Rendered";
 }
 
 void WebApplication::LaunchInspector(wrt::AppControl* appcontrol) {
@@ -621,7 +622,7 @@ void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
   if (method_name == kMethodNotifyEPCreated) {
     // TODO(wy80.choi): send signal to injected bundle to make connection
     // between injected bundle and extension process
-    LoggerD("Call!!!! NotifyEPCreated!");
+    LOGGER(DEBUG) << "Call!!!! NotifyEPCreated!";
   } else if (method_name == kMethodGetRuntimeVariable) {
     gchar* key;
     std::string value;

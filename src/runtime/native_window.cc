@@ -136,13 +136,13 @@ void NativeWindow::Initialize() {
 
 void NativeWindow::DidDeleteRequested(void* /*data*/,
     Evas_Object* /*obj*/, void* /*event_info*/) {
-  LoggerD("didDeleteRequested");
+  LOGGER(DEBUG) << "didDeleteRequested";
   elm_exit();
 }
 
 void NativeWindow::DidProfileChanged(void* /*data*/,
     Evas_Object* /*obj*/, void* /*event_info*/) {
-  LoggerD("didProfileChanged");
+  LOGGER(DEBUG) << "didProfileChanged";
 }
 
 Evas_Object* NativeWindow::evas_object() const {

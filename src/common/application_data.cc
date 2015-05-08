@@ -137,8 +137,8 @@ std::shared_ptr<const wgt::parse::WidgetInfo>
 bool ApplicationData::LoadManifestData() {
   std::string config_xml_path(application_path_ + kConfigXml);
   if (!utils::Exists(config_xml_path)) {
-    LoggerE("Failed to load manifest data. : No such file '%s'",
-            config_xml_path.c_str());
+    LOGGER(ERROR) << "Failed to load manifest data. : No such file '"
+                  << config_xml_path << "'.";
     return false;
   }
 
@@ -182,8 +182,8 @@ bool ApplicationData::LoadManifestData() {
     for (auto iter = handlers.begin(); iter != handlers.end(); ++iter) {
       delete *iter;
     }
-    LoggerE("Failed to load manifest data. : %s",
-            manifest_parser.GetErrorMessage().c_str());
+    LOGGER(ERROR) << "Failed to load manifest data : "
+                  << manifest_parser.GetErrorMessage();
     return false;
   }
 

@@ -57,13 +57,13 @@ void LocaleManager::UpdateSystemLocale() {
   std::string lang = localeToBCP47LangTag(str);
 
   if (lang.length() == 0) {
-    LoggerE("Language tag was invalid");
+    LOGGER(ERROR) << "Language tag was invalid";
     return;
   }
 
   system_locales_.clear();
   while (true) {
-    LoggerD("Processing language description: %s", lang.c_str());
+    LOGGER(DEBUG) << "Processing language description: " << lang;
     system_locales_.push_back(lang);
 
     // compatibility with lower language Tag by SDK

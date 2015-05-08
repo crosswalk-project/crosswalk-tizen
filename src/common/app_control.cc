@@ -17,7 +17,7 @@ static bool BundleAddData(bundle* target, const std::string& key,
                           const std::string& value) {
   int result = appsvc_add_data(target, key.c_str(), value.c_str());
   if (result < 0) {
-    LoggerE("BundleAddData : appsvc_add_data fail");
+    LOGGER(ERROR) << "Failed to add data to appsvc.";
     return false;
   } else {
     return true;
@@ -36,7 +36,7 @@ static bool BundleAddDataArray(bundle* target, const std::string& key,
   int result = appsvc_add_data_array(target, key.c_str(),
                                      v.data(), n);
   if (result < 0) {
-    LoggerE("BundleAddDataArray appsvc_add_data_array fail");
+    LOGGER(ERROR) << "Failed to add an array of data to appsvc.";
     return false;
   } else {
     return true;
@@ -172,7 +172,7 @@ bool AppControl::Reply(const std::map<std::string,
   bundle* result;
   if (appsvc_create_result_bundle(app_control_bundle_,
                                   &result) != APPSVC_RET_OK) {
-    LoggerE("AppControl::Reply Fail : fail to create result bundle");
+    LOGGER(ERROR) << "Failed to craete result bundle.";
     return false;
   }
   auto it = data.begin();

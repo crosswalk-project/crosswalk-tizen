@@ -35,8 +35,8 @@ std::string ExtensionClient::CreateInstance(
       G_VARIANT_TYPE("(s)"));
 
   if (!value) {
-    LoggerE("Failed to create instance for extension %s",
-            extension_name.c_str());
+    LOGGER(ERROR) << "Failed to create instance for extension "
+                  << extension_name;
     return std::string();
   }
 
@@ -57,7 +57,7 @@ void ExtensionClient::DestroyInstance(const std::string& instance_id) {
       G_VARIANT_TYPE("(s)"));
 
   if (!value) {
-    LoggerE("Failed to destroy instance %s", instance_id.c_str());
+    LOGGER(ERROR) << "Failed to destroy instance " << instance_id;
     return;
   }
 
@@ -85,7 +85,7 @@ std::string ExtensionClient::SendSyncMessageToNative(
       G_VARIANT_TYPE("(s)"));
 
   if (!value) {
-    LoggerE("Failed to send synchronous message to ExtensionServer.");
+    LOGGER(ERROR) << "Failed to send synchronous message to ExtensionServer.";
     return std::string();
   }
 
@@ -108,7 +108,7 @@ void ExtensionClient::Initialize(const std::string& uuid) {
         kDBusInterfaceNameForExtension,
         std::bind(&ExtensionClient::HandleSignal, this, _1, _2));
   } else {
-    LoggerE("Failed to connect to the dbus server for Extension.");
+    LOGGER(ERROR) << "Failed to connect to the dbus server for Extension.";
     return;
   }
 
@@ -119,7 +119,7 @@ void ExtensionClient::Initialize(const std::string& uuid) {
       G_VARIANT_TYPE("(a(ssas))"));
 
   if (!value) {
-    LoggerE("Failed to get extension list from ExtensionServer.");
+    LOGGER(ERROR) << "Failed to get extension list from ExtensionServer.";
     return;
   }
 

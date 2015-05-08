@@ -296,7 +296,7 @@ void WebViewImpl::InitQuotaExceededCallback() {
       return EINA_TRUE;
 
     auto result_handler = [view](bool result) {
-      LoggerD("database quota Permission Result : %d", result);
+      LOGGER(DEBUG) << "database quota Permission Result : " << result;
       ewk_view_exceeded_database_quota_reply(view, result);
     };
     std::stringstream url;
@@ -326,7 +326,7 @@ void WebViewImpl::InitQuotaExceededCallback() {
       return EINA_TRUE;
 
     auto result_handler = [view](bool result) {
-      LoggerD("indexed db quota Permission Result : %d", result);
+      LOGGER(DEBUG) << "indexed db quota Permission Result : " << result;
       ewk_view_exceeded_indexed_database_quota_reply(view, result);
     };
     std::stringstream url;
@@ -356,7 +356,7 @@ void WebViewImpl::InitQuotaExceededCallback() {
       return EINA_TRUE;
 
     auto result_handler = [view](bool result) {
-      LoggerD("local file quota Permission Result : %d", result);
+      LOGGER(DEBUG) << "local file quota Permission Result : " << result;
       ewk_view_exceeded_local_file_system_quota_reply(view, result);
     };
     std::stringstream url;
@@ -552,7 +552,7 @@ void WebViewImpl::InitNotificationPermissionCallback() {
   auto request_callback = [](Evas_Object*,
                              Ewk_Notification_Permission_Request* request,
                              void* user_data) {
-    LoggerD("Notification Permission Request");
+    LOGGER(DEBUG) << "Notification Permission Request";
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (!self->listener_) {
       ewk_notification_permission_reply(request, EINA_FALSE);
@@ -561,7 +561,7 @@ void WebViewImpl::InitNotificationPermissionCallback() {
 
     ewk_notification_permission_request_suspend(request);
     auto result_handler = [request](bool result) {
-      LoggerD("Notification Permission Result : %d", result);
+      LOGGER(DEBUG) << "Notification Permission Result : %d" << result;
       ewk_notification_permission_reply(request, result);
     };
     const Ewk_Security_Origin* ewk_origin =
@@ -589,7 +589,7 @@ void WebViewImpl::InitGeolocationPermissionCallback() {
       Evas_Object*,
       Ewk_Geolocation_Permission_Request* request,
       void* user_data) {
-    LoggerD("Geolocation Permission Request");
+    LOGGER(DEBUG) << "Geolocation Permission Request";
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL) {
       ewk_geolocation_permission_reply(request, EINA_FALSE);
@@ -600,7 +600,7 @@ void WebViewImpl::InitGeolocationPermissionCallback() {
     const Ewk_Security_Origin* ewk_origin =
         ewk_geolocation_permission_request_origin_get(request);
     auto result_handler = [request](bool result) {
-      LoggerD("Geolocation Permission Result : %d", result);
+      LOGGER(DEBUG) << "Geolocation Permission Result : " << result;
       ewk_geolocation_permission_reply(request, result);
     };
 
@@ -626,7 +626,7 @@ void WebViewImpl::InitAuthenticationCallback() {
   auto auth_callback = [](void* user_data,
                           Evas_Object*,
                           void* event_info) {
-    LoggerD("Authentication Request");
+    LOGGER(DEBUG) << "Authentication Request";
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     Ewk_Auth_Challenge* auth_challenge =
         static_cast<Ewk_Auth_Challenge*>(event_info);
@@ -638,7 +638,7 @@ void WebViewImpl::InitAuthenticationCallback() {
     auto result_handler = [auth_challenge](bool submit,
                                     const std::string& id,
                                     const std::string& password) {
-      LoggerD("Authentication Result : submit %d", submit);
+      LOGGER(DEBUG) << "Authentication Result : submit = " << submit;
       if (!submit) {
         ewk_auth_challenge_credential_cancel(auth_challenge);
         return;

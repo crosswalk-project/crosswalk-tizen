@@ -73,7 +73,7 @@ static bool CompareStringWithWildcard(const std::string& origin,
     std::regex re(wildcard_str, std::regex_constants::icase);
     return std::regex_match(target.begin(), target.end(), re);
   } catch (std::regex_error& e) {
-    LoggerE("regex exception happened");
+    LOGGER(ERROR) << "regex_error caught: " << e.what();
     return false;
   }
 }
@@ -214,7 +214,7 @@ std::string ResourceManager::GetDefaultOrEmpty() {
       }
     }
   } else {
-    LoggerW("AppWidgetInfo is NULL.");
+    LOGGER(WARN) << "AppWidgetInfo is NULL.";
   }
 
   if (!default_src.empty()) {
@@ -248,7 +248,7 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
     const AppControl* app_control) {
   std::string operation = app_control->operation();
   if (operation.empty()) {
-    LoggerE("operation(mandatory) is NULL");
+    LOGGER(ERROR) << "operation(mandatory) is NULL";
     return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
   }
 
@@ -258,10 +258,10 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
     mime = GetMimeFromUri(uri);
   }
 
-  LoggerD("Passed AppControl data");
-  LoggerD(" - operation : %s", operation.c_str());
-  LoggerD(" - mimetype  : %s", mime.c_str());
-  LoggerD(" - uri       : %s", uri.c_str());
+  LOGGER(DEBUG) << "Passed AppControl data";
+  LOGGER(DEBUG) << " - operation : " << operation;
+  LOGGER(DEBUG) << " - mimetype  : " << mime;
+  LOGGER(DEBUG) << " - uri       : " << uri;
 
   if (application_data_ == NULL ||
       application_data_->app_control_info_list() == NULL) {
@@ -315,7 +315,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     if (url.compare(0, check.length(), check) == 0) {
       url.erase(0, check.length());
     } else {
-      LoggerE("appid was invalid");
+      LOGGER(ERROR) << "Invalid appid";
       return result;
     }
   } else if (url.compare(file_scheme) == 0) {
@@ -328,7 +328,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
   }
 
   if (url.empty()) {
-    LoggerE("URL Localization error");
+    LOGGER(ERROR) << "URL Localization error";
     return result;
   }
 
