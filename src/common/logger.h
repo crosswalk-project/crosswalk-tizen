@@ -56,10 +56,15 @@ class LogMessage {
 }  // namespace utils
 }  // namespace wrt
 
+#ifndef __MODULE__
+#define __MODULE__                                                            \
+    (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif
+
 #define LOGGER(severity)                                                      \
   wrt::utils::LogMessageVodify() &                                            \
     wrt::utils::LogMessage(DLOG_ ## severity,                                 \
-                           __FILE__, __FUNCTION__, __LINE__).stream()
+                           __MODULE__, __FUNCTION__, __LINE__).stream()
 
 
 #endif  // WRT_COMMON_LOGGER_H_
