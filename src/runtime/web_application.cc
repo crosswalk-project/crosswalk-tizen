@@ -24,6 +24,7 @@
 #include "common/locale_manager.h"
 #include "common/application_data.h"
 #include "common/resource_manager.h"
+#include "runtime/app_db.h"
 
 namespace wrt {
 
@@ -86,6 +87,11 @@ const char* kRotationLockFeature = "rotation,lock";
 const char* kBackgroundMusicFeature = "background,music";
 const char* kSoundModeFeature = "sound,mode";
 const char* kBackgroundVibrationFeature = "background,vibration";
+const char* kGeolocationPermissionPrefix = "__WRT_GEOPERM_";
+const char* kNotificationPermissionPrefix = "__WRT_NOTIPERM_";
+const char* kQuotaPermissionPrefix = "__WRT_QUOTAPERM_";
+
+
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -311,8 +317,6 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
 }
 
 void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
-  // TODO(sngn.lee): Set the injected bundle into extension process
-
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
   if (res->should_reset()) {
@@ -541,11 +545,14 @@ void WebApplication::OnNotificationPermissionRequest(
     WebView* view,
     const std::string& url,
     std::function<void(bool)> result_handler) {
-  // TODO(sngn.lee): check from DB url was already allowed
-  // if(check already allow or denied) {
-  //   result_handler(true);
-  //   return;
-  // }
+  auto db = AppDB::GetInstance();
+  std::string reminder = db->Get(kNotificationPermissionPrefix + url);
+  if (reminder == "allowed") {
+    result_handler(true);
+  } else if (reminder == "denied") {
+    result_handler(false);
+  }
+
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (utils::StartsWith(url, "file://") &&
@@ -555,17 +562,25 @@ void WebApplication::OnNotificationPermissionRequest(
   }
 
   // TODO(sngn.lee): create popup and show
+
+  // TODO(sngn.lee): if alway check box was enabled save into db
+  // if (false) {
+  //  db->Set(kNotificationPermissionPrefix + url, result);
+  // }
 }
 
 void WebApplication::OnGeolocationPermissionRequest(
     WebView* view,
     const std::string& url,
     std::function<void(bool)> result_handler) {
-  // TODO(sngn.lee): check from DB url was already allowed
-  // if(check already allow or denied) {
-  //   result_handler(true);
-  //   return;
-  // }
+  auto db = AppDB::GetInstance();
+  std::string reminder = db->Get(kGeolocationPermissionPrefix + url);
+  if (reminder == "allowed") {
+    result_handler(true);
+  } else if (reminder == "denied") {
+    result_handler(false);
+  }
+
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
   if (!FindPrivilege(app_data_.get(), kLocationPrivilege)) {
@@ -586,11 +601,14 @@ void WebApplication::OnQuotaExceed(
     WebView* view,
     const std::string& url,
     std::function<void(bool)> result_handler) {
-  // TODO(sngn.lee): check from DB url was already allowed
-  // if(check already allow or denied) {
-  //   result_handler(true);
-  //   return;
-  // }
+  auto db = AppDB::GetInstance();
+  std::string reminder = db->Get(kQuotaPermissionPrefix + url);
+  if (reminder == "allowed") {
+    result_handler(true);
+  } else if (reminder == "denied") {
+    result_handler(false);
+  }
+
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (utils::StartsWith(url, "file://") &&
