@@ -66,6 +66,13 @@ bool ExtensionServer::Start() {
 }
 
 bool ExtensionServer::Start(const StringVector& paths) {
+  // Connect to DBusServer for Application of Runtime
+  if (!dbus_application_client_.ConnectByName(
+          app_uuid_ + "." + std::string(kDBusNameForApplication))) {
+    LOGGER(ERROR) << "Failed to connect to the dbus server for Application.";
+    return false;
+  }
+
   // Register system extensions to support Tizen Device APIs
   RegisterSystemExtensions();
 
@@ -74,13 +81,6 @@ bool ExtensionServer::Start(const StringVector& paths) {
     if (utils::Exists(*it)) {
       RegisterExtension(*it);
     }
-  }
-
-  // Connect to DBusServer for Application of Runtime
-  if (!dbus_application_client_.ConnectByName(
-          app_uuid_ + "." + std::string(kDBusNameForApplication))) {
-    LOGGER(ERROR) << "Failed to connect to the dbus server for Application.";
-    return false;
   }
 
   // Start DBusServer
@@ -102,6 +102,7 @@ bool ExtensionServer::Start(const StringVector& paths) {
 
 void ExtensionServer::RegisterExtension(const std::string& path) {
   Extension* ext = new Extension(path, this);
+  LOGGER(DEBUG) << "Register " << path;
   if (!ext->Initialize() || !RegisterSymbols(ext)) {
     delete ext;
     return;
