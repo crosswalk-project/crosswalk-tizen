@@ -92,7 +92,7 @@ const char* kBackgroundVibrationFeature = "background,vibration";
 const char* kGeolocationPermissionPrefix = "__WRT_GEOPERM_";
 const char* kNotificationPermissionPrefix = "__WRT_NOTIPERM_";
 const char* kQuotaPermissionPrefix = "__WRT_QUOTAPERM_";
-
+const char* kCertificateAllowPrefix = "__WRT_CERTIPERM_";
 
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
@@ -665,6 +665,23 @@ void WebApplication::OnAuthenticationRequest(
                    > result_handler) {
   // TODO(sngn.lee): create popup and show
   result_handler(false, "", "");
+}
+
+void WebApplication::OnCertificateAllowRequest(
+      WebView* view,
+      const std::string& url,
+      const std::string& pem,
+      std::function<void(bool allow)> result_handler) {
+  auto db = AppDB::GetInstance();
+  std::string reminder = db->Get(kCertificateAllowPrefix + pem);
+  if (reminder == "allowed") {
+    result_handler(true);
+  } else if (reminder == "denied") {
+    result_handler(false);
+  }
+
+  // TODO(sngn.lee): create poup and show
+  result_handler(false);
 }
 
 

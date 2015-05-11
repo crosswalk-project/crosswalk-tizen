@@ -101,8 +101,8 @@ void WebViewImpl::Initialize() {
   InitNotificationPermissionCallback();
   InitGeolocationPermissionCallback();
   InitAuthenticationCallback();
+  InitCertificateAllowCallback();
 
-  // TODO(sngn.lee): "request,certificate,confirm" certification popup
   // TODO(sngn.lee): "notification,show"
   // TODO(sngn.lee): "notification,cancel"
   // TODO(sngn.lee): "protocolhandler,registration,requested"
@@ -663,6 +663,41 @@ void WebViewImpl::InitAuthenticationCallback() {
                                  this);
   smart_callbacks_["authentication,challenge"] = auth_callback;
 }
+
+void WebViewImpl::InitCertificateAllowCallback() {
+  auto certi_callback = [](void* user_data,
+                           Evas_Object*,
+                           void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    Ewk_Certificate_Policy_Decision* policy =
+      static_cast<Ewk_Certificate_Policy_Decision*>(event_info);
+
+    if (self == NULL || self->listener_ == NULL) {
+      ewk_certificate_policy_decision_allowed_set(policy, EINA_FALSE);
+      return;
+    }
+
+    ewk_certificate_policy_decision_suspend(policy);
+    auto result_handler = [policy](bool allow) {
+      ewk_certificate_policy_decision_allowed_set(policy, allow);
+    };
+
+    auto ptr = ewk_certificate_policy_decision_url_get(policy);
+    std::string url(ptr ? ptr : "");
+    ptr = ewk_certificate_policy_decision_certificate_pem_get(policy);
+    std::string pem(ptr ? ptr : "");
+    self->listener_->OnCertificateAllowRequest(self->view_,
+                                               url,
+                                               pem,
+                                               result_handler);
+  };
+  evas_object_smart_callback_add(ewk_view_,
+                                 "request,certificate,confirm",
+                                 certi_callback,
+                                 this);
+  smart_callbacks_["request,certificate,confirm"] = certi_callback;
+}
+
 
 std::string WebViewImpl::GetUrl() {
   return std::string(ewk_view_url_get(ewk_view_));

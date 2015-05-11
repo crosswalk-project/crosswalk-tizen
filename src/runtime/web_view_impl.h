@@ -56,6 +56,7 @@ class WebViewImpl {
   void InitNotificationPermissionCallback();
   void InitGeolocationPermissionCallback();
   void InitAuthenticationCallback();
+  void InitCertificateAllowCallback();
 
   NativeWindow* window_;
   Ewk_Context* context_;

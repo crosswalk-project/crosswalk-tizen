@@ -75,7 +75,11 @@ class WebApplication : public WebView::EventListener {
                          const std::string& id,
                          const std::string& password)
                    > result_handler);
-
+  virtual void OnCertificateAllowRequest(
+      WebView* view,
+      const std::string& url,
+      const std::string& pem,
+      std::function<void(bool allow)> result_handler);
 
  private:
   bool Initialize();
