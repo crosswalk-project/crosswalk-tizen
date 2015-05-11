@@ -25,6 +25,7 @@
 #include "common/application_data.h"
 #include "common/resource_manager.h"
 #include "runtime/app_db.h"
+#include "runtime/notification_manager.h"
 
 namespace wrt {
 
@@ -79,6 +80,7 @@ const char* kLocationPrivilege =
     "http://tizen.org/privilege/location";
 const char* kStoragePrivilege =
     "http://tizen.org/privilege/unlimitedstorage";
+const char* kNotiIconFile = "noti_icon.png";
 
 const char* kVisibilitySuspendFeature = "visibility,suspend";
 const char* kMediastreamRecordFeature = "mediastream,record";
@@ -125,6 +127,38 @@ static void SendDownloadRequest(const std::string& url) {
   request.set_operation(APP_CONTROL_OPERATION_DOWNLOAD);
   request.set_uri(url);
   request.LaunchRequest();
+}
+
+static void InitializeNotificationCallback(Ewk_Context* ewk_context,
+                                           WebApplication* app) {
+  auto show = [](Ewk_Context*,
+                 Ewk_Notification* noti,
+                 void* user_data) {
+    WebApplication* self = static_cast<WebApplication*>(user_data);
+    if (self == NULL)
+      return;
+    uint64_t id = ewk_notification_id_get(noti);
+    std::string title(ewk_notification_title_get(noti) ?
+                      ewk_notification_title_get(noti) : "");
+    std::string body(ewk_notification_body_get(noti) ?
+                     ewk_notification_body_get(noti) : "");
+    std::string icon_path = self->data_path() + "/" + kNotiIconFile;
+    if (!ewk_notification_icon_save_as_png(noti, icon_path.c_str())) {
+      icon_path = "";
+    }
+    if (NotificationManager::GetInstance()->Show(id, title, body, icon_path))
+      ewk_notification_showed(id);
+  };
+  auto hide = [](Ewk_Context*,
+                 uint64_t noti_id,
+                 void *) {
+    NotificationManager::GetInstance()->Hide(noti_id);
+    ewk_notification_closed(noti_id, EINA_FALSE);
+  };
+  ewk_context_notification_callbacks_set(ewk_context,
+                                         show,
+                                         hide,
+                                         app);
 }
 
 }  // namespace
@@ -190,6 +224,7 @@ bool WebApplication::Initialize() {
   ewk_context_did_start_download_callback_set(ewk_context_,
                                               download_callback,
                                               this);
+  InitializeNotificationCallback(ewk_context_, this);
 
   if (FindPrivilege(app_data_.get(), kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
