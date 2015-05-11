@@ -36,7 +36,7 @@ class ExtensionClient {
   std::string SendSyncMessageToNative(const std::string& instance_id,
                                       const std::string& msg);
 
-  void Initialize(const std::string& uuid);
+  bool Initialize(const std::string& uuid);
 
   struct ExtensionCodePoints {
     std::string api;

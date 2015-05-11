@@ -64,9 +64,9 @@ void ExtensionRendererController::WillReleaseScriptContext(
   ModuleSystem::ResetModuleSystemFromContext(context);
 }
 
-void ExtensionRendererController::InitializeExtensions(
+bool ExtensionRendererController::InitializeExtensions(
     const std::string& uuid) {
-  extensions_client_->Initialize(uuid);
+  return extensions_client_->Initialize(uuid);
 }
 
 }  // namespace wrt

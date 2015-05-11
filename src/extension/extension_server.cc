@@ -66,6 +66,16 @@ bool ExtensionServer::Start() {
 }
 
 bool ExtensionServer::Start(const StringVector& paths) {
+  // Register system extensions to support Tizen Device APIs
+  RegisterSystemExtensions();
+
+  // Register user extensions
+  for (auto it = paths.begin(); it != paths.end(); ++it) {
+    if (utils::Exists(*it)) {
+      RegisterExtension(*it);
+    }
+  }
+
   // Connect to DBusServer for Application of Runtime
   if (!dbus_application_client_.ConnectByName(
           app_uuid_ + "." + std::string(kDBusNameForApplication))) {
@@ -83,16 +93,6 @@ bool ExtensionServer::Start(const StringVector& paths) {
       kDBusInterfaceNameForExtension,
       std::bind(&ExtensionServer::HandleDBusMethod, this, _1, _2, _3, _4));
   dbus_server_.Start(app_uuid_ + "." + std::string(kDBusNameForExtension));
-
-  // Register system extensions to support Tizen Device APIs
-  RegisterSystemExtensions();
-
-  // Register user extensions
-  for (auto it = paths.begin(); it != paths.end(); ++it) {
-    if (utils::Exists(*it)) {
-      RegisterExtension(*it);
-    }
-  }
 
   // Send 'ready' signal to Injected Bundle.
   NotifyEPCreatedToApplication();
@@ -205,6 +205,7 @@ void ExtensionServer::HandleDBusMethod(GDBusConnection* connection,
 
 void ExtensionServer::OnGetExtensions(GDBusMethodInvocation* invocation) {
   GVariantBuilder builder;
+
   g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
 
   // build an array of extensions
@@ -226,7 +227,14 @@ void ExtensionServer::OnGetExtensions(GDBusMethodInvocation* invocation) {
     // close container('(ssas)') for extension
     g_variant_builder_close(&builder);
   }
-  GVariant* reply = g_variant_builder_end(&builder);
+
+  GVariant* reply = NULL;
+  if (extensions_.size() == 0) {
+    reply = g_variant_new_array(G_VARIANT_TYPE("(ssas)"), NULL, 0);
+  } else {
+    reply = g_variant_builder_end(&builder);
+  }
+
   g_dbus_method_invocation_return_value(
       invocation, g_variant_new_tuple(&reply, 1));
 }

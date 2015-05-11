@@ -20,7 +20,7 @@ class ExtensionRendererController {
   void DidCreateScriptContext(v8::Handle<v8::Context> context);
   void WillReleaseScriptContext(v8::Handle<v8::Context> context);
 
-  void InitializeExtensions(const std::string& uuid);
+  bool InitializeExtensions(const std::string& uuid);
 
  private:
   ExtensionRendererController();

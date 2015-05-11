@@ -6,6 +6,7 @@
 
 #include "bundle/extension_client.h"
 
+#include <unistd.h>
 #include <glib.h>
 #include <gio/gio.h>
 #include <string>
@@ -98,19 +99,31 @@ std::string ExtensionClient::SendSyncMessageToNative(
   return ret;
 }
 
-void ExtensionClient::Initialize(const std::string& uuid) {
-  // Connect to DBusServer for ExtensionServer
-  if (dbus_extension_client_.ConnectByName(
-          uuid + "." + std::string(kDBusNameForExtension))) {
-    using std::placeholders::_1;
-    using std::placeholders::_2;
-    dbus_extension_client_.SetSignalCallback(
-        kDBusInterfaceNameForExtension,
-        std::bind(&ExtensionClient::HandleSignal, this, _1, _2));
-  } else {
-    LOGGER(ERROR) << "Failed to connect to the dbus server for Extension.";
-    return;
+bool ExtensionClient::Initialize(const std::string& uuid) {
+  // Retry connecting to ExtensionServer
+  // ExtensionServer can not be ready at this time yet.
+  const int retry_max = 20;
+  bool connected = false;
+  for (int i=0; i < retry_max; i++) {
+    connected = dbus_extension_client_.ConnectByName(
+        uuid + "." + std::string(kDBusNameForExtension));
+    if (connected) break;
+    LOGGER(WARN) << "Failed to connect to ExtensionServer. retry "
+                 << (i+1) << "/" << retry_max;
+    usleep(50*1000);
   }
+
+  if (!connected) {
+    LOGGER(ERROR) << "Failed to connect to the dbus server for Extension.";
+    return false;
+  }
+
+  // Set signal handler
+  using std::placeholders::_1;
+  using std::placeholders::_2;
+  dbus_extension_client_.SetSignalCallback(
+      kDBusInterfaceNameForExtension,
+      std::bind(&ExtensionClient::HandleSignal, this, _1, _2));
 
   // get extensions from ExtensionServer
   GVariant* value = dbus_extension_client_.Call(
@@ -120,7 +133,7 @@ void ExtensionClient::Initialize(const std::string& uuid) {
 
   if (!value) {
     LOGGER(ERROR) << "Failed to get extension list from ExtensionServer.";
-    return;
+    return false;
   }
 
   gchar* name;
@@ -140,6 +153,8 @@ void ExtensionClient::Initialize(const std::string& uuid) {
   }
 
   g_variant_unref(value);
+
+  return true;
 }
 
 void ExtensionClient::HandleSignal(

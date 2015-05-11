@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include <unistd.h>
 #include <v8.h>
 #include <ewk_ipc_message.h>
 #include <string>
@@ -29,7 +30,6 @@ extern "C" void DynamicPluginStartSession(int /*widget_id*/,
 
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();
-  // TODO(wy80.choi): Temporarily, uuid is passed as theme arguments.
   controller.InitializeExtensions(uuid);
   controller.DidCreateScriptContext(context);
 }
