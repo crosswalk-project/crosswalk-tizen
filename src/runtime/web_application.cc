@@ -312,9 +312,9 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   // application instead of widget_id.
   // Currently, uuid is passed as encoded_bundle argument temporarily.
   // ewk_send_widget_info(ewk_context_, 1,
-  //                     elm_config_scale_get(),
-  //                     elm_theme_get(NULL),
-  //                    uuid_.c_str());
+  //                      elm_config_scale_get(),
+  //                      elm_theme_get(NULL),
+  //                      app_uuid_.c_str());
 
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
@@ -673,9 +673,7 @@ void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
                                       GVariant* parameters,
                                       GDBusMethodInvocation* invocation) {
   if (method_name == kMethodNotifyEPCreated) {
-    // TODO(wy80.choi): send signal to injected bundle to make connection
-    // between injected bundle and extension process
-    LOGGER(DEBUG) << "Call!!!! NotifyEPCreated!";
+    LOGGER(DEBUG) << "Received 'NotifyEPCreated' from ExtensionServer.";
   } else if (method_name == kMethodGetRuntimeVariable) {
     gchar* key;
     std::string value;
@@ -683,7 +681,8 @@ void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
     if (g_strcmp0(key, "runtime_name") == 0) {
       value = std::string("wrt");
     } else if (g_strcmp0(key, "app_id") == 0) {
-      value = appid_;
+      // TODO(wy80.choi): TEC requries double quotes, but webapi-plugins is not.
+      value = "\"" + appid_ + "\"";
     } else if (g_strcmp0(key, "encoded_bundle") == 0) {
       value = received_appcontrol_->encoded_bundle();
     }
