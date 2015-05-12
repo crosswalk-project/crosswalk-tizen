@@ -8,6 +8,7 @@ PKG_CHECK_MODULES(TARGET_COMMON_STATIC_DEPS
   dlog
   capi-appfw-package-manager
   capi-system-runtime-info
+  capi-appfw-application
   aul
   appsvc
   manifest-parser

@@ -31,6 +31,7 @@ BuildRequires: pkgconfig(aul)
 BuildRequires: pkgconfig(ecore)
 BuildRequires: pkgconfig(notification)
 BuildRequires: boost-devel
+BuildRequires: python
 %if %{with x}
 BuildRequires: pkgconfig(ecore-x)
 %endif
@@ -89,4 +90,5 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt-popup-test
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
 %attr(644,root,root) %{_libdir}/libwrt-injected-bundle.so
+%attr(644,root,root) %{_libdir}/tizen-extensions-crosswalk/libwidget-plugin.so
 %attr(755,root,root) %{_datadir}/locale/*
