@@ -102,12 +102,12 @@ bool ExtensionServer::Start(const StringVector& paths) {
 
 void ExtensionServer::RegisterExtension(const std::string& path) {
   Extension* ext = new Extension(path, this);
-  LOGGER(DEBUG) << "Register " << path;
   if (!ext->Initialize() || !RegisterSymbols(ext)) {
     delete ext;
     return;
   }
   extensions_[ext->name()] = ext;
+  LOGGER(DEBUG) << ext->name() << " is registered.";
 }
 
 void ExtensionServer::RegisterSystemExtensions() {
@@ -268,8 +268,6 @@ void ExtensionServer::OnCreateInstance(
 
   // set callbacks
   using std::placeholders::_1;
-  instance->SetSendSyncReplyCallback(
-      std::bind(&ExtensionServer::SyncReplyCallback, this, _1, invocation));
   instance->SetPostMessageCallback(
       std::bind(&ExtensionServer::PostMessageToJSCallback,
                 this, connection, instance_id, _1));
@@ -315,6 +313,11 @@ void ExtensionServer::OnSendSyncMessage(
   }
 
   ExtensionInstance* instance = it->second;
+
+  using std::placeholders::_1;
+  instance->SetSendSyncReplyCallback(
+      std::bind(&ExtensionServer::SyncReplyCallback, this, _1, invocation));
+
   instance->HandleSyncMessage(msg);
 
   // reponse will be sent by SyncReplyCallback()
