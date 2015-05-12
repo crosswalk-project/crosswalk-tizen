@@ -26,6 +26,8 @@
 #include "common/resource_manager.h"
 #include "common/app_db.h"
 #include "runtime/notification_manager.h"
+#include "runtime/popup.h"
+#include "runtime/popup_string.h"
 
 namespace wrt {
 
@@ -579,7 +581,7 @@ bool WebApplication::OnDidNavigation(WebView* view, const std::string& url) {
 }
 
 void WebApplication::OnNotificationPermissionRequest(
-    WebView* view,
+    WebView*,
     const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = AppDB::GetInstance();
@@ -599,16 +601,26 @@ void WebApplication::OnNotificationPermissionRequest(
     return;
   }
 
-  // TODO(sngn.lee): create popup and show
-
-  // TODO(sngn.lee): if alway check box was enabled save into db
-  // if (false) {
-  //  db->Set(kNotificationPermissionPrefix + url, result);
-  // }
+  Popup* popup = Popup::CreatePopup(window_);
+  popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
+  popup->SetTitle(popup_string::kPopupTitleWebNotification);
+  popup->SetBody(popup_string::kPopupBodyWebNotification);
+  popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
+  popup->SetResultHandler(
+    [db, result_handler, url](Popup* popup, void* user_data) {
+      bool result = popup->GetButtonResult();
+      bool remember = popup->GetCheckBoxResult();
+      if (remember) {
+        db->Set(kDBPrivateSection, kNotificationPermissionPrefix + url,
+                result ? "allowed" : "denied");
+      }
+      result_handler(result);
+    }, this);
+  popup->Show();
 }
 
 void WebApplication::OnGeolocationPermissionRequest(
-    WebView* view,
+    WebView*,
     const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = AppDB::GetInstance();
@@ -632,12 +644,27 @@ void WebApplication::OnGeolocationPermissionRequest(
     return;
   }
 
-  // TODO(sngn.lee): create popup and show
+  Popup* popup = Popup::CreatePopup(window_);
+  popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
+  popup->SetTitle(popup_string::kPopupTitleGeoLocation);
+  popup->SetBody(popup_string::kPopupBodyGeoLocation);
+  popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
+  popup->SetResultHandler(
+    [db, result_handler, url](Popup* popup, void* user_data) {
+      bool result = popup->GetButtonResult();
+      bool remember = popup->GetCheckBoxResult();
+      if (remember) {
+        db->Set(kDBPrivateSection, kGeolocationPermissionPrefix + url,
+                result ? "allowed" : "denied");
+      }
+      result_handler(result);
+    }, this);
+  popup->Show();
 }
 
 
 void WebApplication::OnQuotaExceed(
-    WebView* view,
+    WebView*,
     const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = AppDB::GetInstance();
@@ -657,23 +684,52 @@ void WebApplication::OnQuotaExceed(
     return;
   }
 
-  // TODO(sngn.lee): create popup and show
+  Popup* popup = Popup::CreatePopup(window_);
+  popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
+  popup->SetTitle(popup_string::kPopupTitleWebStorage);
+  popup->SetBody(popup_string::kPopupBodyWebStorage);
+  popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
+  popup->SetResultHandler(
+    [db, result_handler, url](Popup* popup, void* user_data) {
+      bool result = popup->GetButtonResult();
+      bool remember = popup->GetCheckBoxResult();
+      if (remember) {
+        db->Set(kDBPrivateSection, kQuotaPermissionPrefix + url,
+                result ? "allowed" : "denied");
+      }
+      result_handler(result);
+    }, this);
+  popup->Show();
 }
 
 void WebApplication::OnAuthenticationRequest(
-      WebView* view,
+      WebView*,
       const std::string& url,
       const std::string& message,
       std::function<void(bool submit,
                          const std::string& id,
                          const std::string& password)
                    > result_handler) {
-  // TODO(sngn.lee): create popup and show
-  result_handler(false, "", "");
+  Popup* popup = Popup::CreatePopup(window_);
+  popup->SetButtonType(Popup::ButtonType::LoginCancelButton);
+  popup->SetFirstEntry(popup_string::kPopupLabelAuthusername,
+                       Popup::EntryType::Edit);
+  popup->SetSecondEntry(popup_string::kPopupLabelPassword,
+                        Popup::EntryType::PwEdit);
+  popup->SetTitle(popup_string::kPopupTitleAuthRequest);
+  popup->SetBody(popup_string::kPopupBodyAuthRequest);
+  popup->SetResultHandler(
+    [result_handler](Popup* popup, void* user_data) {
+      bool result = popup->GetButtonResult();
+      std::string id = popup->GetFirstEntryResult();
+      std::string passwd = popup->GetSecondEntryResult();
+      result_handler(result, id, passwd);
+    }, this);
+  popup->Show();
 }
 
 void WebApplication::OnCertificateAllowRequest(
-      WebView* view,
+      WebView*,
       const std::string& url,
       const std::string& pem,
       std::function<void(bool allow)> result_handler) {
@@ -686,8 +742,22 @@ void WebApplication::OnCertificateAllowRequest(
     result_handler(false);
   }
 
-  // TODO(sngn.lee): create poup and show
-  result_handler(false);
+  Popup* popup = Popup::CreatePopup(window_);
+  popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
+  popup->SetTitle(popup_string::kPopupTitleCert);
+  popup->SetBody(popup_string::kPopupBodyCert);
+  popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
+  popup->SetResultHandler(
+    [db, result_handler, pem](Popup* popup, void* user_data) {
+      bool result = popup->GetButtonResult();
+      bool remember = popup->GetCheckBoxResult();
+      if (remember) {
+        db->Set(kDBPrivateSection, kCertificateAllowPrefix + pem,
+                result ? "allowed" : "denied");
+      }
+      result_handler(result);
+    }, this);
+  popup->Show();
 }
 
 
