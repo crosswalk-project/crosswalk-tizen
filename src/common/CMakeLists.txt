@@ -32,6 +32,7 @@ SET(TARGET_COMMON_STATIC_SRCS
   ${BASE_SRCDIR}/common/application_data.cc
   ${BASE_SRCDIR}/common/app_control.cc
   ${BASE_SRCDIR}/common/locale_manager.cc
+  ${BASE_SRCDIR}/common/app_db.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_COMMON_STATIC_INCS})

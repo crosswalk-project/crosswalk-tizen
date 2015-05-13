@@ -24,7 +24,7 @@
 #include "common/locale_manager.h"
 #include "common/application_data.h"
 #include "common/resource_manager.h"
-#include "runtime/app_db.h"
+#include "common/app_db.h"
 #include "runtime/notification_manager.h"
 
 namespace wrt {
@@ -93,6 +93,7 @@ const char* kGeolocationPermissionPrefix = "__WRT_GEOPERM_";
 const char* kNotificationPermissionPrefix = "__WRT_NOTIPERM_";
 const char* kQuotaPermissionPrefix = "__WRT_QUOTAPERM_";
 const char* kCertificateAllowPrefix = "__WRT_CERTIPERM_";
+const char* kDBPrivateSection = "private";
 
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
@@ -581,7 +582,8 @@ void WebApplication::OnNotificationPermissionRequest(
     const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = AppDB::GetInstance();
-  std::string reminder = db->Get(kNotificationPermissionPrefix + url);
+  std::string reminder = db->Get(kDBPrivateSection,
+                                 kNotificationPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
   } else if (reminder == "denied") {
@@ -609,7 +611,8 @@ void WebApplication::OnGeolocationPermissionRequest(
     const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = AppDB::GetInstance();
-  std::string reminder = db->Get(kGeolocationPermissionPrefix + url);
+  std::string reminder = db->Get(kDBPrivateSection,
+                                 kGeolocationPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
   } else if (reminder == "denied") {
@@ -637,7 +640,8 @@ void WebApplication::OnQuotaExceed(
     const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = AppDB::GetInstance();
-  std::string reminder = db->Get(kQuotaPermissionPrefix + url);
+  std::string reminder = db->Get(kDBPrivateSection,
+                                 kQuotaPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
   } else if (reminder == "denied") {
@@ -673,7 +677,8 @@ void WebApplication::OnCertificateAllowRequest(
       const std::string& pem,
       std::function<void(bool allow)> result_handler) {
   auto db = AppDB::GetInstance();
-  std::string reminder = db->Get(kCertificateAllowPrefix + pem);
+  std::string reminder = db->Get(kDBPrivateSection,
+                                 kCertificateAllowPrefix + pem);
   if (reminder == "allowed") {
     result_handler(true);
   } else if (reminder == "denied") {

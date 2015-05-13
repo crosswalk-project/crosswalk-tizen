@@ -47,7 +47,6 @@ SET(TARGET_RUNTIME_SRCS
   ${BASE_SRCDIR}/runtime/web_view.cc
   ${BASE_SRCDIR}/runtime/web_view_impl.cc
   ${BASE_SRCDIR}/runtime/vibration_manager.cc
-  ${BASE_SRCDIR}/runtime/app_db.cc
   ${BASE_SRCDIR}/runtime/notification_manager.cc
 )
 
