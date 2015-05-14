@@ -164,6 +164,11 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
                                          app);
 }
 
+static Eina_Bool ExitAppIdlerCallback(void* /*data*/) {
+  elm_exit();
+  return ECORE_CALLBACK_CANCEL;
+}
+
 }  // namespace
 
 WebApplication::WebApplication(
@@ -315,10 +320,10 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   // TODO(wy80.choi): ewk_send_widget_info should be fixed to receive uuid of
   // application instead of widget_id.
   // Currently, uuid is passed as encoded_bundle argument temporarily.
-  // ewk_send_widget_info(ewk_context_, 1,
-  //                      elm_config_scale_get(),
-  //                      elm_theme_get(NULL),
-  //                      app_uuid_.c_str());
+  ewk_send_widget_info(ewk_context_, appid_.c_str(),
+                       elm_config_scale_get(),
+                       elm_theme_get(NULL),
+                       app_uuid_.c_str());
 
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
@@ -469,10 +474,55 @@ void WebApplication::OnClosedWebView(WebView * view) {
 }
 
 void WebApplication::OnReceivedWrtMessage(
-    WebView* /*view*/,
-    Ewk_IPC_Wrt_Message_Data* /*message*/) {
-  // TODO(wy80.choi) : Handle messages from injected bundle?
-  // ex. SendRuntimeMessage to hide / exit application.
+    WebView* view,
+    Ewk_IPC_Wrt_Message_Data* msg) {
+
+  Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
+  Eina_Stringshare* msg_ref_id = ewk_ipc_wrt_message_data_reference_id_get(msg);
+  Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
+  Eina_Stringshare* msg_value = ewk_ipc_wrt_message_data_value_get(msg);
+
+  LOGGER(DEBUG) << "RecvMsg: id = " << msg_id;
+  LOGGER(DEBUG) << "RecvMsg: refid = " << msg_ref_id;
+  LOGGER(DEBUG) << "RecvMsg: type = " << msg_type;
+  LOGGER(DEBUG) << "RecvMsg: value = " << msg_value;
+
+  #define TYPE_IS(x) (!strcmp(msg_type, x))
+  if (TYPE_IS("tizen://hide")) {
+    // One Way Message
+    window_->InActive();
+  } else if (TYPE_IS("tizen://exit")) {
+    // One Way Message
+    ecore_idler_add(ExitAppIdlerCallback, NULL);
+  } else if (TYPE_IS("tizen://changeUA")) {
+    // Async Message
+    // Change UserAgent of current WebView
+    bool ret = false;
+    if (view_stack_.size() > 0 && view_stack_.front() != NULL) {
+      ret = view_stack_.front()->SetUserAgent(std::string(msg_value));
+    }
+    // Send response
+    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+    if(ret)
+      ewk_ipc_wrt_message_data_value_set(ans, "success");
+    else
+      ewk_ipc_wrt_message_data_value_set(ans, "failed");
+    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+      LOGGER(ERROR) << "Failed to send response";
+    }
+    ewk_ipc_wrt_message_data_del(ans);
+  } else if (TYPE_IS("tizen://test-sync")) {
+    // TODO(wy80.choi): this type should be removed after finish test
+    ewk_ipc_wrt_message_data_value_set(msg, "reply!!");
+  }
+  #undef TYPE_IS
+
+  eina_stringshare_del(msg_value);
+  eina_stringshare_del(msg_type);
+  eina_stringshare_del(msg_ref_id);
+  eina_stringshare_del(msg_id);
 }
 
 void WebApplication::OnOrientationLock(WebView* view,
@@ -493,7 +543,7 @@ void WebApplication::OnOrientationLock(WebView* view,
     return;
   }
 
-  if ( lock ) {
+  if (lock) {
     window_->SetRotationLock(preferred_rotation);
   } else {
     window_->SetAutoRotation();
@@ -520,6 +570,7 @@ void WebApplication::OnLanguageChanged() {
 
 void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
   static bool enabled = (getenv(kConsoleLogEnableKey) != NULL);
+  enabled = true;
   if (debug_mode_ || enabled) {
     int dlog_level = DLOG_DEBUG;
     switch (level) {
@@ -774,7 +825,8 @@ void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
     if (g_strcmp0(key, "runtime_name") == 0) {
       value = std::string("wrt");
     } else if (g_strcmp0(key, "app_id") == 0) {
-      // TODO(wy80.choi): TEC requries double quotes, but webapi-plugins is not.
+      // TODO(wy80.choi): TEC requries double quotes,
+      // but webapi-plugins doesn't. It should be fixed.
       value = "\"" + appid_ + "\"";
     } else if (g_strcmp0(key, "encoded_bundle") == 0) {
       value = received_appcontrol_->encoded_bundle();

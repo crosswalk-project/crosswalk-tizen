@@ -62,7 +62,7 @@ void WebView::SetAppInfo(const std::string& app_name,
   impl_->SetAppInfo(app_name, version);
 }
 
-void WebView::SetUserAgent(const std::string& user_agent) {
-  impl_->SetUserAgent(user_agent.c_str());
+bool WebView::SetUserAgent(const std::string& user_agent) {
+  return impl_->SetUserAgent(user_agent.c_str());
 }
 }  // namespace wrt

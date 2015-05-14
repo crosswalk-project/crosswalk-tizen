@@ -49,6 +49,12 @@ class ExtensionModule : public ExtensionClient::InstanceHandler {
       const v8::FunctionCallbackInfo<v8::Value>& info);
   static void SetMessageListenerCallback(
       const v8::FunctionCallbackInfo<v8::Value>& info);
+  static void SendRuntimeMessageCallback(
+      const v8::FunctionCallbackInfo<v8::Value>& info);
+  static void SendRuntimeSyncMessageCallback(
+      const v8::FunctionCallbackInfo<v8::Value>& info);
+  static void SendRuntimeAsyncMessageCallback(
+      const v8::FunctionCallbackInfo<v8::Value>& info);
 
   static ExtensionModule* GetExtensionModule(
       const v8::FunctionCallbackInfo<v8::Value>& info);

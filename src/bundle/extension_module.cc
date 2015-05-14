@@ -15,6 +15,7 @@
 #include "common/logger.h"
 #include "bundle/extension_client.h"
 #include "bundle/module_system.h"
+#include "bundle/runtime_ipc_client.h"
 
 // The arraysize(arr) macro returns the # of elements in an array arr.
 // The expression is a compile-time constant, and therefore can be
@@ -74,6 +75,18 @@ ExtensionModule::ExtensionModule(ExtensionClient* client,
       v8::String::NewFromUtf8(isolate, "setMessageListener"),
       v8::FunctionTemplate::New(
           isolate, SetMessageListenerCallback, function_data));
+  object_template->Set(
+      v8::String::NewFromUtf8(isolate, "sendRuntimeMessage"),
+      v8::FunctionTemplate::New(
+          isolate, SendRuntimeMessageCallback, function_data));
+  object_template->Set(
+      v8::String::NewFromUtf8(isolate, "sendRuntimeSyncMessage"),
+      v8::FunctionTemplate::New(
+          isolate, SendRuntimeSyncMessageCallback, function_data));
+  object_template->Set(
+      v8::String::NewFromUtf8(isolate, "sendRuntimeAsyncMessage"),
+      v8::FunctionTemplate::New(
+          isolate, SendRuntimeAsyncMessageCallback, function_data));
 
   function_data_.Reset(isolate, function_data);
   object_template_.Reset(isolate, object_template);
@@ -370,6 +383,102 @@ void ExtensionModule::SetMessageListenerCallback(
     module->message_listener_.Reset();
   else
     module->message_listener_.Reset(isolate, info[0].As<v8::Function>());
+
+  result.Set(true);
+}
+
+// static
+void ExtensionModule::SendRuntimeMessageCallback(
+    const v8::FunctionCallbackInfo<v8::Value>& info) {
+  v8::ReturnValue<v8::Value> result(info.GetReturnValue());
+  ExtensionModule* module = GetExtensionModule(info);
+  if (!module || info.Length() < 1) {
+    result.Set(false);
+    return;
+  }
+
+  v8::String::Utf8Value type(info[0]->ToString());
+  std::string data_str;
+  if (info.Length() > 1) {
+    v8::String::Utf8Value data(info[1]->ToString());
+    data_str = std::string(*data);
+  }
+
+  RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
+  rc->SendMessage(std::string(*type), data_str);
+
+  result.Set(true);
+}
+
+// static
+void ExtensionModule::SendRuntimeSyncMessageCallback(
+    const v8::FunctionCallbackInfo<v8::Value>& info) {
+  v8::Isolate* isolate = info.GetIsolate();
+
+  v8::ReturnValue<v8::Value> result(info.GetReturnValue());
+  ExtensionModule* module = GetExtensionModule(info);
+  if (!module || info.Length() < 1) {
+    result.SetUndefined();
+    return;
+  }
+
+  v8::String::Utf8Value type(info[0]->ToString());
+  std::string data_str;
+  if (info.Length() > 1) {
+    v8::String::Utf8Value data(info[1]->ToString());
+    data_str = std::string(*data);
+  }
+
+  RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
+  std::string reply = rc->SendSyncMessage(std::string(*type), data_str);
+
+  result.Set(v8::String::NewFromUtf8(isolate, reply.c_str()));
+}
+
+// static
+void ExtensionModule::SendRuntimeAsyncMessageCallback(
+    const v8::FunctionCallbackInfo<v8::Value>& info) {
+  v8::Isolate* isolate = info.GetIsolate();
+  v8::HandleScope handle_scope(isolate);
+
+  v8::ReturnValue<v8::Value> result(info.GetReturnValue());
+  ExtensionModule* module = GetExtensionModule(info);
+  if (!module || info.Length() < 1) {
+    result.Set(false);
+    return;
+  }
+
+  // type
+  v8::String::Utf8Value type(info[0]->ToString());
+
+  // value
+  std::string value_str;
+  if (info.Length() > 1) {
+    v8::String::Utf8Value value(info[1]->ToString());
+    value_str = std::string(*value);
+  }
+
+  // callback
+  RuntimeIPCClient::JSCallback* js_callback = NULL;
+  if (info.Length() > 2) {
+    if (info[2]->IsFunction()) {
+      v8::Handle<v8::Function> func = info[2].As<v8::Function>();
+      js_callback = new RuntimeIPCClient::JSCallback(isolate, func);
+    }
+  }
+
+  auto callback = [](const std::string& /*type*/,
+                     const std::string& value,
+                     RuntimeIPCClient::JSCallback* js_callback) -> void {
+    if (js_callback) {
+      v8::Handle<v8::Value> args[] = {
+          v8::String::NewFromUtf8(js_callback->isolate(), value.c_str()) };
+      js_callback->Call(args);
+    }
+  };
+
+  RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
+  rc->SendAsyncMessage(std::string(*type), value_str, callback, js_callback);
 
   result.Set(true);
 }

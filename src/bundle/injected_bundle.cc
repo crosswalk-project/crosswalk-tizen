@@ -10,10 +10,11 @@
 
 #include "common/logger.h"
 #include "common/string_utils.h"
-#include "bundle/extension_renderer_controller.h"
 #include "common/application_data.h"
 #include "common/resource_manager.h"
 #include "common/locale_manager.h"
+#include "bundle/runtime_ipc_client.h"
+#include "bundle/extension_renderer_controller.h"
 
 namespace wrt {
 class BundleGlobalData {
@@ -53,7 +54,7 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
 
 extern "C" void DynamicPluginStartSession(const char* tizen_id,
                                           v8::Handle<v8::Context> context,
-                                          int /*routing_handle*/,
+                                          int routing_handle,
                                           double /*scale*/,
                                           const char* uuid,
                                           const char* /*theme*/,
@@ -64,6 +65,11 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
     return;
   }
 
+  // Initialize RuntimeIPCClient
+  wrt::RuntimeIPCClient* rc = wrt::RuntimeIPCClient::GetInstance();
+  rc->set_routing_id(routing_handle);
+
+  // Initialize ExtensionRendererController
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();
   controller.InitializeExtensions(uuid);
@@ -95,8 +101,10 @@ extern "C" void DynamicDatabaseAttach(const char* tizen_id) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!" << tizen_id;
 }
 
-extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& /*data*/) {
+extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicOnIPCMessage !!";
+  wrt::RuntimeIPCClient* rc = wrt::RuntimeIPCClient::GetInstance();
+  rc->HandleMessageFromRuntime(&data);
 }
 
 extern "C" void DynamicPreloading() {

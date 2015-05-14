@@ -30,6 +30,7 @@ SET(TARGET_INJECTED_BUNDLE_SRCS
   ${BASE_SRCDIR}/bundle/extension_client.cc
   ${BASE_SRCDIR}/bundle/extension_module.cc
   ${BASE_SRCDIR}/bundle/module_system.cc
+  ${BASE_SRCDIR}/bundle/runtime_ipc_client.cc
 )
 
 INCLUDE_DIRECTORIES(${TARGET_INJECTED_BUNDLE_INCS})

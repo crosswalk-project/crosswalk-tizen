@@ -31,7 +31,7 @@ class WebViewImpl {
   void SetVisibility(bool show);
   bool EvalJavascript(const std::string& script);
   void SetAppInfo(const std::string& app_name, const std::string& version);
-  void SetUserAgent(const std::string& user_agent);
+  bool SetUserAgent(const std::string& user_agent);
 
   void SetEventListener(WebView::EventListener* listener);
   Evas_Object* evas_object() const;
