@@ -66,7 +66,7 @@ void PreferenceAppDB::GetKeys(const std::string& section,
   auto callback = [](const char* key, void *user_data) {
     auto list = static_cast<std::list<std::string>*>(user_data);
     if (utils::StartsWith(key, list->front())) {
-      list->push_back(key);
+      list->push_back(key+list->front().size());
     }
     return true;
   };
