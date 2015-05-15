@@ -31,6 +31,7 @@ SET(TARGET_INJECTED_BUNDLE_SRCS
   ${BASE_SRCDIR}/bundle/extension_module.cc
   ${BASE_SRCDIR}/bundle/module_system.cc
   ${BASE_SRCDIR}/bundle/runtime_ipc_client.cc
+  ${BASE_SRCDIR}/bundle/xwalk_v8tools_module.cc
 )
 
 # Compiler Flags

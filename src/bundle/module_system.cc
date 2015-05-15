@@ -25,6 +25,39 @@ const int kModuleSystemEmbedderDataIndex = 8;
 // pointer back to XWalkExtensionModule.
 const char* kWrtModuleSystem = "kWrtModuleSystem";
 
+void RequireNativeCallback(const v8::FunctionCallbackInfo<v8::Value>& info) {
+  v8::ReturnValue<v8::Value> result(info.GetReturnValue());
+
+  v8::Isolate* isolate = info.GetIsolate();
+  v8::HandleScope handle_scope(isolate);
+
+  v8::Handle<v8::Object> data = info.Data().As<v8::Object>();
+  v8::Handle<v8::Value> module_system_value =
+      data->Get(v8::String::NewFromUtf8(isolate, kWrtModuleSystem));
+  if (module_system_value.IsEmpty() || module_system_value->IsUndefined()) {
+    LOGGER(ERROR) << "Trying to use requireNative from already "
+                  << "destroyed module system!";
+    return;
+  }
+
+  ModuleSystem* module_system = static_cast<ModuleSystem*>(
+      module_system_value.As<v8::External>()->Value());
+
+  if (info.Length() < 1) {
+    // TODO(cmarcelo): Throw appropriate exception or warning.
+    result.SetUndefined();
+    return;
+  }
+  v8::Handle<v8::Object> object =
+      module_system->RequireNative(*v8::String::Utf8Value(info[0]));
+  if (object.IsEmpty()) {
+    // TODO(cmarcelo): Throw appropriate exception or warning.
+    result.SetUndefined();
+    return;
+  }
+  result.Set(object);
+}
+
 }  // namespace
 
 ModuleSystem::ModuleSystem(v8::Handle<v8::Context> context) {
@@ -35,16 +68,25 @@ ModuleSystem::ModuleSystem(v8::Handle<v8::Context> context) {
   v8::Handle<v8::Object> function_data = v8::Object::New(isolate);
   function_data->Set(v8::String::NewFromUtf8(isolate, kWrtModuleSystem),
                      v8::External::New(isolate, this));
+  v8::Handle<v8::FunctionTemplate> require_native_template =
+      v8::FunctionTemplate::New(isolate, RequireNativeCallback, function_data);
 
   function_data_.Reset(isolate, function_data);
+  require_native_template_.Reset(isolate, require_native_template);
 }
 
 ModuleSystem::~ModuleSystem() {
   DeleteExtensionModules();
+  auto it = native_modules_.begin();
+  for ( ; it != native_modules_.end(); ++it) {
+    delete it->second;
+  }
+  native_modules_.clear();
 
   v8::Isolate* isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handle_scope(isolate);
 
+  require_native_template_.Reset();
   function_data_.Reset();
   v8_context_.Reset();
 }
@@ -97,6 +139,15 @@ void ModuleSystem::RegisterExtensionModule(
   extension_modules_.push_back(
       ExtensionModuleEntry(extension_name, module.release(), entry_points));
 }
+
+void ModuleSystem::RegisterNativeModule(
+    const std::string& name, std::unique_ptr<NativeModule> module) {
+  if (native_modules_.find(name) != native_modules_.end()) {
+    return;
+  }
+  native_modules_[name] = module.release();
+}
+
 
 namespace {
 
@@ -246,10 +297,24 @@ bool ModuleSystem::InstallTrampoline(v8::Handle<v8::Context> context,
   return true;
 }
 
+v8::Handle<v8::Object> ModuleSystem::RequireNative(
+    const std::string& name) {
+  NativeModuleMap::iterator it = native_modules_.find(name);
+  if (it == native_modules_.end())
+    return v8::Handle<v8::Object>();
+  return it->second->NewInstance();
+}
+
 void ModuleSystem::Initialize() {
   v8::Isolate* isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handle_scope(isolate);
   v8::Handle<v8::Context> context = GetV8Context();
+  v8::Handle<v8::FunctionTemplate> require_native_template =
+      v8::Local<v8::FunctionTemplate>::New(isolate, require_native_template_);
+  v8::Handle<v8::Function> require_native =
+      require_native_template->GetFunction();
+
+
 
   MarkModulesWithTrampoline();
 
@@ -257,7 +322,7 @@ void ModuleSystem::Initialize() {
   for (; it != extension_modules_.end(); ++it) {
     if (it->use_trampoline && InstallTrampoline(context, &*it))
       continue;
-    it->module->LoadExtensionCode(context);
+    it->module->LoadExtensionCode(context, require_native);
     EnsureExtensionNamespaceIsReadOnly(context, it->name);
   }
 }
@@ -313,9 +378,15 @@ void ModuleSystem::LoadExtensionForTrampoline(
   }
 
   ModuleSystem* module_system = GetModuleSystemFromContext(context);
+  v8::Handle<v8::FunctionTemplate> require_native_template =
+      v8::Local<v8::FunctionTemplate>::New(
+          isolate,
+          module_system->require_native_template_);
+
 
   ExtensionModule* module = entry->module;
-  module->LoadExtensionCode(module_system->GetV8Context());
+  module->LoadExtensionCode(module_system->GetV8Context(),
+                            require_native_template->GetFunction());
 
   module_system->EnsureExtensionNamespaceIsReadOnly(context, entry->name);
 }

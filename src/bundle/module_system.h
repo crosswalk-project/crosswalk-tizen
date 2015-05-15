@@ -11,10 +11,20 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <map>
 
 namespace wrt {
 
 class ExtensionModule;
+
+// Interface used to expose objects via the requireNative() function in JS API
+// code. Native modules should be registered with the module system.
+class NativeModule {
+ public:
+  virtual v8::Handle<v8::Object> NewInstance() = 0;
+  virtual ~NativeModule() {}
+};
+
 
 class ModuleSystem {
  public:
@@ -30,6 +40,9 @@ class ModuleSystem {
 
   void RegisterExtensionModule(std::unique_ptr<ExtensionModule> module,
                                const std::vector<std::string>& entry_points);
+  void RegisterNativeModule(const std::string& name,
+                            std::unique_ptr<NativeModule> module);
+  v8::Handle<v8::Object> RequireNative(const std::string& name);
 
   void Initialize();
 
@@ -86,7 +99,10 @@ class ModuleSystem {
 
   typedef std::vector<ExtensionModuleEntry> ExtensionModules;
   ExtensionModules extension_modules_;
+  typedef std::map<std::string, NativeModule*> NativeModuleMap;
+  NativeModuleMap native_modules_;
 
+  v8::Persistent<v8::FunctionTemplate> require_native_template_;
   v8::Persistent<v8::Object> function_data_;
 
   // Points back to the current context, used when native wants to callback

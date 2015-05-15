@@ -266,7 +266,8 @@ v8::Handle<v8::Value> RunString(const std::string& code,
 
 }  // namespace
 
-void ExtensionModule::LoadExtensionCode(v8::Handle<v8::Context> context) {
+void ExtensionModule::LoadExtensionCode(
+    v8::Handle<v8::Context> context, v8::Handle<v8::Function> require_native) {
   instance_id_ = client_->CreateInstance(extension_name_, this);
 
   std::string exception;
@@ -284,9 +285,10 @@ void ExtensionModule::LoadExtensionCode(v8::Handle<v8::Context> context) {
       v8::Local<v8::ObjectTemplate>::New(context->GetIsolate(),
                                           object_template_);
 
-  const int argc = 1;
+  const int argc = 2;
   v8::Handle<v8::Value> argv[argc] = {
-    object_template->NewInstance()
+    object_template->NewInstance(),
+    require_native
   };
 
   v8::TryCatch try_catch;

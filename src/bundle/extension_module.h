@@ -34,7 +34,8 @@ class ExtensionModule : public ExtensionClient::InstanceHandler {
 
   // TODO(cmarcelo): Make this return a v8::Handle<v8::Object>, and
   // let the module system set it to the appropriated object.
-  void LoadExtensionCode(v8::Handle<v8::Context> context);
+  void LoadExtensionCode(v8::Handle<v8::Context> context,
+                         v8::Handle<v8::Function> require_native);
 
   std::string extension_name() const { return extension_name_; }
 
