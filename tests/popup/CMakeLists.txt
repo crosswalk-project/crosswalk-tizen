@@ -37,6 +37,7 @@ SET(TARGET_TEST_POPUP_LIBS
 # Source Files
 SET(TARGET_TEST_POPUP_SRCS
   ${TEST_SRCDIR}/popup/popup.cc
+  ${TEST_SRCDIR}/popup/popup_string.cc
   ${TEST_SRCDIR}/popup/test_popup.cc
 )
 
