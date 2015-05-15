@@ -34,6 +34,19 @@ LocaleManager::LocaleManager() {
 }
 
 LocaleManager::~LocaleManager() {
+  runtime_info_unset_changed_cb(RUNTIME_INFO_KEY_LANGUAGE);
+}
+
+void LocaleManager::EnableAutoUpdate(bool enable) {
+  if (enable) {
+    auto callback = [](runtime_info_key_e, void* user_data) {
+        LocaleManager* locale = static_cast<LocaleManager*>(user_data);
+        locale->UpdateSystemLocale();
+    };
+    runtime_info_set_changed_cb(RUNTIME_INFO_KEY_LANGUAGE, callback, this);
+  } else {
+    runtime_info_unset_changed_cb(RUNTIME_INFO_KEY_LANGUAGE);
+  }
 }
 
 void LocaleManager::SetDefaultLocale(const std::string& locale) {
@@ -55,6 +68,7 @@ void LocaleManager::UpdateSystemLocale() {
     return;
   }
   std::string lang = localeToBCP47LangTag(str);
+  free(str);
 
   if (lang.length() == 0) {
     LOGGER(ERROR) << "Language tag was invalid";

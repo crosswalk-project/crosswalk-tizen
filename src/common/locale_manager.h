@@ -15,6 +15,7 @@ class LocaleManager {
   LocaleManager();
   virtual ~LocaleManager();
   void SetDefaultLocale(const std::string& locale);
+  void EnableAutoUpdate(bool enable);
   void UpdateSystemLocale();
   const std::list<std::string>& system_locales() const
     { return system_locales_; }
