@@ -11,18 +11,18 @@
 #include "common/string_utils.h"
 #include "bundle/extension_renderer_controller.h"
 
-extern "C" void DynamicSetWidgetInfo(int /*widget_id*/) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!";
+extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
+  LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
 }
 
-extern "C" void DynamicPluginStartSession(int /*widget_id*/,
+extern "C" void DynamicPluginStartSession(const char* tizen_id,
                                           v8::Handle<v8::Context> context,
                                           int /*routing_handle*/,
                                           double /*scale*/,
                                           const char* uuid,
                                           const char* /*theme*/,
                                           const char* base_url) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!";
+  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!" << tizen_id;
   if (base_url == NULL || wrt::utils::StartsWith(base_url, "http")) {
     LOGGER(ERROR) << "External url not allowed plugin loading.";
     return;
@@ -35,8 +35,8 @@ extern "C" void DynamicPluginStartSession(int /*widget_id*/,
 }
 
 extern "C" void DynamicPluginStopSession(
-    int /*widget_id*/, v8::Handle<v8::Context> context) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStopSession !!";
+    const char* tizen_id, v8::Handle<v8::Context> context) {
+  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStopSession !!" << tizen_id;
 
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();
@@ -44,13 +44,13 @@ extern "C" void DynamicPluginStopSession(
 }
 
 extern "C" void DynamicUrlParsing(
-    std::string* old_url, std::string* new_url, int /*widget_id*/) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!";
+    std::string* old_url, std::string* new_url, const char* tizen_id) {
+  LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!" << tizen_id;
   *new_url = *old_url;
 }
 
-extern "C" void DynamicDatabaseAttach(int /*attach*/) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!";
+extern "C" void DynamicDatabaseAttach(const char* tizen_id) {
+  LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!" << tizen_id;
 }
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& /*data*/) {
