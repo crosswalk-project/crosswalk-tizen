@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef WRT_RUNTIME_POPUP_STRING_H_
-#define WRT_RUNTIME_POPUP_STRING_H_
+#ifndef WRT_TESTS_POPUP_STRING_H_
+#define WRT_TESTS_POPUP_STRING_H_
 
 #include <string>
 
@@ -11,47 +11,37 @@ namespace wrt {
 
 namespace popup_string {
 
-static const char* kTextDomainWrt = "wrt";
+extern const char kTextDomainWrt[];
 
-static const char* kPopupTitleAuthRequest = "Auth Request";
-static const char* kPopupTitleCert = "IDS_BR_HEADER_CERTIFICATE_INFO";
-static const char* kPopupTitleGeoLocation = "IDS_WRT_OPT_ACCESS_USER_LOCATION";
-static const char* kPopupTitleUserMedia = "IDS_WRT_OPT_USE_USER_MEDIA";
-static const char* kPopupTitleWebNotification =
-  "IDS_BR_HEADER_WEB_NOTIFICATION";
-static const char* kPopupTitleWebStorage = "IDS_WRT_OPT_USE_STORE_WEB_DATA";
+extern const char kPopupTitleAuthRequest[];
+extern const char kPopupTitleCert[];
+extern const char kPopupTitleGeoLocation[];
+extern const char kPopupTitleUserMedia[];
+extern const char kPopupTitleWebNotification[];
+extern const char kPopupTitleWebStorage[];
 
-static const char* kPopupBodyAuthRequest =
-  "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED";
-static const char* kPopupBodyCert =
-  "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG";
-static const char* kPopupBodyGeoLocation =
-  "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION";
-static const char* kPopupBodyUserMedia =
-  "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE";
-static const char* kPopupBodyWebNotification =
-  "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS";
-static const char* kPopupBodyWebStorage =
-  "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE";
+extern const char kPopupBodyAuthRequest[];
+extern const char kPopupBodyCert[];
+extern const char kPopupBodyGeoLocation[];
+extern const char kPopupBodyUserMedia[];
+extern const char kPopupBodyWebNotification[];
+extern const char kPopupBodyWebStorage[];
 
-static const char* kPopupCheckRememberPreference =
-  "IDS_BR_BODY_REMEMBER_PREFERENCE";
+extern const char kPopupCheckRememberPreference[];
 
-static const char* kPopupLabelAuthusername = "IDS_BR_BODY_AUTHUSERNAME";
-static const char* kPopupLabelPassword =  "IDS_BR_BODY_AUTHPASSWORD";
+extern const char kPopupLabelAuthusername[];
+extern const char kPopupLabelPassword[];
 
-static const char* kPopupButtonOk = "IDS_BR_SK_OK";
-static const char* kPopupButtonLogin = "IDS_BR_BODY_LOGIN";
-static const char* kPopupButtonCancel = "IDS_BR_SK_CANCEL";
-static const char* kPopupButtonAllow = "IDS_BR_OPT_ALLOW";
-static const char* kPopupButtonDeny = "IDS_COM_BODY_DENY";
+extern const char kPopupButtonOk[];
+extern const char kPopupButtonLogin[];
+extern const char kPopupButtonCancel[];
+extern const char kPopupButtonAllow[];
+extern const char kPopupButtonDeny[];
 
-static std::string GetText(const std::string& msg_id) {
-  return dgettext(kTextDomainWrt, msg_id.c_str());
-}
+std::string GetText(const std::string& msg_id);
 
 }  // namespace popup_string
 
 }  // namespace wrt
 
-#endif  // WRT_RUNTIME_POPUP_STRING_H_
+#endif  // WRT_TESTS_POPUP_STRING_H_

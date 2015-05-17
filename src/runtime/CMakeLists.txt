@@ -49,6 +49,7 @@ SET(TARGET_RUNTIME_SRCS
   ${BASE_SRCDIR}/runtime/vibration_manager.cc
   ${BASE_SRCDIR}/runtime/notification_manager.cc
   ${BASE_SRCDIR}/runtime/popup.cc
+  ${BASE_SRCDIR}/runtime/popup_string.cc
 )
 
 # Compiler Flags
