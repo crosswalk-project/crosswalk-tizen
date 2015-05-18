@@ -6,8 +6,8 @@ Summary:    Runtime for Web Application
 Version:    2.0.0
 Release:    1
 Group:      Development/Libraries
-License:    Apache License, Version 2.0 / BSD
-URL:        N/A
+License:    BSD-3-Clause and Apache-2.0
+URL:        https://www.tizen.org
 Source0:    %{name}-%{version}.tar.gz
 
 BuildRequires: cmake
