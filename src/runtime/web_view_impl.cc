@@ -497,6 +497,7 @@ void WebViewImpl::InitWindowCreateCallback() {
     }
     WebView* new_view = new WebView(self->window_, self->context_);
     self->listener_->OnCreatedNewWebView(self->view_, new_view);
+    *(static_cast<Evas_Object **>(event_info)) = new_view->evas_object();
   };
 
   auto close_callback = [](void* user_data,
