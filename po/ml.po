@@ -97,6 +97,9 @@ msgstr "ക്രമീകരണങ്ങൾ > പൊതുവായവ > ആപ
 msgid "IDS_COM_BODY_DENY"
 msgstr "നിരസിക്കുക"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ഉപയോക്തൃ ഓതറൈസേഷന്‍"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "മുന്‍ഗണന ഓര്‍ക്കുക."
 

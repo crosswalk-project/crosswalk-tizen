@@ -97,6 +97,9 @@ msgstr "सेटिंग्स > सामान्य > एप्लीके
 msgid "IDS_COM_BODY_DENY"
 msgstr "अस्वीकृत करें"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "यूज़र प्रमाणीकरण"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "प्राथमिकता याद रखें"
 

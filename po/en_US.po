@@ -97,6 +97,9 @@ msgstr "Clear default app settings by going to Settings > General > Manage appli
 msgid "IDS_COM_BODY_DENY"
 msgstr "Deny"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "User authentication"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Remember preference."
 

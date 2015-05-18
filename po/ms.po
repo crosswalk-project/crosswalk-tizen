@@ -97,6 +97,9 @@ msgstr "Kosongkan aturan aplikasi lalai dengan pergi ke Aturan > Am > Uruskan ap
 msgid "IDS_COM_BODY_DENY"
 msgstr "Nafi"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Pengesahan pengguna"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Ingat keutamaan."
 

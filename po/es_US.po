@@ -97,6 +97,9 @@ msgstr "Elimine la configuración predeterminada de la aplicación en Configurac
 msgid "IDS_COM_BODY_DENY"
 msgstr "Rechazar"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Autenticación de usuario"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Preferencias de recordatorio."
 

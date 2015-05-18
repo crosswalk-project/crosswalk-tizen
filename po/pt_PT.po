@@ -97,6 +97,9 @@ msgstr "Limpe as predefinições das aplicações acedendo a Definições > Gera
 msgid "IDS_COM_BODY_DENY"
 msgstr "Declinar"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Autenticação de utilizador"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Lembrar preferência."
 

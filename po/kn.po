@@ -97,6 +97,9 @@ msgstr "ಸಂಯೋಜನೆ‌ಗಳು > ಸಾಮಾನ್ಯ > ಅನ್ವ
 msgid "IDS_COM_BODY_DENY"
 msgstr "ನಿರಾಕರಿಸು"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ಬಳಕೆದಾರರ ದೃಢೀಕರಣ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ಇಚ್ಛೆ ನೆನಪಿಡಿ."
 

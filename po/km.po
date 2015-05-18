@@ -97,6 +97,9 @@ msgstr "ជម្រះ​ការកំណត់​កម្មវិធី​
 msgid "IDS_COM_BODY_DENY"
 msgstr "Deny"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ការផ្ទៀងផ្ទាត់​ភាពពិត​នៃ​អ្នកប្រើប្រាស់"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ចងចាំ​ចំណូលចិត្ត។"
 

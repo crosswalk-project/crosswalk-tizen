@@ -97,6 +97,9 @@ msgstr "إلغاء تحديد إعدادات التطبيق الافتراضية
 msgid "IDS_COM_BODY_DENY"
 msgstr "رفض"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "مصادقة المستخدم"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "تذكر الأفضلية."
 

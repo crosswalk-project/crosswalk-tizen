@@ -97,6 +97,9 @@ msgstr "Effacez les paramètres par défaut des applications en accédant à Par
 msgid "IDS_COM_BODY_DENY"
 msgstr "Refuser"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Authentification utilisateur"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Mémoriser la préférence."
 

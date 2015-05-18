@@ -97,6 +97,9 @@ msgstr "அமைவுகள் > பொது > பயன்பாடுகள
 msgid "IDS_COM_BODY_DENY"
 msgstr "மறுக்கவும்"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "பயனர் அங்கீகாரம்"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "முன்னுரிமையை நினைவுகொள்."
 

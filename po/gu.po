@@ -97,6 +97,9 @@ msgstr "સેટિંગ્સ > સામાન્ય > એપ્લિકે
 msgid "IDS_COM_BODY_DENY"
 msgstr "નકારો"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ઉપયોગકર્તા પ્રમાણીકરણ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "પ્રાથમિકતા યાદ રાખો."
 

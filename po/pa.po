@@ -97,6 +97,9 @@ msgstr "ਸੈੱਟਿੰਗਸ > ਸਧਾਰਨ > ਅਨੁਪ੍ਰਯੋਗ
 msgid "IDS_COM_BODY_DENY"
 msgstr "ਅਸਵੀਕਾਰ"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ਉਪਭੋਗਤਾ ਪ੍ਰਮਾਣੀਕਰਣ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ਤਰਜੀਹ ਨੂੰ ਯਾਦ ਰੱਖੋ।"
 

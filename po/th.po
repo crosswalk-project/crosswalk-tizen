@@ -97,6 +97,9 @@ msgstr "ล้างการตั้งค่าแอพพื้น​ฐา
 msgid "IDS_COM_BODY_DENY"
 msgstr "ปฏิเสธ"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "การ​รับรอง​ผู้​ใช้"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "จดจำค่าที่เตรียมไว้"
 

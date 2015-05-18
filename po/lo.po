@@ -97,6 +97,9 @@ msgstr "ລຶບການຕັ້ງຄ່າແອັບມາດຕະຖາ
 msgid "IDS_COM_BODY_DENY"
 msgstr "ປະຕິເສດ"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ການຮັບຮອງຜູ້ໃຊ້"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ຈື່ສິ່ງທີ່ມັກໄວ້."
 

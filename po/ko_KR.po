@@ -97,6 +97,9 @@ msgstr "[설정] > [일반] > [애플리케이션 관리] > [전체]에서 기�
 msgid "IDS_COM_BODY_DENY"
 msgstr "거부"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "사용자 인증"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "설정을 기억합니다."
 

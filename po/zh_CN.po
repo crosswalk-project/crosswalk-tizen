@@ -97,6 +97,9 @@ msgstr "通过进入设定 > 一般 > 管理应用程序 > 全部清除默认应
 msgid "IDS_COM_BODY_DENY"
 msgstr "拒绝"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "用户验证"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "记住首选项。"
 

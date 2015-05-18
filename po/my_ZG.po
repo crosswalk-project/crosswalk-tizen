@@ -97,6 +97,9 @@ msgstr "ဆက္တင္မ်ား > အေထြေထြ > အပလီေ
 msgid "IDS_COM_BODY_DENY"
 msgstr "ျငင္းဆိုပါ"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "သုံးသူ စစ္မွန္ေၾကာင္း အေေထာက္အထား"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ပိုမိုႏွစ္သက္မႈမ်ားကို မွတ္ထားပါ"
 

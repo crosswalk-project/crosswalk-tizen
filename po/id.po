@@ -97,6 +97,9 @@ msgstr "Hapus pengaturan aplikasi default dengan masuk ke Pengaturan > Umum > Ke
 msgid "IDS_COM_BODY_DENY"
 msgstr "Deny"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Otentikasi pengguna"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Ingat preferensi."
 

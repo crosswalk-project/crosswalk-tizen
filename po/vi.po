@@ -97,6 +97,9 @@ msgstr "Xóa cài đặt ứng dụng mặc định bằng cách vào Cài đặ
 msgid "IDS_COM_BODY_DENY"
 msgstr "Từ chối"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Xác thực người dùng"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Nhớ Cài đặt sở thích."
 

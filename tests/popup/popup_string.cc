@@ -12,7 +12,7 @@ namespace popup_string {
 
 const char kTextDomainWrt[] = "wrt";
 
-const char kPopupTitleAuthRequest[] = "Auth Request";
+const char kPopupTitleAuthRequest[] = "IDS_SA_BODY_USER_AUTHENTICATION";
 const char kPopupTitleCert[] = "IDS_BR_HEADER_CERTIFICATE_INFO";
 const char kPopupTitleGeoLocation[] = "IDS_WRT_OPT_ACCESS_USER_LOCATION";
 const char kPopupTitleUserMedia[] = "IDS_WRT_OPT_USE_USER_MEDIA";

@@ -97,6 +97,9 @@ msgstr "I-clear ang default na mga setting ng app sa pamamagitan ng pagpunta sa 
 msgid "IDS_COM_BODY_DENY"
 msgstr "Tanggihan"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Pagpapatotoo ng user"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Tandaan ang preferences."
 

@@ -97,6 +97,9 @@ msgstr "এখানে গিয়ে ডিফল্ট অ্যাপ সে�
 msgid "IDS_COM_BODY_DENY"
 msgstr "অস্বীকার"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ইউজার প্রমাণীকরণ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "অগ্রাধিকার মনে রাখা।"
 

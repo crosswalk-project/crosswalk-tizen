@@ -97,6 +97,9 @@ msgstr "ছেটিংছ > সাধাৰণ > এপ্লিকেশ্ব
 msgid "IDS_COM_BODY_DENY"
 msgstr "অবৰোধিত"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ব্যৱহাৰকাৰী প্ৰামাণিকৰণ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "অগ্ৰাধিকাৰ মনত ৰাখক৷"
 

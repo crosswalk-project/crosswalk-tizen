@@ -97,6 +97,9 @@ msgstr "సెట్టింగ్‌లు > సాధారణం > అప్
 msgid "IDS_COM_BODY_DENY"
 msgstr "నిరాకరించు"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "యూజర్ ప్రమాణీకరణ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ప్రాధాన్యతను గుర్తుపెట్టుకోండి."
 

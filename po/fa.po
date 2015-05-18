@@ -97,6 +97,9 @@ msgstr "با رفتن به تنظیمات > عمومی > مدیریت برنام
 msgid "IDS_COM_BODY_DENY"
 msgstr "رد کردن"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "تأیید اعتبار کاربر"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "مورد ترجیحی را یادآوری کنید."
 

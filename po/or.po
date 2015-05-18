@@ -97,6 +97,9 @@ msgstr "ସେଟିଂସ୍ > ସାର୍ବଜନୀନ > ଆପ୍ଲିକ
 msgid "IDS_COM_BODY_DENY"
 msgstr "ଅଗ୍ରାହ୍ୟ"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ଉପଭୋକ୍ତା ପ୍ରାମାଣିକରଣ"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ଅଗ୍ରାଧିକାର ମନେ ରଖନ୍ତୁ।"
 

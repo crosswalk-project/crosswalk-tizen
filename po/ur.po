@@ -97,6 +97,9 @@ msgstr "طے شدہ ایپلیکیشن سیٹنگز کو یہاں جا کر صا
 msgid "IDS_COM_BODY_DENY"
 msgstr "انکار کریں"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "صارف کی توثیق"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "ترجیح یاد رکھیں"
 

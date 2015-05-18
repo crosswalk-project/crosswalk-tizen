@@ -97,6 +97,9 @@ msgstr "सेटिंग्स > सामान्‍य > अनुप्र
 msgid "IDS_COM_BODY_DENY"
 msgstr "नकार द्या"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "प्रयोक्ता प्रमाणीकरण"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "प्राधान्य लक्षात ठेवा."
 

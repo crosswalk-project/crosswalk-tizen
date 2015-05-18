@@ -97,6 +97,9 @@ msgstr "Ayarlar > Genel > Uygulamaları yönet > Tümü seçeneğine giderek var
 msgid "IDS_COM_BODY_DENY"
 msgstr "Geri çevir"
 
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Kullanıcı kimlik doğrulaması"
+
 msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
 msgstr "Tercihi hatırla."
 
