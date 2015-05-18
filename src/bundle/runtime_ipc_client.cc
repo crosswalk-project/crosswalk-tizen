@@ -110,7 +110,7 @@ void RuntimeIPCClient::HandleMessageFromRuntime(
 
   Eina_Stringshare* msg_refid = ewk_ipc_wrt_message_data_reference_id_get(msg);
 
-  if (msg_refid == NULL || !strcmp(msg_refid,"")) {
+  if (msg_refid == NULL || !strcmp(msg_refid, "")) {
     if (msg_refid) eina_stringshare_del(msg_refid);
     LOGGER(ERROR) << "No reference id of received message.";
     return;

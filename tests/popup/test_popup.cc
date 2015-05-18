@@ -4,9 +4,9 @@
 
 #include <Elementary.h>
 #include <string>
+#include <iostream>
 #include "popup/popup.h"
 #include "popup/popup_string.h"
-#include <iostream>
 
 int main(int argc, char **argv) {
   const char* kLocaleKorean = "ko_KR";
@@ -38,10 +38,10 @@ int main(int argc, char **argv) {
   popup->SetCheckBox(check_label);
   popup->SetButtonType(wrt::Popup::ButtonType::AllowDenyButton);
   popup-> SetResultHandler([](wrt::Popup* popup, void* user_data) {
-   std::cout<< popup->GetFirstEntryResult() << std::endl;
-   std::cout<< popup->GetSecondEntryResult() << std::endl;
-   std::cout<< popup->GetCheckBoxResult() << std::endl;
-   std::cout<< popup->GetButtonResult() << std::endl;
+    std::cout<< popup->GetFirstEntryResult() << std::endl;
+    std::cout<< popup->GetSecondEntryResult() << std::endl;
+    std::cout<< popup->GetCheckBoxResult() << std::endl;
+    std::cout<< popup->GetButtonResult() << std::endl;
   }, NULL);
   popup->Show();
 

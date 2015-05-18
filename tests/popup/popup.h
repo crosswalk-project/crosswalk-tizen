@@ -29,7 +29,7 @@ class Popup {
     Edit,
     PwEdit
   };
-  //static Popup* CreatePopup(NativeWindow* window);
+  // static Popup* CreatePopup(NativeWindow* window);
   static Popup* CreatePopup(Evas_Object* window);
 
   // button

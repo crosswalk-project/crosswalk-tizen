@@ -14,15 +14,11 @@ namespace wrt {
 
 namespace {
 
-const char* kEdjPath = "/usr/share/edje/wrt/wrt.edj";
-const char* kEdcGroupName = "PopupCommon";
-
 const char* kContentTitle = "title,text";
 const char* kContentButton1 = "button1";
 const char* kContentButton2 = "button2";
 
 const char* kStyleDefault = "default";
-const char* kStylePopup = "popup";
 const char* kStyleLabel = "default";
 const char* kStyleButton = "popup";
 const char* kStyleEditPw = "editfield/password/popup";
@@ -150,7 +146,6 @@ Popup* Popup::CreatePopup(NativeWindow* window) {
 }
 
 void Popup::SetButtonType(ButtonType type) {
-  using namespace popup_string;
   enable_button_ = true;
   switch (type) {
     case ButtonType::OkButton:
