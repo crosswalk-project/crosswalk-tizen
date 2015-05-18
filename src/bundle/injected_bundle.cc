@@ -6,13 +6,49 @@
 #include <v8.h>
 #include <ewk_ipc_message.h>
 #include <string>
+#include <memory>
 
 #include "common/logger.h"
 #include "common/string_utils.h"
 #include "bundle/extension_renderer_controller.h"
+#include "common/application_data.h"
+#include "common/resource_manager.h"
+#include "common/locale_manager.h"
+
+namespace wrt {
+class BundleGlobalData {
+ public :
+  static BundleGlobalData* GetInstance() {
+    static BundleGlobalData instance;
+    return &instance;
+  }
+  void Initialize(const std::string& app_id) {
+    app_data_.reset(new ApplicationData(app_id));
+    locale_manager_.reset(new LocaleManager);
+    locale_manager_->EnableAutoUpdate(true);
+    if (app_data_->widget_info() != NULL &&
+        !app_data_->widget_info()->default_locale().empty()) {
+      locale_manager_->SetDefaultLocale(
+          app_data_->widget_info()->default_locale());
+    }
+    resource_manager_.reset(new ResourceManager(app_data_.get(),
+                                                locale_manager_.get()));
+  }
+
+  ResourceManager* resource_manager();
+
+ private:
+  BundleGlobalData() {}
+  ~BundleGlobalData() {}
+  std::unique_ptr<ResourceManager> resource_manager_;
+  std::unique_ptr<LocaleManager> locale_manager_;
+  std::unique_ptr<ApplicationData> app_data_;
+};
+}  //  namespace wrt
 
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
+  wrt::BundleGlobalData::GetInstance()->Initialize(tizen_id);
 }
 
 extern "C" void DynamicPluginStartSession(const char* tizen_id,
@@ -46,7 +82,13 @@ extern "C" void DynamicPluginStopSession(
 extern "C" void DynamicUrlParsing(
     std::string* old_url, std::string* new_url, const char* tizen_id) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!" << tizen_id;
-  *new_url = *old_url;
+  auto res_manager = wrt::BundleGlobalData::GetInstance()->resource_manager();
+  if (res_manager == NULL) {
+    LOGGER(ERROR) << "Widget Info was not set, Resource Manager is NULL";
+    *new_url = *old_url;
+    return;
+  }
+  *new_url = res_manager->GetLocalizedPath(*old_url);
 }
 
 extern "C" void DynamicDatabaseAttach(const char* tizen_id) {
