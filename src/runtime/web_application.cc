@@ -226,7 +226,7 @@ bool WebApplication::Initialize() {
                                              vibration_stop_callback,
                                              NULL);
 
-  auto download_callback = [](const char* downloadUrl, void* data) {
+  auto download_callback = [](const char* downloadUrl, void* /*data*/) {
     SendDownloadRequest(downloadUrl);
   };
   ewk_context_did_start_download_callback_set(ewk_context_,
@@ -474,7 +474,7 @@ void WebApplication::OnClosedWebView(WebView * view) {
 }
 
 void WebApplication::OnReceivedWrtMessage(
-    WebView* view,
+    WebView* /*view*/,
     Ewk_IPC_Wrt_Message_Data* msg) {
 
   Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
@@ -505,7 +505,7 @@ void WebApplication::OnReceivedWrtMessage(
     Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
     ewk_ipc_wrt_message_data_type_set(ans, msg_type);
     ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
-    if(ret)
+    if (ret)
       ewk_ipc_wrt_message_data_value_set(ans, "success");
     else
       ewk_ipc_wrt_message_data_value_set(ans, "failed");
@@ -625,7 +625,8 @@ void WebApplication::SetupWebView(WebView* view) {
   // TODO(sngn.lee): set CSP
 }
 
-bool WebApplication::OnDidNavigation(WebView* view, const std::string& url) {
+bool WebApplication::OnDidNavigation(WebView* /*view*/,
+                                     const std::string& /*url*/) {
   // TODO(sngn.lee): scheme handling
   // except(file , http, https, app) pass to appcontrol and return false
   return true;
@@ -658,7 +659,7 @@ void WebApplication::OnNotificationPermissionRequest(
   popup->SetBody(popup_string::kPopupBodyWebNotification);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* user_data) {
+    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
       bool result = popup->GetButtonResult();
       bool remember = popup->GetCheckBoxResult();
       if (remember) {
@@ -701,7 +702,7 @@ void WebApplication::OnGeolocationPermissionRequest(
   popup->SetBody(popup_string::kPopupBodyGeoLocation);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* user_data) {
+    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
       bool result = popup->GetButtonResult();
       bool remember = popup->GetCheckBoxResult();
       if (remember) {
@@ -741,7 +742,7 @@ void WebApplication::OnQuotaExceed(
   popup->SetBody(popup_string::kPopupBodyWebStorage);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* user_data) {
+    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
       bool result = popup->GetButtonResult();
       bool remember = popup->GetCheckBoxResult();
       if (remember) {
@@ -755,8 +756,8 @@ void WebApplication::OnQuotaExceed(
 
 void WebApplication::OnAuthenticationRequest(
       WebView*,
-      const std::string& url,
-      const std::string& message,
+      const std::string& /*url*/,
+      const std::string& /*message*/,
       std::function<void(bool submit,
                          const std::string& id,
                          const std::string& password)
@@ -770,7 +771,7 @@ void WebApplication::OnAuthenticationRequest(
   popup->SetTitle(popup_string::kPopupTitleAuthRequest);
   popup->SetBody(popup_string::kPopupBodyAuthRequest);
   popup->SetResultHandler(
-    [result_handler](Popup* popup, void* user_data) {
+    [result_handler](Popup* popup, void* /*user_data*/) {
       bool result = popup->GetButtonResult();
       std::string id = popup->GetFirstEntryResult();
       std::string passwd = popup->GetSecondEntryResult();
@@ -781,7 +782,7 @@ void WebApplication::OnAuthenticationRequest(
 
 void WebApplication::OnCertificateAllowRequest(
       WebView*,
-      const std::string& url,
+      const std::string& /*url*/,
       const std::string& pem,
       std::function<void(bool allow)> result_handler) {
   auto db = AppDB::GetInstance();
@@ -799,7 +800,7 @@ void WebApplication::OnCertificateAllowRequest(
   popup->SetBody(popup_string::kPopupBodyCert);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, pem](Popup* popup, void* user_data) {
+    [db, result_handler, pem](Popup* popup, void* /*user_data*/) {
       bool result = popup->GetButtonResult();
       bool remember = popup->GetCheckBoxResult();
       if (remember) {

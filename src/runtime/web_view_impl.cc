@@ -524,14 +524,14 @@ void WebViewImpl::InitWindowCreateCallback() {
 void WebViewImpl::InitFullscreenCallback() {
   auto enter_callback = [](void* user_data,
                             Evas_Object*,
-                            void* event_info) {
+                            void* /*event_info*/) {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     self->fullscreen_ = true;
     self->window_->FullScreen(true);
   };
   auto exit_callback =  [](void* user_data,
                             Evas_Object*,
-                            void* event_info) {
+                            void* /*event_info*/) {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     self->fullscreen_ = false;
     self->window_->FullScreen(false);

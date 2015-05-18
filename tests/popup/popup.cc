@@ -150,7 +150,6 @@ Popup* Popup::CreatePopup(Evas_Object* window) {
 }
 
 void Popup::SetButtonType(ButtonType type) {
-  using namespace popup_string;
   enable_button_ = true;
   switch (type) {
     case ButtonType::OkButton:

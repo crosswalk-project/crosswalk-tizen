@@ -39,7 +39,8 @@ class RuntimeIPCClient {
   void SendMessage(const std::string& type, const std::string& value);
 
   // Send message to BrowserProcess synchronous with reply
-  std::string SendSyncMessage(const std::string& type, const std::string& value);
+  std::string SendSyncMessage(const std::string& type,
+                              const std::string& value);
 
   // Send message to BrowserProcess asynchronous,
   // reply message will be passed to callback function.
@@ -68,6 +69,6 @@ class RuntimeIPCClient {
   std::map<std::string, AsyncData> callbacks_;
 };
 
-}  // namespace
+}  // namespace wrt
 
 #endif  // WRT_BUNDLE_RUNTIME_IPC_CLIENT_H_
