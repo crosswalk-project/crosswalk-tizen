@@ -25,6 +25,7 @@ class BundleGlobalData {
   }
   void Initialize(const std::string& app_id) {
     app_data_.reset(new ApplicationData(app_id));
+    app_data_->LoadManifestData();
     locale_manager_.reset(new LocaleManager);
     locale_manager_->EnableAutoUpdate(true);
     if (app_data_->widget_info() != NULL &&
@@ -34,9 +35,13 @@ class BundleGlobalData {
     }
     resource_manager_.reset(new ResourceManager(app_data_.get(),
                                                 locale_manager_.get()));
+    resource_manager_->set_base_resource_path(
+        app_data_->application_path());
   }
 
-  ResourceManager* resource_manager();
+  ResourceManager* resource_manager() {
+    return resource_manager_.get();
+  }
 
  private:
   BundleGlobalData() {}
@@ -97,8 +102,8 @@ extern "C" void DynamicUrlParsing(
   *new_url = res_manager->GetLocalizedPath(*old_url);
 }
 
-extern "C" void DynamicDatabaseAttach(const char* tizen_id) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!" << tizen_id;
+extern "C" void DynamicDatabaseAttach(int /*attach*/) {
+  LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!";
 }
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {

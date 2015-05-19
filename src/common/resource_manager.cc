@@ -306,19 +306,19 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     url.resize(pos);
   }
 
-  if (url.compare(app_scheme) == 0) {
+  if (utils::StartsWith(url, app_scheme)) {
     // remove "app://"
     url.erase(0, app_scheme.length());
 
     // remove app id + /
     std::string check = appid_ + "/";
-    if (url.compare(0, check.length(), check) == 0) {
+    if (utils::StartsWith(url, check)) {
       url.erase(0, check.length());
     } else {
       LOGGER(ERROR) << "Invalid appid";
       return result;
     }
-  } else if (url.compare(file_scheme) == 0) {
+  } else if (utils::StartsWith(url, file_scheme)) {
     // remove "file:///"
     url.erase(0, file_scheme.length());
   }
@@ -332,23 +332,22 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     return result;
   }
 
-  auto locales = locale_manager_->system_locales().begin();
-  for ( ; locales != locale_manager_->system_locales().end(); ++locales) {
+  for (auto& locales : locale_manager_->system_locales()) {
     // check ../locales/
     std::string app_locale_path = resource_base_path_ + locale_path;
     if (!Exists(app_locale_path)) {
       break;
     }
-    std::string resource_path = app_locale_path + (*locales) + "/" + url;
+    std::string resource_path = app_locale_path + locales + "/" + url;
     if (Exists(resource_path)) {
-      result = resource_path + suffix;
+      result = "file://" + resource_path + suffix;
       return result;
     }
   }
 
   std::string default_locale = resource_base_path_ + url;
   if (Exists(default_locale)) {
-    result = default_locale + suffix;
+    result = "file://" + default_locale + suffix;
     return result;
   }
   result = url + suffix;
