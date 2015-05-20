@@ -10,8 +10,7 @@
 namespace wrt {
 
 RuntimeIPCClient::JSCallback::JSCallback(v8::Isolate* isolate,
-                                         v8::Handle<v8::Function> callback)
-    : isolate_(isolate) {
+                                         v8::Handle<v8::Function> callback) {
   callback_.Reset(isolate, callback);
 }
 
@@ -19,11 +18,12 @@ RuntimeIPCClient::JSCallback::~JSCallback() {
   callback_.Reset();
 }
 
-void RuntimeIPCClient::JSCallback::Call(v8::Handle<v8::Value> args[]) {
+void RuntimeIPCClient::JSCallback::Call(v8::Isolate* isolate,
+                                        v8::Handle<v8::Value> args[]) {
   if (!callback_.IsEmpty()) {
-    v8::HandleScope handle_scope(isolate_);
+    v8::HandleScope handle_scope(isolate);
     v8::Handle<v8::Function> func =
-        v8::Local<v8::Function>::New(isolate_, callback_);
+        v8::Local<v8::Function>::New(isolate, callback_);
     func->Call(func, 1, args);
   }
 }
@@ -78,8 +78,7 @@ std::string RuntimeIPCClient::SendSyncMessage(const std::string& type,
 
 void RuntimeIPCClient::SendAsyncMessage(const std::string& type,
                                         const std::string& value,
-                                        ReplyCallback callback,
-                                        JSCallback* js_callback) {
+                                        ReplyCallback callback) {
   std::string msg_id = utils::GenerateUUID();
 
   Ewk_IPC_Wrt_Message_Data* msg = ewk_ipc_wrt_message_data_new();
@@ -95,8 +94,7 @@ void RuntimeIPCClient::SendAsyncMessage(const std::string& type,
     }
   }
 
-  callbacks_[msg_id].callback = callback;
-  callbacks_[msg_id].js_callback = js_callback;
+  callbacks_[msg_id] = callback;
 
   ewk_ipc_wrt_message_data_del(msg);
 }
@@ -126,8 +124,11 @@ void RuntimeIPCClient::HandleMessageFromRuntime(
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
   Eina_Stringshare* msg_value = ewk_ipc_wrt_message_data_value_get(msg);
 
-  const AsyncData& async_data = it->second;
-  async_data.callback(msg_type, msg_value, async_data.js_callback);
+  ReplyCallback func = it->second;
+  if (func) {
+    func(msg_type, msg_value);
+  }
+
   callbacks_.erase(it);
 
   eina_stringshare_del(msg_refid);

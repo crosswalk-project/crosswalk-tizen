@@ -469,18 +469,22 @@ void ExtensionModule::SendRuntimeAsyncMessageCallback(
     }
   }
 
-  auto callback = [](const std::string& /*type*/,
-                     const std::string& value,
-                     RuntimeIPCClient::JSCallback* js_callback) -> void {
-    if (js_callback) {
-      v8::Handle<v8::Value> args[] = {
-          v8::String::NewFromUtf8(js_callback->isolate(), value.c_str()) };
-      js_callback->Call(args);
+  auto callback = [js_callback](const std::string& /*type*/,
+                     const std::string& value) -> void {
+    if (!js_callback) {
+      LOGGER(ERROR) << "JsCallback is NULL.";
+      return;
     }
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope handle_scope(isolate);
+    v8::Handle<v8::Value> args[] = {
+        v8::String::NewFromUtf8(isolate, value.c_str()) };
+    js_callback->Call(isolate, args);
+    delete js_callback;
   };
 
   RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
-  rc->SendAsyncMessage(std::string(*type), value_str, callback, js_callback);
+  rc->SendAsyncMessage(std::string(*type), value_str, callback);
 
   result.Set(true);
 }

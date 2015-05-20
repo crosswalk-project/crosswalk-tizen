@@ -21,17 +21,13 @@ class RuntimeIPCClient {
                         v8::Handle<v8::Function> callback);
     ~JSCallback();
 
-    v8::Isolate* isolate() const { return isolate_; }
-
-    void Call(v8::Handle<v8::Value> args[]);
+    void Call(v8::Isolate* isolate, v8::Handle<v8::Value> args[]);
    private:
-    v8::Isolate* isolate_;
     v8::Persistent<v8::Function> callback_;
   };
 
   typedef std::function<void(const std::string& type,
-                             const std::string& value,
-                             JSCallback* js_callback)> ReplyCallback;
+                             const std::string& value)> ReplyCallback;
 
   static RuntimeIPCClient* GetInstance();
 
@@ -45,7 +41,7 @@ class RuntimeIPCClient {
   // Send message to BrowserProcess asynchronous,
   // reply message will be passed to callback function.
   void SendAsyncMessage(const std::string& type, const std::string& value,
-                        ReplyCallback callback, JSCallback* js_callback);
+                        ReplyCallback callback);
 
   void HandleMessageFromRuntime(const Ewk_IPC_Wrt_Message_Data* msg);
 
@@ -53,20 +49,10 @@ class RuntimeIPCClient {
   void set_routing_id(int routing_id) { routing_id_ = routing_id; }
 
  private:
-  class AsyncData {
-   public:
-    ~AsyncData() {
-      if (js_callback) delete js_callback;
-    }
-
-    ReplyCallback callback;
-    JSCallback* js_callback;
-  };
-
   RuntimeIPCClient();
 
   int routing_id_;
-  std::map<std::string, AsyncData> callbacks_;
+  std::map<std::string, ReplyCallback> callbacks_;
 };
 
 }  // namespace wrt

@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <v8.h>
 #include <ewk_ipc_message.h>
+#include <Ecore.h>
 #include <string>
 #include <memory>
 
@@ -54,6 +55,7 @@ class BundleGlobalData {
 
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
+  ecore_init();
   wrt::BundleGlobalData::GetInstance()->Initialize(tizen_id);
 }
 
@@ -92,7 +94,7 @@ extern "C" void DynamicPluginStopSession(
 
 extern "C" void DynamicUrlParsing(
     std::string* old_url, std::string* new_url, const char* tizen_id) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!" << tizen_id;
+  // LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!" << tizen_id;
   auto res_manager = wrt::BundleGlobalData::GetInstance()->resource_manager();
   if (res_manager == NULL) {
     LOGGER(ERROR) << "Widget Info was not set, Resource Manager is NULL";
@@ -103,7 +105,7 @@ extern "C" void DynamicUrlParsing(
 }
 
 extern "C" void DynamicDatabaseAttach(int /*attach*/) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!";
+  // LOGGER(DEBUG) << "InjectedBundle::DynamicDatabaseAttach !!";
 }
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
@@ -113,5 +115,5 @@ extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
 }
 
 extern "C" void DynamicPreloading() {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
+  // LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
 }

@@ -515,7 +515,17 @@ void WebApplication::OnReceivedWrtMessage(
     ewk_ipc_wrt_message_data_del(ans);
   } else if (TYPE_IS("tizen://test-sync")) {
     // TODO(wy80.choi): this type should be removed after finish test
-    ewk_ipc_wrt_message_data_value_set(msg, "reply!!");
+    ewk_ipc_wrt_message_data_value_set(msg, "Reply!!");
+  } else if (TYPE_IS("tizen://test-async")) {
+    // TODO(wy80.choi): this type should be removed after finish test
+    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+    ewk_ipc_wrt_message_data_value_set(ans, "Aync Reply!!");
+    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+      LOGGER(ERROR) << "Failed to send response";
+    }
+    ewk_ipc_wrt_message_data_del(ans);
   }
   #undef TYPE_IS
 
