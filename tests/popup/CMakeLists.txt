@@ -1,0 +1,66 @@
+# Copyright 2015 Samsung Electronics Co, Ltd. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+SET(TEST_POPUP_SRCDIR ${TEST_SRCDIR}/popup)
+SET(BASE_SRCDIR ${PROJECT_SOURCE_DIR}/src)
+
+# Package Dependencies
+IF(X11_SUPPORT)
+  SET(WIN_PKG "ecore-x")
+ENDIF(X11_SUPPORT)
+IF(WAYLAND_SUPPORT)
+  SET(WIN_PKG "ecore-wayland")
+ENDIF(WAYLAND_SUPPORT)
+
+PKG_CHECK_MODULES(TARGET_TEST_POPUP_DEPS
+    dlog
+    ${WIN_PKG}
+    elementary
+    ecore
+    efl-assist
+   REQUIRED)
+
+# Include Directories
+SET(TARGET_TEST_POPUP_INCS
+  ${BASE_SRCDIR}
+  ${TEST_SRCDIR}
+  ${TARGET_TEST_POPUP_DEPS_INCLUDE_DIRS}
+)
+
+# Libraries
+SET(TARGET_TEST_POPUP_LIBS
+  ${TARGET_COMMON_STATIC}
+  ${TARGET_TEST_POPUP_DEPS_LIBRARIES}
+)
+
+# Source Files
+SET(TARGET_TEST_POPUP_SRCS
+  ${TEST_SRCDIR}/popup/popup.cc
+  ${TEST_SRCDIR}/popup/popup_string.cc
+  ${TEST_SRCDIR}/popup/test_popup.cc
+)
+
+# Compiler Flags
+SET(TARGET_TEST_POPUP_CFLAGS
+  "-fPIE"
+)
+
+# Linker Flags
+SET(TARGET_TEST_POPUP_LDFLAGS
+  "-pie"
+  "-ldl"
+)
+
+# Build Executable
+SET(TARGET_TEST_POPUP "wrt-popup-test")
+INCLUDE_DIRECTORIES(${TARGET_TEST_POPUP_INCS})
+ADD_DEFINITIONS(${TARGET_TEST_POPUP_CFLAGS})
+ADD_EXECUTABLE(${TARGET_TEST_POPUP} ${TARGET_TEST_POPUP_SRCS})
+TARGET_LINK_LIBRARIES(${TARGET_TEST_POPUP}
+  ${TARGET_TEST_POPUP_LIBS}
+  ${TARGET_TEST_POPUP_LDFLAGS}
+)
+
+# Install
+INSTALL(TARGETS ${TARGET_TEST_POPUP} DESTINATION bin)

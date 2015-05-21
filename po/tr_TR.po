@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "İzin ver"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "İndirme başlıyor..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Bu siteyle ilgili güvenlik sertifikasında sorunlar var."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "İptal"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Sil"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Varsayılan olarak sıfırla"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Websitesi ayarları"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Kullanıcı adı"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Kimlik denetimi gerekli."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Şifre"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Şifre"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Web bildirimi"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Sitelere konumunuza erişmeleri için izin verin."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) çevrim dışı kullanım için cihazınıza büyük miktarda veri saklamayı deniyor"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) çevrim dışı kullanım için cihazınıza veri depolamak üzere izin istiyor"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) konumunuza erişmek için izin istiyor"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) bildirimleri göstermek için izin istiyor"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) kameranızı kullanmak için izin istiyor"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Tam ekran"
+
+msgid "IDS_BR_SK_OK"
+msgstr "Tamam"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Konum erişimi"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Bu sitenin bildirimleri görüntülemesine izin verir."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Boş"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Otomatik yenileme"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Kullanıcı konumuna eriş"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Web verilerini kullan/kaydet"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Kullanıcı ortamını kullan"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Bu sitenin konum bilgilerinize ulaşmasına izin verir."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Bu sitenin cihazınıza büyük miktarda veri kaydetmesine izin verir."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Bu sitenin ekranı tam ekrana değiştirmesine izin verir."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Bu sitenin cihazınıza yüklü ortam dosyalarını kullanmasına izin verir."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Ayarlar > Genel > Uygulamaları yönet > Tümü seçeneğine giderek varsayılan uygulama ayarlarını silin."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Geri çevir"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Kullanıcı kimlik doğrulaması"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Tercihi hatırla."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Sertifika bilgisi"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Oturum aç"
+

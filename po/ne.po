@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "अनुमति दिनुहोस्"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "डाउनलोड सुरू भयो..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "यस साइटका लागि सुरक्षा प्रमाणपत्रसंग केही समस्याहरू छन्।"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "रद्द"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "मेटाउनु"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "पूर्वनिर्धारितमा रिसेट गर"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "वेबसाइट सेटिङहरु"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "प्रयोगकर्ता नाम"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "प्रमाणीकरण आवश्यक हुन्छ।"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "पासवर्ड"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "पासवर्ड"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "वेब सूचना"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "तपाईको स्थानमा पहुँच गर्न अनुरोधका लागि साइटहरूलाई अनुमति दिनुहोस्।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) अफलाइन प्रयोगको लागि तपाईको यन्त्रमा डाटाको ठूलो मात्रामा भण्डार गर्ने प्रयास गर्दैछ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) अफलाइन प्रयोगको लागि तपाईंको यन्त्रमा डाटा भण्डार गर्न अनुमति को अनुरोध गर्दैछ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) तपाईको स्थान एक्सेस गर्नको लागि अनुमति को अनुरोध गर्दैछ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) सूचनाहरू देखाउन अनुमतिको लागि अनुरोध गर्दैछ।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) तपाईको क्यामराको प्रयोग गर्न अनुमतिको लागि अनुरोध गर्दैछ।"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "पूर्ण स्क्रीन"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ठीक छ"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "स्थान एक्सेस"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "यो साइटलाई सूचनाहरू प्रर्दशन गर्न अनुमति दिन्छ।"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "खाली"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "स्वत: रिफ्रेश गर्नुहोस्"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "प्रयोगकर्ता स्थान एक्सेस गर्नुहोस्"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "प्रयोग/वेब डाटा भण्‍डारण गर्नुहोस्"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "प्रयोगकर्ता मिडिया प्रयोग गर्नुहोस्"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "यो साइटलाई तपाईको स्थान जानकारी एक्सेस गर्न अनुमति दिन्छ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "यो साइटलाई तपाईको यन्त्रमा डाटाको ठूलो मात्रा सुरक्षित गर्न अनुमति दिन्छ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "यो साइटलाई पूरा स्क्रीनमा प्रर्दशन गर्न परिवर्तन गर्न अनुमति दिन्छ।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "यो साइटलाई तपाईको यन्त्रमा भण्डारण गरिएका मिडिया फाइलहरू प्रयोग गर्न अनुमति दिन्छ।"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "सेटिङ्हरू > सामान्य > अनुप्रयोगहरू व्यवस्थापन गर्नुहोस् > सबै मा गएर पूर्वनिर्धारित एप सेटिङहरू खाली गर्नुहोस्।"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "नकार"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "प्रयोगकर्ता प्रमाणीकरण"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "प्राथमिकता सम्झनुहोस्।"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "प्रमाणपत्र जानकारी"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "लग-इन"
+

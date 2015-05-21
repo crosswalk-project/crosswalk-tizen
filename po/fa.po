@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "اجازه"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "شروع بارگیری..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "مشکلاتی در مجوز امنیتی برای این سایت وجود دارد."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "خیر"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "حذف"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "بازنشانی به پیش فرض"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "تنظیمات وب سایت"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "اسم کاربر"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "تأیید اعتبار لازم است."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "رمز"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "رمز"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "اعلان وب"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "سایت‌ها را برای درخواست دسترسی به مکان شما مجاز کنید."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) سعی می کند مقدار زیادی داده در دستگاه شما برای استفاده آفلاین ذخیره کند"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) درخواست مجوز برای ذخیره داده در دستگاه شما برای استفاده آفلاین دارد"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) درخواست مجوز برای دسترسی به مکان شما را دارد"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) درخواست مجوز برای نشان دادن اعلان ها را دارد"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) درخواست مجوز برای استفاده از دوربین شما را دارد"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "تمام صفحه"
+
+msgid "IDS_BR_SK_OK"
+msgstr "تاييد"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "دسترسی به مکان"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "به این سایت اجازه می‌دهد اعلان ها را نشان دهد."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "خالی"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "نوسازی خودکار"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "دسترسی به مکان کاربر"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "استفاده/ذخیره داده وب"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "استفاده از رسانه کاربر"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "به این سایت اجازه می‌دهد به اطلاعات مکان شما دسترسی یابد."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "به این سایت اجازه می‌دهد مقدار زیادی داده در دستگاه شما ذخیره کند."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "به این سایت اجازه می‌دهد تا نمایش را به تمام صفحه تغییر دهد."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "به این سایت اجازه می‌دهد از فایل‌های رسانه ذخیره شده در دستگاه شما استفاده کند."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "با رفتن به تنظیمات > عمومی > مدیریت برنامه‌ها > همه، تنظیمات پیش‌فرض برنامه را پاک کنید."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "رد کردن"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "تأیید اعتبار کاربر"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "مورد ترجیحی را یادآوری کنید."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "اطلاعات گواهی"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ورود به سیستم"
+

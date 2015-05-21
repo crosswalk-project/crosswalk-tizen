@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Разрешить"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Начало загрузки..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "Проблемы с сертификатом безопасности этого сайта."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Отмена"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Удалить"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Восстановить настройки по умолчанию"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Настройки веб-сайтов"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Имя пользователя"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Требуется проверка подлинности."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Пароль"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Пароль"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Веб-уведомление"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Разрешить сайтам запрашивать доступ к данным о вашем текущем местоположении."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) пытается сохранить большой объем данных на устройстве для использования в автономном режиме."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) запрашивает разрешение на хранение данных на устройстве для использования в автономном режиме."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) запрашивает разрешение на доступ к местоположению."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) запрашивает разрешение на отображение уведомлений."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) запрашивает разрешение на использование камеры."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Во весь экран"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Доступ к местонахождению"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Позволяет сайту выводить уведомления."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Пусто"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Автообновление"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Доступ к данным о местонахождении пользователя"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Использование/хранение веб-данных"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Использовать пользовательское мультимедиа"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Позволяет сайту получать доступ к данным о вашем местонахождении."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Позволяет сайту сохранять большой объем данных на устройстве."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Позволяет сайту переключаться в полноэкранный режим."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Позволяет приложению использовать файлы мультимедиа, хранящиеся на устройстве."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Чтобы больше не использовать приложение по умолчанию, удалите его назначение в меню “Параметры” > “Общие” > “Управление приложениями” > “Все”."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Запретить"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "Проверка подлинности пользователя"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Запомнить настройки."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Информация о сертификате"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Вход"
+

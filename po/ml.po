@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "അനുവദിക്കൂ"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ഡൌണ്‍ലോഡ് ആരംഭിക്കുന്നു..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "ഈ സൈറ്റിനായുള്ള സുരക്ഷാ സര്‍ട്ടിഫിക്കറ്റില്‍ പ്രശ്നങ്ങളുണ്ട്."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "റദ്ദാക്കു."
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "ഇല്ലാതാ."
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "സ്ഥിരസ്ഥിതികളിലേക്ക് പുനസജ്ജമാക്കുക"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "വെബ്‌ സൈറ്റ് ക്രമീകരണങ്ങള്‍"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ഉപയോക്തൃ നാമം"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ആധാരീകരിക്കല്‍ ആവശ്യമാണ്."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "പാസ്‌വേഡ്"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "പാസ്‌വേഡ്"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "വെബ് അറിയിപ്പ്"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "നിങ്ങളുടെ സ്ഥാനത്തേക്കുള്ള ആക്സസ്സ് അഭ്യര്‍ത്ഥിക്കുന്നതിന് സൈറ്റുകളെ അനുവദിക്കുന്നു."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ഓഫ്‌ലൈന്‍ ഉപയോഗത്തിനായി വലിയ തോതിലുള്ള ഡാറ്റ നിങ്ങളുടെ ഉപകരണത്തില്‍ സംഭരിക്കുന്നതിനായി %1$s (%2$s) ശ്രമിക്കുന്നു."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "ഓഫ്‌ലൈന്‍ ഉപയോഗത്തിനായി നിങ്ങളുടെ ഉപകരണത്തില്‍ ഡാറ്റ സംഭരിക്കുന്നതിനുള്ള അനുമതി %1$s (%2$s) അഭ്യര്‍ത്ഥിക്കുന്നു."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "നിങ്ങളുടെ ലൊക്കേഷന്‍ ആക്സസ്സ് ചെയ്യുന്നതിനുള്ള അനുമതി %1$s (%2$s) അഭ്യര്‍ത്ഥിക്കുന്നു."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "അറിയിപ്പുകള്‍ കാണിക്കുന്നതിനുള്ള അനുമതി %1$s (%2$s) അഭ്യര്‍ത്ഥിക്കുന്നു."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "നിങ്ങളുടെ ക്യാമറ ആക്സസ്സ് ചെയ്യുന്നതിനുള്ള അനുമതി %1$s (%2$s) അഭ്യര്‍ത്ഥിക്കുന്നു."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "പൂര്‍‌ണ്ണ സ്‌ക്രീന്‍‌"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ശരി"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "സ്ഥാന ആക്സസ്"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "അറിയിപ്പുകൾ പ്രദർശിപ്പിക്കാൻ ഈ സൈറ്റിനെ അനുവദിക്കുന്നു."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ശൂന്യം"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "യാന്ത്രികമായി പുതുക്കല്‍"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ഉപയോക്തൃ സ്ഥാനം ആക്സസ് ചെയ്യുക"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "വെബ് ഡാറ്റ ഉപയോഗിക്കുക/സംഭരിക്കുക"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "നിങ്ങളുടെ മീഡിയ ഉപയോഗിക്കുക"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "നിങ്ങളുടെ സ്ഥാന വിവരങ്ങൾ ആക്സസ് ചെയ്യാൻ ഈ സൈറ്റിനെ അനുവദിക്കുന്നു."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "വലിയ തോതിലുള്ള ഡാറ്റ നിങ്ങളുടെ ഉപകരണത്തിൽ സംരക്ഷിക്കാൻ ഈ സൈറ്റിനെ അനുവദിക്കുന്നു."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ഡിസ്പ്ലേ പൂർണ്ണ സ്ക്രീനാക്കി മാറ്റാൻ ഈ സൈറ്റിനെ അനുവദിക്കുന്നു."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "നിങ്ങളുടെ ഉപകരണത്തിൽ സംഭരിച്ചിട്ടുള്ള മീഡിയ ഫയലുകൾ ഉപയോഗിക്കാൻ ഈ സൈറ്റിനെ അനുവദിക്കുന്നു."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ക്രമീകരണങ്ങൾ > പൊതുവായവ > ആപ്ലിക്കേഷനുകൾ മാനേജ് ചെയ്യുക > എല്ലാം തുടങ്ങിയവയിലേക്ക് പോയി ഡിഫോൾട്ട് ആപ്ലിക്കേഷൻ ക്രമീകരണങ്ങൾ മായ്ക്കുക."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "നിരസിക്കുക"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "ഉപയോക്തൃ ഓതറൈസേഷന്‍"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "മുന്‍ഗണന ഓര്‍ക്കുക."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "സര്‍ട്ടിഫിക്കറ്റ് വിവരം"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "ലോഗിന്‍ ചെയ്യുക"
+

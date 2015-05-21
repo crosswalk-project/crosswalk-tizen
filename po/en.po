@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "Allow"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "Starting download..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "There are problems with the security certificate for this site."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "Cancel"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "Delete"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "Reset to default"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "Website settings"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "Username"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "Authentication required."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "Password"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "Password"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "Web notification"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "Allow sites to request access to your location."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) is attempting to store a large amount of data on your device for offline use."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) is requesting permission to store data on your device for offline use."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) is requesting permission to access your location."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) is requesting permission to show notifications."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) is requesting permission to use your camera."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "Full screen"
+
+msgid "IDS_BR_SK_OK"
+msgstr "OK"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "Location access"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "Allows this site to display notifications."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "Empty"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Auto refresh"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "Access user location"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "Use/store web data"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "Use user media"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "Allows this site to access your location information."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "Allows this site to save a large amount of data on your device."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "Allows this site to change the display to full screen."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "Allows this site to use the media files stored on your device."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "Clear default app settings by going to Settings > General > Manage applications > All."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "Deny"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "User authentication"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "Remember preference."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "Certificate info"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Login"
+

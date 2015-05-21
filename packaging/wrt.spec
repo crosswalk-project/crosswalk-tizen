@@ -1,0 +1,94 @@
+%bcond_with wayland
+%bcond_with x
+
+Name:       wrt
+Summary:    Runtime for Web Application
+Version:    2.0.0
+Release:    1
+Group:      Development/Libraries
+License:    BSD-3-Clause and Apache-2.0
+URL:        https://www.tizen.org
+Source0:    %{name}-%{version}.tar.gz
+
+BuildRequires: cmake
+BuildRequires: edje-tools
+BuildRequires: gettext
+BuildRequires: pkgconfig(appsvc)
+BuildRequires: pkgconfig(bundle)
+BuildRequires: pkgconfig(dlog)
+BuildRequires: pkgconfig(elementary)
+BuildRequires: pkgconfig(capi-appfw-application)
+BuildRequires: pkgconfig(manifest-parser)
+BuildRequires: pkgconfig(manifest-handlers)
+BuildRequires: pkgconfig(capi-appfw-package-manager)
+BuildRequires: pkgconfig(efl-assist)
+BuildRequires: pkgconfig(deviced)
+BuildRequires: pkgconfig(capi-system-runtime-info)
+BuildRequires: pkgconfig(cert-svc)
+BuildRequires: pkgconfig(uuid)
+BuildRequires: pkgconfig(gio-2.0)
+BuildRequires: pkgconfig(aul)
+BuildRequires: pkgconfig(ecore)
+BuildRequires: pkgconfig(notification)
+BuildRequires: boost-devel
+BuildRequires: python
+%if %{with x}
+BuildRequires: pkgconfig(ecore-x)
+%endif
+%if %{with wayland}
+BuildRequires: pkgconfig(ecore-wayland)
+%endif
+
+#web-engine
+BuildRequires: pkgconfig(chromium-efl)
+
+%description
+Runtime for Web Application
+
+%prep
+%setup -q
+
+%build
+
+%ifarch %{arm}
+%define build_dir build-arm
+%else
+%define build_dir build-x86
+%endif
+
+%if %{with x}
+%define enable_x11 On
+%else
+%define enable_x11 Off
+%endif
+
+%if %{with wayland}
+%define enable_wayland On
+%else
+%define enable_wayland Off
+%endif
+
+mkdir -p %{build_dir}
+cd %{build_dir}
+
+cmake .. -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+         -DCMAKE_BUILD_TYPE=%{?build_type:%build_type} \
+         -DX11_SUPPORT=%{enable_x11} \
+         -DWAYLAND_SUPPORT=%{enable_wayland}
+
+make %{?jobs:-j%jobs}
+
+%install
+cd %{build_dir}
+%make_install
+
+%clean
+rm -fr %{buildroot}
+
+%files
+%attr(755,root,root) %{_bindir}/wrt
+%attr(755,root,root) %{_bindir}/wrt-popup-test
+%attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
+%attr(644,root,root) %{_libdir}/libwrt-injected-bundle.so
+%attr(644,root,root) %{_libdir}/tizen-extensions-crosswalk/libwidget-plugin.so
+%attr(755,root,root) %{_datadir}/locale/*

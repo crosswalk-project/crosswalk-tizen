@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "అనుమతించు"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "డౌన్లోడ్ ప్రారంభమవుతోంది..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "ఈ సైట్ కు సెక్యూరిటీ సర్టిఫికెట్లనుండి సమస్యలు ఉన్నాయి."
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "రద్దు"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "తొలగించు"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "డిఫాల్ట్‌ కు రీసెట్ చేయి"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "వెబ్‌సైట్‌ సెట్టింగులు"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "యూజర్ పేరు"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ప్రమాణీకరణ అవసరం."
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "పాస్వర్డ్"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "పాస్వర్డ్"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "వెబ్ నోటిఫికేషన్"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "మీ స్థానంను యాక్సేస్ అభ్యర్థించేందుకు సైట్లకు అనుమతివ్వండి."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) మీ పరికరంలో ఆఫ్‌లైన్ ఉపయోగం కోసం అధిక మొత్తంలో డేటాని నిల్వ చేయడానికి ప్రయత్నిస్తోంది."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) మీ పరికరంలో ఆఫ్‌లైన్ ఉపయోగం కోసం డేటాని నిల్వ చేయడానికి అనుమతిని అభ్యర్థిస్తోంది."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) మీ స్థానాన్ని యాక్సెస్ చేయడానికి అనుమతిని అభ్యర్థిస్తోంది."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) నోటిఫికేషన్‌లను చూపడానికి అనుమతిని అభ్యర్థిస్తోంది."
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) మీ కెమెరాని ఉపయోగించడానికి అనుమతిని అభ్యర్థిస్తోంది."
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "పూర్తి స్క్రీన్"
+
+msgid "IDS_BR_SK_OK"
+msgstr "సరే"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "స్థాన యాక్సెస్"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "నోటిఫికేషన్‌లను ప్రదర్శించడానికి ఈ సైట్‌ని అనుమతిస్తుంది."
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ఖాళీ"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "స్వయంచాలక రీఫ్రెష్"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "వినియోగదారు స్థానాన్ని యాక్సెస్ చేయి"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "వెబ్ డేటాని ఉపయోగించండి/నిల్వ చేయండి"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "వినియోగదారు మీడియాని ఉపయోగించు"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "మీ స్థానం సమాచారాన్ని యాక్సెస్ చేయడానికి ఈ సైట్‌ని అనుమతిస్తుంది."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "మీ పరికరంలో అధిక మొత్తంలో డేటాని సేవ్ చేయడానికి ఈ సైట్‌ని అనుమతిస్తుంది."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "ప్రదర్శనని పూర్తి స్క్రీన్‌కి మార్చడానికి ఈ సైట్‌ని అనుమతిస్తుంది."
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "మీ పరికరంలో నిల్వ చేసిన మీడియా ఫైల్‌లను ఉపయోగించడానికి ఈ సైట్‌ని అనుమతిస్తుంది."
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "సెట్టింగ్‌లు > సాధారణం > అప్లికేషన్‌లను నిర్వహించు > అన్నీకి వెళ్లడం ద్వారా డిఫాల్ట్ అప్లికేషన్ సెట్టింగ్‌లను క్లియర్ చేయండి."
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "నిరాకరించు"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "యూజర్ ప్రమాణీకరణ"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "ప్రాధాన్యతను గుర్తుపెట్టుకోండి."
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "సర్టిఫికేట్ సమాచారం"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "లాగిన్"
+

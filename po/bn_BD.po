@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "অনুমতি"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "ডাউনলোড শুরু হচ্ছে..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "এই সাইটে নিরাপত্তা প্রমাণপত্র জনিত সমস্যা আছে।"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "বাতিল"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "মুছুন"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "ডিফল্টে পুন:নির্ধারণ করুন"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "ওয়েবসাইট সেটিংস"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ব্যবহারকারীর নাম"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "প্রমাণীকরণ দরকার।"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "পাসওয়ার্ড"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "পাসওয়ার্ড"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "ওয়েব বিজ্ঞপ্তি"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "সাইটগুলোকে আপনার অবস্থানের জন্য অনুরোধ করার সম্মতি প্রদান করুন।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) অফলাইনে ব্যবহারের জন্য আপনার ডিভাইসে বড় পরিমাণ তথ্য সঞ্চয় করার প্রয়াস করছে।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) অফলাইনে ব্যবহারের জন্য আপনার ডিভাইসে ডাটা সঞ্চয় করার অনুমতি অনুরোধ করছে।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) আপনার অবস্থান অ্যাকসেসের জন্য অনুমতি প্রার্থনা করছে।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) নোটিফিকেশনগুলো দেখানোর জন্য অনুমতি অনুরোধ করছে।"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) আপনার ক্যামেরা ব্যবহারের জন্য অনুমতি প্রার্থনা করছে।"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "পূর্ণ স্ক্রিন"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ওকে"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "অবস্থান অ্যাকসেস"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "এই সাইটটিকে নোটিফিকেশন প্রদর্শনের অনুমতি দিন।"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ফাঁকা"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "Auto refresh"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "ব্যবহারকারীর অবস্থান অ্যাকসেস করুন"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ওয়েব তথ্য ব্যবহার করুন/স্টোর করুন"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ব্যবহারকারীর মিডিয়া ব্যবহার করুন"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "এই সাইটটিকে আপনার অবস্থানের তথ্য ব্যাবহারের অনুমতি দিন।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "এই সাইটটিকে আপনার ডিভাইসে প্রচুর পরিমাণে তথ্য সংরক্ষণের অনুমতি দিন।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "এই সাইটটিকে প্রদর্শনটি পূর্ণ স্ক্রিনে পরিবর্তন করার অনুমতি দিন।"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "এই সাইটটিকে আপনার ডিভাইসে সঞ্চিত মিডিয়া ফাইলগুলো ব্যবহারের অনুমতি দিন।"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "এখানে গিয়ে ডিফল্ট অ্যাপ সেটিংস মুছে ফেলুন সেটিংস > সাধারণ > অ্যাপ্লিকেশনগুলো পরিচালনা করুন > সমস্ত।"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "অস্বীকার"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "User authentication"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "অগ্রাধিকার মনে রাখুন।"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "প্রমাণপত্র"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "লগইন"
+

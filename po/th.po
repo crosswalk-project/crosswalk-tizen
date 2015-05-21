@@ -1,0 +1,111 @@
+msgid "IDS_BR_OPT_ALLOW"
+msgstr "อนุญาต"
+
+msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
+msgstr "กำลัง​เริ่ม​ดาวน์​โหลด..."
+
+msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
+msgstr "มี​ปัญหา​การ​รับรอง​ความ​ปลอดภัย​สำ​หรับ​ไซ​ต์​นี้"
+
+msgid "IDS_BR_SK_CANCEL"
+msgstr "ยกเลิก"
+
+msgid "IDS_BR_SK_DELETE"
+msgstr "ลบ"
+
+msgid "IDS_BR_BODY_RESET_TO_DEFAULT"
+msgstr "รี​เซ็ท​เป็น​ค่า​พื้น​ฐาน"
+
+msgid "IDS_BR_BODY_WEBSITE_SETTINGS"
+msgstr "การ​ตั้ง​ค่า​เว็บ​ไซ​ต์"
+
+msgid "IDS_BR_BODY_AUTHUSERNAME"
+msgstr "ชื่อ​ผู้​ใช้"
+
+msgid "IDS_BR_BODY_DESTINATIONS_AUTHENTICATION_REQUIRED"
+msgstr "ต้อง​การ​การ​รับรอง"
+
+msgid "IDS_BR_BODY_AUTHPASSWORD"
+msgstr "รหัสผ่าน"
+
+msgid "IDS_BR_BODY_PASSWORD"
+msgstr "รหัสผ่าน"
+
+msgid "IDS_BR_HEADER_WEB_NOTIFICATION"
+msgstr "การแจ้งเตือนเว็บ"
+
+msgid "IDS_BR_BODY_ALLOW_SITES_TO_REQUEST_ACCESS_TO_YOUR_LOCATION"
+msgstr "อนุญาตให้ไซต์ขอการเข้าถึง ตำแหน่งของคุณ"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_ATTEMPTING_TO_STORE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) กำลังพยายามจัดเก็บข้อมูลจำนวนมาก ลงในอุปกรณ์ของคุณสำหรับใช้งานแบบออฟไลน์"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_STORE_DATA_ON_YOUR_DEVICE_FOR_OFFLINE_USE"
+msgstr "%1$s (%2$s) กำลังขออนุญาตให้จัดเก็บข้อมูล ลงบนอุปกรณ์ของคุณ สำหรับใช้งานแบบออฟไลน์"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_ACCESS_YOUR_LOCATION"
+msgstr "%1$s (%2$s) กำลังขออนุญาต เพื่อเข้าถึงตำแหน่งของคุณ"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_SHOW_NOTIFICATIONS"
+msgstr "%1$s (%2$s) กำลังขออนุญาตให้แสดง การแจ้งเตือน"
+
+msgid "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA"
+msgstr "%1$s (%2$s) กำลังขออนุญาต เพื่อใช้กล้องของคุณ"
+
+msgid "IDS_BR_BODY_FULL_SCREEN"
+msgstr "เต็ม​หน้า​จอ"
+
+msgid "IDS_BR_SK_OK"
+msgstr "ตกลง"
+
+msgid "IDS_BR_MBODY_LOCATION_ACCESS"
+msgstr "การ​เข้า​ถึง​ตำแหน่ง"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS"
+msgstr "อนุญาตให้ไซต์นี้แสดงการแจ้งเตือนได้"
+
+msgid "IDS_BR_BODY_EMPTY"
+msgstr "ว่าง"
+
+msgid "IDS_BR_HEADER_AUTO_REFRESH"
+msgstr "รีเฟรชอัตโนมัติ"
+
+msgid "IDS_WRT_OPT_ACCESS_USER_LOCATION"
+msgstr "เข้าถึงตำแหน่งของผู้ใช้"
+
+msgid "IDS_WRT_OPT_USE_STORE_WEB_DATA"
+msgstr "ใช้/เก็บข้อมูลเว็บ"
+
+msgid "IDS_WRT_OPT_USE_USER_MEDIA"
+msgstr "ใช้มีเดียผู้ใช้"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION"
+msgstr "อนุญาตให้ไซต์นี้เข้าถึง ข้อมูลตำแหน่งของคุณได้"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_SAVE_A_LARGE_AMOUNT_OF_DATA_ON_YOUR_DEVICE"
+msgstr "อนุญาตให้ไซต์นี้บันทึกข้อมูลจำนวนมาก บนอุปกรณ์ของคุณได้"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_CHANGE_THE_DISPLAY_TO_FULL_SCREEN"
+msgstr "อนุญาตให้ไซต์นี้เปลี่ยนข้อมูล ที่แสดงเป็นเต็มหน้าจอได้"
+
+msgid "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE"
+msgstr "อนุญาตให้ไซต์นี้ใช้ไฟล์มีเดีย ที่เก็บอยู่บนอุปกรณ์ของคุณได้"
+
+msgid "IDS_ST_POP_CLEAR_DEFAULT_APP_SETTINGS_BY_GOING_TO_SETTINGS_GENERAL_MANAGE_APPLICATIONS_ALL"
+msgstr "ล้างการตั้งค่าแอพพื้น​ฐาน​โดยไปที่ การตั้งค่า > ทั่วไป > จัดการแอพพลิเคชั่น > ทั้งหมด"
+
+msgid "IDS_COM_BODY_DENY"
+msgstr "ปฏิเสธ"
+
+msgid "IDS_SA_BODY_USER_AUTHENTICATION"
+msgstr "การ​รับรอง​ผู้​ใช้"
+
+msgid "IDS_BR_BODY_REMEMBER_PREFERENCE"
+msgstr "จดจำค่าที่เตรียมไว้"
+
+msgid "IDS_BR_HEADER_CERTIFICATE_INFO"
+msgstr "ข้อมูล​ใบ​รับรอง​การ​ใช้​งาน"
+
+msgid "IDS_BR_BODY_LOGIN"
+msgstr "Login"
+

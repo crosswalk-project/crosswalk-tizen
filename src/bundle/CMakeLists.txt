@@ -1,0 +1,69 @@
+# Copyright 2015 Samsung Electronics Co, Ltd. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Dependencies
+PKG_CHECK_MODULES(TARGET_INJECTED_BUNDLE_DEPS REQUIRED
+  dlog
+  glib-2.0
+  gio-2.0
+  uuid
+  elementary
+  chromium-efl
+)
+
+# Include Directories
+SET(TARGET_INJECTED_BUNDLE_INCS
+  ${BASE_SRCDIR}
+  ${TARGET_INJECTED_BUNDLE_DEPS_INCLUDE_DIRS}
+)
+
+# Libraries
+SET(TARGET_INJECTED_BUNDLE_LIBS
+  ${TARGET_INJECTED_BUNDLE_DEPS_LIBRARIES}
+)
+
+# Source Files
+SET(TARGET_INJECTED_BUNDLE_SRCS
+  ${BASE_SRCDIR}/bundle/injected_bundle.cc
+  ${BASE_SRCDIR}/bundle/extension_renderer_controller.cc
+  ${BASE_SRCDIR}/bundle/extension_client.cc
+  ${BASE_SRCDIR}/bundle/extension_module.cc
+  ${BASE_SRCDIR}/bundle/module_system.cc
+  ${BASE_SRCDIR}/bundle/runtime_ipc_client.cc
+  ${BASE_SRCDIR}/bundle/xwalk_v8tools_module.cc
+)
+
+# Compiler Flags
+SET(TARGET_INJECTED_BUNDLE_CFLAGS
+  "-fPIC"
+)
+
+# Linker Flags
+SET(TARGET_INJECTED_BUNDLE_LDFLAGS
+  "-ldl"
+)
+
+INCLUDE_DIRECTORIES(${TARGET_INJECTED_BUNDLE_INCS})
+ADD_DEFINITIONS(${TARGET_INJECTED_BUNDLE_CFLAGS})
+ADD_LIBRARY(${TARGET_INJECTED_BUNDLE} SHARED
+  ${TARGET_INJECTED_BUNDLE_SRCS}
+)
+TARGET_LINK_LIBRARIES(${TARGET_INJECTED_BUNDLE}
+  ${TARGET_INJECTED_BUNDLE_LIBS}
+  ${TARGET_COMMON_STATIC}
+  ${TARGET_INJECTED_BUNDLE_LDFLAGS}
+)
+
+SET_TARGET_PROPERTIES(${TARGET_INJECTED_BUNDLE} PROPERTIES
+    COMPILE_FLAGS -fPIC)
+SET_TARGET_PROPERTIES(${TARGET_INJECTED_BUNDLE} PROPERTIES
+    LINK_FLAGS "-Wl,--as-needed -Wl,--hash-style=both"
+    OUTPUT_NAME ${TARGET_INJECTED_BUNDLE}
+)
+
+INSTALL(TARGETS ${TARGET_INJECTED_BUNDLE}
+    DESTINATION lib/
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+    GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
