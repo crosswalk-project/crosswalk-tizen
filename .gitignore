@@ -1,0 +1,14 @@
+*.log
+*.pyc
+*.o
+*.os
+*.exe
+*~
+*.lo
+.libs
+.deps
+*.la
+CMakeFiles
+CMakeCache.txt
+cmake_build_tmp/
+.cproject
