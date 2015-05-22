@@ -278,6 +278,16 @@ bool WebApplication::Initialize() {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kRotationLockFeature,
                                                 true);
+  } else if (app_data_->setting_info() != NULL &&
+             app_data_->setting_info()->screen_orientation()
+             == wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
+    window_->SetRotationLock(
+        NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
+  } else if (app_data_->setting_info() != NULL &&
+             app_data_->setting_info()->screen_orientation()
+             == wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
+    window_->SetRotationLock(
+        NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY);
   }
 
   if (app_data_->setting_info() != NULL &&
@@ -570,9 +580,10 @@ void WebApplication::OnReceivedWrtMessage(
   eina_stringshare_del(msg_id);
 }
 
-void WebApplication::OnOrientationLock(WebView* view,
-                                       bool lock,
-                                       int preferred_rotation) {
+void WebApplication::OnOrientationLock(
+    WebView* view,
+    bool lock,
+    NativeWindow::ScreenOrientation preferred_rotation) {
   if (view_stack_.size() == 0)
     return;
 

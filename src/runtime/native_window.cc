@@ -142,6 +142,12 @@ void NativeWindow::Initialize() {
                                  rotation_callback,
                                  this);
 
+  if (w > h) {
+    natural_orientation_ = ScreenOrientation::LANDSCAPE_PRIMARY;
+  } else {
+    natural_orientation_ = ScreenOrientation::PORTRAIT_PRIMARY;
+  }
+
   initialized_ = true;
 }
 
@@ -201,7 +207,29 @@ void NativeWindow::RemoveRotationHandler(int id) {
 void NativeWindow::SetRotationLock(int degree) {
   rotation_ = degree%360;
   elm_win_wm_rotation_preferred_rotation_set(window_, rotation_);
+  elm_win_rotation_set(window_, rotation_);
 }
+
+void NativeWindow::SetRotationLock(ScreenOrientation orientation) {
+  int portrait_natural_angle[] = {
+    0,  // PORTRAIT_PRIMARY
+    180,  // PORTRAIT_SECONDARY
+    270,  // LANDSCAPE_PRIMARY
+    90  // LANDSCAPE_SECONDARY
+  };
+  int landscape_natural_angle[] = {
+    270,  // PORTRAIT_PRIMARY
+    90,  // PORTRAIT_SECONDARY
+    0,  // LANDSCAPE_PRIMARY
+    180  // LANDSCAPE_SECONDARY
+  };
+  auto& convert_table =
+      natural_orientation_ == ScreenOrientation::PORTRAIT_PRIMARY ?
+          portrait_natural_angle :
+          landscape_natural_angle;
+  SetRotationLock(convert_table[static_cast<int>(orientation)]);
+}
+
 
 void NativeWindow::SetAutoRotation() {
   elm_win_wm_rotation_preferred_rotation_set(window_, -1);

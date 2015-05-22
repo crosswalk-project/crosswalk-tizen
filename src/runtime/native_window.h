@@ -25,6 +25,12 @@ namespace wrt {
 
 class NativeWindow {
  public:
+  enum class ScreenOrientation {
+    PORTRAIT_PRIMARY = 0,
+    PORTRAIT_SECONDARY = 1,
+    LANDSCAPE_PRIMARY = 2,
+    LANDSCAPE_SECONDARY = 3
+  };
   typedef std::function<void(int)> RotationHandler;
   NativeWindow();
   virtual ~NativeWindow();
@@ -35,6 +41,7 @@ class NativeWindow {
   Evas_Object* evas_object() const;
   void SetContent(Evas_Object* content);
   void SetRotationLock(int degree);
+  void SetRotationLock(ScreenOrientation orientation);
   void SetAutoRotation();
   int AddRotationHandler(RotationHandler handler);
   void RemoveRotationHandler(int id);
@@ -43,6 +50,7 @@ class NativeWindow {
   void Active();
   void InActive();
   void FullScreen(bool enable);
+  ScreenOrientation natural_orientation() const { return natural_orientation_;}
 
  protected:
   virtual Evas_Object* CreateWindowInternal() = 0;
@@ -61,6 +69,7 @@ class NativeWindow {
   Evas_Object* content_;
   int rotation_;
   int handler_id_;
+  ScreenOrientation natural_orientation_;
   std::map<int, RotationHandler> handler_table_;
 };
 

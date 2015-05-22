@@ -41,15 +41,18 @@ static int ToWebRotation(int r) {
   return r;
 }
 
-static int ToNativeRotation(int r) {
-  switch (r) {
-    case -90:
-      return 90;
-    case 90:
-      return 270;
+static NativeWindow::ScreenOrientation ToNativeRotation(int r) {
+  if (r & EWK_SCREEN_ORIENTATION_PORTRAIT_PRIMARY) {
+    return NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY;
+  } else if (r & EWK_SCREEN_ORIENTATION_PORTRAIT_SECONDARY) {
+    return NativeWindow::ScreenOrientation::PORTRAIT_SECONDARY;
+  } else if (r & EWK_SCREEN_ORIENTATION_LANDSCAPE_PRIMARY) {
+    return NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY;
+  } else {
+    return NativeWindow::ScreenOrientation::LANDSCAPE_SECONDARY;
   }
-  return r;
 }
+
 
 }  // namespace
 

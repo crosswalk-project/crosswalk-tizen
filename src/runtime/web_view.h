@@ -23,10 +23,12 @@
 #include <string>
 #include <functional>
 
+#include "runtime/native_window.h"
+
+
 class Ewk_Context;
 
 namespace wrt {
-class NativeWindow;
 class WebViewImpl;
 
 class WebView {
@@ -52,7 +54,7 @@ class WebView {
     virtual void OnOrientationLock(
         WebView* /*view*/,
         bool /*lock*/,
-        int /*preferred_rotation*/) {}
+        NativeWindow::ScreenOrientation /*preferred_rotation*/) {}
     virtual void OnConsoleMessage(const std::string& /*msg*/, int /*level*/) {}
     virtual bool OnContextMenuDisabled(WebView* /*view*/) { return false; }
 

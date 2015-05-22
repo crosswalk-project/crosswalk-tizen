@@ -55,9 +55,10 @@ class WebApplication : public WebView::EventListener {
   virtual void OnClosedWebView(WebView * view);
   virtual void OnReceivedWrtMessage(WebView* view,
                                     Ewk_IPC_Wrt_Message_Data* msg);
-  virtual void OnOrientationLock(WebView* view,
-                                 bool lock,
-                                 int preferred_rotation);
+  virtual void OnOrientationLock(
+      WebView* view,
+      bool lock,
+      NativeWindow::ScreenOrientation preferred_rotation);
   virtual void OnHardwareKey(WebView* view, const std::string& keyname);
   virtual void OnConsoleMessage(const std::string& msg, int level);
 
