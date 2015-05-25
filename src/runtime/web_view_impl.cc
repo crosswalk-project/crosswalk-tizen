@@ -157,7 +157,7 @@ void WebViewImpl::InitKeyCallback() {
                          void* event_info) -> void {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     Ea_Callback_Type key = static_cast<Ea_Callback_Type>(
-                              reinterpret_cast<int>(event_info));
+                              *static_cast<int*>(event_info));
     self->OnKeyEvent(key);
   };
   ea_object_event_callback_add(ewk_view_,
@@ -286,10 +286,12 @@ void WebViewImpl::InitQuotaExceededCallback() {
   // check http://tizen.org/privilege/unlimitedstorage
 
   // callback for database quota exceeded
+  // TODO(wy80.choi): AARCH64:
+  //   Fix ewk api to use stdint types instead of longlong.
   auto database_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
                                        const char*,
-                                       uint64_t,
+                                       unsigned long long,
                                        void* user_data) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL)
@@ -317,9 +319,11 @@ void WebViewImpl::InitQuotaExceededCallback() {
     this);
 
   // callback for indexed database quota exceeded
+  // TODO(wy80.choi): AARCH64:
+  //   Fix ewk api to use stdint types instead of longlong.
   auto indexed_db_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
-                                       int64_t,
+                                       long long,
                                        void* user_data) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL)
@@ -347,9 +351,11 @@ void WebViewImpl::InitQuotaExceededCallback() {
     this);
 
   // callback for localfile quota exceeded
+  // TODO(wy80.choi): AARCH64:
+  //   Fix ewk api to use stdint types instead of longlong.
   auto localfile_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
-                                       int64_t,
+                                       long long,
                                        void* user_data) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL)

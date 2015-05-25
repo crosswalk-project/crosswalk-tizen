@@ -93,8 +93,7 @@ extern "C" void DynamicPluginStopSession(
 }
 
 extern "C" void DynamicUrlParsing(
-    std::string* old_url, std::string* new_url, const char* tizen_id) {
-  // LOGGER(DEBUG) << "InjectedBundle::DynamicUrlParsing !!" << tizen_id;
+    std::string* old_url, std::string* new_url, const char* /*tizen_id*/) {
   auto res_manager = wrt::BundleGlobalData::GetInstance()->resource_manager();
   if (res_manager == NULL) {
     LOGGER(ERROR) << "Widget Info was not set, Resource Manager is NULL";

@@ -48,7 +48,7 @@ static std::string GetMimeFromUri(const std::string& uri) {
   std::string file_uri_case(kSchemeTypeFile);
   int ret = AUL_R_EINVAL;
   char mimetype[128] = {0, };
-  int pos = std::string::npos;
+  size_t pos = std::string::npos;
   if (utils::StartsWith(uri, file_uri_case)) {
     // case 1. uri = file:///xxxx
     ret = aul_get_mime_from_file(uri.substr(pos+file_uri_case.length()).c_str(),

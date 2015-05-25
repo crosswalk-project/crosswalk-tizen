@@ -37,13 +37,12 @@ NativeWindow::~NativeWindow() {
 }
 
 void NativeWindow::Initialize() {
-  uint16_t pid = getpid();
-
   // window
   window_ = CreateWindowInternal();
   elm_win_conformant_set(window_, EINA_TRUE);
   int w, h;
 #if defined(HAVE_X11)
+  uint16_t pid = getpid();
   ecore_x_window_prop_property_set(
     elm_win_xwindow_get(window_),
     ECORE_X_ATOM_NET_WM_PID,

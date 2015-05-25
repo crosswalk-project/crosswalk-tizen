@@ -7,9 +7,6 @@
 namespace wrt {
 
 // Extension
-const char kSystemExtensionPath[] = "/usr/lib/tizen-extensions-crosswalk";
-const char kExtensionPrefix[] = "lib";
-const char kExtensionSuffix[] = ".so";
 const char kSwitchExtensionServer[] = "extension-server";
 
 // DBus for Application

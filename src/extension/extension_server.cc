@@ -22,6 +22,9 @@ namespace wrt {
 
 namespace {
 
+const char kExtensionPrefix[] = "lib";
+const char kExtensionSuffix[] = ".so";
+
 const char kDBusIntrospectionXML[] =
   "<node>"
   "  <interface name='org.tizen.wrt.Extension'>"
@@ -111,7 +114,11 @@ void ExtensionServer::RegisterExtension(const std::string& path) {
 }
 
 void ExtensionServer::RegisterSystemExtensions() {
-  std::string extension_path(kSystemExtensionPath);
+#ifdef EXTENSION_PATH
+  std::string extension_path(EXTENSION_PATH);
+#else
+  #error EXTENSION_PATH is not set.
+#endif
   extension_path.append("/");
   extension_path.append(kExtensionPrefix);
   extension_path.append("*");

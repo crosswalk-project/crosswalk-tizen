@@ -48,13 +48,11 @@ Runtime for Web Application
 %prep
 %setup -q
 
+%define extension_path %{_libdir}/tizen-extensions-crosswalk
+
 %build
 
-%ifarch %{arm}
-%define build_dir build-arm
-%else
-%define build_dir build-x86
-%endif
+%define build_dir cmake_build_dir
 
 %if %{with x}
 %define enable_x11 On
@@ -72,9 +70,11 @@ mkdir -p %{build_dir}
 cd %{build_dir}
 
 cmake .. -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+         -DLIB_INSTALL_DIR=%{_libdir} \
          -DCMAKE_BUILD_TYPE=%{?build_type:%build_type} \
          -DX11_SUPPORT=%{enable_x11} \
-         -DWAYLAND_SUPPORT=%{enable_wayland}
+         -DWAYLAND_SUPPORT=%{enable_wayland} \
+         -DEXTENSION_PATH=%{extension_path}
 
 make %{?jobs:-j%jobs}
 
@@ -90,5 +90,5 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt-popup-test
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
 %attr(644,root,root) %{_libdir}/libwrt-injected-bundle.so
-%attr(644,root,root) %{_libdir}/tizen-extensions-crosswalk/libwidget-plugin.so
+%attr(644,root,root) %{extension_path}/libwidget-plugin.so
 %attr(755,root,root) %{_datadir}/locale/*
