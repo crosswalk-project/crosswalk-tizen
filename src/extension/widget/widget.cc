@@ -68,7 +68,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
   if (!g_core) {
     LOGGER(ERROR)
         << "Can't initialize extension: error getting Core interface.";
-    return -1;
+    return XW_ERROR;
   }
 
   g_messaging = reinterpret_cast<const XW_MessagingInterface*>(
@@ -76,7 +76,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
   if (!g_messaging) {
     LOGGER(ERROR)
         << "Can't initialize extension: error getting Messaging interface.";
-    return -1;
+    return XW_ERROR;
   }
 
   g_sync_messaging =
@@ -86,7 +86,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
     LOGGER(ERROR)
         << "Can't initialize extension: "
         << "error getting SyncMessaging interface.";
-    return -1;
+    return XW_ERROR;
   }
 
   g_entry_points = reinterpret_cast<const XW_Internal_EntryPointsInterface*>(
@@ -95,7 +95,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
     LOGGER(ERROR)
         << "NOTE: Entry points interface not available in this version "
         << "of Crosswalk, ignoring entry point data for extensions.\n";
-    return -1;
+    return XW_ERROR;
   }
 
   g_runtime = reinterpret_cast<const XW_Internal_RuntimeInterface*>(
@@ -104,7 +104,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
     LOGGER(ERROR)
         << "NOTE: runtime interface not available in this version "
         << "of Crosswalk, ignoring runtime variables for extensions.\n";
-    return -1;
+    return XW_ERROR;
   }
 
   std::vector<char> res(256, 0);
@@ -116,7 +116,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
 
   g_core->RegisterInstanceCallbacks(
       g_xw_extension,
-      [](XW_Instance instance){
+      [](XW_Instance /*instance*/){
         if (g_appdata.get() == NULL) {
           g_appdata.reset(new wrt::ApplicationData(g_appid));
         }
@@ -137,9 +137,12 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
   const char* entry_points[] = {"widget", NULL};
   g_entry_points->SetExtraJSEntryPoints(g_xw_extension, entry_points);
   g_core->SetJavaScriptAPI(g_xw_extension, kSource_widget_api);
+
+  return XW_OK;
 }
 
-static void InitHandler(const picojson::value& args, picojson::object* out) {
+static void InitHandler(const picojson::value& /*args*/,
+                        picojson::object* out) {
   picojson::value result = picojson::value(picojson::object());
   picojson::object& obj = result.get<picojson::object>();
 
@@ -188,7 +191,7 @@ static void GetItemHandler(const picojson::value& args,
   out->insert(std::make_pair("result", picojson::value(value)));
 }
 
-static void LengthHandler(const picojson::value& args,
+static void LengthHandler(const picojson::value& /*args*/,
                            picojson::object* out) {
   int length = wrt::Widget::GetInstance()->Length();
   out->insert(std::make_pair("status", picojson::value("success")));
@@ -196,7 +199,7 @@ static void LengthHandler(const picojson::value& args,
       std::make_pair("result", picojson::value(static_cast<double>(length))));
 }
 
-static void ClearHandler(const picojson::value& args,
+static void ClearHandler(const picojson::value& /*args*/,
                            picojson::object* out) {
   wrt::Widget::GetInstance()->Clear();
   out->insert(std::make_pair("status", picojson::value("success")));
@@ -302,7 +305,6 @@ void Widget::Initialize(const ApplicationData* appdata) {
 
 int Widget::Length() {
   AppDB* db = AppDB::GetInstance();
-  int count = 0;
   std::list<std::string> list;
   db->GetKeys(kDBPublicSection, &list);
   return list.size();
@@ -310,7 +312,6 @@ int Widget::Length() {
 
 bool Widget::Key(int idx, std::string* key) {
   AppDB* db = AppDB::GetInstance();
-  int count = 0;
   std::list<std::string> list;
   db->GetKeys(kDBPublicSection, &list);
 
