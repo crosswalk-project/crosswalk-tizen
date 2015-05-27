@@ -7,11 +7,14 @@
 
 #include <string>
 #include <list>
+#include <map>
 
 namespace wrt {
 
 class LocaleManager {
  public:
+  typedef std::map<std::string, std::string> StringMap;
+
   LocaleManager();
   virtual ~LocaleManager();
   void SetDefaultLocale(const std::string& locale);
@@ -19,6 +22,8 @@ class LocaleManager {
   void UpdateSystemLocale();
   const std::list<std::string>& system_locales() const
     { return system_locales_; }
+
+  std::string GetLocalizedString(const StringMap& strmap);
 
  private:
   std::string default_locale_;

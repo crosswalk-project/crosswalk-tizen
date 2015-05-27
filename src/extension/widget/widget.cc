@@ -14,10 +14,11 @@
 #include "extension/xwalk/XW_Extension_Runtime.h"
 #include "extension/xwalk/XW_Extension_SyncMessage.h"
 
-#include "common/logger.h"
 #include "extension/widget/picojson.h"
+#include "common/logger.h"
 #include "common/app_db.h"
 #include "common/application_data.h"
+#include "common/locale_manager.h"
 #include "common/string_utils.h"
 
 XW_Extension g_xw_extension = 0;
@@ -153,11 +154,19 @@ static void InitHandler(const picojson::value& /*args*/,
   }
   out->insert(std::make_pair("status", picojson::value("success")));
 
+  wrt::LocaleManager locale_manager;
+  if (!widget_info->default_locale().empty()) {
+    locale_manager.SetDefaultLocale(widget_info->default_locale());
+  }
+
   // TODO(sngn.lee): should be returned localized string
   obj["author"] = picojson::value(widget_info->author());
-  obj["description"] = picojson::value(widget_info->description());
-  obj["name"] = picojson::value(widget_info->name());
-  obj["shortName"] = picojson::value(widget_info->short_name());
+  obj["description"] = picojson::value(
+      locale_manager.GetLocalizedString(widget_info->description_set()));
+  obj["name"] = picojson::value(
+      locale_manager.GetLocalizedString(widget_info->name_set()));
+  obj["shortName"] = picojson::value(
+      locale_manager.GetLocalizedString(widget_info->short_name_set()));
   obj["version"] = picojson::value(widget_info->version());
   obj["id"] = picojson::value(widget_info->id());
   obj["authorEmail"] = picojson::value(widget_info->author_email());

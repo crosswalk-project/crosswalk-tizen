@@ -97,4 +97,27 @@ void LocaleManager::UpdateSystemLocale() {
   }
 }
 
+std::string LocaleManager::GetLocalizedString(const StringMap& strmap) {
+  if (strmap.empty()) {
+    return std::string();
+  }
+
+  // find string with system locales
+  for (auto& locale : system_locales_) {
+    auto it = strmap.find(locale);
+    if (it != strmap.end()) {
+      return it->second;
+    }
+  }
+
+  // find string with empty locale
+  auto it = strmap.find("");
+  if (it != strmap.end()) {
+    return it->second;
+  }
+
+  // If localized string is not found, return first string.
+  return strmap.begin()->second;
+}
+
 }  // namespace wrt

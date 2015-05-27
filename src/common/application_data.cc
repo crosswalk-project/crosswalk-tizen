@@ -99,7 +99,7 @@ std::shared_ptr<const wgt::parse::MetaDataInfo>
   return meta_data_info_;
 }
 
-std::shared_ptr<const wgt::parse::NavigationInfo>
+std::shared_ptr<const wgt::parse::AllowedNavigationInfo>
     ApplicationData::navigation_info() const {
   return navigation_info_;
 }
@@ -218,7 +218,7 @@ bool ApplicationData::LoadManifestData() {
         handlers[ManifestHandlerType::META_DATA_HANDLER]->Key()));
 
   navigation_info_ =
-    std::static_pointer_cast<const wgt::parse::NavigationInfo>(
+    std::static_pointer_cast<const wgt::parse::AllowedNavigationInfo>(
       manifest_parser.GetManifestData(
         handlers[ManifestHandlerType::NAVIGATION_HANDLER]->Key()));
 

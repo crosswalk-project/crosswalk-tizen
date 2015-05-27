@@ -44,7 +44,7 @@ class ApplicationData {
     ime_info() const;
   std::shared_ptr<const wgt::parse::MetaDataInfo>
     meta_data_info() const;
-  std::shared_ptr<const wgt::parse::NavigationInfo>
+  std::shared_ptr<const wgt::parse::AllowedNavigationInfo>
     navigation_info() const;
   std::shared_ptr<const wgt::parse::PermissionsInfo>
     permissions_info() const;
@@ -76,7 +76,7 @@ class ApplicationData {
     ime_info_;
   std::shared_ptr<const wgt::parse::MetaDataInfo>
     meta_data_info_;
-  std::shared_ptr<const wgt::parse::NavigationInfo>
+  std::shared_ptr<const wgt::parse::AllowedNavigationInfo>
     navigation_info_;
   std::shared_ptr<const wgt::parse::PermissionsInfo>
     permissions_info_;
