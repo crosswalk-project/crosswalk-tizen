@@ -19,6 +19,8 @@
 #include <manifest_handlers/splash_screen_handler.h>
 #include <manifest_handlers/tizen_application_handler.h>
 #include <manifest_handlers/widget_handler.h>
+#include <manifest_handlers/content_handler.h>
+
 
 #include <memory>
 #include <string>
@@ -32,24 +34,16 @@ class ApplicationData {
 
   bool LoadManifestData();
 
-  std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
-    application_icons_info() const;
-  std::shared_ptr<const wgt::parse::AppWidgetInfo>
-    app_widget_info() const;
   std::shared_ptr<const wgt::parse::AppControlInfoList>
     app_control_info_list() const;
   std::shared_ptr<const wgt::parse::CategoryInfoList>
     category_info_list() const;
-  std::shared_ptr<const wgt::parse::ImeInfo>
-    ime_info() const;
   std::shared_ptr<const wgt::parse::MetaDataInfo>
     meta_data_info() const;
   std::shared_ptr<const wgt::parse::AllowedNavigationInfo>
-    navigation_info() const;
+    allowed_navigation_info() const;
   std::shared_ptr<const wgt::parse::PermissionsInfo>
     permissions_info() const;
-  std::shared_ptr<const wgt::parse::ServiceList>
-    service_list() const;
   std::shared_ptr<const wgt::parse::SettingInfo>
     setting_info() const;
   std::shared_ptr<const wgt::parse::SplashScreenInfo>
@@ -58,30 +52,24 @@ class ApplicationData {
     tizen_application_info() const;
   std::shared_ptr<const wgt::parse::WidgetInfo>
     widget_info() const;
+  std::shared_ptr<const wgt::parse::ContentInfo>
+    content_info() const;
 
   const std::string application_path() const { return application_path_; }
   const std::string pkg_id() const { return pkg_id_; }
   const std::string app_id() const { return app_id_; }
 
  private:
-  std::shared_ptr<const wgt::parse::ApplicationIconsInfo>
-    application_icons_info_;
-  std::shared_ptr<const wgt::parse::AppWidgetInfo>
-    app_widget_info_;
   std::shared_ptr<const wgt::parse::AppControlInfoList>
     app_control_info_list_;
   std::shared_ptr<const wgt::parse::CategoryInfoList>
     category_info_list_;
-  std::shared_ptr<const wgt::parse::ImeInfo>
-    ime_info_;
   std::shared_ptr<const wgt::parse::MetaDataInfo>
     meta_data_info_;
   std::shared_ptr<const wgt::parse::AllowedNavigationInfo>
-    navigation_info_;
+    allowed_navigation_info_;
   std::shared_ptr<const wgt::parse::PermissionsInfo>
     permissions_info_;
-  std::shared_ptr<const wgt::parse::ServiceList>
-    service_list_;
   std::shared_ptr<const wgt::parse::SettingInfo>
     setting_info_;
   std::shared_ptr<const wgt::parse::SplashScreenInfo>
@@ -90,6 +78,8 @@ class ApplicationData {
     tizen_application_info_;
   std::shared_ptr<const wgt::parse::WidgetInfo>
     widget_info_;
+  std::shared_ptr<const wgt::parse::ContentInfo>
+    content_info_;
 
   std::string application_path_;
   std::string pkg_id_;

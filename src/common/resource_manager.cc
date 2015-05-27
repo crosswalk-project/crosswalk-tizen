@@ -197,24 +197,14 @@ ResourceManager::ResourceManager(ApplicationData* application_data,
 }
 
 std::string ResourceManager::GetDefaultOrEmpty() {
-  using wgt::parse::AppWidgetVector;
   std::string default_src;
 
-  // TODO(yons.kim): tizen content src
-
   // content src
-  auto app_widget_info = application_data_->app_widget_info();
-  if (app_widget_info) {
-    const AppWidgetVector app_widgets = app_widget_info->app_widgets();
-    for (auto iter = app_widgets.begin();
-         iter != app_widgets.end(); ++iter) {
-      if (iter->id == appid_) {
-        default_src = iter->content_src;
-        break;
-      }
-    }
+  auto content_info = application_data_->content_info();
+  if (content_info) {
+    default_src = content_info->src();
   } else {
-    LOGGER(WARN) << "AppWidgetInfo is NULL.";
+    LOGGER(WARN) << "ContentInfo is NULL.";
   }
 
   if (!default_src.empty()) {
