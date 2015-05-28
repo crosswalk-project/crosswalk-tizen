@@ -104,12 +104,16 @@ const char* kRotationLockFeature = "rotation,lock";
 const char* kBackgroundMusicFeature = "background,music";
 const char* kSoundModeFeature = "sound,mode";
 const char* kBackgroundVibrationFeature = "background,vibration";
+const char* kCSPFeature = "csp";
+
 const char* kGeolocationPermissionPrefix = "__WRT_GEOPERM_";
 const char* kNotificationPermissionPrefix = "__WRT_NOTIPERM_";
 const char* kQuotaPermissionPrefix = "__WRT_QUOTAPERM_";
 const char* kCertificateAllowPrefix = "__WRT_CERTIPERM_";
 const char* kDBPrivateSection = "private";
 
+const char* kDefaultCSPRule =
+    "default-src *; script-src 'self'; style-src 'self'; object-src 'none';";
 
 bool FindPrivilege(wrt::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -303,8 +307,26 @@ bool WebApplication::Initialize() {
   // TODO(sngn.lee): find the proxy url
   // ewk_context_proxy_uri_set(ewk_context_, ... );
 
-
-  // TODO(sngn.lee): check csp element in config.xml and enable - "csp"
+  if (app_data_->csp_info() != NULL ||
+      app_data_->csp_report_info() != NULL ||
+      app_data_->allowed_navigation_info() != NULL) {
+    security_model_version_ = 2;
+    if (app_data_->csp_info() == NULL ||
+        app_data_->csp_info()->security_rules().empty()) {
+      csp_rule_ = kDefaultCSPRule;
+    } else {
+      csp_rule_ = app_data_->csp_info()->security_rules();
+    }
+    if (app_data_->csp_report_info() != NULL &&
+        !app_data_->csp_report_info()->security_rules().empty()) {
+      csp_report_rule_ = app_data_->csp_report_info()->security_rules();
+    }
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kCSPFeature,
+                                                EINA_TRUE);
+  } else {
+    security_model_version_ = 1;
+  }
 
   return true;
 }
@@ -644,15 +666,24 @@ void WebApplication::LaunchInspector(wrt::AppControl* appcontrol) {
 
 void WebApplication::SetupWebView(WebView* view) {
   view->SetEventListener(this);
+
+  // Setup CSP Rule
+  if (security_model_version_ == 2) {
+    view->SetCSPRule(csp_rule_, false);
+    if (!csp_report_rule_.empty()) {
+      view->SetCSPRule(csp_report_rule_, true);
+    }
+  }
+
   // TODO(sngn.lee): set UserAgent to WebView
-  // TODO(sngn.lee): set CSP
 }
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,
-                                     const std::string& /*url*/) {
+                                     const std::string& url) {
   // TODO(sngn.lee): scheme handling
   // except(file , http, https, app) pass to appcontrol and return false
-  return true;
+
+  return resource_manager_->AllowNavigation(url);
 }
 
 void WebApplication::OnNotificationPermissionRequest(

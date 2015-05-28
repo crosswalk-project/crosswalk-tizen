@@ -32,6 +32,8 @@
 #include <manifest_handlers/tizen_application_handler.h>
 #include <manifest_handlers/widget_handler.h>
 #include <manifest_handlers/content_handler.h>
+#include <manifest_handlers/warp_handler.h>
+#include <manifest_handlers/csp_handler.h>
 
 
 #include <memory>
@@ -66,6 +68,12 @@ class ApplicationData {
     widget_info() const;
   std::shared_ptr<const wgt::parse::ContentInfo>
     content_info() const;
+  std::shared_ptr<const wgt::parse::WarpInfo>
+    warp_info() const;
+  std::shared_ptr<const wgt::parse::CSPInfo>
+    csp_info() const;
+  std::shared_ptr<const wgt::parse::CSPInfo>
+    csp_report_info() const;
 
   const std::string application_path() const { return application_path_; }
   const std::string pkg_id() const { return pkg_id_; }
@@ -92,6 +100,12 @@ class ApplicationData {
     widget_info_;
   std::shared_ptr<const wgt::parse::ContentInfo>
     content_info_;
+  std::shared_ptr<const wgt::parse::WarpInfo>
+    warp_info_;
+  std::shared_ptr<const wgt::parse::CSPInfo>
+    csp_info_;
+  std::shared_ptr<const wgt::parse::CSPInfo>
+    csp_report_info_;
 
   std::string application_path_;
   std::string pkg_id_;

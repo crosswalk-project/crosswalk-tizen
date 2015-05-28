@@ -78,4 +78,9 @@ void WebView::SetAppInfo(const std::string& app_name,
 bool WebView::SetUserAgent(const std::string& user_agent) {
   return impl_->SetUserAgent(user_agent.c_str());
 }
+
+void WebView::SetCSPRule(const std::string& rule, bool report_only) {
+  impl_->SetCSPRule(rule, report_only);
+}
+
 }  // namespace wrt

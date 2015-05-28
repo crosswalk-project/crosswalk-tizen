@@ -121,6 +121,9 @@ class WebApplication : public WebView::EventListener {
   std::unique_ptr<ResourceManager> resource_manager_;
   std::unique_ptr<wrt::AppControl> received_appcontrol_;
   std::function<void(void)> terminator_;
+  int security_model_version_;
+  std::string csp_rule_;
+  std::string csp_report_rule_;
 };
 
 }  // namespace wrt

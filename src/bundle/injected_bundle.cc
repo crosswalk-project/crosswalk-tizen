@@ -112,6 +112,12 @@ extern "C" void DynamicUrlParsing(
     *new_url = *old_url;
     return;
   }
+  // Check Access control
+  if (!res_manager->AllowedResource(*old_url)) {
+    // deined resource
+    *new_url = "about:blank";
+    return;
+  }
   *new_url = res_manager->GetLocalizedPath(*old_url);
 }
 

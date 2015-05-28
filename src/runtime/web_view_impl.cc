@@ -765,4 +765,12 @@ bool WebViewImpl::SetUserAgent(const std::string& user_agent) {
   return ewk_view_user_agent_set(ewk_view_, user_agent.c_str());
 }
 
+void WebViewImpl::SetCSPRule(const std::string& rule, bool report_only) {
+  ewk_view_content_security_policy_set(
+      ewk_view_,
+      rule.c_str(),
+      report_only ? EWK_REPORT_ONLY : EWK_ENFORCE_POLICY);
+}
+
+
 }  // namespace wrt

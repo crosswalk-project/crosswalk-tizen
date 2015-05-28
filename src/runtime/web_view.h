@@ -98,6 +98,7 @@ class WebView {
   bool EvalJavascript(const std::string& script);
   void SetAppInfo(const std::string& app_name, const std::string& version);
   bool SetUserAgent(const std::string& user_agent);
+  void SetCSPRule(const std::string& rule, bool report_only);
 
   void SetEventListener(EventListener* listener);
   Evas_Object* evas_object() const;

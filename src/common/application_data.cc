@@ -131,6 +131,21 @@ std::shared_ptr<const wgt::parse::ContentInfo>
   return content_info_;
 }
 
+std::shared_ptr<const wgt::parse::WarpInfo>
+    ApplicationData::warp_info() const {
+  return warp_info_;
+}
+
+std::shared_ptr<const wgt::parse::CSPInfo>
+    ApplicationData::csp_info() const {
+  return csp_info_;
+}
+
+std::shared_ptr<const wgt::parse::CSPInfo>
+    ApplicationData::csp_report_info() const {
+  return csp_report_info_;
+}
+
 
 bool ApplicationData::LoadManifestData() {
   std::string config_xml_path(application_path_ + kConfigXml);
@@ -150,7 +165,10 @@ bool ApplicationData::LoadManifestData() {
     SPLASH_SCREEN_HANDLER,
     TIZEN_APPLICATION_HANDLER,
     WIDGET_HANDLER,
-    CONTENT_HANDLER
+    CONTENT_HANDLER,
+    WARP_HANDLER,
+    CSP_HANDLER,
+    CSP_REPORT_HANDLER
   };
 
   std::vector<parser::ManifestHandler*> handlers = {
@@ -163,7 +181,13 @@ bool ApplicationData::LoadManifestData() {
     new wgt::parse::SplashScreenHandler,      // SPLASH_SCREEN_HANDLER
     new wgt::parse::TizenApplicationHandler,  // TIZEN_APPLICATION_HANDLER
     new wgt::parse::WidgetHandler,            // WIDGET_HANDLER
-    new wgt::parse::ContentHandler            // CONTENT_HANDLER
+    new wgt::parse::ContentHandler,           // CONTENT_HANDLER
+    new wgt::parse::WarpHandler,              // WARP_HANDLER
+    // CSP_HANDLER
+    new wgt::parse::CSPHandler(wgt::parse::CSPHandler::SecurityType::CSP),
+    // CSP_REPORT_HANDLER
+    new wgt::parse::CSPHandler(
+      wgt::parse::CSPHandler::SecurityType::CSP_REPORT_ONLY)
   };
 
   std::unique_ptr<parser::ManifestHandlerRegistry> registry;
@@ -228,6 +252,21 @@ bool ApplicationData::LoadManifestData() {
     std::static_pointer_cast<const wgt::parse::ContentInfo>(
       manifest_parser.GetManifestData(
         handlers[ManifestHandlerType::CONTENT_HANDLER]->Key()));
+
+  warp_info_ =
+    std::static_pointer_cast<const wgt::parse::WarpInfo>(
+      manifest_parser.GetManifestData(
+        handlers[ManifestHandlerType::WARP_HANDLER]->Key()));
+
+  csp_info_ =
+    std::static_pointer_cast<const wgt::parse::CSPInfo>(
+      manifest_parser.GetManifestData(
+        handlers[ManifestHandlerType::CSP_HANDLER]->Key()));
+
+  csp_report_info_ =
+    std::static_pointer_cast<const wgt::parse::CSPInfo>(
+      manifest_parser.GetManifestData(
+        handlers[ManifestHandlerType::CSP_REPORT_HANDLER]->Key()));
 
   for (auto iter = handlers.begin(); iter != handlers.end(); ++iter) {
     delete *iter;

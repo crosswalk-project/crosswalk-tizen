@@ -73,6 +73,8 @@ class ResourceManager {
   // output : /[system path]/.../locales/.../
   std::string GetLocalizedPath(const std::string& origin);
   std::unique_ptr<Resource> GetStartResource(const AppControl* app_control);
+  bool AllowNavigation(const std::string& url);
+  bool AllowedResource(const std::string& url);
 
   void set_base_resource_path(const std::string& base_path);
 
@@ -81,14 +83,19 @@ class ResourceManager {
   std::string GetDefaultOrEmpty();
   // for localization
   bool Exists(const std::string& path);
+  bool CheckWARP(const std::string& url);
+  bool CheckAllowNavigation(const std::string& url);
 
   std::string resource_base_path_;
   std::string appid_;
   std::map<const std::string, bool> file_existed_cache_;
   std::map<const std::string, std::string> locale_cache_;
+  std::map<const std::string, bool> warp_cache_;
+
 
   ApplicationData* application_data_;
   LocaleManager* locale_manager_;
+  int security_model_version_;
 };
 
 }  // namespace wrt
