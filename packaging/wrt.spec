@@ -6,7 +6,7 @@ Summary:    Runtime for Web Application
 Version:    2.0.0
 Release:    1
 Group:      Development/Libraries
-License:    BSD-3-Clause and Apache-2.0
+License:    Apache-2.0 and BSD-3-Clause
 URL:        https://www.tizen.org
 Source0:    %{name}-%{version}.tar.gz
 
@@ -79,6 +79,10 @@ cmake .. -DCMAKE_INSTALL_PREFIX=%{_prefix} \
 make %{?jobs:-j%jobs}
 
 %install
+%define license_dir %{build_dir}%{_datadir}/license 
+mkdir -p %{license_dir} 
+cp LICENSE %{license_dir}/%{name} 
+cat LICENSE.BSD >> %{license_dir}/%{name}
 cd %{build_dir}
 %make_install
 
