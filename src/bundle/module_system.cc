@@ -269,7 +269,7 @@ bool ModuleSystem::DeleteAccessorForEntryPoint(
     return false;
   }
 
-  value.As<v8::Object>()->ForceDelete(
+  value.As<v8::Object>()->Delete(
       v8::String::NewFromUtf8(context->GetIsolate(), basename.c_str()));
   return true;
 }
