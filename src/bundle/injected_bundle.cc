@@ -28,6 +28,7 @@
 #include "common/locale_manager.h"
 #include "bundle/runtime_ipc_client.h"
 #include "bundle/extension_renderer_controller.h"
+#include "bundle/widget_module.h"
 
 namespace wrt {
 class BundleGlobalData {
@@ -50,6 +51,10 @@ class BundleGlobalData {
                                                 locale_manager_.get()));
     resource_manager_->set_base_resource_path(
         app_data_->application_path());
+
+    auto widgetdb = WidgetPreferenceDB::GetInstance();
+    widgetdb->Initialize(app_data_.get(),
+                         locale_manager_.get());
   }
 
   ResourceManager* resource_manager() {
