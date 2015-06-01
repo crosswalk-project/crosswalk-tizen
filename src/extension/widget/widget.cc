@@ -124,7 +124,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
   g_runtime->GetRuntimeVariableString(extension, "app_id", &res[0], 256);
   g_appid = std::string(res.begin(), res.end());
   if (g_appid.at(0) == '"') {
-    g_appid = g_appid.substr(1, g_appid.size()-2);
+    g_appid = g_appid.substr(1, strlen(g_appid.c_str())-2);
   }
 
   g_core->RegisterInstanceCallbacks(
@@ -132,6 +132,7 @@ extern "C" int32_t XW_Initialize(XW_Extension extension,
       [](XW_Instance /*instance*/){
         if (g_appdata.get() == NULL) {
           g_appdata.reset(new wrt::ApplicationData(g_appid));
+          g_appdata->LoadManifestData();
         }
         wrt::Widget::GetInstance()->Initialize(g_appdata.get());
       },
