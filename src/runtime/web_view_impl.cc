@@ -119,8 +119,9 @@ void WebViewImpl::Initialize() {
   InitAuthenticationCallback();
   InitCertificateAllowCallback();
 
-  // TODO(sngn.lee): "notification,show"
-  // TODO(sngn.lee): "notification,cancel"
+  Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
+  ewk_settings_scripts_can_open_windows_set(settings, EINA_TRUE);
+
   // TODO(sngn.lee): "protocolhandler,registration,requested"
   //                  custom protocol handler
   // TODO(sngn.lee): ewk_view_user_media_permission_callback_set
