@@ -1,6 +1,7 @@
 
 var dispatchStorageEvent = function(key, oldValue, newValue) {
-  var evt = new CustomEvent("Storage");
+  var evt = document.createEvent("CustomEvent");
+  evt.initCustomEvent("storage", true, true);
   evt.key = key;
   evt.oldValue = oldValue;
   evt.newValue = newValue;
@@ -62,6 +63,10 @@ function Widget() {
       writable: false
     }
   });
+};
+
+Widget.prototype.toString = function() {
+    return "[object Widget]";
 };
 
 window.widget = new Widget();

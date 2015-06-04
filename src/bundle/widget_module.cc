@@ -391,6 +391,11 @@ void WidgetPreferenceDB::Initialize(const ApplicationData* appdata,
   auto& preferences = appdata->widget_info()->preferences();
 
   for (const auto& pref : preferences) {
+    if (pref->Name().empty())
+      continue;
+    if (db->HasKey(kDBPublicSection, pref->Name()))
+      continue;
+
     db->Set(kDBPublicSection,
             pref->Name(),
             pref->Value());

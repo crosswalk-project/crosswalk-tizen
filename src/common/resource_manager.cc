@@ -170,12 +170,18 @@ static void GetURLInfo(const std::string& url,
                        std::string* scheme,
                        std::string* domain,
                        std::string* port) {
+  if (url.empty())
+    return;
+
   size_t end_of_scheme = url.find_first_of(':');
   if (end_of_scheme == std::string::npos) {
     end_of_scheme = -1;
   } else {
     *scheme = url.substr(0, end_of_scheme);
   }
+
+  if (end_of_scheme+1 == url.length())
+    return;
 
   size_t start_of_domain = url.find_first_not_of('/', end_of_scheme+1);
   size_t end_of_domain = url.find_first_of('/', start_of_domain);
@@ -460,6 +466,8 @@ bool ResourceManager::CheckWARP(const std::string& url) {
   for (auto& allow : warp->access_map()) {
     if (allow.first == "*") {
       return true;
+    } else if (allow.first.empty()) {
+      continue;
     }
     std::string a_scheme, a_domain, a_port;
     GetURLInfo(allow.first, &a_scheme, &a_domain, &a_port);
