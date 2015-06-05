@@ -83,4 +83,8 @@ void WebView::SetCSPRule(const std::string& rule, bool report_only) {
   impl_->SetCSPRule(rule, report_only);
 }
 
+void WebView::SetDefaultEncoding(const std::string& encoding) {
+  impl_->SetDefaultEncoding(encoding);
+}
+
 }  // namespace wrt

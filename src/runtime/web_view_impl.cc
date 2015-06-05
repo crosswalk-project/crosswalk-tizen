@@ -30,6 +30,7 @@ namespace {
 // TODO(sngn.lee) : It should be declare in common header
 const char* kKeyNameBack = "back";
 const char* kKeyNameMenu = "menu";
+const char* kDefaultEncoding = "UTF-8";
 
 static int ToWebRotation(int r) {
   switch (r) {
@@ -121,6 +122,7 @@ void WebViewImpl::Initialize() {
 
   Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
   ewk_settings_scripts_can_open_windows_set(settings, EINA_TRUE);
+  ewk_settings_default_text_encoding_name_set(settings, kDefaultEncoding);
 
   // TODO(sngn.lee): "protocolhandler,registration,requested"
   //                  custom protocol handler
@@ -776,5 +778,11 @@ void WebViewImpl::SetCSPRule(const std::string& rule, bool report_only) {
       report_only ? EWK_REPORT_ONLY : EWK_ENFORCE_POLICY);
 }
 
+void WebViewImpl::SetDefaultEncoding(const std::string& encoding) {
+  if (ewk_settings_is_encoding_valid(encoding.c_str())) {
+    Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
+    ewk_settings_default_text_encoding_name_set(settings, encoding.c_str());
+  }
+}
 
 }  // namespace wrt
