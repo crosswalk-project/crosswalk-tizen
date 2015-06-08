@@ -372,7 +372,13 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     if (!Exists(app_locale_path)) {
       break;
     }
-    std::string resource_path = app_locale_path + locales + "/" + url;
+
+    // check locale path ../locales/en_us/
+    std::string app_localized_path = app_locale_path + locales + "/";
+    if (!Exists(app_localized_path)) {
+      continue;
+    }
+    std::string resource_path = app_localized_path + url;
     if (Exists(resource_path)) {
       result = "file://" + resource_path + suffix;
       return result;
@@ -384,7 +390,8 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     result = "file://" + default_locale + suffix;
     return result;
   }
-  result = url + suffix;
+
+  LOGGER(ERROR) << "URL Localization error";
   return result;
 }
 
