@@ -55,6 +55,9 @@ const char* kDefaultStartFiles[] = {
   "index.xht"
 };
 
+// Default Encoding
+const char* kDefaultEncoding = "UTF-8";
+
 static std::string GetMimeFromUri(const std::string& uri) {
   // checking passed uri is local file
   std::string file_uri_case(kSchemeTypeFile);
@@ -200,15 +203,15 @@ static void GetURLInfo(const std::string& url,
 }  // namespace
 
 ResourceManager::Resource::Resource(const std::string& uri)
-  : uri_(uri), should_reset_(true) {}
+  : uri_(uri), should_reset_(true), encoding_(kDefaultEncoding) {}
+
+ResourceManager::Resource::Resource(const std::string& uri, bool should_reset)
+  : uri_(uri), should_reset_(should_reset), encoding_(kDefaultEncoding) {}
 
 ResourceManager::Resource::Resource(const std::string& uri,
-                                    const std::string& mime)
-  : uri_(uri), mime_(mime), should_reset_(true) {}
-
-ResourceManager::Resource::Resource(const std::string& uri,
-                                    const std::string& mime, bool should_reset)
-  : uri_(uri), mime_(mime), should_reset_(should_reset) {}
+                                    const std::string& mime,
+                                    const std::string& encoding)
+  : uri_(uri), should_reset_(true), mime_(mime), encoding_(encoding) {}
 
 ResourceManager::Resource::Resource(const ResourceManager::Resource& res) {
   *this = res;
@@ -219,12 +222,14 @@ ResourceManager::Resource& ResourceManager::Resource::operator=(
   this->uri_ = res.uri();
   this->mime_ = res.mime();
   this->should_reset_ = res.should_reset();
+  this->encoding_ = res.encoding();
   return *this;
 }
 
 bool ResourceManager::Resource::operator==(const Resource& res) {
   if (this->uri_ == res.uri() && this->mime_ == res.mime()
-     && this->should_reset_ == res.should_reset()) {
+     && this->should_reset_ == res.should_reset()
+     && this->encoding_ == res.encoding()) {
     return true;
   } else {
     return false;
@@ -246,39 +251,49 @@ ResourceManager::ResourceManager(ApplicationData* application_data,
   }
 }
 
-std::string ResourceManager::GetDefaultOrEmpty() {
+std::unique_ptr<ResourceManager::Resource>
+ResourceManager::GetDefaultOrEmpty() {
   std::string default_src;
+  std::string type;
+  std::string encoding = kDefaultEncoding;
 
-  // content src
   auto content_info = application_data_->content_info();
   if (content_info) {
     default_src = content_info->src();
+    // TODO(yons.kim): uncomment below codes after implementing
+    //                 content info handler
+    //type = content_info->type();
+    //encoding = (content_info->encoding())
+    //           ? content_info->encoding() : kDefaultEncoding;
   } else {
     LOGGER(WARN) << "ContentInfo is NULL.";
   }
 
   if (!default_src.empty()) {
-    return InsertPrefixPath(default_src);
-  }
-
-  // if there is no content src, find reserved index files
-  for (auto& start_file : kDefaultStartFiles) {
-    if (utils::Exists(resource_base_path_ + start_file)) {
-      default_src = start_file;
+    default_src = InsertPrefixPath(default_src);
+  } else {
+    // if there is no content src, find reserved index files
+    for (auto& start_file : kDefaultStartFiles) {
+      if (utils::Exists(resource_base_path_ + start_file)) {
+        default_src = start_file;
+        break;
+      }
     }
   }
 
-  return InsertPrefixPath(default_src);
+  return std::unique_ptr<Resource>(new Resource(default_src, type, encoding));
 }
 
-std::string ResourceManager::GetMatchedSrcOrUri(
-    const AppControlInfo& app_control_info) {
+std::unique_ptr<ResourceManager::Resource> ResourceManager::GetMatchedSrcOrUri(
+    const AppControlInfo& app_control_info, bool should_reset) {
   if (!app_control_info.src().empty()) {
-    return InsertPrefixPath(app_control_info.src());
+    return std::unique_ptr<Resource>(new Resource(
+      InsertPrefixPath(app_control_info.src()), should_reset));
   }
 
   if (!app_control_info.uri().empty()) {
-    return InsertPrefixPath(app_control_info.uri());
+    return std::unique_ptr<Resource>(new Resource(
+      InsertPrefixPath(app_control_info.uri()), should_reset));
   }
 
   return GetDefaultOrEmpty();
@@ -289,7 +304,7 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
   std::string operation = app_control->operation();
   if (operation.empty()) {
     LOGGER(ERROR) << "operation(mandatory) is NULL";
-    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
+    return std::unique_ptr<Resource>(GetDefaultOrEmpty());
   }
 
   std::string mime = app_control->mime();
@@ -305,7 +320,7 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
 
   if (application_data_ == NULL ||
       application_data_->app_control_info_list() == NULL) {
-    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
+    return GetDefaultOrEmpty();
   }
 
   AppControlList app_control_list =
@@ -317,14 +332,12 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
       CompareMimeAndUri(app_control_list, mime, uri);
     if (iter != app_control_list.end()) {
       // TODO(jh5.cho) : following comment will be added after SRPOL implement
-      return std::unique_ptr<Resource>(
-        new Resource(GetMatchedSrcOrUri(*iter), iter->mime()
-                   /*, iter->should_reset()*/));
+      return GetMatchedSrcOrUri(*iter/*, iter->should_reset()*/);
     } else {
-    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
+    return GetDefaultOrEmpty();
     }
   } else {
-    return std::unique_ptr<Resource>(new Resource(GetDefaultOrEmpty()));
+    return GetDefaultOrEmpty();
   }
 }
 

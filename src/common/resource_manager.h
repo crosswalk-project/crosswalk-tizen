@@ -42,9 +42,9 @@ class ResourceManager {
   class Resource {
    public:
     explicit Resource(const std::string& uri);
-    Resource(const std::string& uri, const std::string& mime);
+    Resource(const std::string& uri, bool should_reset);
     Resource(const std::string& uri, const std::string& mime,
-             bool should_reset);
+             const std::string& encoding);
     Resource(const Resource& res);
     ~Resource() {}
 
@@ -54,15 +54,18 @@ class ResourceManager {
     void set_uri(const std::string& uri) { uri_ = uri; }
     void set_mime(const std::string& mime) { mime_ = mime; }
     void set_should_reset(bool should_reset) { should_reset_ = should_reset; }
+    void set_encoding(const std::string& encoding) { encoding_ = encoding; }
 
     std::string uri() const { return uri_; }
     std::string mime() const { return mime_; }
     bool should_reset() const { return should_reset_; }
+    std::string encoding() const { return encoding_; }
 
    private:
     std::string uri_;
     std::string mime_;
     bool should_reset_;
+    std::string encoding_;
   };
 
   ResourceManager(ApplicationData* application_data,
@@ -79,8 +82,10 @@ class ResourceManager {
   void set_base_resource_path(const std::string& base_path);
 
  private:
-  std::string GetMatchedSrcOrUri(const wgt::parse::AppControlInfo&);
-  std::string GetDefaultOrEmpty();
+  std::unique_ptr<Resource> GetMatchedSrcOrUri(
+    const wgt::parse::AppControlInfo&,bool should_reset = true);
+  std::unique_ptr<Resource> GetDefaultOrEmpty();
+
   // for localization
   bool Exists(const std::string& path);
   bool CheckWARP(const std::string& url);
