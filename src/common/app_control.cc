@@ -19,6 +19,7 @@
 #include <appsvc.h>
 #include <algorithm>
 #include <memory>
+#include <app_control_internal.h>
 
 #include "common/logger.h"
 
