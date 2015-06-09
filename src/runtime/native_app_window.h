@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
- 
+
 #ifndef WRT_RUNTIME_NATIVE_APP_WINDOW_H_
 #define WRT_RUNTIME_NATIVE_APP_WINDOW_H_
 

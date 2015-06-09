@@ -83,7 +83,7 @@ class ResourceManager {
 
  private:
   std::unique_ptr<Resource> GetMatchedSrcOrUri(
-    const wgt::parse::AppControlInfo&,bool should_reset = true);
+    const wgt::parse::AppControlInfo&, bool should_reset = true);
   std::unique_ptr<Resource> GetDefaultOrEmpty();
 
   // for localization

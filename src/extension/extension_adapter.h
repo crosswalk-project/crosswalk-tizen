@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
- 
+
 #ifndef WRT_EXTENSION_EXTENSION_ADAPTER_H_
 #define WRT_EXTENSION_EXTENSION_ADAPTER_H_
 

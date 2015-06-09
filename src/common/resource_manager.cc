@@ -262,8 +262,8 @@ ResourceManager::GetDefaultOrEmpty() {
     default_src = content_info->src();
     // TODO(yons.kim): uncomment below codes after implementing
     //                 content info handler
-    //type = content_info->type();
-    //encoding = (content_info->encoding())
+    // type = content_info->type();
+    // encoding = (content_info->encoding())
     //           ? content_info->encoding() : kDefaultEncoding;
   } else {
     LOGGER(WARN) << "ContentInfo is NULL.";

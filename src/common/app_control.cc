@@ -17,9 +17,10 @@
 #include "common/app_control.h"
 
 #include <appsvc.h>
+#include <app_control_internal.h>
+
 #include <algorithm>
 #include <memory>
-#include <app_control_internal.h>
 
 #include "common/logger.h"
 
