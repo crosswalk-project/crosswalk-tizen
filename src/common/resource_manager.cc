@@ -275,7 +275,7 @@ ResourceManager::GetDefaultOrEmpty() {
     // if there is no content src, find reserved index files
     for (auto& start_file : kDefaultStartFiles) {
       if (utils::Exists(resource_base_path_ + start_file)) {
-        default_src = start_file;
+        default_src = InsertPrefixPath(start_file);
         break;
       }
     }
