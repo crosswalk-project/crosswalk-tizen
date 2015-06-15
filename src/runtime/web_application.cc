@@ -372,6 +372,7 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
 
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
+  view->SetDefaultEncoding(res->encoding());
   // TODO(wy80.choi): temporary comment for test, remove it later.
   // view->LoadUrl("file:///home/owner/apps_rw/33CFo0eFJe/"
   //               "33CFo0eFJe.annex/index.html");
@@ -413,7 +414,7 @@ void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
     ClearViewStack();
     WebView* view = new WebView(window_, ewk_context_);
     SetupWebView(view);
-
+    view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri());
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
