@@ -154,7 +154,7 @@ static void FindOperations(AppControlList* app_control_list,
   auto iter = app_control_list->begin();
   while (iter != app_control_list->end()) {
     if (iter->operation() != operation) {
-      app_control_list->erase(iter++);
+      app_control_list->erase(iter);
     } else {
       ++iter;
     }
