@@ -709,8 +709,10 @@ void WebApplication::OnNotificationPermissionRequest(
                                  kNotificationPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
+    return;
   } else if (reminder == "denied") {
     result_handler(false);
+    return;
   }
 
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
@@ -748,8 +750,10 @@ void WebApplication::OnGeolocationPermissionRequest(
                                  kGeolocationPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
+    return;
   } else if (reminder == "denied") {
     result_handler(false);
+    return;
   }
 
   // Local Domain: Grant permission if defined, otherwise block execution.
@@ -792,8 +796,10 @@ void WebApplication::OnQuotaExceed(
                                  kQuotaPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
+    return;
   } else if (reminder == "denied") {
     result_handler(false);
+    return;
   }
 
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
@@ -858,8 +864,10 @@ void WebApplication::OnCertificateAllowRequest(
                                  kCertificateAllowPrefix + pem);
   if (reminder == "allowed") {
     result_handler(true);
+    return;
   } else if (reminder == "denied") {
     result_handler(false);
+    return;
   }
 
   Popup* popup = Popup::CreatePopup(window_);
