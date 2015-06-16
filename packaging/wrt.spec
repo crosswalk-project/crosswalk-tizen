@@ -57,6 +57,7 @@ Runtime for Web Application
 %setup -q
 
 %define extension_path %{_libdir}/tizen-extensions-crosswalk
+%define injected_bundle_path %{_libdir}/libwrt-injected-bundle.so
 
 %build
 
@@ -82,7 +83,8 @@ cmake .. -DCMAKE_INSTALL_PREFIX=%{_prefix} \
          -DCMAKE_BUILD_TYPE=%{?build_type:%build_type} \
          -DX11_SUPPORT=%{enable_x11} \
          -DWAYLAND_SUPPORT=%{enable_wayland} \
-         -DEXTENSION_PATH=%{extension_path}
+         -DEXTENSION_PATH=%{extension_path} \
+         -DINJECTED_BUNDLE_PATH=${injected_bundle_path}
 
 make %{?jobs:-j%jobs}
 
@@ -101,6 +103,6 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt
 %attr(755,root,root) %{_bindir}/wrt-popup-test
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
-%attr(644,root,root) %{_libdir}/libwrt-injected-bundle.so
+%attr(644,root,root) %{injected_bundle_path}
 %attr(644,root,root) %{extension_path}/libwidget-plugin.so
 %attr(755,root,root) %{_datadir}/locale/*

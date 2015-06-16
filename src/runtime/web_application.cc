@@ -42,6 +42,10 @@
 #include "runtime/popup.h"
 #include "runtime/popup_string.h"
 
+#ifndef INJECTED_BUNDLE_PATH
+  #error INJECTED_BUNDLE_PATH is not set.
+#endif
+
 namespace wrt {
 
 namespace {
@@ -54,8 +58,6 @@ const char* kConsoleMessageLogTag = "ConsoleMessage";
 const char* kDebugKey = "debug";
 const char* kPortKey = "port";
 
-// TODO(wy80.choi): consider 64bits system.
-const char* kInjectedBundlePath = "/usr/lib/libwrt-injected-bundle.so";
 const char* kDBusIntrospectionXML =
     "<node>"
     "  <interface name='org.tizen.wrt.Application'>"
@@ -193,7 +195,7 @@ WebApplication::WebApplication(
     : launched_(false),
       debug_mode_(false),
       ewk_context_(ewk_context_new_with_injected_bundle_path(
-          kInjectedBundlePath)),
+          INJECTED_BUNDLE_PATH)),
       window_(window),
       appid_(app_data->app_id()),
       app_uuid_(utils::GenerateUUID()),
