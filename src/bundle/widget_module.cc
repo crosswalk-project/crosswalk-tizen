@@ -35,6 +35,8 @@ const char* kSetItemKey = "setItem";
 const char* kRemoveItemKey = "removeItem";
 const char* kLengthKey = "length";
 const char* kClearKey = "clear";
+const int kKeyLengthLimit = 80;
+const int kValueLengthLimit = 8192;
 
 std::vector<const char*> kExcludeList = {
   kOnchangedEventHandler,
@@ -317,6 +319,7 @@ v8::Handle<v8::Object> WidgetModule::NewInstance() {
       v8::Local<v8::ObjectTemplate>::New(isolate, preference_object_template_);
 
   auto widgetdb = WidgetPreferenceDB::GetInstance();
+  widgetdb->InitializeDB();
 
   widget->Set(
       v8::String::NewFromUtf8(isolate, "preference"),
@@ -346,12 +349,6 @@ v8::Handle<v8::Object> WidgetModule::NewInstance() {
   widget->Set(
       v8::String::NewFromUtf8(isolate, "authorHref"),
       v8::String::NewFromUtf8(isolate, widgetdb->authorHref().c_str()));
-  widget->Set(
-      v8::String::NewFromUtf8(isolate, "height"),
-      v8::Uint32::New(isolate, widgetdb->height()));
-  widget->Set(
-      v8::String::NewFromUtf8(isolate, "width"),
-      v8::Uint32::New(isolate, widgetdb->width()));
 
   return handle_scope.Escape(widget);
 }
@@ -379,29 +376,44 @@ void WidgetPreferenceDB::Initialize(const ApplicationData* appdata,
                                     LocaleManager* locale_manager) {
   appdata_ = appdata;
   locale_manager_ = locale_manager;
+}
 
+void WidgetPreferenceDB::InitializeDB() {
   AppDB* db = AppDB::GetInstance();
   if (db->HasKey(kDBPrivateSection, kDbInitedCheckKey)) {
     return;
   }
-  if (appdata->widget_info() == NULL) {
+  if (appdata_->widget_info() == NULL) {
     return;
   }
 
-  auto& preferences = appdata->widget_info()->preferences();
+  auto& preferences = appdata_->widget_info()->preferences();
 
   for (const auto& pref : preferences) {
     if (pref->Name().empty())
       continue;
-    if (db->HasKey(kDBPublicSection, pref->Name()))
+
+    // check size limit
+    std::string key = pref->Name();
+    std::string value = pref->Value();
+    if (key.length() > kKeyLengthLimit) {
+      key.resize(kKeyLengthLimit);
+    }
+
+    if (db->HasKey(kDBPublicSection, key))
       continue;
 
+    // check size limit
+    if (value.length() > kValueLengthLimit) {
+      value.resize(kValueLengthLimit);
+    }
+
     db->Set(kDBPublicSection,
-            pref->Name(),
-            pref->Value());
+            key,
+            value);
     if (pref->ReadOnly()) {
       db->Set(kDBPrivateSection,
-              kReadOnlyPrefix + pref->Name(), "true");
+              kReadOnlyPrefix + key, "true");
     }
   }
   db->Set(kDBPrivateSection, kDbInitedCheckKey, "true");

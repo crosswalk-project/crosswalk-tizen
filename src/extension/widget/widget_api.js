@@ -51,11 +51,11 @@ function Widget() {
       writable: false
     },
     "height": {
-      value: parseInt(widget_info_["height"]),
+      value: window && window.innerHeight || 0,
       writable: false
     },
     "width": {
-      value: parseInt(widget_info_["width"]),
+      value: window && window.innerWidth || 0,
       writable: false
     },
     "preferences": {

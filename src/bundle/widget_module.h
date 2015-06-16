@@ -41,6 +41,7 @@ class WidgetPreferenceDB {
   static WidgetPreferenceDB* GetInstance();
   void Initialize(const ApplicationData* appdata,
                   LocaleManager* locale_manager);
+  void InitializeDB();
   int Length();
   bool Key(int idx, std::string* key);
   bool GetItem(const std::string& key, std::string* value);
