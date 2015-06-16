@@ -304,7 +304,7 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
   std::string operation = app_control->operation();
   if (operation.empty()) {
     LOGGER(ERROR) << "operation(mandatory) is NULL";
-    return std::unique_ptr<Resource>(GetDefaultOrEmpty());
+    return GetDefaultOrEmpty();
   }
 
   std::string mime = app_control->mime();
