@@ -22,6 +22,8 @@
 #include <memory>
 #include <regex>
 #include <vector>
+#include <functional>
+#include <algorithm>
 
 #include "common/logger.h"
 #include "common/file_utils.h"
@@ -81,92 +83,46 @@ static std::string GetMimeFromUri(const std::string& uri) {
   }
 }
 
-static bool CompareStringWithWildcard(const std::string& origin,
-                                      const std::string& target) {
-  std::string wildcard_str = utils::ReplaceAll(origin, "*", ".*");
+static bool CompareStringWithWildcard(const std::string& info,
+                                      const std::string& request) {
+  std::string wildcard_str = utils::ReplaceAll(info, "*", ".*");
   try {
     std::regex re(wildcard_str, std::regex_constants::icase);
-    return std::regex_match(target.begin(), target.end(), re);
+    return std::regex_match(request.begin(), request.end(), re);
   } catch (std::regex_error& e) {
     LOGGER(ERROR) << "regex_error caught: " << e.what();
     return false;
   }
 }
 
-static bool CompareMime(const std::string& origin, const std::string& target) {
-  return CompareStringWithWildcard(origin, target);
+static bool CompareMime(const std::string& info_mime,
+                        const std::string& request_mime) {
+  if (request_mime.empty())
+    return info_mime.empty();
+
+  return CompareStringWithWildcard(info_mime, request_mime);
 }
 
-static bool CompareUri(const std::string& origin_uri,
-                       const std::string& target_uri) {
-  std::string origin_scheme = utils::SchemeName(origin_uri);
-  std::string target_scheme = utils::SchemeName(target_uri);
+static bool CompareUri(const std::string& info_uri,
+                       const std::string& request_uri) {
+  if (request_uri.empty())
+    return info_uri.empty();
 
-  if (!origin_scheme.empty() && !target_scheme.empty()) {
-    return (origin_scheme == target_scheme);
+  std::string info_scheme = utils::SchemeName(info_uri);
+  std::string request_scheme = utils::SchemeName(request_uri);
+
+  if (!info_scheme.empty() && !request_scheme.empty()) {
+    return (info_scheme == request_scheme);
   } else {
-    return CompareStringWithWildcard(origin_uri, target_uri);
-  }
-}
-
-static AppControlList::const_iterator CompareMimeAndUri(
-    const AppControlList& operation_list,
-    const std::string& mime, const std::string& uri) {
-  if (mime.empty() && uri.empty()) {
-    // 1. request_mime = "", request_uri = ""
-    for (auto iter = operation_list.begin();
-         iter != operation_list.end(); ++iter) {
-      if (iter->mime().empty() && iter->uri().empty()) {
-        return iter;
-      }
-    }
-  } else if (mime.empty() && !uri.empty()) {
-    // 2.. request_mime = "", request_uri = "blahblah"
-    for (auto iter = operation_list.begin();
-         iter != operation_list.end(); ++iter) {
-      if (iter->mime().empty() && CompareUri(iter->uri(), uri)) {
-        return iter;
-      }
-    }
-  } else if (!mime.empty() && uri.empty()) {
-    // 3... request_mime = "blahblah", request_uri = ""
-    for (auto iter = operation_list.begin();
-         iter != operation_list.end(); ++iter) {
-      if (iter->uri().empty() && CompareMime(iter->mime(), mime)) {
-        return iter;
-      }
-    }
-  } else {
-    // 4... request_mime = "blahblah", request_uri = "blahblah"
-    for (auto iter = operation_list.begin();
-         iter != operation_list.end(); ++iter) {
-      if (CompareMime(iter->mime(), mime) &&
-          CompareUri(iter->uri(), uri)) {
-        return iter;
-      }
-    }
-  }
-  return operation_list.end();
-}
-
-static void FindOperations(AppControlList* app_control_list,
-                           const std::string& operation) {
-  auto iter = app_control_list->begin();
-  while (iter != app_control_list->end()) {
-    if (iter->operation() != operation) {
-      app_control_list->erase(iter);
-    } else {
-      ++iter;
-    }
+    return CompareStringWithWildcard(info_uri, request_uri);
   }
 }
 
 static std::string InsertPrefixPath(const std::string& start_uri) {
-  if (start_uri.find("://") != std::string::npos) {
+  if (start_uri.find("://") != std::string::npos)
     return start_uri;
-  } else {
-    return std::string() + kSchemeTypeFile + "/" + start_uri;
-  }
+  else
+    return std::string(kSchemeTypeFile) + "/" + start_uri;
 }
 
 static void GetURLInfo(const std::string& url,
@@ -211,7 +167,7 @@ ResourceManager::Resource::Resource(const std::string& uri, bool should_reset)
 ResourceManager::Resource::Resource(const std::string& uri,
                                     const std::string& mime,
                                     const std::string& encoding)
-  : uri_(uri), should_reset_(true), mime_(mime), encoding_(encoding) {}
+  : uri_(uri), mime_(mime), should_reset_(true), encoding_(encoding) {}
 
 ResourceManager::Resource::Resource(const ResourceManager::Resource& res) {
   *this = res;
@@ -252,7 +208,7 @@ ResourceManager::ResourceManager(ApplicationData* application_data,
 }
 
 std::unique_ptr<ResourceManager::Resource>
-ResourceManager::GetDefaultOrEmpty() {
+ResourceManager::GetDefaultResource() {
   std::string default_src;
   std::string type;
   std::string encoding = kDefaultEncoding;
@@ -263,10 +219,8 @@ ResourceManager::GetDefaultOrEmpty() {
     // TODO(yons.kim): uncomment below codes after implementing
     //                 content info handler
     // type = content_info->type();
-    // encoding = (content_info->encoding())
-    //           ? content_info->encoding() : kDefaultEncoding;
-  } else {
-    LOGGER(WARN) << "ContentInfo is NULL.";
+    // encoding = (!content_info->encoding().empty())
+    //            ? content_info->encoding() : kDefaultEncoding;
   }
 
   if (!default_src.empty()) {
@@ -284,19 +238,15 @@ ResourceManager::GetDefaultOrEmpty() {
   return std::unique_ptr<Resource>(new Resource(default_src, type, encoding));
 }
 
-std::unique_ptr<ResourceManager::Resource> ResourceManager::GetMatchedSrcOrUri(
-    const AppControlInfo& app_control_info, bool should_reset) {
+std::unique_ptr<ResourceManager::Resource> ResourceManager::GetMatchedResource(
+    const AppControlInfo& app_control_info) {
   if (!app_control_info.src().empty()) {
     return std::unique_ptr<Resource>(new Resource(
-      InsertPrefixPath(app_control_info.src()), should_reset));
+      InsertPrefixPath(app_control_info.src()),
+                       app_control_info.onreset() == "disable" ? false : true));
   }
 
-  if (!app_control_info.uri().empty()) {
-    return std::unique_ptr<Resource>(new Resource(
-      InsertPrefixPath(app_control_info.uri()), should_reset));
-  }
-
-  return GetDefaultOrEmpty();
+  return GetDefaultResource();
 }
 
 std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
@@ -304,7 +254,7 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
   std::string operation = app_control->operation();
   if (operation.empty()) {
     LOGGER(ERROR) << "operation(mandatory) is NULL";
-    return GetDefaultOrEmpty();
+    return GetDefaultResource();
   }
 
   std::string mime = app_control->mime();
@@ -320,24 +270,22 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetStartResource(
 
   if (application_data_ == NULL ||
       application_data_->app_control_info_list() == NULL) {
-    return GetDefaultOrEmpty();
+    return GetDefaultResource();
   }
 
-  AppControlList app_control_list =
+  auto app_control_list =
     application_data_->app_control_info_list()->controls;
-  FindOperations(&app_control_list, operation);
 
-  if (!app_control_list.empty()) {
-    AppControlList::const_iterator iter =
-      CompareMimeAndUri(app_control_list, mime, uri);
-    if (iter != app_control_list.end()) {
-      // TODO(jh5.cho) : following comment will be added after SRPOL implement
-      return GetMatchedSrcOrUri(*iter/*, iter->should_reset()*/);
-    } else {
-    return GetDefaultOrEmpty();
-    }
+  AppControlList::const_iterator iter = std::find_if(
+    app_control_list.begin(), app_control_list.end(),
+    [&operation, &uri, &mime](AppControlInfo& info) -> bool {
+      return (info.operation() == operation)
+        && CompareMime(info.mime(), mime) && CompareUri(info.uri(), uri); });
+
+  if (iter != app_control_list.end()) {
+    return GetMatchedResource(*iter);
   } else {
-    return GetDefaultOrEmpty();
+  return GetDefaultResource();
   }
 }
 

@@ -82,9 +82,9 @@ class ResourceManager {
   void set_base_resource_path(const std::string& base_path);
 
  private:
-  std::unique_ptr<Resource> GetMatchedSrcOrUri(
-    const wgt::parse::AppControlInfo&, bool should_reset = true);
-  std::unique_ptr<Resource> GetDefaultOrEmpty();
+  std::unique_ptr<Resource> GetMatchedResource(
+    const wgt::parse::AppControlInfo&);
+  std::unique_ptr<Resource> GetDefaultResource();
 
   // for localization
   bool Exists(const std::string& path);
@@ -96,7 +96,6 @@ class ResourceManager {
   std::map<const std::string, bool> file_existed_cache_;
   std::map<const std::string, std::string> locale_cache_;
   std::map<const std::string, bool> warp_cache_;
-
 
   ApplicationData* application_data_;
   LocaleManager* locale_manager_;
