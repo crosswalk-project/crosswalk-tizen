@@ -23,6 +23,7 @@
 
 #include "runtime/native_window.h"
 #include "common/logger.h"
+#include "common/file_utils.h"
 
 namespace wrt {
 
@@ -453,8 +454,8 @@ void WebViewImpl::InitConsoleMessageCallback() {
 
     std::stringstream buf;
     if (line_number) {
-        buf << ewk_console_message_source_get(msg) << ":";
-        buf << line_number << ":";
+        buf << utils::BaseName(ewk_console_message_source_get(msg)) << ":";
+        buf << line_number << ": ";
     }
     buf << ewk_console_message_text_get(msg);
     int level = ewk_console_message_level_get(msg);

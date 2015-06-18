@@ -630,6 +630,7 @@ void WebApplication::OnLanguageChanged() {
 void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
   static bool enabled = (getenv(kConsoleLogEnableKey) != NULL);
   enabled = true;
+
   if (debug_mode_ || enabled) {
     int dlog_level = DLOG_DEBUG;
     switch (level) {
@@ -643,7 +644,7 @@ void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
           dlog_level = DLOG_DEBUG;
           break;
     }
-    LOG_(LOG_ID_MAIN, dlog_level, kConsoleMessageLogTag, "%s", msg.c_str());
+    LOGGER_RAW(dlog_level, kConsoleMessageLogTag) << msg;
   }
 }
 

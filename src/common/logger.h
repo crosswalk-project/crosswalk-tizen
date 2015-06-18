@@ -50,15 +50,24 @@ class LogMessageVodify {
 
 class LogMessage {
  public:
-  LogMessage(int severity, const char* file, const char* func, const int line)
-      : severity_(severity), file_(file), func_(func), line_(line) {}
+  LogMessage(int severity, const char* tag,
+             const char* file, const char* func, const int line)
+      : severity_(severity), tag_(tag), file_(file), func_(func), line_(line) {}
+  LogMessage(int severity, const char* tag)
+      : severity_(severity), tag_(tag), file_(NULL), func_(NULL), line_(0) {}
   ~LogMessage() {
-    __dlog_print(LOG_ID_MAIN, severity_, LOGGER_TAG,
-                 "%s: %s(%d) > %s", file_, func_, line_, stream_.str().c_str());
+    if (file_) {
+      __dlog_print(LOG_ID_MAIN, severity_, tag_,
+                   "%s: %s(%d) > %s",
+                   file_, func_, line_, stream_.str().c_str());
+    } else {
+      __dlog_print(LOG_ID_MAIN, severity_, tag_, "%s", stream_.str().c_str());
+    }
   }
   std::ostream& stream() { return stream_; }
  private:
   const int severity_;
+  const char* tag_;
   const char* file_;
   const char* func_;
   const int line_;
@@ -75,8 +84,12 @@ class LogMessage {
 
 #define LOGGER(severity)                                                      \
   wrt::utils::LogMessageVodify() &                                            \
-    wrt::utils::LogMessage(DLOG_ ## severity,                                 \
+    wrt::utils::LogMessage(DLOG_ ## severity, LOGGER_TAG,                     \
                            __MODULE__, __FUNCTION__, __LINE__).stream()
+
+#define LOGGER_RAW(level, tag)                                                \
+  wrt::utils::LogMessageVodify() &                                            \
+    wrt::utils::LogMessage(level, tag).stream()
 
 
 #endif  // WRT_COMMON_LOGGER_H_
