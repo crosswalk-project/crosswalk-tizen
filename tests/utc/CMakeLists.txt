@@ -14,20 +14,7 @@
 #    limitations under the License.
 #
 
-# Tests names
-SET(TESTS_GTEST "gtest")
-SET(TESTS_GTEST_MAIN "gtest_main")
-SET(TESTS_UTC "wrt-utc")
-SET(UTC_BUNDLE "utc-bundle")
-SET(UTC_COMMON "utc-common")
-SET(UTC_EXTENSION "utc-extension")
-SET(UTC_RUNTIME "utc-runtime")
-
-SET(BASE_SRCDIR ${PROJECT_SOURCE_DIR}/src)
-SET(TEST_SRCDIR ${PROJECT_SOURCE_DIR}/tests)
-SET(GTEST_SRCDIR ${TEST_SRCDIR}/gtest)
-SET(UTC_SRCDIR ${TEST_SRCDIR}/utc)
-
-ADD_SUBDIRECTORY(popup)
-ADD_SUBDIRECTORY(gtest)
-ADD_SUBDIRECTORY(utc)
+ADD_SUBDIRECTORY(bundle)
+ADD_SUBDIRECTORY(common)
+ADD_SUBDIRECTORY(extension)
+ADD_SUBDIRECTORY(runtime)

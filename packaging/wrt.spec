@@ -53,6 +53,13 @@ BuildRequires: pkgconfig(chromium-efl)
 %description
 Runtime for Web Application
 
+%package tests
+summary: Unit tests for wrt
+Requires: %{name} = %{version}
+
+%description tests
+Unit tests for all modules of wrt
+
 %prep
 %setup -q
 
@@ -101,8 +108,11 @@ rm -fr %{buildroot}
 
 %files
 %attr(755,root,root) %{_bindir}/wrt
-%attr(755,root,root) %{_bindir}/wrt-popup-test
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
 %attr(644,root,root) %{injected_bundle_path}
 %attr(644,root,root) %{extension_path}/libwidget-plugin.so
 %attr(755,root,root) %{_datadir}/locale/*
+
+%files tests
+%attr(755,root,root) %{_bindir}/wrt-popup-test
+%attr(755,root,root) %{_bindir}/wrt-utc/*
