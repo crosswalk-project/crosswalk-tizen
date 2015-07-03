@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <string>
+#include <algorithm>
 
 namespace wrt {
 namespace utils {
@@ -41,6 +42,17 @@ std::string SchemeName(const std::string& uri) {
   size_t pos = uri.find(":");
   if (pos != std::string::npos && pos < uri.length()) {
     return std::string(uri.substr(0, pos));
+  } else {
+    return std::string();
+  }
+}
+
+std::string ExtName(const std::string& path) {
+  size_t last_dot = path.find_last_of(".");
+  if (last_dot != 0 && last_dot != std::string::npos) {
+    std::string ext = path.substr(last_dot);
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    return ext;
   } else {
     return std::string();
   }

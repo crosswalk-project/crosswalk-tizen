@@ -30,6 +30,8 @@ std::string DirName(const std::string& path);
 
 std::string SchemeName(const std::string& uri);
 
+std::string ExtName(const std::string& path);
+
 
 }  // namespace utils
 }  // namespace wrt
