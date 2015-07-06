@@ -16,7 +16,7 @@
 
 #include "common/locale_manager.h"
 
-#include <runtime_info.h>
+#include <system_settings.h>
 #include <memory>
 #include <algorithm>
 
@@ -46,18 +46,18 @@ LocaleManager::LocaleManager() {
 }
 
 LocaleManager::~LocaleManager() {
-  runtime_info_unset_changed_cb(RUNTIME_INFO_KEY_LANGUAGE);
+  system_settings_unset_changed_cb(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE);
 }
 
 void LocaleManager::EnableAutoUpdate(bool enable) {
   if (enable) {
-    auto callback = [](runtime_info_key_e, void* user_data) {
+    auto callback = [](system_settings_key_e, void* user_data) {
         LocaleManager* locale = static_cast<LocaleManager*>(user_data);
         locale->UpdateSystemLocale();
     };
-    runtime_info_set_changed_cb(RUNTIME_INFO_KEY_LANGUAGE, callback, this);
+    system_settings_set_changed_cb(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE, callback, this);
   } else {
-    runtime_info_unset_changed_cb(RUNTIME_INFO_KEY_LANGUAGE);
+    system_settings_unset_changed_cb(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE);
   }
 }
 
@@ -74,8 +74,8 @@ void LocaleManager::SetDefaultLocale(const std::string& locale) {
 
 void LocaleManager::UpdateSystemLocale() {
   char* str = NULL;
-  if (RUNTIME_INFO_ERROR_NONE !=
-      runtime_info_get_value_string(RUNTIME_INFO_KEY_LANGUAGE, &str)
+  if (SYSTEM_SETTINGS_ERROR_NONE !=
+      system_settings_get_value_string(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE, &str)
      || str == NULL) {
     return;
   }

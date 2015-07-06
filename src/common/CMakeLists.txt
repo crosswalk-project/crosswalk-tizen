@@ -19,7 +19,7 @@ PKG_CHECK_MODULES(TARGET_COMMON_STATIC_DEPS
   gio-2.0
   dlog
   capi-appfw-package-manager
-  capi-system-runtime-info
+  capi-system-system-settings
   capi-appfw-application
   aul
   appsvc
