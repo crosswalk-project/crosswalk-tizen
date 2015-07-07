@@ -26,6 +26,7 @@
 #include "bundle/module_system.h"
 #include "bundle/xwalk_v8tools_module.h"
 #include "bundle/widget_module.h"
+#include "bundle/object_tools_module.h"
 
 
 namespace wrt {
@@ -73,6 +74,8 @@ void ExtensionRendererController::DidCreateScriptContext(
         "v8tools", std::unique_ptr<NativeModule>(new XWalkV8ToolsModule));
   module_system->RegisterNativeModule(
         "WidgetModule", std::unique_ptr<NativeModule>(new WidgetModule));
+  module_system->RegisterNativeModule(
+        "objecttools", std::unique_ptr<NativeModule>(new ObjectToolsModule));
 
   CreateExtensionModules(extensions_client_.get(), module_system);
   module_system->Initialize();
