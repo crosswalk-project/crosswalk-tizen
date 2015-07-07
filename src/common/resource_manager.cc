@@ -31,6 +31,7 @@
 #include "common/app_control.h"
 #include "common/application_data.h"
 #include "common/locale_manager.h"
+#include "common/url.h"
 
 using wgt::parse::AppControlInfo;
 
@@ -123,37 +124,6 @@ static std::string InsertPrefixPath(const std::string& start_uri) {
     return start_uri;
   else
     return std::string(kSchemeTypeFile) + "/" + start_uri;
-}
-
-static void GetURLInfo(const std::string& url,
-                       std::string* scheme,
-                       std::string* domain,
-                       std::string* port) {
-  if (url.empty())
-    return;
-
-  size_t end_of_scheme = url.find_first_of(':');
-  if (end_of_scheme == std::string::npos) {
-    end_of_scheme = -1;
-  } else {
-    *scheme = url.substr(0, end_of_scheme);
-  }
-
-  if (end_of_scheme+1 == url.length())
-    return;
-
-  size_t start_of_domain = url.find_first_not_of('/', end_of_scheme+1);
-  size_t end_of_domain = url.find_first_of('/', start_of_domain);
-  *domain = url.substr(start_of_domain,
-      end_of_domain == std::string::npos ?
-          std::string::npos : end_of_domain - start_of_domain);
-  size_t port_separator = (*domain).find_first_of(':');
-  if (port_separator != std::string::npos) {
-    *port = (*domain).substr(port_separator+1);
-    *domain = (*domain).substr(0, port_separator);
-  } else {
-    *port = "80";
-  }
 }
 
 }  // namespace
@@ -413,16 +383,12 @@ bool ResourceManager::CheckWARP(const std::string& url) {
   bool& result = warp_cache_[url];
   result = true;
 
+  URL url_info(url);
+
   // if didn't have a scheme, it means local resource
-  size_t end_of_scheme = url.find_first_of(':');
-  if (end_of_scheme == std::string::npos) {
+  if (url_info.scheme().empty()) {
     return true;
   }
-
-  std::string scheme;
-  std::string domain;
-  std::string port;
-  GetURLInfo(url, &scheme, &domain, &port);
 
   for (auto& allow : warp->access_map()) {
     if (allow.first == "*") {
@@ -430,16 +396,17 @@ bool ResourceManager::CheckWARP(const std::string& url) {
     } else if (allow.first.empty()) {
       continue;
     }
-    std::string a_scheme, a_domain, a_port;
-    GetURLInfo(allow.first, &a_scheme, &a_domain, &a_port);
+
+    URL allow_url(allow.first);
 
     // should be match the scheme and port
-    if (a_scheme != scheme || a_port != port) {
+    if (allow_url.scheme() != url_info.scheme() ||
+        allow_url.port() != url_info.port()) {
       continue;
     }
 
     // if domain alos was matched, allow resource
-    if (a_domain == domain) {
+    if (allow_url.domain() == url_info.domain()) {
       return true;
     } else if (allow.second) {
       // if does not match domain, should be check sub domain
@@ -447,8 +414,7 @@ bool ResourceManager::CheckWARP(const std::string& url) {
       // filter : test.com , subdomain=true
       // url : aaa.test.com
       // check url was ends with ".test.com"
-      a_domain = "." + a_domain;
-      if (utils::EndsWith(domain, a_domain)) {
+      if (utils::EndsWith(url_info.domain(), "." + allow_url.domain())) {
         return true;
       }
     }
@@ -476,30 +442,24 @@ bool ResourceManager::CheckAllowNavigation(const std::string& url) {
   bool& result = warp_cache_[url];
   result = true;
 
+  URL url_info(url);
+
   // if didn't have a scheme, it means local resource
-  size_t end_of_scheme = url.find_first_of(':');
-  if (end_of_scheme == std::string::npos) {
+  if (url_info.scheme().empty()) {
     return true;
   }
 
-  std::string scheme;
-  std::string domain;
-  std::string port;
-  GetURLInfo(url, &scheme, &domain, &port);
-
   for (auto& allow_domain : allow->GetAllowedDomains()) {
-    std::string a_scheme;
-    std::string a_domain;
-    std::string a_port;
-    GetURLInfo(allow_domain, &a_scheme, &a_domain, &a_port);
+    URL a_domain_info(allow_domain);
 
     // check wildcard *
-    if (a_domain == "*") {
+    if (a_domain_info.domain() == "*") {
       return true;
     }
 
     bool prefix_wild = false;
     bool suffix_wild = false;
+    std::string a_domain = a_domain_info.domain();
     if (utils::StartsWith(a_domain, "*.")) {
       prefix_wild = true;
       // *.domain.com -> .domain.com
@@ -513,25 +473,25 @@ bool ResourceManager::CheckAllowNavigation(const std::string& url) {
 
     if (!prefix_wild && !suffix_wild) {
       // if no wildcard, should be exactly matched
-      if (domain == a_domain) {
+      if (url_info.domain() == a_domain) {
         return true;
       }
     } else if (prefix_wild && !suffix_wild) {
       // *.domain.com : it shoud be "domain.com" or end with ".domain.com"
-      if (domain == a_domain.substr(1) ||
-          utils::EndsWith(domain, a_domain)) {
+      if (url_info.domain() == a_domain.substr(1) ||
+          utils::EndsWith(url_info.domain(), a_domain)) {
         return true;
       }
     } else if (!prefix_wild && suffix_wild) {
       // www.sample.* : it should be starts with "www.sample."
-      if (utils::StartsWith(domain, a_domain)) {
+      if (utils::StartsWith(url_info.domain(), a_domain)) {
         return true;
       }
     } else if (prefix_wild && suffix_wild) {
       // *.sample.* : it should be starts with sample. or can find ".sample."
       // in url
-      if (utils::StartsWith(domain, a_domain.substr(1)) ||
-          std::string::npos != domain.find(a_domain)) {
+      if (utils::StartsWith(url_info.domain(), a_domain.substr(1)) ||
+          std::string::npos != url_info.domain().find(a_domain)) {
         return true;
       }
     }
