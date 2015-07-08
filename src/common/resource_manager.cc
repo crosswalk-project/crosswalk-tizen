@@ -20,7 +20,6 @@
 #include <aul.h>
 
 #include <memory>
-#include <regex>
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -46,6 +45,8 @@ const char* kSchemeTypeApp = "app://";
 const char* kSchemeTypeFile = "file://";
 const char* kSchemeTypeHttp = "http://";
 const char* kSchemeTypeHttps = "https://";
+// lendth of scheme identifier ://
+const int kSchemeIdLen = 3;
 // TODO(wy80.choi): comment out below unused const variables if needed.
 // const char* kSchemeTypeWidget = "widget://";
 
@@ -84,24 +85,25 @@ static std::string GetMimeFromUri(const std::string& uri) {
   }
 }
 
-static bool CompareStringWithWildcard(const std::string& info,
-                                      const std::string& request) {
-  std::string wildcard_str = utils::ReplaceAll(info, "*", ".*");
-  try {
-    std::regex re(wildcard_str, std::regex_constants::icase);
-    return std::regex_match(request.begin(), request.end(), re);
-  } catch (std::regex_error& e) {
-    LOGGER(ERROR) << "regex_error caught: " << e.what();
-    return false;
-  }
-}
-
 static bool CompareMime(const std::string& info_mime,
                         const std::string& request_mime) {
   if (request_mime.empty())
     return info_mime.empty();
 
-  return CompareStringWithWildcard(info_mime, request_mime);
+  // suppose that these mimetypes are valid expressions ('type'/'sub-type')
+  if (info_mime == "*" || info_mime == "*/*")
+    return true;
+
+  std::string info_type;
+  std::string info_sub;
+  std::string request_type;
+  std::string request_sub;
+  if (!(utils::SplitString(info_mime, &info_type, &info_sub, '/') &&
+        utils::SplitString(request_mime, &request_type, &request_sub, '/')))
+    return false;
+
+  return info_type == request_type &&
+         (info_sub == "*") ? true : (info_sub == request_sub);
 }
 
 static bool CompareUri(const std::string& info_uri,
@@ -110,12 +112,19 @@ static bool CompareUri(const std::string& info_uri,
     return info_uri.empty();
 
   std::string info_scheme = utils::SchemeName(info_uri);
-  std::string request_scheme = utils::SchemeName(request_uri);
 
-  if (!info_scheme.empty() && !request_scheme.empty()) {
-    return (info_scheme == request_scheme);
+  // if has only scheme or scheme+star. ex) http, http://, http://*
+  if (!info_scheme.empty() &&
+      (info_uri == info_scheme || utils::EndsWith(info_uri, "://")
+        || utils::EndsWith(info_uri, "://*"))) {
+    return utils::SchemeName(request_uri) == info_scheme;
+  }
+
+  if (utils::EndsWith(info_uri, "*")) {
+    return utils::StartsWith(request_uri, info_uri.substr(0,
+                                                          info_uri.length()-1));
   } else {
-    return CompareStringWithWildcard(info_uri, request_uri);
+    return request_uri == info_uri;
   }
 }
 

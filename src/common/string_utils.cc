@@ -65,5 +65,19 @@ std::string GetCurrentMilliSeconds() {
   return ss.str();
 }
 
+bool SplitString(const std::string &str,
+                 std::string *part_1, std::string *part_2, const char delim) {
+  if (part_1 == nullptr || part_2 == nullptr)
+    return false;
+
+  size_t pos = str.find(delim);
+  if (pos == std::string::npos)
+    return false;
+
+  *part_1 = str.substr(0, pos);
+  *part_2 = str.substr(pos+1);
+  return true;
+}
+
 }  // namespace utils
 }  // namespace wrt

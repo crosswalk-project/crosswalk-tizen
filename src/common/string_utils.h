@@ -28,6 +28,8 @@ bool EndsWith(const std::string& str, const std::string& sub);
 std::string ReplaceAll(const std::string& replace,
                        const std::string& from, const std::string& to);
 std::string GetCurrentMilliSeconds();
+bool SplitString(const std::string &str,
+                 std::string *part_1, std::string *part_2, const char delim);
 
 }  // namespace utils
 }  // namespace wrt
