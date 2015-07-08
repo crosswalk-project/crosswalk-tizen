@@ -364,9 +364,8 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   SetupWebView(view);
 
   // send widget info to injected bundle
-  // TODO(wy80.choi): ewk_send_widget_info should be fixed to receive uuid of
-  // application instead of widget_id.
-  // Currently, uuid is passed as encoded_bundle argument temporarily.
+  // TODO(wy80.choi): Currently, uuid is passed as encoded_bundle argument
+  // temporarily.
   ewk_send_widget_info(ewk_context_, appid_.c_str(),
                        elm_config_scale_get(),
                        elm_theme_get(NULL),
@@ -375,24 +374,9 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
   view->SetDefaultEncoding(res->encoding());
-  // TODO(wy80.choi): temporary comment for test, remove it later.
-  // view->LoadUrl("file:///home/owner/apps_rw/33CFo0eFJe/"
-  //               "33CFo0eFJe.annex/index.html");
   view->LoadUrl(res->uri());
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
-
-  // TODO(sngn.lee): below code only debug code
-  auto callback = [](void*, Evas*, Evas_Object* obj,
-                     void*) -> void {
-    int x, y, w, h;
-    evas_object_geometry_get(obj, &x, &y, &w, &h);
-    LOGGER(DEBUG) << "resize ! ("
-                  << x << ", " << y << ", " << w << ", " << h << ")";
-  };
-  evas_object_event_callback_add(view->evas_object(),
-                                 EVAS_CALLBACK_RESIZE,
-                                 callback, NULL);
 
   if (appcontrol->data(kDebugKey) == "true") {
     debug_mode_ = true;
@@ -557,19 +541,6 @@ void WebApplication::OnReceivedWrtMessage(
       ewk_ipc_wrt_message_data_value_set(ans, "success");
     else
       ewk_ipc_wrt_message_data_value_set(ans, "failed");
-    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
-      LOGGER(ERROR) << "Failed to send response";
-    }
-    ewk_ipc_wrt_message_data_del(ans);
-  } else if (TYPE_IS("tizen://test-sync")) {
-    // TODO(wy80.choi): this type should be removed after finish test
-    ewk_ipc_wrt_message_data_value_set(msg, "Reply!!");
-  } else if (TYPE_IS("tizen://test-async")) {
-    // TODO(wy80.choi): this type should be removed after finish test
-    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
-    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
-    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
-    ewk_ipc_wrt_message_data_value_set(ans, "Aync Reply!!");
     if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
       LOGGER(ERROR) << "Failed to send response";
     }
@@ -903,8 +874,6 @@ void WebApplication::HandleDBusMethod(GDBusConnection* /*connection*/,
     if (g_strcmp0(key, "runtime_name") == 0) {
       value = std::string("wrt");
     } else if (g_strcmp0(key, "app_id") == 0) {
-      // TODO(wy80.choi): TEC requries double quotes,
-      // but webapi-plugins doesn't. It should be fixed.
       value = "\"" + appid_ + "\"";
     } else if (g_strcmp0(key, "encoded_bundle") == 0) {
       value = received_appcontrol_->encoded_bundle();

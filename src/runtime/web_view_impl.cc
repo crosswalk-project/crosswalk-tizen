@@ -306,12 +306,10 @@ void WebViewImpl::InitQuotaExceededCallback() {
   // check http://tizen.org/privilege/unlimitedstorage
 
   // callback for database quota exceeded
-  // TODO(wy80.choi): AARCH64:
-  //   Fix ewk api to use stdint types instead of longlong.
   auto database_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
                                        const char*,
-                                       unsigned long long,
+                                       unsigned long long, // NOLINT
                                        void* user_data) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL)
@@ -339,11 +337,9 @@ void WebViewImpl::InitQuotaExceededCallback() {
     this);
 
   // callback for indexed database quota exceeded
-  // TODO(wy80.choi): AARCH64:
-  //   Fix ewk api to use stdint types instead of longlong.
   auto indexed_db_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
-                                       long long,
+                                       long long, // NOLINT
                                        void* user_data) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL)
@@ -371,11 +367,9 @@ void WebViewImpl::InitQuotaExceededCallback() {
     this);
 
   // callback for localfile quota exceeded
-  // TODO(wy80.choi): AARCH64:
-  //   Fix ewk api to use stdint types instead of longlong.
   auto localfile_exceeded_callback = [](Evas_Object* view,
                                        Ewk_Security_Origin* origin,
-                                       long long,
+                                       long long, // NOLINT
                                        void* user_data) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (self == NULL || self->listener_ == NULL)

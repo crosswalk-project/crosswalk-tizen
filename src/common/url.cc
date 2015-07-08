@@ -129,9 +129,9 @@ void URLImpl::ExtractDomainPort() {
   if (port_separator != std::string::npos) {
     domain_ = domain.substr(0, port_separator);
     std::string port = domain.substr(port_separator+1);
-    if (port.empty())
+    if (port.empty()) {
       port_ = GetDefaultPort(scheme_);
-    else {
+    } else {
       try {
         port_ = std::stoi(port);
       } catch (...) {

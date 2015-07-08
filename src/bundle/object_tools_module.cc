@@ -17,6 +17,7 @@
 #include "bundle/object_tools_module.h"
 
 #include <v8/v8.h>
+#include <string>
 
 #include "common/logger.h"
 

@@ -55,7 +55,8 @@ void LocaleManager::EnableAutoUpdate(bool enable) {
         LocaleManager* locale = static_cast<LocaleManager*>(user_data);
         locale->UpdateSystemLocale();
     };
-    system_settings_set_changed_cb(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE, callback, this);
+    system_settings_set_changed_cb(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE,
+                                   callback, this);
   } else {
     system_settings_unset_changed_cb(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE);
   }
@@ -75,8 +76,9 @@ void LocaleManager::SetDefaultLocale(const std::string& locale) {
 void LocaleManager::UpdateSystemLocale() {
   char* str = NULL;
   if (SYSTEM_SETTINGS_ERROR_NONE !=
-      system_settings_get_value_string(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE, &str)
-     || str == NULL) {
+      system_settings_get_value_string(SYSTEM_SETTINGS_KEY_LOCALE_LANGUAGE,
+                                       &str) ||
+      str == NULL) {
     return;
   }
   std::string lang = localeToBCP47LangTag(str);
