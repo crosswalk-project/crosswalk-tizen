@@ -177,17 +177,17 @@ void WebViewImpl::InitKeyCallback() {
                          void* event_info) -> void {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     Ea_Callback_Type key = static_cast<Ea_Callback_Type>(
-                              *static_cast<int*>(event_info));
+      reinterpret_cast<long long>(event_info)); // for 64-bit
     self->OnKeyEvent(key);
   };
   ea_object_event_callback_add(ewk_view_,
                                EA_CALLBACK_BACK,
                                key_callback,
-                               view_);
+                               this);
   ea_object_event_callback_add(ewk_view_,
                                EA_CALLBACK_MORE,
                                key_callback,
-                               view_);
+                               this);
   smart_callbacks_["key_callback"] = key_callback;
 }
 
