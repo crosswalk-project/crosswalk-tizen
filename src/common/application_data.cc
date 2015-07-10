@@ -17,8 +17,9 @@
 #include "common/application_data.h"
 
 #include <package_manager.h>
-#include <manifest_parser/manifest_parser.h>
 #include <manifest_parser/manifest_handler.h>
+#include <manifest_handlers/widget_config_parser.h>
+#include <manifest_handlers/application_manifest_constants.h>
 
 #include <vector>
 
@@ -155,122 +156,92 @@ bool ApplicationData::LoadManifestData() {
     return false;
   }
 
-  enum ManifestHandlerType {
-    APP_CONTROL_HANDLER = 0,
-    CATEGORY_HANDLER,
-    META_DATA_HANDLER,
-    NAVIGATION_HANDLER,
-    PERMISSIONS_HANDLER,
-    SETTING_HANDLER,
-    SPLASH_SCREEN_HANDLER,
-    TIZEN_APPLICATION_HANDLER,
-    WIDGET_HANDLER,
-    CONTENT_HANDLER,
-    WARP_HANDLER,
-    CSP_HANDLER,
-    CSP_REPORT_HANDLER
-  };
-
-  std::vector<parser::ManifestHandler*> handlers = {
-    new wgt::parse::AppControlHandler,        // APP_CONTROL_HANDLER
-    new wgt::parse::CategoryHandler,          // CATEGORY_HANDLER
-    new wgt::parse::MetaDataHandler,          // META_DATA_HANDLER
-    new wgt::parse::NavigationHandler,        // NAVIGATION_HANDLER
-    new wgt::parse::PermissionsHandler,       // PERMISSIONS_HANDLER
-    new wgt::parse::SettingHandler,           // SETTING_HANDLER
-    new wgt::parse::SplashScreenHandler,      // SPLASH_SCREEN_HANDLER
-    new wgt::parse::TizenApplicationHandler,  // TIZEN_APPLICATION_HANDLER
-    new wgt::parse::WidgetHandler,            // WIDGET_HANDLER
-    new wgt::parse::ContentHandler,           // CONTENT_HANDLER
-    new wgt::parse::WarpHandler,              // WARP_HANDLER
-    // CSP_HANDLER
-    new wgt::parse::CSPHandler(wgt::parse::CSPHandler::SecurityType::CSP),
-    // CSP_REPORT_HANDLER
-    new wgt::parse::CSPHandler(
-      wgt::parse::CSPHandler::SecurityType::CSP_REPORT_ONLY)
-  };
-
-  std::unique_ptr<parser::ManifestHandlerRegistry> registry;
-  registry.reset(new parser::ManifestHandlerRegistry(handlers));
-
-  parser::ManifestParser manifest_parser(std::move(registry));
-  if (!manifest_parser.ParseManifest(config_xml_path)) {
-    for (auto iter = handlers.begin(); iter != handlers.end(); ++iter) {
-      delete *iter;
-    }
-    LOGGER(ERROR) << "Failed to load manifest data : "
-                  << manifest_parser.GetErrorMessage();
+  std::unique_ptr<wgt::parse::WidgetConfigParser> widget_config_parser;
+  widget_config_parser.reset(new wgt::parse::WidgetConfigParser());
+  if (!widget_config_parser->ParseManifest(config_xml_path)) {
+    LOGGER(ERROR) << "Failed to load widget config parser data: "
+                  << widget_config_parser->GetErrorMessage();
     return false;
   }
 
   app_control_info_list_ =
     std::static_pointer_cast<const wgt::parse::AppControlInfoList>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::APP_CONTROL_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenApplicationAppControlsKey));
 
   category_info_list_ =
     std::static_pointer_cast<const wgt::parse::CategoryInfoList>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::CATEGORY_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenCategoryKey));
 
   meta_data_info_ =
     std::static_pointer_cast<const wgt::parse::MetaDataInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::META_DATA_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenMetaDataKey));
 
   allowed_navigation_info_ =
     std::static_pointer_cast<const wgt::parse::AllowedNavigationInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::NAVIGATION_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kAllowNavigationKey));
 
   permissions_info_ =
     std::static_pointer_cast<const wgt::parse::PermissionsInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::PERMISSIONS_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenPermissionsKey));
 
   setting_info_ =
     std::static_pointer_cast<const wgt::parse::SettingInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::SETTING_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenSettingKey));
 
   splash_screen_info_ =
     std::static_pointer_cast<const wgt::parse::SplashScreenInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::SPLASH_SCREEN_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenSplashScreenKey));
 
   tizen_application_info_ =
     std::static_pointer_cast<const wgt::parse::TizenApplicationInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::TIZEN_APPLICATION_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenApplicationKey));
 
   widget_info_ =
     std::static_pointer_cast<const wgt::parse::WidgetInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::WIDGET_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenWidgetKey));
 
   content_info_ =
     std::static_pointer_cast<const wgt::parse::ContentInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::CONTENT_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kTizenContentKey));
 
   warp_info_ =
     std::static_pointer_cast<const wgt::parse::WarpInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::WARP_HANDLER]->Key()));
+      widget_config_parser->GetManifestData(
+        wgt::application_widget_keys::kAccessKey));
+
+  std::unique_ptr<parser::ManifestHandlerRegistry> csp_registry;
+  csp_registry.reset(new parser::ManifestHandlerRegistry({
+    new wgt::parse::CSPHandler(wgt::parse::CSPHandler::SecurityType::CSP),
+    new wgt::parse::CSPHandler(
+      wgt::parse::CSPHandler::SecurityType::CSP_REPORT_ONLY)
+  }));
+
+  parser::ManifestParser csp_parser(std::move(csp_registry));
+  if (!csp_parser.ParseManifest(config_xml_path)) {
+    LOGGER(ERROR) << "Failed to load manifest data : "
+                  << csp_parser.GetErrorMessage();
+    return false;
+  }
 
   csp_info_ =
     std::static_pointer_cast<const wgt::parse::CSPInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::CSP_HANDLER]->Key()));
+      csp_parser.GetManifestData(
+        wgt::application_widget_keys::kCSPKey));
 
   csp_report_info_ =
     std::static_pointer_cast<const wgt::parse::CSPInfo>(
-      manifest_parser.GetManifestData(
-        handlers[ManifestHandlerType::CSP_REPORT_HANDLER]->Key()));
-
-  for (auto iter = handlers.begin(); iter != handlers.end(); ++iter) {
-    delete *iter;
-  }
+      csp_parser.GetManifestData(
+        wgt::application_widget_keys::kCSPReportOnlyKey));
 
   // Set default empty object
   if (widget_info_.get() == NULL) {
