@@ -34,8 +34,8 @@ WebView::~WebView() {
   delete impl_;
 }
 
-void WebView::LoadUrl(const std::string& url) {
-  impl_->LoadUrl(url);
+void WebView::LoadUrl(const std::string& url, const std::string& mime) {
+  impl_->LoadUrl(url, mime);
 }
 
 std::string WebView::GetUrl() {

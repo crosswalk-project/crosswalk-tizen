@@ -374,7 +374,7 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
   view->SetDefaultEncoding(res->encoding());
-  view->LoadUrl(res->uri());
+  view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
 
@@ -401,7 +401,7 @@ void WebApplication::AppControl(std::unique_ptr<wrt::AppControl> appcontrol) {
     WebView* view = new WebView(window_, ewk_context_);
     SetupWebView(view);
     view->SetDefaultEncoding(res->encoding());
-    view->LoadUrl(res->uri());
+    view->LoadUrl(res->uri(), res->mime());
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
   } else {

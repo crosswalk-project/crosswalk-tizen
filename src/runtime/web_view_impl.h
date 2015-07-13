@@ -25,6 +25,7 @@
 #include <map>
 
 #include "runtime/web_view.h"
+#include "common/url.h"
 
 class Ewk_Context;
 
@@ -35,7 +36,7 @@ class WebViewImpl {
   WebViewImpl(WebView* view, wrt::NativeWindow* window, Ewk_Context* context);
   virtual ~WebViewImpl();
 
-  void LoadUrl(const std::string& url);
+  void LoadUrl(const std::string& url, const std::string& mime = std::string());
   std::string GetUrl();
 
   void Suspend();
@@ -50,6 +51,7 @@ class WebViewImpl {
 
   void SetEventListener(WebView::EventListener* listener);
   Evas_Object* evas_object() const;
+  std::string mime() const { return mime_; }
 
  private:
   void OnKeyEvent(Ea_Callback_Type key_type);
@@ -81,6 +83,7 @@ class WebViewImpl {
   WebView* view_;
   std::map<const std::string, Evas_Smart_Cb> smart_callbacks_;
   bool fullscreen_;
+  std::string mime_;
 };
 }  // namespace wrt
 

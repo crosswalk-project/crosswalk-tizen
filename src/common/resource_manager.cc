@@ -195,11 +195,9 @@ ResourceManager::GetDefaultResource() {
   auto content_info = application_data_->content_info();
   if (content_info) {
     default_src = content_info->src();
-    // TODO(yons.kim): uncomment below codes after implementing
-    //                 content info handler
-    // type = content_info->type();
-    // encoding = (!content_info->encoding().empty())
-    //            ? content_info->encoding() : kDefaultEncoding;
+    type = content_info->type();
+    encoding = (!content_info->encoding().empty())
+               ? content_info->encoding() : kDefaultEncoding;
   }
 
   if (!default_src.empty()) {

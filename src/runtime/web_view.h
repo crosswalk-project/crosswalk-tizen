@@ -90,7 +90,7 @@ class WebView {
   WebView(wrt::NativeWindow* window, Ewk_Context* context);
   virtual ~WebView();
 
-  void LoadUrl(const std::string& url);
+  void LoadUrl(const std::string& url, const std::string& mime = std::string());
   std::string GetUrl();
 
   void Suspend();

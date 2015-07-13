@@ -75,7 +75,22 @@ WebViewImpl::~WebViewImpl() {
   evas_object_del(ewk_view_);
 }
 
-void WebViewImpl::LoadUrl(const std::string& url) {
+void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {
+  if (!mime.empty()) {
+    mime_ = mime;
+    auto mime_override_cb = [](const char* url, const char* mime,
+                               char** new_mime, void* data) -> Eina_Bool{
+      WebViewImpl* view = static_cast<WebViewImpl*>(data);
+      if (view != nullptr
+          && utils::BaseName(url) == utils::BaseName(view->GetUrl())) {
+        *new_mime = strdup(view->mime().c_str());
+        LOGGER(DEBUG) << "ewk's new_mime: " << *new_mime;
+        return EINA_TRUE;
+      }
+      return EINA_FALSE;
+    };
+    ewk_context_mime_override_callback_set(context_, mime_override_cb, this);
+  }
   ewk_view_url_set(ewk_view_, url.c_str());
 }
 
