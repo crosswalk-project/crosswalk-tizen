@@ -30,7 +30,6 @@ PKG_CHECK_MODULES(TARGET_TEST_POPUP_DEPS
     ${WIN_PKG}
     elementary
     ecore
-    efl-assist
    REQUIRED)
 
 # Include Directories

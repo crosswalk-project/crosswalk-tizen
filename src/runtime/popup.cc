@@ -17,8 +17,6 @@
 
 #include "runtime/popup.h"
 
-#include <efl_assist.h>
-
 #include "runtime/native_window.h"
 #include "runtime/popup_string.h"
 #include "common/logger.h"

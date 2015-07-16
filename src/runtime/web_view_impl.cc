@@ -156,8 +156,8 @@ void WebViewImpl::Deinitialize() {
         it->first.c_str(),
         it->second);
   }
-  ea_object_event_callback_del(ewk_view_,
-                               EA_CALLBACK_BACK,
+  eext_object_event_callback_del(ewk_view_,
+                               EEXT_CALLBACK_BACK,
                                smart_callbacks_["key_callback"]);
   ewk_view_exceeded_database_quota_callback_set(
       ewk_view_,
@@ -191,16 +191,16 @@ void WebViewImpl::InitKeyCallback() {
                          Evas_Object* /*obj*/,
                          void* event_info) -> void {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
-    Ea_Callback_Type key = static_cast<Ea_Callback_Type>(
+    Eext_Callback_Type key = static_cast<Eext_Callback_Type>(
       reinterpret_cast<long long>(event_info)); // for 64-bit
     self->OnKeyEvent(key);
   };
-  ea_object_event_callback_add(ewk_view_,
-                               EA_CALLBACK_BACK,
+  eext_object_event_callback_add(ewk_view_,
+                               EEXT_CALLBACK_BACK,
                                key_callback,
                                this);
-  ea_object_event_callback_add(ewk_view_,
-                               EA_CALLBACK_MORE,
+  eext_object_event_callback_add(ewk_view_,
+                               EEXT_CALLBACK_MORE,
                                key_callback,
                                this);
   smart_callbacks_["key_callback"] = key_callback;
@@ -747,9 +747,9 @@ void WebViewImpl::OnRotation(int degree) {
   ewk_view_orientation_send(ewk_view_, ToWebRotation(degree));
 }
 
-void WebViewImpl::OnKeyEvent(Ea_Callback_Type key_type) {
+void WebViewImpl::OnKeyEvent(Eext_Callback_Type key_type) {
   std::string keyname;
-  if (key_type == EA_CALLBACK_BACK) {
+  if (key_type == EEXT_CALLBACK_BACK) {
     if (fullscreen_) {
       ewk_view_fullscreen_exit(ewk_view_);
       return;
@@ -758,7 +758,7 @@ void WebViewImpl::OnKeyEvent(Ea_Callback_Type key_type) {
       return;
     }
     keyname = kKeyNameBack;
-  } else if (key_type == EA_CALLBACK_MORE) {
+  } else if (key_type == EEXT_CALLBACK_MORE) {
     keyname = kKeyNameMenu;
   } else {
     return;

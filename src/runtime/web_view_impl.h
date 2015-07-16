@@ -20,7 +20,7 @@
 
 
 #include <Elementary.h>
-#include <efl_assist.h>
+#include <efl_extension.h>
 #include <string>
 #include <map>
 
@@ -54,7 +54,7 @@ class WebViewImpl {
   std::string mime() const { return mime_; }
 
  private:
-  void OnKeyEvent(Ea_Callback_Type key_type);
+  void OnKeyEvent(Eext_Callback_Type key_type);
   void OnRotation(int degree);
   void Initialize();
   void Deinitialize();
