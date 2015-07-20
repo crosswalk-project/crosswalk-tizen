@@ -188,6 +188,17 @@ static Eina_Bool ExitAppIdlerCallback(void* /*data*/) {
   return ECORE_CALLBACK_CANCEL;
 }
 
+static bool ClearCookie(Ewk_Context* ewk_context) {
+  Ewk_Cookie_Manager* cookie_manager =
+      ewk_context_cookie_manager_get(ewk_context);
+  if (!cookie_manager) {
+    LOGGER(ERROR) << "Fail to get cookie manager";
+    return false;
+  }
+  ewk_cookie_manager_cookies_clear(cookie_manager);
+  return true;
+}
+
 }  // namespace
 
 WebApplication::WebApplication(
@@ -538,6 +549,18 @@ void WebApplication::OnReceivedWrtMessage(
     ewk_ipc_wrt_message_data_type_set(ans, msg_type);
     ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
     if (ret)
+      ewk_ipc_wrt_message_data_value_set(ans, "success");
+    else
+      ewk_ipc_wrt_message_data_value_set(ans, "failed");
+    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+      LOGGER(ERROR) << "Failed to send response";
+    }
+    ewk_ipc_wrt_message_data_del(ans);
+  } else if (TYPE_IS("tizen://deleteAllCookies")) {
+    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+    if (ClearCookie(ewk_context_))
       ewk_ipc_wrt_message_data_value_set(ans, "success");
     else
       ewk_ipc_wrt_message_data_value_set(ans, "failed");
