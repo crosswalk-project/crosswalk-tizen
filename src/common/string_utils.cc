@@ -20,6 +20,7 @@
 #include <math.h>
 #include <uuid/uuid.h>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <iomanip>
 #include <algorithm>

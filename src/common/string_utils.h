@@ -17,6 +17,7 @@
 #ifndef WRT_COMMON_STRING_UTILS_H_
 #define WRT_COMMON_STRING_UTILS_H_
 
+#include <vector>
 #include <string>
 
 namespace wrt {

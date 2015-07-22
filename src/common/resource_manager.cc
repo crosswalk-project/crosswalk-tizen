@@ -188,31 +188,45 @@ ResourceManager::ResourceManager(ApplicationData* application_data,
 
 std::unique_ptr<ResourceManager::Resource>
 ResourceManager::GetDefaultResource() {
-  std::string default_src;
+  std::string src;
   std::string type;
   std::string encoding = kDefaultEncoding;
-
   auto content_info = application_data_->content_info();
   if (content_info) {
-    default_src = content_info->src();
+    src = content_info->src();
     type = content_info->type();
-    encoding = (!content_info->encoding().empty())
-               ? content_info->encoding() : kDefaultEncoding;
+    encoding = content_info->encoding();
+    LOGGER(DEBUG) << "src: " << src;
+    LOGGER(DEBUG) << "type: " << type;
+    LOGGER(DEBUG) << "encoding: " << encoding;
+  }
+  else
+    LOGGER(DEBUG) << "content_info is null";
+
+  // Check that tizen:content src is external page
+  if (content_info && content_info->is_tizen_content()
+      && (utils::StartsWith(src, kSchemeTypeHttp) ||
+          utils::StartsWith(src, kSchemeTypeHttps))) {
+    LOGGER(DEBUG) << "tizen content_info's src is an external page";
+    return std::unique_ptr<Resource>(new Resource(src, type, encoding));
   }
 
-  if (!default_src.empty()) {
-    default_src = InsertPrefixPath(default_src);
-  } else {
-    // if there is no content src, find reserved index files
+  // Find based on default start files list, if src is empty or invald
+  if (!content_info || !utils::Exists(resource_base_path_+src)) {
     for (auto& start_file : kDefaultStartFiles) {
       if (utils::Exists(resource_base_path_ + start_file)) {
-        default_src = InsertPrefixPath(start_file);
-        break;
+        src = InsertPrefixPath(start_file);
+        LOGGER(DEBUG) << "start file: " << src;
+        return std::unique_ptr<Resource>(new Resource(src, type, encoding));
       }
     }
+    // shouldn't be entered here
+    LOGGER(ERROR) << "it can't enter here. can't find any default start file";
+    return std::unique_ptr<Resource>(new Resource(src, type, encoding));
   }
 
-  return std::unique_ptr<Resource>(new Resource(default_src, type, encoding));
+  return std::unique_ptr<Resource>(new Resource(InsertPrefixPath(src),
+                                                type, encoding));
 }
 
 std::unique_ptr<ResourceManager::Resource> ResourceManager::GetMatchedResource(
@@ -222,7 +236,6 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetMatchedResource(
       InsertPrefixPath(app_control_info.src()),
                        app_control_info.onreset() == "disable" ? false : true));
   }
-
   return GetDefaultResource();
 }
 
