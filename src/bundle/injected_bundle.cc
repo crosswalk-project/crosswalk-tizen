@@ -123,7 +123,11 @@ extern "C" void DynamicUrlParsing(
     *new_url = "about:blank";
     return;
   }
-  *new_url = res_manager->GetLocalizedPath(*old_url);
+  if (wrt::utils::StartsWith(*old_url, "file:/") ||
+      wrt::utils::StartsWith(*old_url, "app:/"))
+    *new_url = res_manager->GetLocalizedPath(*old_url);
+  else
+    *new_url = *old_url;
 }
 
 extern "C" void DynamicDatabaseAttach(int /*attach*/) {
