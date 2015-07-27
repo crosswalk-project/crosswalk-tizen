@@ -38,6 +38,7 @@ BuildRequires: pkgconfig(gio-2.0)
 BuildRequires: pkgconfig(aul)
 BuildRequires: pkgconfig(ecore)
 BuildRequires: pkgconfig(notification)
+BuildRequires: pkgconfig(sqlite3)
 BuildRequires: boost-devel
 BuildRequires: python
 %if %{with x}

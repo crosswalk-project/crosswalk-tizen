@@ -33,6 +33,7 @@ SET(UTC_COMMON_LIBS
 # Source Files
 SET(UTC_COMMON_SRCS
   ${UTC_SRCDIR}/common/utc_common_url.cc
+  ${UTC_SRCDIR}/common/utc_appdb_sqlite.cc
 )
 
 # Compiler Flags

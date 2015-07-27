@@ -25,6 +25,7 @@ PKG_CHECK_MODULES(TARGET_COMMON_STATIC_DEPS
   appsvc
   manifest-parser
   manifest-handlers
+  sqlite3
   REQUIRED
 )
 
