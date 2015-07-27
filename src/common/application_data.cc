@@ -32,6 +32,7 @@ namespace {
 
 const char* kPathSeparator = "/";
 const char* kConfigXml = "config.xml";
+const char* kResWgtPath = "res/wgt";
 
 static std::string GetPackageIdByAppId(const std::string& appid) {
   char* pkgid = NULL;
@@ -43,6 +44,7 @@ static std::string GetPackageIdByAppId(const std::string& appid) {
   if (pkgid != NULL) {
     return std::string(pkgid_ptr.get());
   } else {
+    LOGGER(ERROR) << "Failed to get package id";
     return std::string();
   }
 }
@@ -65,6 +67,7 @@ static std::string GetPackageRootPath(const std::string& pkgid) {
   if (pkg_root_path != NULL) {
     return std::string(path_ptr.get());
   } else {
+    LOGGER(ERROR) << "Failed to get package root path";
     return std::string();
   }
 }
@@ -73,11 +76,9 @@ static std::string GetPackageRootPath(const std::string& pkgid) {
 
 ApplicationData::ApplicationData(const std::string& appid) : app_id_(appid) {
   pkg_id_ = GetPackageIdByAppId(appid);
-
-  if (!pkg_id_.empty()) {
-    application_path_ = GetPackageRootPath(pkg_id_) + kPathSeparator +
-                        appid + kPathSeparator;
-  }
+  if (!pkg_id_.empty())
+    application_path_ = GetPackageRootPath(pkg_id_) + kPathSeparator
+                        + kResWgtPath + kPathSeparator;
 }
 
 ApplicationData::~ApplicationData() {}
@@ -151,7 +152,7 @@ std::shared_ptr<const wgt::parse::CSPInfo>
 bool ApplicationData::LoadManifestData() {
   std::string config_xml_path(application_path_ + kConfigXml);
   if (!utils::Exists(config_xml_path)) {
-    LOGGER(ERROR) << "Failed to load manifest data. : No such file '"
+    LOGGER(ERROR) << "Failed to load manifest data : No such file '"
                   << config_xml_path << "'.";
     return false;
   }
