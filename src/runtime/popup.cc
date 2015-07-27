@@ -264,7 +264,6 @@ void Popup::Show() {
 
 void Popup::Hide() {
   evas_object_hide(popup_);
-  evas_object_del(popup_);
   ecore_idler_add([](void* popup) {
       Popup* obj = static_cast<Popup*>(popup);
       delete obj;
@@ -292,6 +291,10 @@ void Popup::Result(bool is_positive) {
 Popup::Popup(Evas_Object* popup, Evas_Object* grid, Evas_Object* box)
   : popup_(popup), grid_(grid), box_(box) {}
 
-Popup::~Popup() {}
+Popup::~Popup() {
+  if (popup_)
+    evas_object_del(popup_);
+  popup_ = NULL;
+}
 
 }  // namespace wrt
