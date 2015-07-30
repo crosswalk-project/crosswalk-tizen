@@ -51,6 +51,7 @@ namespace wrt {
 namespace {
 // TODO(sngn.lee) : It should be declare in common header
 const char* kKeyNameBack = "back";
+const char* kKeyNameMenu = "menu";
 
 const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
 const char* kConsoleMessageLogTag = "ConsoleMessage";
@@ -84,6 +85,16 @@ const char* kBackKeyEventScript = \
     "var __event = document.createEvent(\"CustomEvent\");\n"
     "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
     "__event.keyName = \"back\";\n"
+    "document.dispatchEvent(__event);\n"
+    "\n"
+    "for (var i=0; i < window.frames.length; i++)\n"
+    "{ window.frames[i].document.dispatchEvent(__event); }"
+    "})()";
+const char* kMenuKeyEventScript = \
+    "(function(){"
+    "var __event = document.createEvent(\"CustomEvent\");\n"
+    "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
+    "__event.keyName = \"menu\";\n"
     "document.dispatchEvent(__event);\n"
     "\n"
     "for (var i=0; i < window.frames.length; i++)\n"
@@ -609,6 +620,8 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
                  true;
   if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
+  } else if (enabled && kKeyNameMenu == keyname) {
+    view->EvalJavascript(kMenuKeyEventScript);
   }
 }
 
