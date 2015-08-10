@@ -18,7 +18,7 @@
 #ifndef WRT_RUNTIME_WEB_VIEW_IMPL_H_
 #define WRT_RUNTIME_WEB_VIEW_IMPL_H_
 
-
+#include <ewk_chromium.h>
 #include <Elementary.h>
 #include <efl_extension.h>
 #include <string>
@@ -26,8 +26,6 @@
 
 #include "runtime/web_view.h"
 #include "common/url.h"
-
-class Ewk_Context;
 
 namespace wrt {
 class NativeWindow;
@@ -84,6 +82,8 @@ class WebViewImpl {
   std::map<const std::string, Evas_Smart_Cb> smart_callbacks_;
   bool fullscreen_;
   std::string mime_;
+  Evas_Smart* evas_smart_class_;
+  Ewk_View_Smart_Class ewk_smart_class_;
 };
 }  // namespace wrt
 

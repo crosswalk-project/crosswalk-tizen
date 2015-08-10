@@ -32,6 +32,7 @@ namespace {
 const char* kKeyNameBack = "back";
 const char* kKeyNameMenu = "menu";
 const char* kDefaultEncoding = "UTF-8";
+const char* kSmartClassUserDataKey = "__SC_USERDATA__";
 
 static int ToWebRotation(int r) {
   switch (r) {
@@ -66,13 +67,16 @@ WebViewImpl::WebViewImpl(WebView* view,
       ewk_view_(NULL),
       listener_(NULL),
       view_(view),
-      fullscreen_(false) {
+      fullscreen_(false),
+      evas_smart_class_(NULL) {
   Initialize();
 }
 
 WebViewImpl::~WebViewImpl() {
   Deinitialize();
   evas_object_del(ewk_view_);
+  if (evas_smart_class_ != NULL)
+    evas_smart_free(evas_smart_class_);
 }
 
 void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {
@@ -118,7 +122,45 @@ bool WebViewImpl::EvalJavascript(const std::string& script) {
 }
 
 void WebViewImpl::Initialize() {
-  ewk_view_ = ewk_view_add_with_context(window_->evas_object(), context_);
+  ewk_smart_class_ = EWK_VIEW_SMART_CLASS_INIT_NAME_VERSION("WebView");
+  ewk_view_smart_class_set(&ewk_smart_class_);
+  ewk_smart_class_.orientation_lock = [](Ewk_View_Smart_Data *sd,
+                                         int orientation) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(
+        evas_object_data_get(sd->self, kSmartClassUserDataKey));
+    if (self == NULL || self->listener_ == NULL)
+      return EINA_FALSE;
+    self->listener_->OnOrientationLock(self->view_,
+                                       true,
+                                       ToNativeRotation(orientation));
+    return EINA_TRUE;
+  };
+
+  ewk_smart_class_.orientation_unlock = [](Ewk_View_Smart_Data *sd) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(
+        evas_object_data_get(sd->self, kSmartClassUserDataKey));
+    if (self == NULL || self->listener_ == NULL)
+      return;
+    self->listener_->OnOrientationLock(
+        self->view_,
+        false,
+        NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
+  };
+
+  if (evas_smart_class_ != NULL)
+    evas_smart_free(evas_smart_class_);
+  evas_smart_class_ = evas_smart_class_new(&ewk_smart_class_.sc);
+  if (evas_smart_class_ == NULL) {
+    LOGGER(ERROR) << "Can't create evas smart class";
+    return;
+  }
+
+  Ewk_Page_Group* page_group = ewk_page_group_create("");
+  ewk_view_ = ewk_view_smart_add(evas_object_evas_get(window_->evas_object()),
+                                 evas_smart_class_,
+                                 context_,
+                                 page_group);
+  evas_object_data_set(ewk_view_, kSmartClassUserDataKey, this);
 
   InitKeyCallback();
   InitLoaderCallback();
