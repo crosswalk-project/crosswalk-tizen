@@ -48,8 +48,12 @@ int main(int argc, char* argv[]) {
         sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);
     ewk_set_arguments(chromium_arg_cnt, chromium_arg_options);
 
-    wrt::Runtime runtime;
-    int ret = runtime.Exec(argc, argv);
+    int ret = 0;
+    // Runtime's destructor should be called before ewk_shutdown()
+    {
+      wrt::Runtime runtime;
+      ret = runtime.Exec(argc, argv);
+    }
     ewk_shutdown();
     exit(ret);
   }
