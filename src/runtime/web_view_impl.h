@@ -62,7 +62,6 @@ class WebViewImpl {
   void InitPolicyDecideCallback();
   void InitQuotaExceededCallback();
   void InitIPCMessageCallback();
-  void InitOrientaionLockCallback();
   void InitConsoleMessageCallback();
   void InitCustomContextMenuCallback();
   void InitRotationCallback();

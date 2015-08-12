@@ -167,7 +167,6 @@ void WebViewImpl::Initialize() {
   InitPolicyDecideCallback();
   InitQuotaExceededCallback();
   InitIPCMessageCallback();
-  InitOrientaionLockCallback();
   InitConsoleMessageCallback();
   InitCustomContextMenuCallback();
   InitRotationCallback();
@@ -210,10 +209,6 @@ void WebViewImpl::Deinitialize() {
       NULL,
       NULL);
   ewk_view_exceeded_local_file_system_quota_callback_set(
-      ewk_view_,
-      NULL,
-      NULL);
-  ewk_view_orientation_lock_callback_set(
       ewk_view_,
       NULL,
       NULL);
@@ -470,25 +465,6 @@ void WebViewImpl::InitIPCMessageCallback() {
                                  wrt_message_callback,
                                  this);
   smart_callbacks_["wrt,message"] = wrt_message_callback;
-}
-
-void WebViewImpl::InitOrientaionLockCallback() {
-  // Orientation lock callback
-  auto orientation_lock_callback = [](Evas_Object*,
-                                      Eina_Bool need_lock,
-                                      int orientation,
-                                      void* user_data) -> Eina_Bool {
-    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
-    if (self->listener_) {
-      self->listener_->OnOrientationLock(self->view_,
-                                         need_lock,
-                                         ToNativeRotation(orientation));
-    }
-    return EINA_TRUE;
-  };
-  ewk_view_orientation_lock_callback_set(ewk_view_,
-                                         orientation_lock_callback,
-                                         this);
 }
 
 void WebViewImpl::InitConsoleMessageCallback() {
