@@ -45,7 +45,17 @@ static int ToWebRotation(int r) {
 }
 
 static NativeWindow::ScreenOrientation ToNativeRotation(int r) {
-  if (r & EWK_SCREEN_ORIENTATION_PORTRAIT_PRIMARY) {
+  if (r ==
+      (EWK_SCREEN_ORIENTATION_PORTRAIT_PRIMARY
+       | EWK_SCREEN_ORIENTATION_PORTRAIT_SECONDARY
+       | EWK_SCREEN_ORIENTATION_LANDSCAPE_PRIMARY
+       | EWK_SCREEN_ORIENTATION_LANDSCAPE_SECONDARY)) {
+    return NativeWindow::ScreenOrientation::ANY;
+  } else if (r ==
+      (EWK_SCREEN_ORIENTATION_PORTRAIT_PRIMARY
+       | EWK_SCREEN_ORIENTATION_LANDSCAPE_PRIMARY)) {
+    return NativeWindow::ScreenOrientation::NATURAL;
+  } else if (r & EWK_SCREEN_ORIENTATION_PORTRAIT_PRIMARY) {
     return NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY;
   } else if (r & EWK_SCREEN_ORIENTATION_PORTRAIT_SECONDARY) {
     return NativeWindow::ScreenOrientation::PORTRAIT_SECONDARY;
@@ -229,7 +239,7 @@ void WebViewImpl::InitKeyCallback() {
                          void* event_info) -> void {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     Eext_Callback_Type key = static_cast<Eext_Callback_Type>(
-      reinterpret_cast<long long>(event_info)); // for 64-bit
+      reinterpret_cast<long long>(event_info));  // for 64-bit
     self->OnKeyEvent(key);
   };
   eext_object_event_callback_add(ewk_view_,
@@ -815,7 +825,6 @@ void WebViewImpl::SetDefaultEncoding(const std::string& encoding) {
     ewk_settings_default_text_encoding_name_set(settings, kDefaultEncoding);
     // TODO(jh5.cho) : It is required to set an encoding value again to apply it
     // to the document.characterSet for unkown reason. ewk api seems to be fixed
-
 }
 
 }  // namespace wrt

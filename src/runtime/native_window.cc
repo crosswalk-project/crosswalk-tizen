@@ -205,7 +205,8 @@ void NativeWindow::RemoveRotationHandler(int id) {
 }
 
 void NativeWindow::SetRotationLock(int degree) {
-  rotation_ = degree % 360;
+  if (degree != -1)
+    rotation_ = degree % 360;
   elm_win_wm_rotation_preferred_rotation_set(window_, rotation_);
   elm_win_rotation_set(window_, rotation_);
 }
@@ -215,13 +216,17 @@ void NativeWindow::SetRotationLock(ScreenOrientation orientation) {
     0,  // PORTRAIT_PRIMARY
     180,  // PORTRAIT_SECONDARY
     270,  // LANDSCAPE_PRIMARY
-    90  // LANDSCAPE_SECONDARY
+    90,  // LANDSCAPE_SECONDARY
+    0,  // NATURAL
+    -1  // ANY
   };
   int landscape_natural_angle[] = {
     270,  // PORTRAIT_PRIMARY
     90,  // PORTRAIT_SECONDARY
     0,  // LANDSCAPE_PRIMARY
-    180  // LANDSCAPE_SECONDARY
+    180,  // LANDSCAPE_SECONDARY
+    0,  // NATURAL
+    -1,  // ANY
   };
   auto& convert_table =
       natural_orientation_ == ScreenOrientation::PORTRAIT_PRIMARY ?

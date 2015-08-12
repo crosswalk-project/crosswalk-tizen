@@ -29,7 +29,9 @@ class NativeWindow {
     PORTRAIT_PRIMARY = 0,
     PORTRAIT_SECONDARY = 1,
     LANDSCAPE_PRIMARY = 2,
-    LANDSCAPE_SECONDARY = 3
+    LANDSCAPE_SECONDARY = 3,
+    NATURAL = 4,
+    ANY = 5
   };
   typedef std::function<void(int)> RotationHandler;
   NativeWindow();
