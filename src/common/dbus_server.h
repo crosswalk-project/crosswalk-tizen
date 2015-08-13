@@ -37,6 +37,7 @@ class DBusServer {
   typedef std::function<bool(GDBusConnection* connection,
                              const gchar* property,
                              GVariant* value)> PropertySetter;
+  typedef std::function<void(GDBusConnection* connection)> DisconnectedCallback;
 
   DBusServer();
   virtual ~DBusServer();
@@ -52,10 +53,12 @@ class DBusServer {
                   const std::string& iface, const std::string& signal_name,
                   GVariant* parameters);
 
+  void SetDisconnectedCallback(DisconnectedCallback func);
   void SetPeerCredentialsCallback(PeerCredentialsCallback func);
   void SetMethodCallback(const std::string& iface, MethodCallback func);
   void SetPropertyGetter(const std::string& iface, PropertyGetter func);
   void SetPropertySetter(const std::string& iface, PropertySetter func);
+  DisconnectedCallback GetDisconnectedCallback() const;
   PeerCredentialsCallback GetPeerCredentialsCallback() const;
   MethodCallback GetMethodCallback(const std::string& iface);
   PropertySetter GetPropertySetter(const std::string& iface);
@@ -66,6 +69,7 @@ class DBusServer {
   GDBusServer* server_;
   GDBusNodeInfo* node_info_;
 
+  DisconnectedCallback disconnected_callback_;
   PeerCredentialsCallback peer_credentials_callback_;
   std::map<std::string, MethodCallback> method_callbacks_;
   std::map<std::string, PropertyGetter> property_getters_;

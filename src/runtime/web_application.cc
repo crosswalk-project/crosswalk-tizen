@@ -378,6 +378,11 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   dbus_server_.Start(app_uuid_ +
                      "." + std::string(kDBusNameForApplication));
 
+  dbus_server_.SetDisconnectedCallback([](GDBusConnection* /*conn*/) {
+    LOGGER(ERROR) << "Application DBusServer has received disconnection event.";
+    exit(1);
+  });
+
   // Execute ExtensionProcess
   ExecExtensionProcess(app_uuid_);
 

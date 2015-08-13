@@ -102,6 +102,14 @@ static void OnClosedConnection(GDBusConnection* connection,
                                gboolean /*remote_peer_vanished*/,
                                GError* /*error*/,
                                gpointer user_data) {
+  DBusServer* self = reinterpret_cast<DBusServer*>(user_data);
+  if (self) {
+    auto callback = self->GetDisconnectedCallback();
+    if (callback) {
+      callback(connection);
+    }
+  }
+
   g_signal_handlers_disconnect_by_func(connection,
                                        (gpointer)OnClosedConnection,
                                        user_data);
@@ -236,6 +244,10 @@ void DBusServer::SendSignal(GDBusConnection* connection,
   }
 }
 
+void DBusServer::SetDisconnectedCallback(DisconnectedCallback func) {
+  disconnected_callback_ = func;
+}
+
 void DBusServer::SetPeerCredentialsCallback(PeerCredentialsCallback func) {
   peer_credentials_callback_ = func;
 }
@@ -253,6 +265,11 @@ void DBusServer::SetPropertyGetter(
 void DBusServer::SetPropertySetter(
     const std::string& iface, PropertySetter func) {
   property_setters_[iface] = func;
+}
+
+DBusServer::DisconnectedCallback
+DBusServer::GetDisconnectedCallback() const {
+  return disconnected_callback_;
 }
 
 DBusServer::PeerCredentialsCallback
