@@ -61,7 +61,7 @@ std::string GetCurrentMilliSeconds() {
   std::ostringstream ss;
   struct timespec spec;
   clock_gettime(CLOCK_REALTIME, &spec);
-  ss << spec.tv_sec << "." <<
+  ss << (spec.tv_sec%10000) << "." <<
      std::setw(3) << std::setfill('0') << (round(spec.tv_nsec / 1.0e6));
   return ss.str();
 }

@@ -29,6 +29,7 @@
 #include "bundle/runtime_ipc_client.h"
 #include "bundle/extension_renderer_controller.h"
 #include "bundle/widget_module.h"
+#include "common/profiler.h"
 
 namespace wrt {
 class BundleGlobalData {
@@ -71,6 +72,7 @@ class BundleGlobalData {
 }  //  namespace wrt
 
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
+  SCOPE_PROFILE();
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
   ecore_init();
   wrt::BundleGlobalData::GetInstance()->Initialize(tizen_id);
@@ -83,20 +85,26 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
                                           const char* uuid,
                                           const char* /*theme*/,
                                           const char* base_url) {
+  SCOPE_PROFILE();
   LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!" << tizen_id;
   if (base_url == NULL || wrt::utils::StartsWith(base_url, "http")) {
     LOGGER(ERROR) << "External url not allowed plugin loading.";
     return;
   }
 
+  STEP_PROFILE_START("Initialize RuntimeIPCClient");
   // Initialize RuntimeIPCClient
   wrt::RuntimeIPCClient* rc = wrt::RuntimeIPCClient::GetInstance();
   rc->set_routing_id(routing_handle);
+  STEP_PROFILE_END("Initialize RuntimeIPCClient");
 
+  STEP_PROFILE_START("Initialize ExtensionRendererController");
   // Initialize ExtensionRendererController
   wrt::ExtensionRendererController& controller =
       wrt::ExtensionRendererController::GetInstance();
   controller.InitializeExtensions(uuid);
+  STEP_PROFILE_END("Initialize ExtensionRendererController");
+
   controller.DidCreateScriptContext(context);
 }
 

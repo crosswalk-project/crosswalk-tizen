@@ -21,8 +21,11 @@
 #include "common/command_line.h"
 #include "runtime/runtime.h"
 #include "extension/extension_server.h"
+#include "common/profiler.h"
 
 int main(int argc, char* argv[]) {
+  STEP_PROFILE_START("Start -> Launch Completed");
+  STEP_PROFILE_START("Start -> OnCreate");
   // Parse commandline.
   wrt::CommandLine::Init(argc, argv);
 

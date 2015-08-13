@@ -27,6 +27,7 @@
 #include "bundle/xwalk_v8tools_module.h"
 #include "bundle/widget_module.h"
 #include "bundle/object_tools_module.h"
+#include "common/profiler.h"
 
 
 namespace wrt {
@@ -35,6 +36,7 @@ namespace {
 
 void CreateExtensionModules(ExtensionClient* client,
                             ModuleSystem* module_system) {
+  SCOPE_PROFILE();
   const ExtensionClient::ExtensionAPIMap& extensions =
       client->extension_apis();
   auto it = extensions.begin();
@@ -66,6 +68,7 @@ ExtensionRendererController::~ExtensionRendererController() {
 
 void ExtensionRendererController::DidCreateScriptContext(
     v8::Handle<v8::Context> context) {
+  SCOPE_PROFILE();
   ModuleSystem* module_system = new ModuleSystem(context);
   ModuleSystem::SetModuleSystemInContext(
       std::unique_ptr<ModuleSystem>(module_system), context);

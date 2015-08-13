@@ -100,6 +100,7 @@ std::string ExtensionClient::SendSyncMessageToNative(
 }
 
 bool ExtensionClient::Initialize(const std::string& uuid) {
+  STEP_PROFILE_START("Connect ExtensionServer");
   // Retry connecting to ExtensionServer
   // ExtensionServer can not be ready at this time yet.
   const int retry_max = 20;
@@ -112,6 +113,7 @@ bool ExtensionClient::Initialize(const std::string& uuid) {
                  << (i+1) << "/" << retry_max;
     usleep(50*1000);
   }
+  STEP_PROFILE_END("Connect ExtensionServer");
 
   if (!connected) {
     LOGGER(ERROR) << "Failed to connect to the dbus server for Extension.";

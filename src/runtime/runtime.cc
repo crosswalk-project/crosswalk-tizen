@@ -26,6 +26,7 @@
 #include "common/app_control.h"
 #include "common/application_data.h"
 #include "runtime/native_app_window.h"
+#include "common/profiler.h"
 
 namespace wrt {
 
@@ -35,6 +36,7 @@ const char* kTextLocalePath = "/usr/share/locale";
 const char* kTextDomainWrt = "wrt";
 
 static NativeWindow* CreateNativeWindow() {
+  SCOPE_PROFILE();
   // TODO(wy80.choi) : consider other type of native window.
   NativeWindow* window = new NativeAppWindow();
   window->Initialize();
@@ -58,6 +60,10 @@ Runtime::~Runtime() {
 }
 
 bool Runtime::OnCreate() {
+  STEP_PROFILE_END("ui_app_main -> OnCreate");
+  STEP_PROFILE_END("Start -> OnCreate");
+  STEP_PROFILE_START("OnCreate -> URL Set");
+
   std::string appid = CommandLine::ForCurrentProcess()->appid();
 
   // Process First Launch
@@ -67,7 +73,9 @@ bool Runtime::OnCreate() {
   }
 
   native_window_ = CreateNativeWindow();
+  STEP_PROFILE_START("WebApplication Create");
   application_ = new WebApplication(native_window_, std::move(appdata));
+  STEP_PROFILE_END("WebApplication Create");
   application_->set_terminator([](){ ui_app_exit(); });
 
   setlocale(LC_ALL, "");
@@ -92,6 +100,7 @@ void Runtime::OnResume() {
 }
 
 void Runtime::OnAppControl(app_control_h app_control) {
+  SCOPE_PROFILE();
   std::unique_ptr<AppControl> appcontrol(new AppControl(app_control));
   if (application_->launched()) {
     application_->AppControl(std::move(appcontrol));
@@ -189,7 +198,7 @@ int Runtime::Exec(int argc, char* argv[]) {
                            APP_EVENT_LOW_MEMORY,
                            low_memory,
                            this);
-
+  STEP_PROFILE_START("ui_app_main -> OnCreate");
   return ui_app_main(argc, argv, &ops, this);
 }
 

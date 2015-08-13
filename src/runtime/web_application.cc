@@ -41,6 +41,7 @@
 #include "runtime/notification_manager.h"
 #include "runtime/popup.h"
 #include "runtime/popup_string.h"
+#include "common/profiler.h"
 
 #ifndef INJECTED_BUNDLE_PATH
   #error INJECTED_BUNDLE_PATH is not set.
@@ -241,6 +242,7 @@ WebApplication::~WebApplication() {
 }
 
 bool WebApplication::Initialize() {
+  SCOPE_PROFILE();
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
 
@@ -366,6 +368,7 @@ bool WebApplication::Initialize() {
 }
 
 void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
+  STEP_PROFILE_START("ExtensionServer Init");
   // Start DBus Server for Runtime
   // TODO(wy80.choi): Should I add PeerCredentials checker?
   using std::placeholders::_1;
@@ -385,6 +388,7 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
 
   // Execute ExtensionProcess
   ExecExtensionProcess(app_uuid_);
+  STEP_PROFILE_END("ExtensionServer Init");
 
   // Setup View
   WebView* view = new WebView(window_, ewk_context_);
@@ -401,6 +405,10 @@ void WebApplication::Launch(std::unique_ptr<wrt::AppControl> appcontrol) {
   std::unique_ptr<ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
   view->SetDefaultEncoding(res->encoding());
+
+  STEP_PROFILE_END("OnCreate -> URL Set");
+  STEP_PROFILE_START("URL Set -> Rendered");
+
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
   window_->SetContent(view->evas_object());
@@ -678,6 +686,8 @@ void WebApplication::OnLoadFinished(WebView* /*view*/) {
   LOGGER(DEBUG) << "LoadFinished";
 }
 void WebApplication::OnRendered(WebView* /*view*/) {
+  STEP_PROFILE_END("URL Set -> Rendered");
+  STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
 }
 

@@ -25,6 +25,7 @@
 
 #include "common/logger.h"
 #include "common/file_utils.h"
+#include "common/profiler.h"
 
 namespace wrt {
 
@@ -150,6 +151,7 @@ std::shared_ptr<const wgt::parse::CSPInfo>
 
 
 bool ApplicationData::LoadManifestData() {
+  SCOPE_PROFILE();
   std::string config_xml_path(application_path_ + kConfigXml);
   if (!utils::Exists(config_xml_path)) {
     LOGGER(ERROR) << "Failed to load manifest data : No such file '"

@@ -24,7 +24,7 @@
 #include "runtime/native_window.h"
 #include "common/logger.h"
 #include "common/file_utils.h"
-
+#include "common/profiler.h"
 namespace wrt {
 
 namespace {
@@ -90,6 +90,7 @@ WebViewImpl::~WebViewImpl() {
 }
 
 void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {
+  SCOPE_PROFILE();
   if (!mime.empty()) {
     mime_ = mime;
     auto mime_override_cb = [](const char* url, const char* mime,

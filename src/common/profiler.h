@@ -17,6 +17,12 @@
 #ifndef WRT_COMMON_PROFILER_H_
 #define WRT_COMMON_PROFILER_H_
 
+#include <time.h>
+
+#include <string>
+#include <memory>
+#include <map>
+
 namespace wrt {
 
 #define PROFILE_START() PrintProfileLog(__FUNCTION__, "START");
@@ -25,6 +31,41 @@ namespace wrt {
 
 void PrintProfileLog(const char* func, const char* tag);
 
+class ScopeProfile {
+ public:
+  explicit ScopeProfile(const char* step);
+  ~ScopeProfile();
+  void Reset();
+  void End();
+ private:
+  std::string step_;
+  struct timespec start_;
+  bool expired_;
+};
+
+class StepProfile {
+ public:
+  static StepProfile* GetInstance();
+  void Start(const char* step);
+  void End(const char* step);
+ private:
+  StepProfile();
+  ~StepProfile();
+  typedef std::map<const std::string,
+                   std::unique_ptr<ScopeProfile> > ProfileMapT;
+  ProfileMapT map_;
+};
+
 }  // namespace wrt
+
+#define SCOPE_PROFILE() \
+  wrt::ScopeProfile __profile(__FUNCTION__);
+
+#define STEP_PROFILE_START(x) \
+  wrt::StepProfile::GetInstance()->Start(x)
+
+#define STEP_PROFILE_END(x) \
+  wrt::StepProfile::GetInstance()->End(x)
+
 
 #endif  // WRT_COMMON_PROFILER_H_
