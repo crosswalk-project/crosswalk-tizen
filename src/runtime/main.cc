@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
       wrt::Runtime runtime;
       ret = runtime.Exec(argc, argv);
     }
-    ewk_shutdown();
+    //ewk_shutdown();
     exit(ret);
   }
 
