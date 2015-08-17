@@ -272,6 +272,9 @@ void ExtensionModule::LoadExtensionCode(
   instance_id_ = client_->CreateInstance(extension_name_, this);
 
   std::string exception;
+  if (extension_code_.empty()) {
+    extension_code_ = client_->GetExtensionJavascriptAPICode(extension_name_);
+  }
   std::string wrapped_api_code = WrapAPICode(extension_code_, extension_name_);
   v8::Handle<v8::Value> result = RunString(wrapped_api_code, &exception);
 

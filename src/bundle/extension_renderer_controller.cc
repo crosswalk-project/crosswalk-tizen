@@ -42,11 +42,12 @@ void CreateExtensionModules(ExtensionClient* client,
   auto it = extensions.begin();
   for (; it != extensions.end(); ++it) {
     ExtensionClient::ExtensionCodePoints* codepoint = it->second;
-    if (codepoint->api.empty())
-      continue;
 
     std::unique_ptr<ExtensionModule> module(
-        new ExtensionModule(client, module_system, it->first, codepoint->api));
+        new ExtensionModule(client,
+              module_system,
+              it->first,
+              codepoint->api));
     module_system->RegisterExtensionModule(
         std::move(module), codepoint->entry_points);
   }

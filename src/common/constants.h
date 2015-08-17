@@ -34,6 +34,7 @@ extern const char kMethodDestroyInstance[];
 extern const char kMethodSendSyncMessage[];
 extern const char kMethodPostMessage[];
 extern const char kSignalOnMessageToJS[];
+extern const char kMethodGetJavascriptCode[];
 
 }  // namespace wrt
 

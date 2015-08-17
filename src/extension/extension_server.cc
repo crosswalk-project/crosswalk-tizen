@@ -22,12 +22,14 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "common/logger.h"
 #include "common/constants.h"
 #include "common/file_utils.h"
 #include "common/string_utils.h"
 #include "common/command_line.h"
+#include "common/picojson.h"
 #include "extension/extension.h"
 
 namespace wrt {
@@ -36,12 +38,17 @@ namespace {
 
 const char kExtensionPrefix[] = "lib";
 const char kExtensionSuffix[] = ".so";
+const char kExtensionMetadata[] = "plugins.json";
 
 const char kDBusIntrospectionXML[] =
   "<node>"
   "  <interface name='org.tizen.wrt.Extension'>"
   "    <method name='GetExtensions'>"
   "      <arg name='extensions' type='a(ssas)' direction='out' />"
+  "    </method>"
+  "    <method name='GetJavascriptCode'>"
+  "      <arg name='extension_name' type='s' direction='in' />"
+  "      <arg name='code' type='s' direction='out' />"
   "    </method>"
   "    <method name='CreateInstance'>"
   "      <arg name='extension_name' type='s' direction='in' />"
@@ -67,6 +74,17 @@ const char kDBusIntrospectionXML[] =
   "  </interface>"
   "</node>";
 
+void LoadFrequentlyUsedModules(std::map<std::string, Extension*>& modules) {
+  auto it = modules.find("tizen");
+  if (it != modules.end()) {
+    it->second->Initialize();
+  }
+  it = modules.find("xwalk.utils");
+  if (it != modules.end()) {
+    it->second->Initialize();
+  }
+}
+
 }  // namespace
 
 ExtensionServer::ExtensionServer(const std::string& uuid)
@@ -89,7 +107,11 @@ bool ExtensionServer::Start(const StringVector& paths) {
   }
 
   // Register system extensions to support Tizen Device APIs
+#ifdef PLUGIN_LAZY_LOADING
+  RegisterSystemExtensionsByMetadata();
+#else
   RegisterSystemExtensions();
+#endif
 
   // Register user extensions
   for (auto it = paths.begin(); it != paths.end(); ++it) {
@@ -112,6 +134,10 @@ bool ExtensionServer::Start(const StringVector& paths) {
   // Send 'ready' signal to Injected Bundle.
   NotifyEPCreatedToApplication();
 
+#ifdef PLUGIN_LAZY_LOADING
+  LoadFrequentlyUsedModules(extensions_);
+#endif
+
   return true;
 }
 
@@ -123,6 +149,21 @@ void ExtensionServer::RegisterExtension(const std::string& path) {
   }
   extensions_[ext->name()] = ext;
   LOGGER(DEBUG) << ext->name() << " is registered.";
+}
+
+void ExtensionServer::RegisterExtension(Extension* extension) {
+  if (!extension->lazy_loading() && !extension->Initialize()) {
+    delete extension;
+    return;
+  }
+
+  if (!RegisterSymbols(extension)) {
+    delete extension;
+    return;
+  }
+
+  extensions_[extension->name()] = extension;
+  LOGGER(DEBUG) << extension->name() << " is registered.";
 }
 
 void ExtensionServer::RegisterSystemExtensions() {
@@ -142,6 +183,52 @@ void ExtensionServer::RegisterSystemExtensions() {
     RegisterExtension(glob_result.gl_pathv[i]);
   }
 }
+
+void ExtensionServer::RegisterSystemExtensionsByMetadata() {
+#ifdef EXTENSION_PATH
+  std::string extension_path(EXTENSION_PATH);
+#else
+  #error EXTENSION_PATH is not set.
+#endif
+
+  extension_path.append("/");
+  extension_path.append(kExtensionMetadata);
+  std::ifstream metafile(extension_path.c_str());
+  if (!metafile.is_open()) {
+    LOGGER(ERROR) << "Fail to open the plugin metadata file(plugins.json)";
+    LOGGER(ERROR) << "Fallback - load plugin without lazy loading";
+    RegisterSystemExtensions();
+    return;
+  }
+
+  picojson::value metadata;
+  metafile >> metadata;
+    if (metadata.is<picojson::array>()) {
+    auto& plugins = metadata.get<picojson::array>();
+    for (auto plugin = plugins.begin(); plugin != plugins.end(); ++plugin) {
+      if (!plugin->is<picojson::object>())
+        continue;
+
+      std::string name = plugin->get("name").to_str();
+      std::string lib = plugin->get("lib").to_str();
+      std::vector<std::string> entries;
+      auto& entry_points_value = plugin->get("entry_points");
+      if (entry_points_value.is<picojson::array>()) {
+        auto& entry_points = entry_points_value.get<picojson::array>();
+        for (auto entry = entry_points.begin(); entry != entry_points.end();
+             ++entry) {
+          entries.push_back(entry->to_str());
+        }
+      }
+      Extension* extension = new Extension(lib, name, entries, this);
+      RegisterExtension(extension);
+    }
+  } else {
+    SLOGE("%s is not plugin metadata", extension_path.c_str());
+  }
+  metafile.close();
+}
+
 
 bool ExtensionServer::RegisterSymbols(Extension* extension) {
   std::string name = extension->name();
@@ -220,6 +307,10 @@ void ExtensionServer::HandleDBusMethod(GDBusConnection* connection,
     gchar* msg;
     g_variant_get(parameters, "(&s&s)", &instance_id, &msg);
     OnPostMessage(instance_id, msg);
+  } else if (method_name == kMethodGetJavascriptCode) {
+    gchar* extension_name;
+    g_variant_get(parameters, "(&s)", &extension_name);
+    OnGetJavascriptCode(connection, extension_name, invocation);
   }
 }
 
@@ -236,6 +327,7 @@ void ExtensionServer::OnGetExtensions(GDBusMethodInvocation* invocation) {
     g_variant_builder_open(&builder, G_VARIANT_TYPE("(ssas)"));
     g_variant_builder_add(&builder, "s", ext->name().c_str());
     g_variant_builder_add(&builder, "s", ext->javascript_api().c_str());
+
     // open container for entry_point
     g_variant_builder_open(&builder, G_VARIANT_TYPE("as"));
     auto it_entry = ext->entry_points().begin();
@@ -353,6 +445,24 @@ void ExtensionServer::OnPostMessage(
 
   ExtensionInstance* instance = it->second;
   instance->HandleMessage(msg);
+}
+
+void ExtensionServer::OnGetJavascriptCode(GDBusConnection* connection,
+                        const std::string& extension_name,
+                        GDBusMethodInvocation* invocation) {
+  // find extension with given the extension name
+  auto it = extensions_.find(extension_name);
+  if (it == extensions_.end()) {
+    LOGGER(ERROR) << "Failed to find extension '" << extension_name << "'";
+    g_dbus_method_invocation_return_error(
+        invocation, G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
+        "Not found extension %s", extension_name.c_str());
+    return;
+  }
+
+  it->second->Initialize();
+  g_dbus_method_invocation_return_value(
+      invocation, g_variant_new("(s)", it->second->javascript_api().c_str()));
 }
 
 void ExtensionServer::SyncReplyCallback(

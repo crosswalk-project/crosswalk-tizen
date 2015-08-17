@@ -36,7 +36,7 @@ const char kMethodDestroyInstance[] = "DestroyInstance";
 const char kMethodSendSyncMessage[] = "SendSyncMessage";
 const char kMethodPostMessage[] = "PostMessage";
 const char kSignalOnMessageToJS[] = "OnMessageToJS";
-
+const char kMethodGetJavascriptCode[] = "GetJavascriptCode";
 
 
 

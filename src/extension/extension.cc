@@ -30,6 +30,26 @@ Extension::Extension(const std::string& path, ExtensionDelegate* delegate)
     library_path_(path),
     xw_extension_(0),
     use_trampoline_(true),
+    lazy_loading_(false),
+    delegate_(delegate),
+    created_instance_callback_(NULL),
+    destroyed_instance_callback_(NULL),
+    shutdown_callback_(NULL),
+    handle_msg_callback_(NULL),
+    handle_sync_msg_callback_(NULL) {
+}
+
+Extension::Extension(const std::string& path,
+                     const std::string& name,
+                     const StringVector& entry_points,
+                     ExtensionDelegate* delegate)
+  : initialized_(false),
+    library_path_(path),
+    xw_extension_(0),
+    name_(name),
+    entry_points_(entry_points),
+    use_trampoline_(true),
+    lazy_loading_(true),
     delegate_(delegate),
     created_instance_callback_(NULL),
     destroyed_instance_callback_(NULL),
@@ -84,6 +104,7 @@ bool Extension::Initialize() {
 }
 
 ExtensionInstance* Extension::CreateInstance() {
+  Initialize();
   ExtensionAdapter* adapter = ExtensionAdapter::GetInstance();
   XW_Instance xw_instance = adapter->GetNextXWInstance();
   return new ExtensionInstance(this, xw_instance);

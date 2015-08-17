@@ -40,6 +40,10 @@ class Extension {
   };
 
   Extension(const std::string& path, ExtensionDelegate* delegate);
+  Extension(const std::string& path,
+            const std::string& name,
+            const StringVector& entry_points,
+            ExtensionDelegate* delegate);
   virtual ~Extension();
 
   bool Initialize();
@@ -55,6 +59,10 @@ class Extension {
 
   bool use_trampoline() const {
     return use_trampoline_;
+  }
+
+  bool lazy_loading() const {
+    return lazy_loading_;
   }
 
   void set_name(const std::string& name) {
@@ -85,6 +93,7 @@ class Extension {
   std::string javascript_api_;
   StringVector entry_points_;
   bool use_trampoline_;
+  bool lazy_loading_;
 
   ExtensionDelegate* delegate_;
 

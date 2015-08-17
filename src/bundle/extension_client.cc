@@ -175,4 +175,27 @@ void ExtensionClient::HandleSignal(
   }
 }
 
+std::string ExtensionClient::GetExtensionJavascriptAPICode(
+    const std::string& name) {
+
+  auto extension_code_point = extension_apis_.find(name);
+  if (extension_code_point == extension_apis_.end())
+    return std::string();
+
+  ExtensionCodePoints* code_points = extension_code_point->second;
+  if (!code_points->api.empty()) {
+    return code_points->api;
+  }
+
+  GVariant* value = dbus_extension_client_.Call(
+      kDBusInterfaceNameForExtension, kMethodGetJavascriptCode,
+      g_variant_new("(s)", name.c_str()),
+      G_VARIANT_TYPE("(s)"));
+  gchar* api;
+  g_variant_get(value, "(&s)", &api);
+  code_points->api = std::string(api);
+  g_variant_unref(value);
+  return code_points->api;
+}
+
 }  // namespace wrt

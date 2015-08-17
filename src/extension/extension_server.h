@@ -44,7 +44,9 @@ class ExtensionServer : public Extension::ExtensionDelegate {
 
  private:
   void RegisterExtension(const std::string& path);
+  void RegisterExtension(Extension* extension);
   void RegisterSystemExtensions();
+  void RegisterSystemExtensionsByMetadata();
   bool RegisterSymbols(Extension* extension);
 
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);
@@ -74,6 +76,9 @@ class ExtensionServer : public Extension::ExtensionDelegate {
   void PostMessageToJSCallback(GDBusConnection* connection,
                                const std::string& instance_id,
                                const std::string& msg);
+  void OnGetJavascriptCode(GDBusConnection* connection,
+                        const std::string& extension_name,
+                        GDBusMethodInvocation* invocation);
 
   std::string app_uuid_;
   DBusServer dbus_server_;

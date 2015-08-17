@@ -45,6 +45,7 @@ class ExtensionClient {
 
   typedef std::map<std::string, ExtensionCodePoints*> ExtensionAPIMap;
   const ExtensionAPIMap& extension_apis() const { return extension_apis_; }
+  std::string GetExtensionJavascriptAPICode(const std::string& name);
 
  private:
   void HandleSignal(const std::string& signal_name, GVariant* parameters);
