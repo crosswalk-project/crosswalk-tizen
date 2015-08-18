@@ -18,7 +18,10 @@
 
 #include <unistd.h>
 #include <libgen.h>
+#include <sys/types.h>
+
 #include <string>
+#include <sstream>
 #include <algorithm>
 
 namespace wrt {
@@ -56,6 +59,17 @@ std::string ExtName(const std::string& path) {
   } else {
     return std::string();
   }
+}
+
+std::string GetUserRuntimeDir() {
+  uid_t uid = getuid();
+  std::stringstream ss;
+  ss << "/run/user/" << uid;
+  std::string path = ss.str();
+  if (!Exists(path)) {
+    path = "/tmp";
+  }
+  return path;
 }
 
 }  // namespace utils

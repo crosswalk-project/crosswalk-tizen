@@ -32,6 +32,7 @@ std::string SchemeName(const std::string& uri);
 
 std::string ExtName(const std::string& path);
 
+std::string GetUserRuntimeDir();
 
 }  // namespace utils
 }  // namespace wrt

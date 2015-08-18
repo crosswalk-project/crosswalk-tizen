@@ -17,6 +17,7 @@
 #include "common/dbus_server.h"
 
 #include "common/logger.h"
+#include "common/file_utils.h"
 
 namespace wrt {
 
@@ -184,7 +185,7 @@ void DBusServer::Start(const std::string& name) {
   GError* err = NULL;
 
   address_path_.clear();
-  address_path_.append(g_get_user_runtime_dir());
+  address_path_.append(utils::GetUserRuntimeDir());
   address_path_.append("/.");
   address_path_.append(name);
   // unlink existing bus address

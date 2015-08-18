@@ -17,6 +17,7 @@
 #include "common/dbus_client.h"
 
 #include "common/logger.h"
+#include "common/file_utils.h"
 
 namespace wrt {
 
@@ -52,7 +53,7 @@ DBusClient::~DBusClient() {
 
 bool DBusClient::ConnectByName(const std::string& name) {
   std::string address("unix:path=");
-  address.append(g_get_user_runtime_dir());
+  address.append(utils::GetUserRuntimeDir());
   address.append("/.");
   address.append(name);
   return Connect(address);
