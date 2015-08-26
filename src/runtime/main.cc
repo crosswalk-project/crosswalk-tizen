@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
     ewk_init();
     char* chromium_arg_options[] = {
       argv[0],
+      const_cast<char*>("--no-sandbox"),
       const_cast<char*>("--enable-file-cookies"),
       const_cast<char*>("--allow-file-access-from-files"),
       const_cast<char*>("--allow-universal-access-from-files")
