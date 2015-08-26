@@ -208,7 +208,6 @@ void NativeWindow::SetRotationLock(int degree) {
   if (degree != -1)
     rotation_ = degree % 360;
   elm_win_wm_rotation_preferred_rotation_set(window_, rotation_);
-  elm_win_rotation_set(window_, rotation_);
 }
 
 void NativeWindow::SetRotationLock(ScreenOrientation orientation) {
