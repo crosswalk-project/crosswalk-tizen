@@ -818,14 +818,10 @@ void WebViewImpl::SetCSPRule(const std::string& rule, bool report_only) {
 }
 
 void WebViewImpl::SetDefaultEncoding(const std::string& encoding) {
-  Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
-
-  if (ewk_settings_is_encoding_valid(encoding.c_str()))
+  if (ewk_settings_is_encoding_valid(encoding.c_str())) {
+    Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
     ewk_settings_default_text_encoding_name_set(settings, encoding.c_str());
-  else
-    ewk_settings_default_text_encoding_name_set(settings, kDefaultEncoding);
-    // TODO(jh5.cho) : It is required to set an encoding value again to apply it
-    // to the document.characterSet for unkown reason. ewk api seems to be fixed
+  }
 }
 
 }  // namespace wrt
