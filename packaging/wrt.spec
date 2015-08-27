@@ -108,6 +108,7 @@ cd %{build_dir}
 rm -fr %{buildroot}
 
 %files
+%manifest nwrt.manifest
 %attr(755,root,root) %{_bindir}/wrt
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
 %attr(644,root,root) %{injected_bundle_path}
