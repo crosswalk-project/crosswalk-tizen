@@ -71,6 +71,7 @@ class WebViewImpl {
   void InitGeolocationPermissionCallback();
   void InitAuthenticationCallback();
   void InitCertificateAllowCallback();
+  void InitPopupWaitCallback();
 
   NativeWindow* window_;
   Ewk_Context* context_;
@@ -83,6 +84,7 @@ class WebViewImpl {
   std::string mime_;
   Evas_Smart* evas_smart_class_;
   Ewk_View_Smart_Class ewk_smart_class_;
+  bool internal_popup_opened_;
 };
 }  // namespace wrt
 

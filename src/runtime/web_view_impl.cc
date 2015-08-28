@@ -78,11 +78,15 @@ WebViewImpl::WebViewImpl(WebView* view,
       listener_(NULL),
       view_(view),
       fullscreen_(false),
-      evas_smart_class_(NULL) {
+      evas_smart_class_(NULL),
+      internal_popup_opened_(false) {
   Initialize();
 }
 
 WebViewImpl::~WebViewImpl() {
+  if (internal_popup_opened_) {
+    ewk_view_javascript_alert_reply(ewk_view_);
+  }
   Deinitialize();
   evas_object_del(ewk_view_);
   if (evas_smart_class_ != NULL)
@@ -187,6 +191,7 @@ void WebViewImpl::Initialize() {
   InitGeolocationPermissionCallback();
   InitAuthenticationCallback();
   InitCertificateAllowCallback();
+  InitPopupWaitCallback();
 
   Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
   ewk_settings_scripts_can_open_windows_set(settings, EINA_TRUE);
@@ -762,6 +767,22 @@ void WebViewImpl::InitCertificateAllowCallback() {
                                  this);
   smart_callbacks_["request,certificate,confirm"] = certi_callback;
 }
+
+void WebViewImpl::InitPopupWaitCallback() {
+  evas_object_smart_callback_add(ewk_view_,
+      "popup,reply,wait,start",
+      [](void* user_data, Evas_Object* /*obj*/, void*) {
+        WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+        self->internal_popup_opened_ = true;
+      }, this);
+  evas_object_smart_callback_add(ewk_view_,
+      "popup,reply,wait,finish",
+      [](void* user_data, Evas_Object* /*obj*/, void*) {
+        WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+        self->internal_popup_opened_ = false;
+      }, this);
+}
+
 
 
 std::string WebViewImpl::GetUrl() {
