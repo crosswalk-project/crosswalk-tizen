@@ -227,6 +227,17 @@ void ExtensionServer::RegisterSystemExtensionsByMetadata() {
     SLOGE("%s is not plugin metadata", extension_path.c_str());
   }
   metafile.close();
+
+  // widget API
+  std::string widget_api_lib_path(EXTENSION_PATH);
+  widget_api_lib_path.append("/");
+  widget_api_lib_path.append("libwidget-plugin.so");
+  std::vector<std::string> widget_entries = {"widget"};
+  Extension* widget = new Extension(widget_api_lib_path,
+                                    "Widget",
+                                    widget_entries,
+                                    this);
+  RegisterExtension(widget);
 }
 
 
