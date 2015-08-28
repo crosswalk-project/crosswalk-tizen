@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <set>
 
 namespace wrt {
 
@@ -44,6 +45,7 @@ class Popup {
   };
 
   static Popup* CreatePopup(NativeWindow* window);
+  static void ForceCloseAllPopup();
 
   // button
   void SetButtonType(ButtonType type);
@@ -96,6 +98,7 @@ class Popup {
   std::string result_entry2_;
   bool enable_check_box_;
   bool result_check_box_;
+  static std::set<Popup*> opened_popups_;
 };
 
 }  // namespace wrt

@@ -134,6 +134,9 @@ static Evas_Object* AddCheckBox(Evas_Object* parent) {
 
 }  // namespace
 
+// static variable initialize
+std::set<Popup*> Popup::opened_popups_;
+
 Popup* Popup::CreatePopup(NativeWindow* window) {
   Evas_Object* popup = elm_popup_add(window->evas_object());
   elm_object_style_set(popup, kStyleDefault);
@@ -155,6 +158,15 @@ Popup* Popup::CreatePopup(NativeWindow* window) {
 
   return new Popup(popup, grid, box);
 }
+
+void Popup::ForceCloseAllPopup() {
+  auto backup = opened_popups_;
+  for (auto& popup : backup) {
+    // will cause modification of opened_popups_
+    popup->Hide();
+  }
+}
+
 
 void Popup::SetButtonType(ButtonType type) {
   enable_button_ = true;
@@ -260,6 +272,7 @@ void Popup::SetResultHandler(std::function<void
 
 void Popup::Show() {
   evas_object_show(popup_);
+  opened_popups_.insert(this);
 }
 
 void Popup::Hide() {
@@ -269,6 +282,10 @@ void Popup::Hide() {
       delete obj;
       return EINA_FALSE;
     }, this);
+  auto found = opened_popups_.find(this);
+  if (found != opened_popups_.end()) {
+    opened_popups_.erase(found);
+  }
 }
 
 void Popup::Result(bool is_positive) {

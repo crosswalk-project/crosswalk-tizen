@@ -461,6 +461,7 @@ void WebApplication::SendAppControlEvent() {
 
 void WebApplication::ClearViewStack() {
   window_->SetContent(NULL);
+  Popup::ForceCloseAllPopup();
   auto it = view_stack_.begin();
   for ( ; it != view_stack_.end(); ++it) {
     (*it)->Suspend();
