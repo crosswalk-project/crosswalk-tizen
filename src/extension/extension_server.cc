@@ -38,7 +38,7 @@ namespace {
 
 const char kExtensionPrefix[] = "lib";
 const char kExtensionSuffix[] = ".so";
-const char kExtensionMetadata[] = "plugins.json";
+const char kExtensionMetadataSuffix[] = ".json";
 
 const char kDBusIntrospectionXML[] =
   "<node>"
@@ -74,7 +74,8 @@ const char kDBusIntrospectionXML[] =
   "  </interface>"
   "</node>";
 
-void LoadFrequentlyUsedModules(std::map<std::string, Extension*>& modules) {
+void LoadFrequentlyUsedModules(
+    const std::map<std::string, Extension*>& modules) {
   auto it = modules.find("tizen");
   if (it != modules.end()) {
     it->second->Initialize();
@@ -190,14 +191,31 @@ void ExtensionServer::RegisterSystemExtensionsByMetadata() {
 #else
   #error EXTENSION_PATH is not set.
 #endif
-
   extension_path.append("/");
-  extension_path.append(kExtensionMetadata);
-  std::ifstream metafile(extension_path.c_str());
-  if (!metafile.is_open()) {
-    LOGGER(ERROR) << "Fail to open the plugin metadata file(plugins.json)";
-    LOGGER(ERROR) << "Fallback - load plugin without lazy loading";
+  extension_path.append("*");
+  extension_path.append(kExtensionMetadataSuffix);
+
+  glob_t glob_result;
+  glob(extension_path.c_str(), GLOB_TILDE, NULL, &glob_result);
+  for (unsigned int i = 0; i < glob_result.gl_pathc; ++i) {
+    RegisterSystemExtensionsByMetadata(glob_result.gl_pathv[i]);
+  }
+  if (glob_result.gl_pathc == 0) {
     RegisterSystemExtensions();
+  }
+}
+
+void ExtensionServer::RegisterSystemExtensionsByMetadata(
+    const std::string& metadata_path) {
+#ifdef EXTENSION_PATH
+  std::string extension_path(EXTENSION_PATH);
+#else
+  #error EXTENSION_PATH is not set.
+#endif
+
+  std::ifstream metafile(metadata_path.c_str());
+  if (!metafile.is_open()) {
+    LOGGER(ERROR) << "Fail to open the plugin metadata file :" << metadata_path;
     return;
   }
 
@@ -211,6 +229,10 @@ void ExtensionServer::RegisterSystemExtensionsByMetadata() {
 
       std::string name = plugin->get("name").to_str();
       std::string lib = plugin->get("lib").to_str();
+      if (!utils::StartsWith(lib, "/")) {
+        lib = extension_path + "/" + lib;
+      }
+
       std::vector<std::string> entries;
       auto& entry_points_value = plugin->get("entry_points");
       if (entry_points_value.is<picojson::array>()) {
@@ -224,20 +246,9 @@ void ExtensionServer::RegisterSystemExtensionsByMetadata() {
       RegisterExtension(extension);
     }
   } else {
-    SLOGE("%s is not plugin metadata", extension_path.c_str());
+    SLOGE("%s is not plugin metadata", metadata_path.c_str());
   }
   metafile.close();
-
-  // widget API
-  std::string widget_api_lib_path(EXTENSION_PATH);
-  widget_api_lib_path.append("/");
-  widget_api_lib_path.append("libwidget-plugin.so");
-  std::vector<std::string> widget_entries = {"widget"};
-  Extension* widget = new Extension(widget_api_lib_path,
-                                    "Widget",
-                                    widget_entries,
-                                    this);
-  RegisterExtension(widget);
 }
 
 

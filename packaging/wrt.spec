@@ -113,6 +113,7 @@ rm -fr %{buildroot}
 %attr(644,root,root) %{_datadir}/edje/wrt/wrt.edj
 %attr(644,root,root) %{injected_bundle_path}
 %attr(644,root,root) %{extension_path}/libwidget-plugin.so
+%attr(644,root,root) %{extension_path}/widget.json
 %attr(755,root,root) %{_datadir}/locale/*
 
 %files tests

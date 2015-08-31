@@ -47,6 +47,7 @@ class ExtensionServer : public Extension::ExtensionDelegate {
   void RegisterExtension(Extension* extension);
   void RegisterSystemExtensions();
   void RegisterSystemExtensionsByMetadata();
+  void RegisterSystemExtensionsByMetadata(const std::string& metadata_path);
   bool RegisterSymbols(Extension* extension);
 
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);
