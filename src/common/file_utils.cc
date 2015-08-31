@@ -46,7 +46,7 @@ std::string SchemeName(const std::string& uri) {
   if (pos != std::string::npos && pos < uri.length()) {
     return std::string(uri.substr(0, pos));
   } else {
-    return std::string();
+    return uri;
   }
 }
 
