@@ -1,7 +1,0 @@
-[
-  {
-    "name":"Widget",
-    "lib":"libwidget-plugin.so",
-    "entry_points":["widget"]
-  }
-]
