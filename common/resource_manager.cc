@@ -288,6 +288,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     return find->second;
   }
   std::string& result = locale_cache_[origin];
+  result = origin;
   std::string url = origin;
 
   std::string suffix;
@@ -323,6 +324,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     return result;
   }
 
+  std::string file_path = utils::UrlDecode(RemoveLocalePath(url));
   for (auto& locales : locale_manager_->system_locales()) {
     // check ../locales/
     std::string app_locale_path = resource_base_path_ + locale_path;
@@ -335,14 +337,14 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     if (!Exists(app_localized_path)) {
       continue;
     }
-    std::string resource_path = app_localized_path + url;
+    std::string resource_path = app_localized_path + file_path;
     if (Exists(resource_path)) {
       result = "file://" + resource_path + suffix;
       return result;
     }
   }
 
-  std::string default_locale = resource_base_path_ + url;
+  std::string default_locale = resource_base_path_ + file_path;
   if (Exists(default_locale)) {
     result = "file://" + default_locale + suffix;
     return result;
@@ -350,6 +352,25 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
 
   LOGGER(ERROR) << "URL Localization error";
   return result;
+}
+
+std::string ResourceManager::RemoveLocalePath(const std::string& path) {
+  std::string locale_path = "locales/";
+  std::string result_path = path.at(0) == '/' ? path : "/" + path;
+  if (!utils::StartsWith(result_path, resource_base_path_)) {
+    return path;
+  }
+
+  result_path = result_path.substr(resource_base_path_.length());
+  if (!utils::StartsWith(result_path, locale_path)) {
+    return result_path;
+  }
+
+  size_t found = result_path.find_first_of('/', locale_path.length());
+  if (found != std::string::npos) {
+    result_path = result_path.substr(found+1);
+  }
+  return result_path;
 }
 
 void ResourceManager::set_base_resource_path(const std::string& path) {

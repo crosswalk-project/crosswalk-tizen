@@ -32,6 +32,9 @@ std::string GetCurrentMilliSeconds();
 bool SplitString(const std::string &str,
                  std::string *part_1, std::string *part_2, const char delim);
 
+std::string UrlEncode(const std::string& url);
+std::string UrlDecode(const std::string& url);
+
 }  // namespace utils
 }  // namespace common
 

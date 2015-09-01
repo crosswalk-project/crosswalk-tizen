@@ -19,14 +19,23 @@
 #include <time.h>
 #include <math.h>
 #include <uuid/uuid.h>
+#include <curl/curl.h>
+
 #include <string>
 #include <vector>
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <memory>
+
 
 namespace common {
 namespace utils {
+
+namespace {
+std::unique_ptr<CURL, decltype(curl_easy_cleanup)*>
+    g_curl {nullptr, curl_easy_cleanup};
+}  // namespace
 
 std::string GenerateUUID() {
   char tmp[37];
@@ -78,6 +87,28 @@ bool SplitString(const std::string &str,
   *part_1 = str.substr(0, pos);
   *part_2 = str.substr(pos+1);
   return true;
+}
+
+std::string UrlDecode(const std::string& url) {
+  if (g_curl.get() == nullptr) {
+    g_curl.reset(curl_easy_init());
+  }
+  std::unique_ptr<char, decltype(curl_free)*> decoded_str {
+      curl_easy_unescape(g_curl.get(), url.c_str(), url.length(), NULL),
+      curl_free };
+
+  return decoded_str.get() != nullptr ? std::string(decoded_str.get()) : url;
+}
+
+std::string UrlEncode(const std::string& url) {
+  if (g_curl.get() == nullptr) {
+    g_curl.reset(curl_easy_init());
+  }
+  std::unique_ptr<char, decltype(curl_free)*> encoded_str {
+      curl_easy_escape(g_curl.get(), url.c_str(), url.length()),
+      curl_free };
+
+  return encoded_str.get() != nullptr ? std::string(encoded_str.get()) : url;
 }
 
 }  // namespace utils

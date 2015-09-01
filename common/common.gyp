@@ -50,6 +50,7 @@
           'capi-appfw-package-manager',
           'capi-appfw-application',
           'capi-system-system-settings',
+          'libcurl'
         ],
       },
       'direct_dependent_settings': {
