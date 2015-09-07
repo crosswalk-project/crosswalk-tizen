@@ -21,8 +21,14 @@
 
 #include <algorithm>
 #include <memory>
+#include <map>
+#include <vector>
+#include <regex> // NOLINT
+#include <utility>
 
 #include "common/logger.h"
+#include "common/string_utils.h"
+#include "common/file_utils.h"
 
 namespace common {
 
@@ -54,6 +60,46 @@ static bool BundleAddDataArray(bundle* target, const std::string& key,
     return false;
   } else {
     return true;
+  }
+}
+
+static const std::string GetOperationFromScheme(const std::string& scheme) {
+  static std::map<const std::string, const std::string> table = {
+    {"sms", APP_CONTROL_OPERATION_COMPOSE},
+    {"mmsto", APP_CONTROL_OPERATION_COMPOSE},
+    {"mailto", APP_CONTROL_OPERATION_COMPOSE},
+    {"tel", APP_CONTROL_OPERATION_CALL}
+  };
+  auto found = table.find(scheme);
+  if (found == table.end()) {
+    // default operation
+    return APP_CONTROL_OPERATION_VIEW;
+  }
+  return found->second;
+}
+
+static void AppendExtraDatafromUrl(AppControl* request,
+                                   const std::string& url) {
+  static std::vector<std::pair<std::string, std::string> > patterns = {
+    {".*[?&]body=([^&]+).*", APP_CONTROL_DATA_TEXT},
+    {".*[?&]cc=([^&]+).*", APP_CONTROL_DATA_CC},
+    {".*[?&]bcc=([^&]+).*", APP_CONTROL_DATA_BCC},
+    {".*[?&]subject=([^&]+).*", APP_CONTROL_DATA_SUBJECT},
+    {".*[?&]to=([^&]+).*", APP_CONTROL_DATA_TO},
+    {"sms:([^?&]+).*", APP_CONTROL_DATA_TO},
+    {"mmsto:([^?&]+).*", APP_CONTROL_DATA_TO},
+    {"mailto:([^?&]+).*", APP_CONTROL_DATA_TO}
+  };
+
+  for (auto& param : patterns) {
+    std::regex pattern(param.first, std::regex_constants::icase);
+    std::smatch result;
+    if (std::regex_match(url, result, pattern) && result.size() >= 2) {
+      std::string extra_data = result[1].str();
+      request->AddData(
+        param.second,
+        utils::UrlDecode(extra_data));
+    }
   }
 }
 
@@ -208,6 +254,26 @@ bool AppControl::Reply(const std::map<std::string,
 bool AppControl::LaunchRequest() {
   return (app_control_send_launch_request(app_control_, NULL, NULL) ==
           APP_CONTROL_ERROR_NONE);
+}
+
+std::unique_ptr<AppControl> AppControl::MakeAppcontrolFromURL(
+    const std::string& url) {
+  std::string smsto_scheme("smsto");
+
+  std::string request_url(url);
+  std::string scheme = utils::SchemeName(request_url);
+  // smsto: does not supported by platform. change to sms:
+  if (scheme == smsto_scheme) {
+    request_url = "sms" + request_url.substr(smsto_scheme.length());
+    scheme = "sms";
+  }
+
+  std::unique_ptr<AppControl> request(new AppControl());
+  request->set_uri(request_url);
+  request->set_operation(GetOperationFromScheme(scheme));
+  AppendExtraDatafromUrl(request.get(), request_url);
+
+  return std::move(request);
 }
 
 }  // namespace common

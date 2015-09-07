@@ -184,6 +184,28 @@ static bool ClearCookie(Ewk_Context* ewk_context) {
   return true;
 }
 
+static bool ProcessWellKnownScheme(const std::string& url) {
+  if (utils::StartsWith(url, "file:") ||
+      utils::StartsWith(url, "app:") ||
+      utils::StartsWith(url, "data:") ||
+      utils::StartsWith(url, "http:") ||
+      utils::StartsWith(url, "https:") ||
+      utils::StartsWith(url, "widget:") ||
+      utils::StartsWith(url, "about:") ||
+      utils::StartsWith(url, "blob:")) {
+    return false;
+  }
+
+  std::unique_ptr<AppControl> request(AppControl::MakeAppcontrolFromURL(url));
+  if (request.get() == NULL || !request->LaunchRequest()) {
+    LOGGER(ERROR) << "Fail to send appcontrol request";
+    SLoggerE("Fail to send appcontrol request [%s]", url.c_str());
+  }
+
+  // Should return true, to stop the WebEngine progress step about this URL
+  return true;
+}
+
 }  // namespace
 
 WebApplication::WebApplication(
@@ -666,9 +688,11 @@ void WebApplication::SetupWebView(WebView* view) {
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,
                                      const std::string& url) {
-  // TODO(sngn.lee): scheme handling
+  // scheme handling
   // except(file , http, https, app) pass to appcontrol and return false
-
+  if (ProcessWellKnownScheme(url)) {
+    return false;
+  }
   return resource_manager_->AllowNavigation(url);
 }
 

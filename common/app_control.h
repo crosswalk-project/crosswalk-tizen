@@ -22,11 +22,14 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace common {
 
 class AppControl {
  public:
+  static std::unique_ptr<AppControl> MakeAppcontrolFromURL(
+      const std::string& url);
   explicit AppControl(app_control_h app_control);
   AppControl();
   ~AppControl();
