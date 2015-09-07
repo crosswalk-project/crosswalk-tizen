@@ -96,6 +96,8 @@ const char* kLocationPrivilege =
     "http://tizen.org/privilege/location";
 const char* kStoragePrivilege =
     "http://tizen.org/privilege/unlimitedstorage";
+const char* kUsermediaPrivilege =
+    "http://tizen.org/privilege/mediacapture";
 const char* kNotiIconFile = "noti_icon.png";
 
 const char* kVisibilitySuspendFeature = "visibility,suspend";
@@ -111,6 +113,7 @@ const char* kGeolocationPermissionPrefix = "__WRT_GEOPERM_";
 const char* kNotificationPermissionPrefix = "__WRT_NOTIPERM_";
 const char* kQuotaPermissionPrefix = "__WRT_QUOTAPERM_";
 const char* kCertificateAllowPrefix = "__WRT_CERTIPERM_";
+const char* kUsermediaPermissionPrefix = "__WRT_USERMEDIAPERM_";
 const char* kDBPrivateSection = "private";
 
 const char* kDefaultCSPRule =
@@ -853,6 +856,51 @@ void WebApplication::OnCertificateAllowRequest(
       bool remember = popup->GetCheckBoxResult();
       if (remember) {
         db->Set(kDBPrivateSection, kCertificateAllowPrefix + pem,
+                result ? "allowed" : "denied");
+      }
+      result_handler(result);
+    }, this);
+  popup->Show();
+}
+
+void WebApplication::OnUsermediaPermissionRequest(
+      WebView*,
+      const std::string& url,
+      std::function<void(bool)> result_handler) {
+  auto db = common::AppDB::GetInstance();
+  std::string reminder = db->Get(kDBPrivateSection,
+                                 kUsermediaPermissionPrefix + url);
+  if (reminder == "allowed") {
+    result_handler(true);
+    return;
+  } else if (reminder == "denied") {
+    result_handler(false);
+    return;
+  }
+
+  // Local Domain: Grant permission if defined, otherwise block execution.
+  // Remote Domain: Popup user prompt if defined, otherwise block execution.
+  if (!FindPrivilege(app_data_.get(), kUsermediaPrivilege)) {
+    result_handler(false);
+    return;
+  }
+
+  if (common::utils::StartsWith(url, "file://")) {
+    result_handler(true);
+    return;
+  }
+
+  Popup* popup = Popup::CreatePopup(window_);
+  popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
+  popup->SetTitle(popup_string::kPopupTitleUserMedia);
+  popup->SetBody(popup_string::kPopupBodyUserMedia);
+  popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
+  popup->SetResultHandler(
+    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
+      bool result = popup->GetButtonResult();
+      bool remember = popup->GetCheckBoxResult();
+      if (remember) {
+        db->Set(kDBPrivateSection, kUsermediaPermissionPrefix + url,
                 result ? "allowed" : "denied");
       }
       result_handler(result);

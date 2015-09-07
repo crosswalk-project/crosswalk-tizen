@@ -83,6 +83,10 @@ class WebView {
         std::function<void(bool allow)> result_handler) {
       result_handler(false);
     }
+    virtual void OnUsermediaPermissionRequest(
+        WebView* /*view*/,
+        const std::string& /*url*/,
+        std::function<void(bool)> /*result_handler*/) {}
   };
 
   WebView(NativeWindow* window, Ewk_Context* context);
