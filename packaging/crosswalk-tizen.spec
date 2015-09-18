@@ -12,6 +12,7 @@ Group:      Development/Libraries
 License:    Apache-2.0 and BSD-3-Clause
 URL:        https://www.tizen.org
 Source0:    %{name}-%{version}.tar.gz
+Source1001: %{name}.manifest
 
 ################ disable builds in X11 repos ###############
 # currently, crosswalk-tizen is not needed on X11 profiles
@@ -52,6 +53,8 @@ Crosswalk Runtime and AppShell for Tizen 3.0 and later
 
 %prep
 %setup -q
+
+cp %{SOURCE1001} .
 
 %build
 export GYP_GENERATORS='ninja'
@@ -115,7 +118,7 @@ install -p -m 755 out/Default/lib/libxwalk_injected_bundle.so %{buildroot}%{_lib
 rm -fr %{buildroot}
 
 %files
-%manifest packaging/%{name}.manifest
+%manifest %{name}.manifest
 %attr(644,root,root) %{_datadir}/license/%{name}
 %attr(755,root,root) %{_datadir}/locale/*
 %attr(644,root,root) %{_datadir}/edje/xwalk/*.edj
