@@ -47,6 +47,7 @@ BuildRequires: pkgconfig(notification)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(ecore-wayland)
 BuildRequires: pkgconfig(chromium-efl)
+BuildRequires: pkgconfig(libcurl)
 
 %description
 Crosswalk Runtime and AppShell for Tizen 3.0 and later

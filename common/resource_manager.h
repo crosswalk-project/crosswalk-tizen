@@ -86,6 +86,7 @@ class ResourceManager {
   bool Exists(const std::string& path);
   bool CheckWARP(const std::string& url);
   bool CheckAllowNavigation(const std::string& url);
+  std::string RemoveLocalePath(const std::string& path);
 
   std::string resource_base_path_;
   std::string appid_;
