@@ -76,11 +76,10 @@ class Popup {
   Evas_Object* popup() { return popup_; }
 
  private:
-  Popup(Evas_Object* popup, Evas_Object* grid, Evas_Object* box);
+  Popup(Evas_Object* popup, Evas_Object* box);
   ~Popup();
 
   Evas_Object* popup_;
-  Evas_Object* grid_;
   Evas_Object* box_;
   Evas_Object* button1_;
   Evas_Object* button2_;
