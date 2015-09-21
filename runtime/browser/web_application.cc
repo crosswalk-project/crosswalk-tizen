@@ -188,18 +188,18 @@ static bool ClearCookie(Ewk_Context* ewk_context) {
 }
 
 static bool ProcessWellKnownScheme(const std::string& url) {
-  if (utils::StartsWith(url, "file:") ||
-      utils::StartsWith(url, "app:") ||
-      utils::StartsWith(url, "data:") ||
-      utils::StartsWith(url, "http:") ||
-      utils::StartsWith(url, "https:") ||
-      utils::StartsWith(url, "widget:") ||
-      utils::StartsWith(url, "about:") ||
-      utils::StartsWith(url, "blob:")) {
+  if (common::utils::StartsWith(url, "file:") ||
+      common::utils::StartsWith(url, "app:") ||
+      common::utils::StartsWith(url, "data:") ||
+      common::utils::StartsWith(url, "http:") ||
+      common::utils::StartsWith(url, "https:") ||
+      common::utils::StartsWith(url, "widget:") ||
+      common::utils::StartsWith(url, "about:") ||
+      common::utils::StartsWith(url, "blob:")) {
     return false;
   }
 
-  std::unique_ptr<AppControl> request(AppControl::MakeAppcontrolFromURL(url));
+  std::unique_ptr<common::AppControl> request(common::AppControl::MakeAppcontrolFromURL(url));
   if (request.get() == NULL || !request->LaunchRequest()) {
     LOGGER(ERROR) << "Fail to send appcontrol request";
     SLoggerE("Fail to send appcontrol request [%s]", url.c_str());
