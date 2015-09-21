@@ -193,6 +193,7 @@ void WebViewImpl::Initialize() {
   InitAuthenticationCallback();
   InitCertificateAllowCallback();
   InitPopupWaitCallback();
+  InitUsermediaCallback();
 
   Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
   ewk_settings_scripts_can_open_windows_set(settings, EINA_TRUE);
@@ -200,7 +201,6 @@ void WebViewImpl::Initialize() {
 
   // TODO(sngn.lee): "protocolhandler,registration,requested"
   //                  custom protocol handler
-  // TODO(sngn.lee): ewk_view_user_media_permission_callback_set
 
   // Show webview
   evas_object_show(ewk_view_);
@@ -234,6 +234,10 @@ void WebViewImpl::Deinitialize() {
       NULL,
       NULL);
   ewk_view_geolocation_permission_callback_set(
+      ewk_view_,
+      NULL,
+      NULL);
+  ewk_view_user_media_permission_callback_set(
       ewk_view_,
       NULL,
       NULL);
@@ -782,6 +786,39 @@ void WebViewImpl::InitPopupWaitCallback() {
         WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
         self->internal_popup_opened_ = false;
       }, this);
+}
+
+void WebViewImpl::InitUsermediaCallback() {
+  auto callback = [](Evas_Object*,
+                     Ewk_User_Media_Permission_Request* request,
+                     void* user_data) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (self == NULL || self->listener_ == NULL) {
+      ewk_user_media_permission_reply(request, EINA_FALSE);
+      return EINA_TRUE;
+    }
+
+    ewk_user_media_permission_request_suspend(request);
+    const Ewk_Security_Origin* origin =
+        ewk_user_media_permission_request_origin_get(request);
+    std::stringstream url;
+    url << ewk_security_origin_protocol_get(origin)
+        << "://"
+        << ewk_security_origin_host_get(origin)
+        << ":"
+        << ewk_security_origin_port_get(origin);
+
+    auto result_handler = [request](bool result) {
+      LOGGER(DEBUG) << "Getusermedia Permission Result : " << result;
+      ewk_user_media_permission_reply(request, result);
+    };
+    std::string test = url.str();
+    self->listener_->OnUsermediaPermissionRequest(self->view_,
+                                                  url.str(),
+                                                  result_handler);
+    return EINA_TRUE;
+  };
+  ewk_view_user_media_permission_callback_set(ewk_view_, callback, this);
 }
 
 std::string WebViewImpl::GetUrl() {
