@@ -109,8 +109,11 @@ void XWalkModuleSystem::SetModuleSystemInContext(
 // static
 void XWalkModuleSystem::ResetModuleSystemFromContext(
     v8::Handle<v8::Context> context) {
-  delete GetModuleSystemFromContext(context);
-  SetModuleSystemInContext(std::unique_ptr<XWalkModuleSystem>(), context);
+  XWalkModuleSystem* module_system = GetModuleSystemFromContext(context);
+  if (module_system) {
+    delete module_system;
+    SetModuleSystemInContext(std::unique_ptr<XWalkModuleSystem>(), context);
+  }
 }
 
 void XWalkModuleSystem::RegisterExtensionModule(

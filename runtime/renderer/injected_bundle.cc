@@ -29,6 +29,7 @@
 #include "common/profiler.h"
 #include "extensions/renderer/runtime_ipc_client.h"
 #include "extensions/renderer/xwalk_extension_renderer_controller.h"
+#include "extensions/renderer/xwalk_module_system.h"
 #include "extensions/renderer/widget_module.h"
 
 namespace runtime {
@@ -92,6 +93,11 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
                                           const char* /*theme*/,
                                           const char* base_url) {
   SCOPE_PROFILE();
+
+  // Initialize context's aligned pointer in embedder data with null
+  extensions::XWalkModuleSystem::SetModuleSystemInContext(
+      std::unique_ptr<extensions::XWalkModuleSystem>(), context);
+
   LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!" << tizen_id;
   if (base_url == NULL || common::utils::StartsWith(base_url, "http")) {
     LOGGER(ERROR) << "External url not allowed plugin loading.";
