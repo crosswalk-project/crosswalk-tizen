@@ -16,18 +16,18 @@
 
 #include "common/string_utils.h"
 
-#include <time.h>
-#include <math.h>
-#include <uuid/uuid.h>
 #include <curl/curl.h>
+#include <uuid/uuid.h>
+#include <glib.h>
+#include <math.h>
+#include <time.h>
 
+#include <algorithm>
+#include <iomanip>
+#include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
-#include <memory>
-
 
 namespace common {
 namespace utils {
@@ -109,6 +109,12 @@ std::string UrlEncode(const std::string& url) {
       curl_free };
 
   return encoded_str.get() != nullptr ? std::string(encoded_str.get()) : url;
+}
+
+std::string Base64Encode(const unsigned char* data, size_t len) {
+  gchar* encoded = g_base64_encode(data, len);
+  std::unique_ptr<gchar, decltype(g_free)*> encoded_ptr {encoded, g_free};
+  return std::string(encoded);
 }
 
 }  // namespace utils

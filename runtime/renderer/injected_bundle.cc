@@ -140,11 +140,17 @@ extern "C" void DynamicUrlParsing(
     *new_url = "about:blank";
     return;
   }
+  // convert to localized path
   if (common::utils::StartsWith(*old_url, "file:/") ||
-      common::utils::StartsWith(*old_url, "app:/"))
+      common::utils::StartsWith(*old_url, "app:/")) {
     *new_url = res_manager->GetLocalizedPath(*old_url);
-  else
+  } else {
     *new_url = *old_url;
+  }
+  // check encryption
+  if (res_manager->IsEncrypted(*new_url)) {
+    *new_url = res_manager->DecryptResource(*new_url);
+  }
 }
 
 extern "C" void DynamicDatabaseAttach(int /*attach*/) {

@@ -31,9 +31,9 @@ std::string ReplaceAll(const std::string& replace,
 std::string GetCurrentMilliSeconds();
 bool SplitString(const std::string &str,
                  std::string *part_1, std::string *part_2, const char delim);
-
 std::string UrlEncode(const std::string& url);
 std::string UrlDecode(const std::string& url);
+std::string Base64Encode(const unsigned char* data, size_t len);
 
 }  // namespace utils
 }  // namespace common
