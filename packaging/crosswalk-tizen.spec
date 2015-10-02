@@ -34,6 +34,7 @@ BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(manifest-parser)
 BuildRequires: pkgconfig(manifest-handlers)
+BuildRequires: pkgconfig(pkgmgr-info)
 BuildRequires: pkgconfig(capi-appfw-package-manager)
 BuildRequires: pkgconfig(efl-extension)
 BuildRequires: pkgconfig(deviced)
@@ -47,6 +48,8 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(ecore-wayland)
 BuildRequires: pkgconfig(chromium-efl)
 BuildRequires: pkgconfig(libcurl)
+BuildRequires: pkgconfig(libwebappenc)
+BuildRequires: pkgconfig(glib-2.0)
 
 %description
 Crosswalk Runtime and AppShell for Tizen 3.0 and later

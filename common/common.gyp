@@ -45,12 +45,15 @@
           'uuid',
           'aul',
           'appsvc',
+          'pkgmgr-info',
           'manifest-parser',
           'manifest-handlers',
           'capi-appfw-package-manager',
           'capi-appfw-application',
           'capi-system-system-settings',
-          'libcurl'
+          'libcurl',
+          'libwebappenc',
+          'glib-2.0',
         ],
       },
       'direct_dependent_settings': {

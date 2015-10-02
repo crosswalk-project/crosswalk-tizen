@@ -75,6 +75,9 @@ class ResourceManager {
   bool AllowNavigation(const std::string& url);
   bool AllowedResource(const std::string& url);
 
+  bool IsEncrypted(const std::string& url);
+  std::string DecryptResource(const std::string& path);
+
   void set_base_resource_path(const std::string& base_path);
 
  private:
