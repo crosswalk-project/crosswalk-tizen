@@ -22,34 +22,34 @@ ExclusiveArch:
 %endif
 ############################################################
 
-BuildRequires: ninja
+BuildRequires: boost-devel
 BuildRequires: edje-tools
 BuildRequires: gettext
+BuildRequires: ninja
 BuildRequires: python
-BuildRequires: boost-devel
 BuildRequires: pkgconfig(appsvc)
-BuildRequires: pkgconfig(bundle)
-BuildRequires: pkgconfig(dlog)
-BuildRequires: pkgconfig(elementary)
-BuildRequires: pkgconfig(capi-appfw-application)
-BuildRequires: pkgconfig(manifest-parser)
-BuildRequires: pkgconfig(manifest-handlers)
-BuildRequires: pkgconfig(pkgmgr-info)
-BuildRequires: pkgconfig(capi-appfw-package-manager)
-BuildRequires: pkgconfig(efl-extension)
-BuildRequires: pkgconfig(deviced)
-BuildRequires: pkgconfig(capi-system-system-settings)
-BuildRequires: pkgconfig(uuid)
-BuildRequires: pkgconfig(gio-2.0)
 BuildRequires: pkgconfig(aul)
-BuildRequires: pkgconfig(ecore)
-BuildRequires: pkgconfig(notification)
-BuildRequires: pkgconfig(sqlite3)
-BuildRequires: pkgconfig(ecore-wayland)
+BuildRequires: pkgconfig(bundle)
+BuildRequires: pkgconfig(capi-appfw-application)
+BuildRequires: pkgconfig(capi-appfw-package-manager)
+BuildRequires: pkgconfig(capi-system-system-settings)
 BuildRequires: pkgconfig(chromium-efl)
+BuildRequires: pkgconfig(deviced)
+BuildRequires: pkgconfig(dlog)
+BuildRequires: pkgconfig(ecore)
+BuildRequires: pkgconfig(ecore-wayland)
+BuildRequires: pkgconfig(efl-extension)
+BuildRequires: pkgconfig(elementary)
+BuildRequires: pkgconfig(gio-2.0)
+BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(libcurl)
 BuildRequires: pkgconfig(libwebappenc)
-BuildRequires: pkgconfig(glib-2.0)
+BuildRequires: pkgconfig(manifest-handlers)
+BuildRequires: pkgconfig(manifest-parser)
+BuildRequires: pkgconfig(notification)
+BuildRequires: pkgconfig(pkgmgr-info)
+BuildRequires: pkgconfig(sqlite3)
+BuildRequires: pkgconfig(uuid)
 
 %description
 Crosswalk Runtime and AppShell for Tizen 3.0 and later

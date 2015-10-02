@@ -16,14 +16,14 @@
 
 #include "common/application_data.h"
 
-#include <package_manager.h>
-#include <manifest_handlers/widget_config_parser.h>
 #include <manifest_handlers/application_manifest_constants.h>
+#include <manifest_handlers/widget_config_parser.h>
+#include <package_manager.h>
 
 #include <vector>
 
-#include "common/logger.h"
 #include "common/file_utils.h"
+#include "common/logger.h"
 #include "common/profiler.h"
 
 namespace common {

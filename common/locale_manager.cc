@@ -17,11 +17,12 @@
 #include "common/locale_manager.h"
 
 #include <system_settings.h>
-#include <memory>
-#include <algorithm>
 
-#include "common/logger.h"
+#include <algorithm>
+#include <memory>
+
 #include "common/file_utils.h"
+#include "common/logger.h"
 
 namespace common {
 

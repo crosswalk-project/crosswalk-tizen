@@ -17,8 +17,8 @@
 #ifndef XWALK_COMMON_STRING_UTILS_H_
 #define XWALK_COMMON_STRING_UTILS_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace common {
 namespace utils {

@@ -11,12 +11,12 @@
 
 #include "common/logger.h"
 #include "common/profiler.h"
+#include "extensions/renderer/object_tools_module.h"
+#include "extensions/renderer/widget_module.h"
 #include "extensions/renderer/xwalk_extension_client.h"
 #include "extensions/renderer/xwalk_extension_module.h"
 #include "extensions/renderer/xwalk_module_system.h"
 #include "extensions/renderer/xwalk_v8tools_module.h"
-#include "extensions/renderer/widget_module.h"
-#include "extensions/renderer/object_tools_module.h"
 
 namespace extensions {
 

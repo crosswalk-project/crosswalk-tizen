@@ -19,28 +19,28 @@
 #include <app.h>
 #include <Ecore.h>
 #include <ewk_chromium.h>
+
 #include <algorithm>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <vector>
-#include <map>
 
-#include "common/logger.h"
-#include "common/command_line.h"
-#include "common/string_utils.h"
-#include "common/app_control.h"
-#include "common/locale_manager.h"
 #include "common/application_data.h"
-#include "common/resource_manager.h"
 #include "common/app_db.h"
+#include "common/app_control.h"
+#include "common/command_line.h"
+#include "common/locale_manager.h"
+#include "common/logger.h"
 #include "common/profiler.h"
-
+#include "common/resource_manager.h"
+#include "common/string_utils.h"
 #include "runtime/browser/native_window.h"
-#include "runtime/browser/web_view.h"
-#include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/notification_manager.h"
 #include "runtime/browser/popup.h"
 #include "runtime/browser/popup_string.h"
+#include "runtime/browser/vibration_manager.h"
+#include "runtime/browser/web_view.h"
 
 #ifndef INJECTED_BUNDLE_PATH
   #error INJECTED_BUNDLE_PATH is not set.

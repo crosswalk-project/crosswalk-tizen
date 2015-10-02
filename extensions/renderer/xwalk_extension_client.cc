@@ -5,14 +5,14 @@
 
 #include "extensions/renderer/xwalk_extension_client.h"
 
-#include <unistd.h>
-#include <glib.h>
 #include <gio/gio.h>
+#include <glib.h>
+#include <unistd.h>
+
 #include <string>
 
 #include "common/logger.h"
 #include "common/profiler.h"
-
 #include "extensions/common/constants.h"
 
 namespace extensions {

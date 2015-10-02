@@ -18,13 +18,13 @@
 #ifndef XWALK_RUNTIME_BROWSER_POPUP_H_
 #define XWALK_RUNTIME_BROWSER_POPUP_H_
 
-#include <Evas.h>
 #include <Elementary.h>
+#include <Evas.h>
 
-#include <string>
-#include <set>
-#include <vector>
 #include <functional>
+#include <set>
+#include <string>
+#include <vector>
 
 namespace runtime {
 

@@ -59,8 +59,8 @@
       ],
       'variables': {
         'packages': [
-          'elementary',
           'chromium-efl',
+          'elementary',
         ],
       },
     }, # end of target 'xwalk_extension_renderer'

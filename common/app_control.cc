@@ -22,13 +22,13 @@
 #include <algorithm>
 #include <memory>
 #include <map>
-#include <vector>
 #include <regex> // NOLINT
 #include <utility>
+#include <vector>
 
+#include "common/file_utils.h"
 #include "common/logger.h"
 #include "common/string_utils.h"
-#include "common/file_utils.h"
 
 namespace common {
 

@@ -18,8 +18,8 @@
 #ifndef XWALK_RUNTIME_BROWSER_NOTIFICATION_MANAGER_H_
 #define XWALK_RUNTIME_BROWSER_NOTIFICATION_MANAGER_H_
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace runtime {
 class NotificationManager {

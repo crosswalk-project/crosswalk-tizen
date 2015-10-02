@@ -6,16 +6,16 @@
 
 #include "extensions/renderer/xwalk_extension_module.h"
 
-#include <stdio.h>
-#include <stdarg.h>
 #include <v8/v8.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include <vector>
 
 #include "common/logger.h"
+#include "extensions/renderer/runtime_ipc_client.h"
 #include "extensions/renderer/xwalk_extension_client.h"
 #include "extensions/renderer/xwalk_module_system.h"
-#include "extensions/renderer/runtime_ipc_client.h"
 
 // The arraysize(arr) macro returns the # of elements in an array arr.
 // The expression is a compile-time constant, and therefore can be

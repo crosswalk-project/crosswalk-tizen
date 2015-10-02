@@ -17,9 +17,9 @@
 #ifndef XWALK_COMMON_RESOURCE_MANAGER_H_
 #define XWALK_COMMON_RESOURCE_MANAGER_H_
 
-#include <string>
 #include <map>
 #include <memory>
+#include <string>
 
 namespace wgt {
 namespace parse {

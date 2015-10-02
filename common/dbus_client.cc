@@ -16,8 +16,8 @@
 
 #include "common/dbus_client.h"
 
-#include "common/logger.h"
 #include "common/file_utils.h"
+#include "common/logger.h"
 
 namespace common {
 

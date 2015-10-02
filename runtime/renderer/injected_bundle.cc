@@ -14,23 +14,24 @@
  *    limitations under the License.
  */
 
+#include <Ecore.h>
+#include <ewk_ipc_message.h>
 #include <unistd.h>
 #include <v8.h>
-#include <ewk_ipc_message.h>
-#include <Ecore.h>
-#include <string>
-#include <memory>
 
-#include "common/logger.h"
-#include "common/string_utils.h"
+#include <memory>
+#include <string>
+
 #include "common/application_data.h"
-#include "common/resource_manager.h"
 #include "common/locale_manager.h"
+#include "common/logger.h"
 #include "common/profiler.h"
+#include "common/resource_manager.h"
+#include "common/string_utils.h"
 #include "extensions/renderer/runtime_ipc_client.h"
+#include "extensions/renderer/widget_module.h"
 #include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "extensions/renderer/xwalk_module_system.h"
-#include "extensions/renderer/widget_module.h"
 
 namespace runtime {
 class BundleGlobalData {
