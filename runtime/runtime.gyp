@@ -40,12 +40,12 @@
       ],
       'variables': {
         'packages': [
+          'capi-appfw-application',
+          'chromium-efl',
           'ecore',
           'ecore-wayland',
-          'elementary',
           'efl-extension',
-          'chromium-efl',
-          'capi-appfw-application',
+          'elementary',
           'deviced',
           'notification',
         ],
@@ -66,8 +66,8 @@
       ],
       'variables': {
         'packages': [
-          'elementary',
           'chromium-efl',
+          'elementary',
         ],
       },
     }, # end of target 'xwalk_injected_bundle'

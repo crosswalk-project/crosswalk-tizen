@@ -18,13 +18,13 @@
 #ifndef XWALK_RUNTIME_BROWSER_POPUP_H_
 #define XWALK_RUNTIME_BROWSER_POPUP_H_
 
-#include <Evas.h>
 #include <Elementary.h>
+#include <Evas.h>
 
-#include <string>
-#include <set>
-#include <vector>
 #include <functional>
+#include <set>
+#include <string>
+#include <vector>
 
 namespace runtime {
 
@@ -76,11 +76,10 @@ class Popup {
   Evas_Object* popup() { return popup_; }
 
  private:
-  Popup(Evas_Object* popup, Evas_Object* grid, Evas_Object* box);
+  Popup(Evas_Object* popup, Evas_Object* box);
   ~Popup();
 
   Evas_Object* popup_;
-  Evas_Object* grid_;
   Evas_Object* box_;
   Evas_Object* button1_;
   Evas_Object* button2_;

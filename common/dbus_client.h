@@ -17,12 +17,12 @@
 #ifndef XWALK_COMMON_DBUS_CLIENT_H_
 #define XWALK_COMMON_DBUS_CLIENT_H_
 
-#include <glib.h>
 #include <gio/gio.h>
+#include <glib.h>
 
-#include <string>
 #include <functional>
 #include <map>
+#include <string>
 
 namespace common {
 

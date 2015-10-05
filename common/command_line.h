@@ -17,8 +17,8 @@
 #ifndef XWALK_COMMON_COMMAND_LINE_H_
 #define XWALK_COMMON_COMMAND_LINE_H_
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
 
 namespace common {

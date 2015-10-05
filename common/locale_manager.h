@@ -17,9 +17,9 @@
 #ifndef XWALK_COMMON_LOCALE_MANAGER_H_
 #define XWALK_COMMON_LOCALE_MANAGER_H_
 
-#include <string>
 #include <list>
 #include <map>
+#include <string>
 
 namespace common {
 

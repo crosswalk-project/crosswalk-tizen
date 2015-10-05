@@ -18,21 +18,22 @@
 #include "runtime/browser/popup.h"
 
 #include "common/logger.h"
-
-#include "runtime/common/constants.h"
 #include "runtime/browser/native_window.h"
 #include "runtime/browser/popup_string.h"
+#include "runtime/common/constants.h"
 
 namespace runtime {
 
 namespace {
+
+const char* kWRTEdjePath = "/usr/share/edje/xwalk/xwalk_tizen.edj";
 
 const char* kContentTitle = "title,text";
 const char* kContentButton1 = "button1";
 const char* kContentButton2 = "button2";
 
 const char* kStyleDefault = "default";
-const char* kStyleLabel = "default";
+const char* kStyleLabel = "popup/default";
 const char* kStyleButton = "popup";
 const char* kStyleEditPw = "editfield/password/popup";
 
@@ -40,9 +41,6 @@ const char* kSignalEdit = "elm,action,hide,search_icon";
 
 const char* kStateActivated = "activated";
 const char* kStateClicked = "clicked";
-
-const double kMaxPopupHeight = 0.80;
-const double kMaxScrollerHeight = 0.80;
 
 static void ButtonClickedCallback(void* data,
                                   Evas_Object* obj, void* /*eventInfo*/) {
@@ -95,31 +93,28 @@ static Evas_Object* AddEntry(Evas_Object* parent, Popup::EntryType type) {
 
 static Evas_Object* AddEntrySet(Evas_Object* parent,
                                 const char* str_id, Popup::EntryType type) {
-  // a grid for entry
-  Evas_Object* entry_grid = elm_grid_add(parent);
-  evas_object_size_hint_weight_set(entry_grid, EVAS_HINT_EXPAND,
-                                   EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(entry_grid, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  evas_object_show(entry_grid);
+  Evas_Object* entry = AddEntry(parent, type);
+  evas_object_show(entry);
 
-  // label for the entry
-  Evas_Object* entry_label = elm_label_add(entry_grid);
-  elm_object_style_set(entry_label, kStyleLabel);
-  elm_object_domain_translatable_part_text_set(entry_label, 0,
+  Evas_Object* layout = elm_layout_add(parent);
+  elm_layout_file_set(layout, kWRTEdjePath, "PopupTextEntrySet");
+
+  Evas_Object* rectangle = evas_object_rectangle_add(
+                             evas_object_evas_get(layout));
+  evas_object_color_set(rectangle, 0, 0, 0, 0);
+  evas_object_resize(rectangle, 100, 100);
+  evas_object_size_hint_min_set(rectangle, 100, 100);
+  evas_object_show(rectangle);
+  elm_object_part_content_set(layout, "entry.rectangle", rectangle);
+  evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  elm_object_domain_translatable_part_text_set(layout, "entry.text",
                                                kTextDomainRuntime,
                                                str_id);
-  evas_object_color_set(entry_label, 0, 0, 0, 255);
-  evas_object_size_hint_weight_set(entry_label,
-                                   EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(entry_label, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_grid_pack(entry_grid, entry_label, 0, 0, 30, 100);
-  evas_object_show(entry_label);
+  elm_layout_content_set(layout, "entry.swallow", entry);
 
-  // entry
-  Evas_Object* entry = AddEntry(entry_grid, type);
-  evas_object_show(entry);
-  elm_grid_pack(entry_grid, entry, 30, 0, 40, 100);
-  elm_box_pack_end(parent, entry_grid);
+  evas_object_show(layout);
+  elm_box_pack_end(parent, layout);
 
   return entry;
 }
@@ -128,8 +123,7 @@ static Evas_Object* AddCheckBox(Evas_Object* parent) {
   Evas_Object* check = elm_check_add(parent);
   elm_object_style_set(check, kStyleDefault);
   elm_object_style_set(check, "multiline");
-  evas_object_size_hint_align_set(check, 0.0, 0.0);
-  evas_object_color_set(check, 0, 0, 0, 255);
+  evas_object_size_hint_align_set(check, 0.1, 0.0);
   elm_check_state_set(check, EINA_TRUE);
   return check;
 }
@@ -141,24 +135,19 @@ std::set<Popup*> Popup::opened_popups_;
 
 Popup* Popup::CreatePopup(NativeWindow* window) {
   Evas_Object* popup = elm_popup_add(window->evas_object());
+  evas_object_size_hint_weight_set(popup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   elm_object_style_set(popup, kStyleDefault);
 
-  Evas_Object* grid = elm_grid_add(popup);
-  evas_object_size_hint_weight_set(grid, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(grid, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_object_part_content_set(popup, "default", grid);
-  evas_object_show(grid);
-
-  Evas_Object* box = elm_box_add(grid);
+  Evas_Object* box = elm_box_add(popup);
   elm_box_padding_set(box, 0, 10);
   evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_grid_pack(grid, box, 3, 3, 94, 94);
+  elm_object_part_content_set(popup, "default", box);
   evas_object_show(box);
 
   evas_object_event_callback_add(popup, EVAS_CALLBACK_RESIZE, NULL, NULL);
 
-  return new Popup(popup, grid, box);
+  return new Popup(popup, box);
 }
 
 void Popup::ForceCloseAllPopup() {
@@ -295,9 +284,13 @@ void Popup::Result(bool is_positive) {
     result_button_ = is_positive;
   }
   if (enable_entry_ && !!entry1_) {
-    result_entry1_ = elm_entry_entry_get(entry1_);
+    const char* text = elm_entry_entry_get(entry1_);
+    if (text)
+      result_entry1_ = text;
     if (!!entry2_) {
-      result_entry2_ = elm_entry_entry_get(entry2_);
+      text = elm_entry_entry_get(entry2_);
+      if (text)
+        result_entry2_ = text;
     }
   }
   if (enable_check_box_) {
@@ -307,8 +300,11 @@ void Popup::Result(bool is_positive) {
   handler_(this, user_data_);
 }
 
-Popup::Popup(Evas_Object* popup, Evas_Object* grid, Evas_Object* box)
-  : popup_(popup), grid_(grid), box_(box) {}
+Popup::Popup(Evas_Object* popup, Evas_Object* box)
+  : popup_(popup), box_(box), button1_(NULL), button2_(NULL),
+    entry1_(NULL), entry2_(NULL), check_box_(NULL), user_data_(NULL),
+    enable_button_(false), result_button_(false), enable_entry_(false),
+    enable_check_box_(false), result_check_box_(false) {}
 
 Popup::~Popup() {
   if (popup_)

@@ -17,8 +17,8 @@
 #ifndef XWALK_COMMON_APP_DB_H_
 #define XWALK_COMMON_APP_DB_H_
 
-#include <string>
 #include <list>
+#include <string>
 
 namespace common {
 

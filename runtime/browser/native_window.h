@@ -16,10 +16,11 @@
 
 #ifndef XWALK_RUNTIME_BROWSER_NATIVE_WINDOW_H_
 #define XWALK_RUNTIME_BROWSER_NATIVE_WINDOW_H_
-#include <functional>
-#include <map>
 
 #include <Elementary.h>
+
+#include <functional>
+#include <map>
 
 namespace runtime {
 

@@ -14,22 +14,24 @@
  *    limitations under the License.
  */
 
+#include <Ecore.h>
+#include <ewk_ipc_message.h>
 #include <unistd.h>
 #include <v8.h>
-#include <ewk_ipc_message.h>
-#include <Ecore.h>
-#include <string>
-#include <memory>
 
-#include "common/logger.h"
-#include "common/string_utils.h"
+#include <memory>
+#include <string>
+
 #include "common/application_data.h"
-#include "common/resource_manager.h"
 #include "common/locale_manager.h"
+#include "common/logger.h"
 #include "common/profiler.h"
+#include "common/resource_manager.h"
+#include "common/string_utils.h"
 #include "extensions/renderer/runtime_ipc_client.h"
-#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "extensions/renderer/widget_module.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
+#include "extensions/renderer/xwalk_module_system.h"
 
 namespace runtime {
 class BundleGlobalData {
@@ -92,6 +94,11 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
                                           const char* /*theme*/,
                                           const char* base_url) {
   SCOPE_PROFILE();
+
+  // Initialize context's aligned pointer in embedder data with null
+  extensions::XWalkModuleSystem::SetModuleSystemInContext(
+      std::unique_ptr<extensions::XWalkModuleSystem>(), context);
+
   LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!" << tizen_id;
   if (base_url == NULL || common::utils::StartsWith(base_url, "http")) {
     LOGGER(ERROR) << "External url not allowed plugin loading.";
@@ -134,11 +141,17 @@ extern "C" void DynamicUrlParsing(
     *new_url = "about:blank";
     return;
   }
+  // convert to localized path
   if (common::utils::StartsWith(*old_url, "file:/") ||
-      common::utils::StartsWith(*old_url, "app:/"))
+      common::utils::StartsWith(*old_url, "app:/")) {
     *new_url = res_manager->GetLocalizedPath(*old_url);
-  else
+  } else {
     *new_url = *old_url;
+  }
+  // check encryption
+  if (res_manager->IsEncrypted(*new_url)) {
+    *new_url = res_manager->DecryptResource(*new_url);
+  }
 }
 
 extern "C" void DynamicDatabaseAttach(int /*attach*/) {

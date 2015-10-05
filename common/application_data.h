@@ -21,6 +21,8 @@
 #include <manifest_handlers/appwidget_handler.h>
 #include <manifest_handlers/app_control_handler.h>
 #include <manifest_handlers/category_handler.h>
+#include <manifest_handlers/content_handler.h>
+#include <manifest_handlers/csp_handler.h>
 #include <manifest_handlers/ime_handler.h>
 #include <manifest_handlers/metadata_handler.h>
 #include <manifest_handlers/navigation_handler.h>
@@ -29,11 +31,8 @@
 #include <manifest_handlers/setting_handler.h>
 #include <manifest_handlers/splash_screen_handler.h>
 #include <manifest_handlers/tizen_application_handler.h>
-#include <manifest_handlers/widget_handler.h>
-#include <manifest_handlers/content_handler.h>
 #include <manifest_handlers/warp_handler.h>
-#include <manifest_handlers/csp_handler.h>
-
+#include <manifest_handlers/widget_handler.h>
 
 #include <memory>
 #include <string>

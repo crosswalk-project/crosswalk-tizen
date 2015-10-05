@@ -20,16 +20,15 @@
 #ifdef USE_APP_PREFERENCE
 #include <app_preference.h>
 #else
-#include <unistd.h>
-#include <sqlite3.h>
 #include <app.h>
+#include <sqlite3.h>
+#include <unistd.h>
 #endif
 
 #include <memory>
 
-#include "common/string_utils.h"
 #include "common/logger.h"
-
+#include "common/string_utils.h"
 #ifndef USE_APP_PREFERENCE
 #include "common/app_db_sqlite.h"
 #endif

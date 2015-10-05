@@ -17,10 +17,10 @@
 #ifndef XWALK_RUNTIME_BROWSER_WEB_APPLICATION_H_
 #define XWALK_RUNTIME_BROWSER_WEB_APPLICATION_H_
 
-#include <string>
+#include <functional>
 #include <list>
 #include <memory>
-#include <functional>
+#include <string>
 
 #include "runtime/browser/web_view.h"
 

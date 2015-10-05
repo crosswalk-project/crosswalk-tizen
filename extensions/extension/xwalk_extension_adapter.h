@@ -10,12 +10,11 @@
 
 #include "extensions/extension/xwalk_extension.h"
 #include "extensions/extension/xwalk_extension_instance.h"
-
 #include "extensions/public/XW_Extension.h"
-#include "extensions/public/XW_Extension_SyncMessage.h"
 #include "extensions/public/XW_Extension_EntryPoints.h"
-#include "extensions/public/XW_Extension_Runtime.h"
 #include "extensions/public/XW_Extension_Permissions.h"
+#include "extensions/public/XW_Extension_Runtime.h"
+#include "extensions/public/XW_Extension_SyncMessage.h"
 
 namespace extensions {
 

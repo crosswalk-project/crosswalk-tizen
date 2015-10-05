@@ -6,8 +6,8 @@
 #ifndef XWALK_EXTENSIONS_XWALK_EXTENSION_INSTANCE_H_
 #define XWALK_EXTENSIONS_XWALK_EXTENSION_INSTANCE_H_
 
-#include <string>
 #include <functional>
+#include <string>
 
 #include "extensions/public/XW_Extension.h"
 

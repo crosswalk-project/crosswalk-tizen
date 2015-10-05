@@ -16,13 +16,13 @@
 
 #include "common/file_utils.h"
 
-#include <unistd.h>
-#include <libgen.h>
 #include <sys/types.h>
+#include <libgen.h>
+#include <unistd.h>
 
-#include <string>
-#include <sstream>
 #include <algorithm>
+#include <sstream>
+#include <string>
 
 namespace common {
 namespace utils {
@@ -54,6 +54,9 @@ std::string ExtName(const std::string& path) {
   size_t last_dot = path.find_last_of(".");
   if (last_dot != 0 && last_dot != std::string::npos) {
     std::string ext = path.substr(last_dot);
+    size_t end_of_ext = ext.find_first_of("?#");
+    if (end_of_ext != std::string::npos)
+      ext = ext.substr(0, end_of_ext);
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
     return ext;
   } else {

@@ -21,8 +21,8 @@
 #include <functional>
 #include <sstream>
 
-#include "common/logger.h"
 #include "common/file_utils.h"
+#include "common/logger.h"
 #include "common/profiler.h"
 #include "runtime/browser/native_window.h"
 
@@ -528,7 +528,7 @@ void WebViewImpl::InitCustomContextMenuCallback() {
       disabled = true;
     }
     int cnt = ewk_context_menu_item_count(contextmenu);
-    for (unsigned idx = cnt-1; idx > 0; --idx) {
+    for (int idx = cnt-1; idx >= 0; --idx) {
       auto* item = ewk_context_menu_nth_item_get(contextmenu, idx);
       Ewk_Context_Menu_Item_Tag tag = ewk_context_menu_item_tag_get(item);
       switch (tag) {

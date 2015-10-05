@@ -16,21 +16,27 @@
 
 #include "common/resource_manager.h"
 
-#include <stdio.h>
+#include <sys/types.h>
 #include <aul.h>
+#include <pkgmgr-info.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <web_app_enc.h>
 
-#include <memory>
-#include <vector>
-#include <functional>
 #include <algorithm>
+#include <functional>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <vector>
 
-#include "common/logger.h"
+#include "common/application_data.h"
+#include "common/app_control.h"
 #include "common/file_utils.h"
+#include "common/locale_manager.h"
+#include "common/logger.h"
 #include "common/string_utils.h"
 #include "common/url.h"
-#include "common/app_control.h"
-#include "common/application_data.h"
-#include "common/locale_manager.h"
 
 using wgt::parse::AppControlInfo;
 
@@ -52,15 +58,18 @@ const int kSchemeIdLen = 3;
 
 // Default Start Files
 const char* kDefaultStartFiles[] = {
-  "index.htm",
-  "index.html",
-  "index.svg",
-  "index.xhtml",
-  "index.xht"
-};
+    "index.htm",
+    "index.html",
+    "index.svg",
+    "index.xhtml",
+    "index.xht"};
 
 // Default Encoding
 const char* kDefaultEncoding = "UTF-8";
+
+// EncryptedFileExtensions
+const std::set<std::string> kEncryptedFileExtensions{
+    ".html", ".htm", ".css", ".js"};
 
 static std::string GetMimeFromUri(const std::string& uri) {
   // checking passed uri is local file
@@ -87,12 +96,12 @@ static std::string GetMimeFromUri(const std::string& uri) {
 
 static bool CompareMime(const std::string& info_mime,
                         const std::string& request_mime) {
-  if (request_mime.empty())
-    return info_mime.empty();
-
   // suppose that these mimetypes are valid expressions ('type'/'sub-type')
   if (info_mime == "*" || info_mime == "*/*")
     return true;
+
+  if (request_mime.empty())
+    return info_mime.empty();
 
   std::string info_type;
   std::string info_sub;
@@ -288,6 +297,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     return find->second;
   }
   std::string& result = locale_cache_[origin];
+  result = origin;
   std::string url = origin;
 
   std::string suffix;
@@ -323,6 +333,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     return result;
   }
 
+  std::string file_path = utils::UrlDecode(RemoveLocalePath(url));
   for (auto& locales : locale_manager_->system_locales()) {
     // check ../locales/
     std::string app_locale_path = resource_base_path_ + locale_path;
@@ -335,14 +346,14 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     if (!Exists(app_localized_path)) {
       continue;
     }
-    std::string resource_path = app_localized_path + url;
+    std::string resource_path = app_localized_path + file_path;
     if (Exists(resource_path)) {
       result = "file://" + resource_path + suffix;
       return result;
     }
   }
 
-  std::string default_locale = resource_base_path_ + url;
+  std::string default_locale = resource_base_path_ + file_path;
   if (Exists(default_locale)) {
     result = "file://" + default_locale + suffix;
     return result;
@@ -350,6 +361,25 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
 
   LOGGER(ERROR) << "URL Localization error";
   return result;
+}
+
+std::string ResourceManager::RemoveLocalePath(const std::string& path) {
+  std::string locale_path = "locales/";
+  std::string result_path = path.at(0) == '/' ? path : "/" + path;
+  if (!utils::StartsWith(result_path, resource_base_path_)) {
+    return path;
+  }
+
+  result_path = result_path.substr(resource_base_path_.length());
+  if (!utils::StartsWith(result_path, locale_path)) {
+    return result_path;
+  }
+
+  size_t found = result_path.find_first_of('/', locale_path.length());
+  if (found != std::string::npos) {
+    result_path = result_path.substr(found+1);
+  }
+  return result_path;
 }
 
 void ResourceManager::set_base_resource_path(const std::string& path) {
@@ -518,6 +548,135 @@ bool ResourceManager::CheckAllowNavigation(const std::string& url) {
   }
 
   return result = false;
+}
+
+bool ResourceManager::IsEncrypted(const std::string& path) {
+  auto setting = application_data_->setting_info();
+  if (setting.get() == NULL)
+    return false;
+
+  if (setting->encryption_enabled()) {
+    std::string ext = utils::ExtName(path);
+    if (kEncryptedFileExtensions.count(ext) > 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+std::string ResourceManager::DecryptResource(const std::string& path) {
+  // read file and make a buffer
+  std::string src_path(path);
+  if (utils::StartsWith(src_path, kSchemeTypeFile)) {
+    src_path.erase(0, strlen(kSchemeTypeFile));
+  }
+
+  FILE *src = fopen(src_path.c_str(), "rb");
+  if (!src) {
+    LOGGER(ERROR) << "Cannot open file for decryption: " << src_path;
+    return path;
+  }
+
+  // Read filesize
+  fseek(src, 0, SEEK_END);
+  size_t src_len = ftell(src);
+  rewind(src);
+
+  // Read buffer from the source file
+  std::unique_ptr<char> src_buf(new char[src_len]);
+  if (src_len != fread(src_buf.get(), sizeof(char), src_len, src)) {
+    LOGGER(ERROR) << "Read error, file: " << src_path;
+    fclose(src);
+    return path;
+  }
+  fclose(src);
+
+  // checking web app type
+  static bool inited = false;
+  static bool is_global = false;
+  static bool is_preload = false;
+
+  int ret;
+  std::string pkg_id = application_data_->pkg_id();
+  if (!inited) {
+    inited = true;
+    pkgmgrinfo_pkginfo_h handle;
+    ret = pkgmgrinfo_pkginfo_get_usr_pkginfo(pkg_id.c_str(), getuid(), &handle);
+    if (ret != PMINFO_R_OK) {
+      LOGGER(ERROR) << "Could not get handle for pkginfo : pkg_id = "
+                    << pkg_id;
+      return path;
+    } else {
+      ret = pkgmgrinfo_pkginfo_is_global(handle, &is_global);
+      if (ret != PMINFO_R_OK) {
+        LOGGER(ERROR) << "Could not check is_global : pkg_id = "
+                      << pkg_id;
+        pkgmgrinfo_pkginfo_destroy_pkginfo(handle);
+        return path;
+      }
+      ret = pkgmgrinfo_pkginfo_is_preload(handle, &is_preload);
+      if (ret != PMINFO_R_OK) {
+        LOGGER(ERROR) << "Could not check is_preload : pkg_id = "
+                      << pkg_id;
+        pkgmgrinfo_pkginfo_destroy_pkginfo(handle);
+        return path;
+      }
+      pkgmgrinfo_pkginfo_destroy_pkginfo(handle);
+    }
+  }
+
+  wae_app_type_e app_type = WAE_DOWNLOADED_NORMAL_APP;
+  if (is_global) {
+    app_type = WAE_DOWNLOADED_GLOBAL_APP;
+  } else if (is_preload) {
+    app_type = WAE_PRELOADED_APP;
+  }
+
+  // decrypt buffer with wae functions
+  uint8_t* dst_buf = nullptr;
+  size_t dst_len = 0;
+  ret = wae_decrypt_web_application(pkg_id.c_str(),
+                                    app_type,
+                                    reinterpret_cast<uint8_t*>(src_buf.get()),
+                                    src_len,
+                                    &dst_buf,
+                                    &dst_len);
+  if (WAE_ERROR_NONE != ret) {
+    switch (ret) {
+    case WAE_ERROR_INVALID_PARAMETER:
+      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_INVALID_PARAMETER";
+      break;
+    case WAE_ERROR_PERMISSION_DENIED:
+      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_PERMISSION_DENIED";
+      break;
+    case WAE_ERROR_NO_KEY:
+      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_NO_KEY";
+      break;
+    case WAE_ERROR_KEY_MANAGER:
+      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_KEY_MANAGER";
+      break;
+    case WAE_ERROR_CRYPTO:
+      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_CRYPTO";
+      break;
+    case WAE_ERROR_UNKNOWN:
+      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_UNKNOWN";
+      break;
+    default:
+      LOGGER(ERROR) << "Error during decryption: UNKNOWN";
+      break;
+    }
+    return path;
+  }
+
+  // change to data schem
+  std::stringstream dst_str;
+  std::string content_type = GetMimeFromUri(path);
+  std::string encoded = utils::Base64Encode(dst_buf, dst_len);
+  dst_str << "data:" << content_type << ";base64," << encoded;
+
+  std::free(dst_buf);
+
+  return dst_str.str();
 }
 
 }  // namespace common
