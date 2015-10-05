@@ -421,11 +421,10 @@ void WebApplication::AppControl(
   if (do_reset) {
     // Reset to context
     ClearViewStack();
-    WebView* view = new WebView(window_, ewk_context_);
+    WebView* view = view_stack_.front();
     SetupWebView(view);
     view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri(), res->mime());
-    view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
   }
 
@@ -443,12 +442,16 @@ void WebApplication::SendAppControlEvent() {
 
 void WebApplication::ClearViewStack() {
   window_->SetContent(NULL);
+  WebView* front = view_stack_.front();
   auto it = view_stack_.begin();
   for ( ; it != view_stack_.end(); ++it) {
-    (*it)->Suspend();
-    delete *it;
+    if (*it != front) {
+      (*it)->Suspend();
+      delete *it;
+    }
   }
   view_stack_.clear();
+  view_stack_.push_front(front);
 }
 
 void WebApplication::Resume() {
