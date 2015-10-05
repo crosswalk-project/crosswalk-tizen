@@ -19,8 +19,8 @@
 
 #include <Elementary.h>
 #include <ewk_ipc_message.h>
-#include <string>
 #include <functional>
+#include <string>
 
 #include "runtime/browser/native_window.h"
 

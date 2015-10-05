@@ -25,9 +25,9 @@
 #include "extensions/public/XW_Extension_Runtime.h"
 #include "extensions/public/XW_Extension_SyncMessage.h"
 
-#include "common/logger.h"
 #include "common/application_data.h"
 #include "common/locale_manager.h"
+#include "common/logger.h"
 #include "common/string_utils.h"
 
 XW_Extension g_xw_extension = 0;

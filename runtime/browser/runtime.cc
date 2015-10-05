@@ -14,21 +14,20 @@
  *    limitations under the License.
  */
 
-
 #include "runtime/browser/runtime.h"
 
 #include <ewk_chromium.h>
-#include <string>
 #include <memory>
+#include <string>
 
-#include "common/logger.h"
-#include "common/command_line.h"
-#include "common/app_control.h"
 #include "common/application_data.h"
+#include "common/app_control.h"
 #include "common/app_db.h"
+#include "common/command_line.h"
+#include "common/logger.h"
 #include "common/profiler.h"
-#include "runtime/common/constants.h"
 #include "runtime/browser/native_app_window.h"
+#include "runtime/common/constants.h"
 
 namespace runtime {
 

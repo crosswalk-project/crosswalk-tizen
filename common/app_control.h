@@ -19,10 +19,10 @@
 
 #include <app_control.h>
 #include <bundle.h>
-#include <string>
-#include <vector>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace common {
 

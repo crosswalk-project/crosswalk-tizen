@@ -6,6 +6,7 @@
 #include "extensions/renderer/xwalk_module_system.h"
 
 #include <v8/v8.h>
+
 #include <algorithm>
 
 #include "common/logger.h"

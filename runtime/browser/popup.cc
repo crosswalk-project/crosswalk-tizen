@@ -18,10 +18,9 @@
 #include "runtime/browser/popup.h"
 
 #include "common/logger.h"
-
-#include "runtime/common/constants.h"
 #include "runtime/browser/native_window.h"
 #include "runtime/browser/popup_string.h"
+#include "runtime/common/constants.h"
 
 namespace runtime {
 

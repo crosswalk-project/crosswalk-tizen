@@ -19,9 +19,9 @@
 
 #include <time.h>
 
-#include <string>
-#include <memory>
 #include <map>
+#include <memory>
+#include <string>
 
 namespace common {
 

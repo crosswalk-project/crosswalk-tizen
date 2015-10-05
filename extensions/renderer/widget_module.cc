@@ -17,11 +17,12 @@
 #include "extensions/renderer/widget_module.h"
 
 #include <v8/v8.h>
-#include <vector>
-#include <algorithm>
 
-#include "common/logger.h"
+#include <algorithm>
+#include <vector>
+
 #include "common/app_db.h"
+#include "common/logger.h"
 
 namespace extensions {
 

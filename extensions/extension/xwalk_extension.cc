@@ -9,8 +9,8 @@
 #include <string>
 
 #include "common/logger.h"
-#include "extensions/public/XW_Extension.h"
 #include "extensions/extension/xwalk_extension_adapter.h"
+#include "extensions/public/XW_Extension.h"
 
 namespace extensions {
 

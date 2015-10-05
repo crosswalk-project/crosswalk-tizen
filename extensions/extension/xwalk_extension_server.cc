@@ -4,18 +4,19 @@
 
 #include "extensions/extension/xwalk_extension_server.h"
 
-#include <glob.h>
 #include <glib.h>
+#include <glob.h>
 
+#include <fstream>
 #include <string>
 #include <vector>
-#include <fstream>
 
-#include "common/logger.h"
-#include "common/file_utils.h"
-#include "common/string_utils.h"
-#include "common/picojson.h"
 #include "common/app_db.h"
+#include "common/file_utils.h"
+#include "common/logger.h"
+#include "common/picojson.h"
+#include "common/string_utils.h"
+
 #include "extensions/common/constants.h"
 #include "extensions/extension/xwalk_extension.h"
 

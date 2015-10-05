@@ -6,8 +6,8 @@
 #include <glib.h>
 #include <glib-unix.h>
 
-#include "common/logger.h"
 #include "common/command_line.h"
+#include "common/logger.h"
 #include "extensions/extension/xwalk_extension_server.h"
 
 int main(int argc, char* argv[]) {

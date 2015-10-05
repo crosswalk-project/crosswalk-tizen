@@ -5,13 +5,13 @@
 #ifndef XWALK_EXTENSIONS_XWALK_EXTENSION_SERVER_H_
 #define XWALK_EXTENSIONS_XWALK_EXTENSION_SERVER_H_
 
-#include <string>
-#include <set>
 #include <map>
+#include <set>
+#include <string>
 #include <vector>
 
-#include "common/dbus_server.h"
 #include "common/dbus_client.h"
+#include "common/dbus_server.h"
 #include "extensions/extension/xwalk_extension.h"
 
 namespace extensions {

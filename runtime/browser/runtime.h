@@ -14,7 +14,6 @@
  *    limitations under the License.
  */
 
-
 #ifndef XWALK_RUNTIME_BROWSER_RUNTIME_H_
 #define XWALK_RUNTIME_BROWSER_RUNTIME_H_
 

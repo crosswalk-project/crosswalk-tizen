@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
+#include "common/url.h"
+
 #include <algorithm>
 #include <stdexcept>
-
-#include "common/url.h"
 
 #include "common/logger.h"
 #include "common/string_utils.h"

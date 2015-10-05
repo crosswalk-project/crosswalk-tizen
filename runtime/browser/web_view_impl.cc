@@ -21,8 +21,8 @@
 #include <functional>
 #include <sstream>
 
-#include "common/logger.h"
 #include "common/file_utils.h"
+#include "common/logger.h"
 #include "common/profiler.h"
 #include "runtime/browser/native_window.h"
 

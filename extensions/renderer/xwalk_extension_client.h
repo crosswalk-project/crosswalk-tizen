@@ -6,9 +6,9 @@
 #ifndef XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_CLIENT_H_
 #define XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_CLIENT_H_
 
-#include <string>
-#include <memory>
 #include <map>
+#include <memory>
+#include <string>
 #include <vector>
 
 #include "common/dbus_client.h"

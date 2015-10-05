@@ -7,8 +7,8 @@
 #define XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_RENDERER_CONTROLLER_H_
 
 #include <v8/v8.h>
-#include <string>
 #include <memory>
+#include <string>
 
 namespace extensions {
 

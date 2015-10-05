@@ -17,11 +17,12 @@
 #ifndef XWALK_RUNTIME_BROWSER_WEB_VIEW_IMPL_H_
 #define XWALK_RUNTIME_BROWSER_WEB_VIEW_IMPL_H_
 
-#include <ewk_chromium.h>
-#include <Elementary.h>
 #include <efl_extension.h>
-#include <string>
+#include <Elementary.h>
+#include <ewk_chromium.h>
+
 #include <map>
+#include <string>
 
 #include "common/url.h"
 #include "runtime/browser/web_view.h"

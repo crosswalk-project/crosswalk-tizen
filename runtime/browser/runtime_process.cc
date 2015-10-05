@@ -16,8 +16,8 @@
 
 #include <ewk_chromium.h>
 
-#include "common/logger.h"
 #include "common/command_line.h"
+#include "common/logger.h"
 #include "common/profiler.h"
 #include "runtime/browser/runtime.h"
 
