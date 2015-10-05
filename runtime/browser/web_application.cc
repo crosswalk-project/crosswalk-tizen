@@ -199,7 +199,8 @@ static bool ProcessWellKnownScheme(const std::string& url) {
     return false;
   }
 
-  std::unique_ptr<common::AppControl> request(common::AppControl::MakeAppcontrolFromURL(url));
+  std::unique_ptr<common::AppControl>
+      request(common::AppControl::MakeAppcontrolFromURL(url));
   if (request.get() == NULL || !request->LaunchRequest()) {
     LOGGER(ERROR) << "Fail to send appcontrol request";
     SLoggerE("Fail to send appcontrol request [%s]", url.c_str());
@@ -397,14 +398,27 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   window_->Show();
 
   launched_ = true;
-  received_appcontrol_ = std::move(appcontrol);
 }
 
 void WebApplication::AppControl(
     std::unique_ptr<common::AppControl> appcontrol) {
   std::unique_ptr<common::ResourceManager::Resource> res =
     resource_manager_->GetStartResource(appcontrol.get());
-  if (res->should_reset()) {
+
+  bool do_reset = res->should_reset();
+
+  if (!do_reset) {
+    std::string current_page = view_stack_.front()->GetUrl();
+    std::string localized_page =
+        resource_manager_->GetLocalizedPath(res->uri());
+    if (current_page != localized_page) {
+      do_reset = true;
+    } else {
+      SendAppControlEvent();
+    }
+  }
+
+  if (do_reset) {
     // Reset to context
     ClearViewStack();
     WebView* view = new WebView(window_, ewk_context_);
@@ -413,9 +427,6 @@ void WebApplication::AppControl(
     view->LoadUrl(res->uri(), res->mime());
     view_stack_.push_front(view);
     window_->SetContent(view->evas_object());
-  } else {
-    // Send Event
-    SendAppControlEvent();
   }
 
   if (!debug_mode_ && appcontrol->data(kDebugKey) == "true") {
@@ -423,14 +434,11 @@ void WebApplication::AppControl(
     LaunchInspector(appcontrol.get());
   }
   window_->Active();
-  received_appcontrol_ = std::move(appcontrol);
 }
 
 void WebApplication::SendAppControlEvent() {
-  auto it = view_stack_.begin();
-  while (it != view_stack_.end()) {
-    (*it)->EvalJavascript(kAppControlEventScript);
-  }
+  if (view_stack_.size() > 0 && view_stack_.front() != NULL)
+    view_stack_.front()->EvalJavascript(kAppControlEventScript);
 }
 
 void WebApplication::ClearViewStack() {
