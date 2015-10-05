@@ -96,12 +96,12 @@ static std::string GetMimeFromUri(const std::string& uri) {
 
 static bool CompareMime(const std::string& info_mime,
                         const std::string& request_mime) {
-  if (request_mime.empty())
-    return info_mime.empty();
-
   // suppose that these mimetypes are valid expressions ('type'/'sub-type')
   if (info_mime == "*" || info_mime == "*/*")
     return true;
+
+  if (request_mime.empty())
+    return info_mime.empty();
 
   std::string info_type;
   std::string info_sub;
