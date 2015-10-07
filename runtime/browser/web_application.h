@@ -35,6 +35,7 @@ class ResourceManager;
 
 namespace runtime {
 class NativeWindow;
+class SplashScreen;
 
 class WebApplication : public WebView::EventListener {
  public:
@@ -49,18 +50,17 @@ class WebApplication : public WebView::EventListener {
   void Terminate();
 
   std::string data_path() const { return app_data_path_; }
-  void set_terminator(std::function<void(void)> terminator)
-      { terminator_ = terminator; }
+  void set_terminator(std::function<void(void)> terminator) {
+    terminator_ = terminator;
+  }
   bool launched() const { return launched_; }
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
-  virtual void OnClosedWebView(WebView * view);
-  virtual void OnReceivedWrtMessage(
-      WebView* view,
-      Ewk_IPC_Wrt_Message_Data* msg);
+  virtual void OnClosedWebView(WebView* view);
+  virtual void OnReceivedWrtMessage(WebView* view,
+                                    Ewk_IPC_Wrt_Message_Data* msg);
   virtual void OnOrientationLock(
-      WebView* view,
-      bool lock,
+      WebView* view, bool lock,
       NativeWindow::ScreenOrientation preferred_rotation);
   virtual void OnHardwareKey(WebView* view, const std::string& keyname);
   virtual void OnConsoleMessage(const std::string& msg, int level);
@@ -72,33 +72,22 @@ class WebApplication : public WebView::EventListener {
   virtual bool OnContextMenuDisabled(WebView* view);
   virtual bool OnDidNavigation(WebView* view, const std::string& url);
   virtual void OnNotificationPermissionRequest(
-      WebView* view,
-      const std::string& url,
+      WebView* view, const std::string& url,
       std::function<void(bool)> result_handler);
   virtual void OnGeolocationPermissionRequest(
-      WebView* view,
-      const std::string& url,
+      WebView* view, const std::string& url,
       std::function<void(bool)> result_handler);
-  virtual void OnQuotaExceed(
-      WebView* view,
-      const std::string& url,
-      std::function<void(bool)> result_handler);
+  virtual void OnQuotaExceed(WebView* view, const std::string& url,
+                             std::function<void(bool)> result_handler);
   virtual void OnAuthenticationRequest(
-      WebView* view,
-      const std::string& url,
-      const std::string& message,
-      std::function<void(bool submit,
-                         const std::string& id,
-                         const std::string& password)
-                   > result_handler);
+      WebView* view, const std::string& url, const std::string& message,
+      std::function<void(bool submit, const std::string& id,
+                         const std::string& password)> result_handler);
   virtual void OnCertificateAllowRequest(
-      WebView* view,
-      const std::string& url,
-      const std::string& pem,
+      WebView* view, const std::string& url, const std::string& pem,
       std::function<void(bool allow)> result_handler);
   virtual void OnUsermediaPermissionRequest(
-      WebView* view,
-      const std::string& url,
+      WebView* view, const std::string& url,
       std::function<void(bool)> result_handler);
 
  private:
@@ -116,6 +105,7 @@ class WebApplication : public WebView::EventListener {
   std::string appid_;
   std::string app_data_path_;
   std::list<WebView*> view_stack_;
+  std::unique_ptr<SplashScreen> splash_screen_;
   std::unique_ptr<common::LocaleManager> locale_manager_;
   std::unique_ptr<common::ApplicationData> app_data_;
   std::unique_ptr<common::ResourceManager> resource_manager_;
