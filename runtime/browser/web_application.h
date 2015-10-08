@@ -46,6 +46,7 @@ class WebApplication : public WebView::EventListener {
   void Launch(std::unique_ptr<common::AppControl> appcontrol);
   void Resume();
   void Suspend();
+  void Terminate();
 
   std::string data_path() const { return app_data_path_; }
   void set_terminator(std::function<void(void)> terminator)

@@ -171,8 +171,10 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
                                          app);
 }
 
-static Eina_Bool ExitAppIdlerCallback(void* /*data*/) {
-  elm_exit();
+static Eina_Bool ExitAppIdlerCallback(void* data) {
+  WebApplication* app = static_cast<WebApplication*>(data);
+  if (app)
+    app->Terminate();
   return ECORE_CALLBACK_CANCEL;
 }
 
@@ -485,6 +487,14 @@ void WebApplication::Suspend() {
   }
 }
 
+void WebApplication::Terminate() {
+  if (terminator_) {
+    terminator_();
+  } else {
+    elm_exit();
+  }
+}
+
 void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(false);
@@ -509,9 +519,7 @@ void WebApplication::OnClosedWebView(WebView * view) {
   }
 
   if (view_stack_.size() == 0) {
-    if (terminator_ != NULL) {
-      terminator_();
-    }
+    Terminate();
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
@@ -545,7 +553,7 @@ void WebApplication::OnReceivedWrtMessage(
     window_->InActive();
   } else if (TYPE_IS("tizen://exit")) {
     // One Way Message
-    ecore_idler_add(ExitAppIdlerCallback, NULL);
+    ecore_idler_add(ExitAppIdlerCallback, this);
   } else if (TYPE_IS("tizen://changeUA")) {
     // Async Message
     // Change UserAgent of current WebView
