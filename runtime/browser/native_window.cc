@@ -178,6 +178,9 @@ void NativeWindow::SetContent(Evas_Object* content) {
   elm_object_part_content_set(focus_, "elm.swallow.content", content);
   elm_object_focus_set(focus_, EINA_TRUE);
   content_ = content;
+
+  // attached webview was resized by evas_norender API
+  evas_norender(evas_object_evas_get(window_));
 }
 
 void NativeWindow::DidRotation(int degree) {

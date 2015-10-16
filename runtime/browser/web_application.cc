@@ -385,9 +385,10 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   STEP_PROFILE_END("OnCreate -> URL Set");
   STEP_PROFILE_START("URL Set -> Rendered");
 
+  window_->SetContent(view->evas_object());
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
-  window_->SetContent(view->evas_object());
+
 
   if (appcontrol->data(kDebugKey) == "true") {
     debug_mode_ = true;
