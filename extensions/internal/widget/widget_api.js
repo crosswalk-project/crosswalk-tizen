@@ -67,12 +67,16 @@ function Widget() {
       writable: false
     },
     "height": {
-      value: window && window.innerHeight || 0,
-      writable: false
+      get: function() {
+        return window && window.innerHeight || 0;
+      },
+      configurable: false
     },
     "width": {
-      value: window && window.innerWidth || 0,
-      writable: false
+      get: function() {
+        return window && window.innerWidth || 0;
+      },
+      configurable: false
     },
     "preferences": {
       value: preference_,
