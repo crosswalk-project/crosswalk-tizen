@@ -243,7 +243,7 @@ std::unique_ptr<ResourceManager::Resource> ResourceManager::GetMatchedResource(
   if (!app_control_info.src().empty()) {
     return std::unique_ptr<Resource>(new Resource(
       InsertPrefixPath(app_control_info.src()),
-                       app_control_info.reload() == "disable" ? false : true));
+                       app_control_info.onreset() == "disable" ? false : true));
   }
   return GetDefaultResource();
 }
