@@ -25,6 +25,11 @@
       'defines': [
         'PLUGIN_LAZY_LOADING',
       ],
+      'variables': {
+        'packages': [
+          'ecore',
+        ],
+      },
       'link_settings': {
         'ldflags': [
           '-ldl',
