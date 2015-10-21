@@ -1,28 +1,25 @@
-// Copyright (c) 2013 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Samsung Electronics Co., Ltd. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include <glib.h>
-#include <glib-unix.h>
+#include <Ecore.h>
 
 #include "common/command_line.h"
 #include "common/logger.h"
 #include "extensions/extension/xwalk_extension_server.h"
 
-int main(int argc, char* argv[]) {
-  GMainLoop* loop;
+Ecore_Event_Handler* quit_handler = NULL;
 
-  loop = g_main_loop_new(NULL, FALSE);
+int main(int argc, char* argv[]) {
+  ecore_init();
 
   // Register Quit Signal Handlers
-  auto quit_callback = [](gpointer data) -> gboolean {
-    GMainLoop* loop = reinterpret_cast<GMainLoop*>(data);
-    g_main_loop_quit(loop);
-    return false;
+  auto quit_callback = [](void*, int, void*) -> Eina_Bool {
+    ecore_main_loop_quit();
+    return EINA_TRUE;
   };
-  g_unix_signal_add(SIGINT, quit_callback, loop);
-  g_unix_signal_add(SIGTERM, quit_callback, loop);
+  ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT,
+                          quit_callback, NULL);
 
   common::CommandLine::Init(argc, argv);
   common::CommandLine* cmd = common::CommandLine::ForCurrentProcess();
@@ -44,12 +41,11 @@ int main(int argc, char* argv[]) {
   }
 
   LOGGER(INFO) << "extension process has been started.";
-
-  g_main_loop_run(loop);
+  ecore_main_loop_glib_integrate();
+  ecore_main_loop_begin();
 
   LOGGER(INFO) << "extension process is exiting.";
-
-  g_main_loop_unref(loop);
+  ecore_shutdown();
 
   return true;
 }
