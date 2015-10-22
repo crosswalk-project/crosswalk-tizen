@@ -583,7 +583,7 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
   rewind(src);
 
   // Read buffer from the source file
-  std::unique_ptr<char> src_buf(new char[src_len]);
+  std::unique_ptr<char[]> src_buf(new char[src_len]);
   if (src_len != fread(src_buf.get(), sizeof(char), src_len, src)) {
     LOGGER(ERROR) << "Read error, file: " << src_path;
     fclose(src);
