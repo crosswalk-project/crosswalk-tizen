@@ -411,7 +411,8 @@ void XWalkExtensionModule::SendRuntimeMessageCallback(
   }
 
   RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
-  rc->SendMessage(std::string(*type), data_str);
+  rc->SendMessage(module->module_system_->GetV8Context(),
+                  std::string(*type), data_str);
 
   result.Set(true);
 }
@@ -436,7 +437,9 @@ void XWalkExtensionModule::SendRuntimeSyncMessageCallback(
   }
 
   RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
-  std::string reply = rc->SendSyncMessage(std::string(*type), data_str);
+  std::string reply = rc->SendSyncMessage(
+      module->module_system_->GetV8Context(),
+      std::string(*type), data_str);
 
   result.Set(v8::String::NewFromUtf8(isolate, reply.c_str()));
 }
@@ -488,7 +491,8 @@ void XWalkExtensionModule::SendRuntimeAsyncMessageCallback(
   };
 
   RuntimeIPCClient* rc = RuntimeIPCClient::GetInstance();
-  rc->SendAsyncMessage(std::string(*type), value_str, callback);
+  rc->SendAsyncMessage(module->module_system_->GetV8Context(),
+                       std::string(*type), value_str, callback);
 
   result.Set(true);
 }

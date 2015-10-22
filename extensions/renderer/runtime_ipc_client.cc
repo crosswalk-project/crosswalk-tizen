@@ -21,6 +21,12 @@
 
 namespace extensions {
 
+namespace {
+
+const int kRoutingIdEmbedderDataIndex = 12;
+
+}  // namespace
+
 RuntimeIPCClient::JSCallback::JSCallback(v8::Isolate* isolate,
                                          v8::Handle<v8::Function> callback) {
   callback_.Reset(isolate, callback);
@@ -46,18 +52,39 @@ RuntimeIPCClient* RuntimeIPCClient::GetInstance() {
   return &self;
 }
 
-RuntimeIPCClient::RuntimeIPCClient() : routing_id_(0) {
+RuntimeIPCClient::RuntimeIPCClient() {
 }
 
-void RuntimeIPCClient::SendMessage(const std::string& type,
+int RuntimeIPCClient::GetRoutingId(v8::Handle<v8::Context> context) {
+  v8::Handle<v8::Value> value =
+      context->GetEmbedderData(kRoutingIdEmbedderDataIndex);
+  int routing_id = 0;
+  if (value->IsNumber()) {
+    routing_id = value->IntegerValue();
+  } else {
+    LOGGER(WARN) << "Failed to get routing index from context.";
+  }
+
+  return routing_id;
+}
+
+void RuntimeIPCClient::SetRoutingId(v8::Handle<v8::Context> context,
+                                    int routing_id) {
+  context->SetEmbedderData(kRoutingIdEmbedderDataIndex,
+                           v8::Integer::New(context->GetIsolate(), routing_id));
+}
+
+void RuntimeIPCClient::SendMessage(v8::Handle<v8::Context> context,
+                                   const std::string& type,
                                    const std::string& value) {
   Ewk_IPC_Wrt_Message_Data* msg = ewk_ipc_wrt_message_data_new();
   ewk_ipc_wrt_message_data_id_set(msg, "");
   ewk_ipc_wrt_message_data_type_set(msg, type.c_str());
   ewk_ipc_wrt_message_data_value_set(msg, value.c_str());
 
-  if (routing_id_ > 0) {
-    if (!ewk_ipc_plugins_message_send(routing_id_, msg)) {
+  int routing_id = GetRoutingId(context);
+  if (routing_id > 0) {
+    if (!ewk_ipc_plugins_message_send(routing_id, msg)) {
       LOGGER(ERROR) << "Failed to send message to runtime using ewk_ipc.";
     }
   }
@@ -65,14 +92,16 @@ void RuntimeIPCClient::SendMessage(const std::string& type,
   ewk_ipc_wrt_message_data_del(msg);
 }
 
-std::string RuntimeIPCClient::SendSyncMessage(const std::string& type,
+std::string RuntimeIPCClient::SendSyncMessage(v8::Handle<v8::Context> context,
+                                              const std::string& type,
                                               const std::string& value) {
   Ewk_IPC_Wrt_Message_Data* msg = ewk_ipc_wrt_message_data_new();
   ewk_ipc_wrt_message_data_type_set(msg, type.c_str());
   ewk_ipc_wrt_message_data_value_set(msg, value.c_str());
 
-  if (routing_id_ > 0) {
-    if (!ewk_ipc_plugins_sync_message_send(routing_id_, msg)) {
+  int routing_id = GetRoutingId(context);
+  if (routing_id > 0) {
+    if (!ewk_ipc_plugins_sync_message_send(routing_id, msg)) {
       LOGGER(ERROR) << "Failed to send message to runtime using ewk_ipc.";
       ewk_ipc_wrt_message_data_del(msg);
       return std::string();
@@ -88,7 +117,8 @@ std::string RuntimeIPCClient::SendSyncMessage(const std::string& type,
   return result;
 }
 
-void RuntimeIPCClient::SendAsyncMessage(const std::string& type,
+void RuntimeIPCClient::SendAsyncMessage(v8::Handle<v8::Context> context,
+                                        const std::string& type,
                                         const std::string& value,
                                         ReplyCallback callback) {
   std::string msg_id = common::utils::GenerateUUID();
@@ -98,8 +128,9 @@ void RuntimeIPCClient::SendAsyncMessage(const std::string& type,
   ewk_ipc_wrt_message_data_type_set(msg, type.c_str());
   ewk_ipc_wrt_message_data_value_set(msg, value.c_str());
 
-  if (routing_id_ > 0) {
-    if (!ewk_ipc_plugins_message_send(routing_id_, msg)) {
+  int routing_id = GetRoutingId(context);
+  if (routing_id > 0) {
+    if (!ewk_ipc_plugins_message_send(routing_id, msg)) {
       LOGGER(ERROR) << "Failed to send message to runtime using ewk_ipc.";
       ewk_ipc_wrt_message_data_del(msg);
       return;
