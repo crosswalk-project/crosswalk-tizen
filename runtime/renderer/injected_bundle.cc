@@ -109,7 +109,7 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
   // Initialize RuntimeIPCClient
   extensions::RuntimeIPCClient* rc =
       extensions::RuntimeIPCClient::GetInstance();
-  rc->set_routing_id(routing_handle);
+  rc->SetRoutingId(context, routing_handle);
   STEP_PROFILE_END("Initialize RuntimeIPCClient");
 
   extensions::XWalkExtensionRendererController& controller =

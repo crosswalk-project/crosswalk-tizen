@@ -45,26 +45,29 @@ class RuntimeIPCClient {
   static RuntimeIPCClient* GetInstance();
 
   // Send message to BrowserProcess without reply
-  void SendMessage(const std::string& type, const std::string& value);
+  void SendMessage(v8::Handle<v8::Context> context,
+                   const std::string& type, const std::string& value);
 
   // Send message to BrowserProcess synchronous with reply
-  std::string SendSyncMessage(const std::string& type,
+  std::string SendSyncMessage(v8::Handle<v8::Context> context,
+                              const std::string& type,
                               const std::string& value);
 
   // Send message to BrowserProcess asynchronous,
   // reply message will be passed to callback function.
-  void SendAsyncMessage(const std::string& type, const std::string& value,
+  void SendAsyncMessage(v8::Handle<v8::Context> context,
+                        const std::string& type, const std::string& value,
                         ReplyCallback callback);
 
   void HandleMessageFromRuntime(const Ewk_IPC_Wrt_Message_Data* msg);
 
-  int routing_id() const { return routing_id_; }
-  void set_routing_id(int routing_id) { routing_id_ = routing_id; }
+  int GetRoutingId(v8::Handle<v8::Context> context);
+
+  void SetRoutingId(v8::Handle<v8::Context> context, int routing_id);
 
  private:
   RuntimeIPCClient();
 
-  int routing_id_;
   std::map<std::string, ReplyCallback> callbacks_;
 };
 
