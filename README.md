@@ -13,6 +13,20 @@ It is an open source project forked from [Crosswalk](https://crosswalk-project.o
   Extension enhance the capabilities of the Crosswalk Project, enabling applications to make full use of platform features via native code.
   The [Device APIs for Tizen](https://review.tizen.org/git/?p=platform/core/api/webapi-plugins.git;a=shortlog;h=refs/heads/tizen) are written under the Crosswalk Extension Framework.
 
+## System Requirement
+Presently, the following Mobile and TV profiles are supported on Tizen 3.0:
+
+* Mobile
+  * Device: Samsung Galaxy Note 4
+  * Binary: https://download.tizen.org/snapshots/tizen/mobile/latest/images
+
+* TV
+  * Device: Odroid XU3
+  * Binary: https://download.tizen.org/snapshots/tizen/tv/latest/images
+
+## Quick Start Guide
+Refer to the [Quick Start Guide](https://github.com/crosswalk-project/crosswalk-tizen/wiki/Quick-Start-Guide) page to build crosswalk-tizen project.
+
 ## Community
 
 * Follow the [crosswalk-help](https://lists.crosswalk-project.org/mailman/listinfo/crosswalk-help) mailing list to ask questions
