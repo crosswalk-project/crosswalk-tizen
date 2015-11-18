@@ -169,67 +169,67 @@ bool ApplicationData::LoadManifestData() {
   app_control_info_list_ =
     std::static_pointer_cast<const wgt::parse::AppControlInfoList>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenApplicationAppControlsKey));
+          wgt::parse::AppControlInfo::Key()));
 
   category_info_list_ =
     std::static_pointer_cast<const wgt::parse::CategoryInfoList>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenCategoryKey));
+        wgt::parse::CategoryInfoList::Key()));
 
   meta_data_info_ =
     std::static_pointer_cast<const wgt::parse::MetaDataInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenMetaDataKey));
+          wgt::parse::MetaDataInfo::Key()));
 
   allowed_navigation_info_ =
     std::static_pointer_cast<const wgt::parse::AllowedNavigationInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kAllowNavigationKey));
+          wgt::parse::AllowedNavigationInfo::Key()));
 
   permissions_info_ =
     std::static_pointer_cast<const wgt::parse::PermissionsInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenPermissionsKey));
+        wgt::parse::PermissionsInfo::Key()));
 
   setting_info_ =
     std::static_pointer_cast<const wgt::parse::SettingInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenSettingKey));
+        wgt::parse::SettingInfo::Key()));
 
   splash_screen_info_ =
     std::static_pointer_cast<const wgt::parse::SplashScreenInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenSplashScreenKey));
+        wgt::parse::SplashScreenInfo::Key()));
 
   tizen_application_info_ =
     std::static_pointer_cast<const wgt::parse::TizenApplicationInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenApplicationKey));
+          wgt::parse::TizenApplicationInfo::Key()));
 
   widget_info_ =
     std::static_pointer_cast<const wgt::parse::WidgetInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenWidgetKey));
+          wgt::parse::WidgetInfo::Key()));
 
   content_info_ =
     std::static_pointer_cast<const wgt::parse::ContentInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kTizenContentKey));
+        wgt::parse::ContentInfo::Key()));
 
   warp_info_ =
     std::static_pointer_cast<const wgt::parse::WarpInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kAccessKey));
+          wgt::parse::WarpInfo::Key()));
 
   csp_info_ =
     std::static_pointer_cast<const wgt::parse::CSPInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kCSPKey));
+          wgt::parse::CSPInfo::Key()));
 
   csp_report_info_ =
     std::static_pointer_cast<const wgt::parse::CSPInfo>(
       widget_config_parser->GetManifestData(
-        wgt::application_widget_keys::kCSPReportOnlyKey));
+          wgt::parse::CSPInfo::Report_only_key()));
 
   // Set default empty object
   if (widget_info_.get() == NULL) {
