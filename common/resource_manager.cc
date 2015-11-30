@@ -580,6 +580,11 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
   // Read filesize
   fseek(src, 0, SEEK_END);
   size_t src_len = ftell(src);
+  if (src_len == 0) {
+    // if the file exists and is empty, bypass it
+    fclose(src);
+    return path;
+  }
   rewind(src);
 
   // Read buffer from the source file
