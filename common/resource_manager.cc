@@ -316,7 +316,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     if (utils::StartsWith(url, check)) {
       url.erase(0, check.length());
     } else {
-      LOGGER(ERROR) << "Invalid appid";
+      LOGGER(ERROR) << "Invalid uri: {scheme:app} uri=" << origin;
       return result;
     }
   } else if (utils::StartsWith(url, file_scheme)) {
@@ -329,7 +329,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
   }
 
   if (url.empty()) {
-    LOGGER(ERROR) << "URL Localization error";
+    LOGGER(ERROR) << "Invalid uri: uri=" << origin;
     return result;
   }
 
@@ -359,7 +359,7 @@ std::string ResourceManager::GetLocalizedPath(const std::string& origin) {
     return result;
   }
 
-  LOGGER(ERROR) << "URL Localization error";
+  LOGGER(ERROR) << "Invalid uri: uri=" << origin << ", decoded=" << file_path;
   return result;
 }
 

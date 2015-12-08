@@ -48,7 +48,6 @@
           'dlog',
           'gio-2.0',
           'uuid',
-          'libcurl',
           'libwebappenc',
           'manifest-parser',
           'manifest-handlers',
