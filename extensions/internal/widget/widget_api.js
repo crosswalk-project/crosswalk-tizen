@@ -16,7 +16,7 @@
 
 var dispatchStorageEvent = function(key, oldValue, newValue) {
   var evt = document.createEvent("CustomEvent");
-  evt.initCustomEvent("storage", true, true);
+  evt.initCustomEvent("storage", true, true, null);
   evt.key = key;
   evt.oldValue = oldValue;
   evt.newValue = newValue;

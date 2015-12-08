@@ -63,7 +63,7 @@ const char* kPortKey = "port";
 const char* kAppControlEventScript =
     "(function(){"
     "var __event = document.createEvent(\"CustomEvent\");\n"
-    "__event.initCustomEvent(\"appcontrol\", true, true);\n"
+    "__event.initCustomEvent(\"appcontrol\", true, true, null);\n"
     "document.dispatchEvent(__event);\n"
     "\n"
     "for (var i=0; i < window.frames.length; i++)\n"
@@ -72,7 +72,7 @@ const char* kAppControlEventScript =
 const char* kBackKeyEventScript =
     "(function(){"
     "var __event = document.createEvent(\"CustomEvent\");\n"
-    "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
+    "__event.initCustomEvent(\"tizenhwkey\", true, true, null);\n"
     "__event.keyName = \"back\";\n"
     "document.dispatchEvent(__event);\n"
     "\n"
@@ -82,7 +82,7 @@ const char* kBackKeyEventScript =
 const char* kMenuKeyEventScript =
     "(function(){"
     "var __event = document.createEvent(\"CustomEvent\");\n"
-    "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
+    "__event.initCustomEvent(\"tizenhwkey\", true, true, null);\n"
     "__event.keyName = \"menu\";\n"
     "document.dispatchEvent(__event);\n"
     "\n"
