@@ -104,6 +104,10 @@ install -p -m 755 out/Default/xwalk_extension %{buildroot}%{_bindir}
 install -p -m 644 out/Default/lib/libwidget_plugin.so %{buildroot}%{extension_path}
 install -p -m 644 out/Default/gen/widget.json %{buildroot}%{extension_path}
 
+# screen_plugin
+install -p -m 644 out/Default/lib/libsplash_screen_plugin.so %{buildroot}%{extension_path}
+install -p -m 644 out/Default/gen/splash_screen.json %{buildroot}%{extension_path}
+
 # xwalk_runtime
 install -p -m 755 out/Default/xwalk_runtime %{buildroot}%{_bindir}
 ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt
@@ -129,6 +133,8 @@ rm -fr %{buildroot}
 %attr(644,root,root) %{_libdir}/libxwalk_injected_bundle.so
 %attr(644,root,root) %{extension_path}/libwidget_plugin.so
 %attr(644,root,root) %{extension_path}/widget.json
+%attr(644,root,root) %{extension_path}/libsplash_screen_plugin.so
+%attr(644,root,root) %{extension_path}/splash_screen.json
 %attr(755,root,root) %{_bindir}/xwalk_extension
 %attr(755,root,root) %{_bindir}/xwalk_runtime
 %attr(755,root,root) %{_bindir}/wrt

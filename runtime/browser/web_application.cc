@@ -41,9 +41,10 @@
 #include "runtime/browser/popup_string.h"
 #include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/web_view.h"
+#include "runtime/browser/splash_screen.h"
 
 #ifndef INJECTED_BUNDLE_PATH
-  #error INJECTED_BUNDLE_PATH is not set.
+#error INJECTED_BUNDLE_PATH is not set.
 #endif
 
 namespace runtime {
@@ -59,7 +60,7 @@ const char* kConsoleMessageLogTag = "ConsoleMessage";
 const char* kDebugKey = "debug";
 const char* kPortKey = "port";
 
-const char* kAppControlEventScript = \
+const char* kAppControlEventScript =
     "(function(){"
     "var __event = document.createEvent(\"CustomEvent\");\n"
     "__event.initCustomEvent(\"appcontrol\", true, true);\n"
@@ -68,7 +69,7 @@ const char* kAppControlEventScript = \
     "for (var i=0; i < window.frames.length; i++)\n"
     "{ window.frames[i].document.dispatchEvent(__event); }"
     "})()";
-const char* kBackKeyEventScript = \
+const char* kBackKeyEventScript =
     "(function(){"
     "var __event = document.createEvent(\"CustomEvent\");\n"
     "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
@@ -78,7 +79,7 @@ const char* kBackKeyEventScript = \
     "for (var i=0; i < window.frames.length; i++)\n"
     "{ window.frames[i].document.dispatchEvent(__event); }"
     "})()";
-const char* kMenuKeyEventScript = \
+const char* kMenuKeyEventScript =
     "(function(){"
     "var __event = document.createEvent(\"CustomEvent\");\n"
     "__event.initCustomEvent(\"tizenhwkey\", true, true);\n"
@@ -90,14 +91,10 @@ const char* kMenuKeyEventScript = \
     "})()";
 const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
 const char* kFullscreenFeature = "fullscreen";
-const char* kNotificationPrivilege =
-    "http://tizen.org/privilege/notification";
-const char* kLocationPrivilege =
-    "http://tizen.org/privilege/location";
-const char* kStoragePrivilege =
-    "http://tizen.org/privilege/unlimitedstorage";
-const char* kUsermediaPrivilege =
-    "http://tizen.org/privilege/mediacapture";
+const char* kNotificationPrivilege = "http://tizen.org/privilege/notification";
+const char* kLocationPrivilege = "http://tizen.org/privilege/location";
+const char* kStoragePrivilege = "http://tizen.org/privilege/unlimitedstorage";
+const char* kUsermediaPrivilege = "http://tizen.org/privilege/mediacapture";
 const char* kNotiIconFile = "noti_icon.png";
 
 const char* kVisibilitySuspendFeature = "visibility,suspend";
@@ -121,13 +118,11 @@ const char* kDefaultCSPRule =
 
 bool FindPrivilege(common::ApplicationData* app_data,
                    const std::string& privilege) {
-  if (app_data->permissions_info().get() == NULL)
-    return false;
+  if (app_data->permissions_info().get() == NULL) return false;
   auto it = app_data->permissions_info()->GetAPIPermissions().begin();
   auto end = app_data->permissions_info()->GetAPIPermissions().end();
-  for ( ; it != end; ++it) {
-    if (*it == privilege)
-      return true;
+  for (; it != end; ++it) {
+    if (*it == privilege) return true;
   }
   return false;
 }
@@ -141,17 +136,15 @@ static void SendDownloadRequest(const std::string& url) {
 
 static void InitializeNotificationCallback(Ewk_Context* ewk_context,
                                            WebApplication* app) {
-  auto show = [](Ewk_Context*,
-                 Ewk_Notification* noti,
-                 void* user_data) {
+  auto show = [](Ewk_Context*, Ewk_Notification* noti, void* user_data) {
     WebApplication* self = static_cast<WebApplication*>(user_data);
-    if (self == NULL)
-      return;
+    if (self == NULL) return;
     uint64_t id = ewk_notification_id_get(noti);
-    std::string title(ewk_notification_title_get(noti) ?
-                      ewk_notification_title_get(noti) : "");
-    std::string body(ewk_notification_body_get(noti) ?
-                     ewk_notification_body_get(noti) : "");
+    std::string title(ewk_notification_title_get(noti)
+                          ? ewk_notification_title_get(noti)
+                          : "");
+    std::string body(
+        ewk_notification_body_get(noti) ? ewk_notification_body_get(noti) : "");
     std::string icon_path = self->data_path() + "/" + kNotiIconFile;
     if (!ewk_notification_icon_save_as_png(noti, icon_path.c_str())) {
       icon_path = "";
@@ -159,16 +152,11 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
     if (NotificationManager::GetInstance()->Show(id, title, body, icon_path))
       ewk_notification_showed(id);
   };
-  auto hide = [](Ewk_Context*,
-                 uint64_t noti_id,
-                 void *) {
+  auto hide = [](Ewk_Context*, uint64_t noti_id, void*) {
     NotificationManager::GetInstance()->Hide(noti_id);
     ewk_notification_closed(noti_id, EINA_FALSE);
   };
-  ewk_context_notification_callbacks_set(ewk_context,
-                                         show,
-                                         hide,
-                                         app);
+  ewk_context_notification_callbacks_set(ewk_context, show, hide, app);
 }
 
 static Eina_Bool ExitAppIdlerCallback(void* data) {
@@ -201,8 +189,8 @@ static bool ProcessWellKnownScheme(const std::string& url) {
     return false;
   }
 
-  std::unique_ptr<common::AppControl>
-      request(common::AppControl::MakeAppcontrolFromURL(url));
+  std::unique_ptr<common::AppControl> request(
+      common::AppControl::MakeAppcontrolFromURL(url));
   if (request.get() == NULL || !request->LaunchRequest()) {
     LOGGER(ERROR) << "Fail to send appcontrol request";
     SLoggerE("Fail to send appcontrol request [%s]", url.c_str());
@@ -218,27 +206,27 @@ WebApplication::WebApplication(
     NativeWindow* window, std::unique_ptr<common::ApplicationData> app_data)
     : launched_(false),
       debug_mode_(false),
-      ewk_context_(ewk_context_new_with_injected_bundle_path(
-          INJECTED_BUNDLE_PATH)),
+      ewk_context_(
+          ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       window_(window),
       appid_(app_data->app_id()),
       locale_manager_(new common::LocaleManager()),
       app_data_(std::move(app_data)),
       terminator_(NULL) {
-  std::unique_ptr<char, decltype(std::free)*>
-    path {app_get_data_path(), std::free};
+  std::unique_ptr<char, decltype(std::free)*> path{app_get_data_path(),
+                                                   std::free};
   app_data_path_ = path.get();
-
+  LOGGER(ERROR) << "path is " << path.get();
+  splash_screen_.reset(new SplashScreen(
+      window_, app_data_->splash_screen_info(), app_data_->application_path()));
   resource_manager_.reset(
       new common::ResourceManager(app_data_.get(), locale_manager_.get()));
-  resource_manager_->set_base_resource_path(
-      app_data_->application_path());
+  resource_manager_->set_base_resource_path(app_data_->application_path());
   Initialize();
 }
 
 WebApplication::~WebApplication() {
-  if (ewk_context_)
-    ewk_context_delete(ewk_context_);
+  if (ewk_context_) ewk_context_delete(ewk_context_);
 }
 
 bool WebApplication::Initialize() {
@@ -254,8 +242,8 @@ bool WebApplication::Initialize() {
   // set persistent storage path
   std::string cookie_path = data_path() + ".cookie";
   ewk_cookie_manager_persistent_storage_set(
-                                      cookie_manager, cookie_path.c_str(),
-                                      EWK_COOKIE_PERSISTENT_STORAGE_SQLITE);
+      cookie_manager, cookie_path.c_str(),
+      EWK_COOKIE_PERSISTENT_STORAGE_SQLITE);
 
   // vibration callback
   auto vibration_start_callback = [](uint64_t ms, void*) {
@@ -264,71 +252,59 @@ bool WebApplication::Initialize() {
   auto vibration_stop_callback = [](void* /*user_data*/) {
     platform::VibrationManager::GetInstance()->Stop();
   };
-  ewk_context_vibration_client_callbacks_set(ewk_context_,
-                                             vibration_start_callback,
-                                             vibration_stop_callback,
-                                             NULL);
+  ewk_context_vibration_client_callbacks_set(
+      ewk_context_, vibration_start_callback, vibration_stop_callback, NULL);
 
   auto download_callback = [](const char* downloadUrl, void* /*data*/) {
     SendDownloadRequest(downloadUrl);
   };
-  ewk_context_did_start_download_callback_set(ewk_context_,
-                                              download_callback,
+  ewk_context_did_start_download_callback_set(ewk_context_, download_callback,
                                               this);
   InitializeNotificationCallback(ewk_context_, this);
 
   if (FindPrivilege(app_data_.get(), kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kFullscreenFeature,
-                                                true);
+                                                kFullscreenFeature, true);
   }
 
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->background_support_enabled()) {
+    ewk_context_tizen_extensible_api_string_set(
+        ewk_context_, kVisibilitySuspendFeature, true);
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kVisibilitySuspendFeature,
-                                                true);
-    ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kBackgroundMusicFeature,
-                                                true);
+                                                kBackgroundMusicFeature, true);
   }
   ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                              kMediastreamRecordFeature,
-                                              true);
+                                              kMediastreamRecordFeature, true);
   ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                              kEncryptedDatabaseFeature,
-                                              true);
+                                              kEncryptedDatabaseFeature, true);
   if (app_data_->setting_info() != NULL &&
-      app_data_->setting_info()->screen_orientation()
-      == wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
+      app_data_->setting_info()->screen_orientation() ==
+          wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kRotationLockFeature,
-                                                true);
+                                                kRotationLockFeature, true);
   } else if (app_data_->setting_info() != NULL &&
-             app_data_->setting_info()->screen_orientation()
-             == wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
-    window_->SetRotationLock(
-        NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
+             app_data_->setting_info()->screen_orientation() ==
+                 wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
+    window_->SetRotationLock(NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
   } else if (app_data_->setting_info() != NULL &&
-             app_data_->setting_info()->screen_orientation()
-             == wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
+             app_data_->setting_info()->screen_orientation() ==
+                 wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
     window_->SetRotationLock(
         NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY);
   }
 
   if (app_data_->setting_info() != NULL &&
-      app_data_->setting_info()->sound_mode()
-      == wgt::parse::SettingInfo::SoundMode::EXCLUSIVE) {
-    ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kSoundModeFeature,
+      app_data_->setting_info()->sound_mode() ==
+          wgt::parse::SettingInfo::SoundMode::EXCLUSIVE) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_, kSoundModeFeature,
                                                 true);
   }
 
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->background_vibration()) {
-    ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kBackgroundVibrationFeature,
-                                                true);
+    ewk_context_tizen_extensible_api_string_set(
+        ewk_context_, kBackgroundVibrationFeature, true);
   }
 
   if (app_data_->widget_info() != NULL &&
@@ -343,8 +319,7 @@ bool WebApplication::Initialize() {
   // TODO(sngn.lee): find the proxy url
   // ewk_context_proxy_uri_set(ewk_context_, ... );
 
-  if (app_data_->csp_info() != NULL ||
-      app_data_->csp_report_info() != NULL ||
+  if (app_data_->csp_info() != NULL || app_data_->csp_report_info() != NULL ||
       app_data_->allowed_navigation_info() != NULL) {
     security_model_version_ = 2;
     if (app_data_->csp_info() == NULL ||
@@ -357,8 +332,7 @@ bool WebApplication::Initialize() {
         !app_data_->csp_report_info()->security_rules().empty()) {
       csp_report_rule_ = app_data_->csp_report_info()->security_rules();
     }
-    ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kCSPFeature,
+    ewk_context_tizen_extensible_api_string_set(ewk_context_, kCSPFeature,
                                                 EINA_TRUE);
   } else {
     security_model_version_ = 1;
@@ -373,13 +347,11 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   SetupWebView(view);
 
   // send widget info to injected bundle
-  ewk_send_widget_info(ewk_context_, appid_.c_str(),
-                       elm_config_scale_get(),
-                       elm_theme_get(NULL),
-                       "");
+  ewk_send_widget_info(ewk_context_, appid_.c_str(), elm_config_scale_get(),
+                       elm_theme_get(NULL), "");
 
   std::unique_ptr<common::ResourceManager::Resource> res =
-    resource_manager_->GetStartResource(appcontrol.get());
+      resource_manager_->GetStartResource(appcontrol.get());
   view->SetDefaultEncoding(res->encoding());
 
   STEP_PROFILE_END("OnCreate -> URL Set");
@@ -406,7 +378,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
 void WebApplication::AppControl(
     std::unique_ptr<common::AppControl> appcontrol) {
   std::unique_ptr<common::ResourceManager::Resource> res =
-    resource_manager_->GetStartResource(appcontrol.get());
+      resource_manager_->GetStartResource(appcontrol.get());
 
   bool do_reset = res->should_reset();
 
@@ -447,7 +419,7 @@ void WebApplication::ClearViewStack() {
   window_->SetContent(NULL);
   WebView* front = view_stack_.front();
   auto it = view_stack_.begin();
-  for ( ; it != view_stack_.end(); ++it) {
+  for (; it != view_stack_.end(); ++it) {
     if (*it != front) {
       (*it)->Suspend();
       delete *it;
@@ -467,7 +439,7 @@ void WebApplication::Resume() {
   }
 
   auto it = view_stack_.begin();
-  for ( ; it != view_stack_.end(); ++it) {
+  for (; it != view_stack_.end(); ++it) {
     (*it)->Resume();
   }
 }
@@ -483,7 +455,7 @@ void WebApplication::Suspend() {
   }
 
   auto it = view_stack_.begin();
-  for ( ; it != view_stack_.end(); ++it) {
+  for (; it != view_stack_.end(); ++it) {
     (*it)->Suspend();
   }
 }
@@ -505,9 +477,8 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
   window_->SetContent(new_view->evas_object());
 }
 
-void WebApplication::OnClosedWebView(WebView * view) {
-  if (view_stack_.size() == 0)
-    return;
+void WebApplication::OnClosedWebView(WebView* view) {
+  if (view_stack_.size() == 0) return;
 
   WebView* current = view_stack_.front();
   if (current == view) {
@@ -528,16 +499,15 @@ void WebApplication::OnClosedWebView(WebView * view) {
 
   // Delete after the callback context(for ewk view) was not used
   ecore_idler_add([](void* view) {
-      WebView* obj = static_cast<WebView*>(view);
-      delete obj;
-      return EINA_FALSE;
-    }, view);
+                    WebView* obj = static_cast<WebView*>(view);
+                    delete obj;
+                    return EINA_FALSE;
+                  },
+                  view);
 }
 
-void WebApplication::OnReceivedWrtMessage(
-    WebView* /*view*/,
-    Ewk_IPC_Wrt_Message_Data* msg) {
-
+void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
+                                          Ewk_IPC_Wrt_Message_Data* msg) {
   Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
   Eina_Stringshare* msg_ref_id = ewk_ipc_wrt_message_data_reference_id_get(msg);
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
@@ -548,7 +518,7 @@ void WebApplication::OnReceivedWrtMessage(
   LOGGER(DEBUG) << "RecvMsg: type = " << msg_type;
   LOGGER(DEBUG) << "RecvMsg: value = " << msg_value;
 
-  #define TYPE_IS(x) (!strcmp(msg_type, x))
+#define TYPE_IS(x) (!strcmp(msg_type, x))
   if (TYPE_IS("tizen://hide")) {
     // One Way Message
     window_->InActive();
@@ -586,8 +556,12 @@ void WebApplication::OnReceivedWrtMessage(
       LOGGER(ERROR) << "Failed to send response";
     }
     ewk_ipc_wrt_message_data_del(ans);
+  } else if (TYPE_IS("tizen://hide_splash_screen")) {
+    splash_screen_->HideSplashScreen(SplashScreen::HideReason::CUSTOM);
   }
-  #undef TYPE_IS
+
+
+#undef TYPE_IS
 
   eina_stringshare_del(msg_value);
   eina_stringshare_del(msg_type);
@@ -596,20 +570,19 @@ void WebApplication::OnReceivedWrtMessage(
 }
 
 void WebApplication::OnOrientationLock(
-    WebView* view,
-    bool lock,
+    WebView* view, bool lock,
     NativeWindow::ScreenOrientation preferred_rotation) {
-  if (view_stack_.size() == 0)
-    return;
+  if (view_stack_.size() == 0) return;
 
   // Only top-most view can set the orientation relate operation
-  if (view_stack_.front() != view)
-    return;
+  if (view_stack_.front() != view) return;
 
-  auto orientaion_setting = app_data_->setting_info() != NULL ?
-                            app_data_->setting_info()->screen_orientation() :
-                            // TODO(sngn.lee): check default value
-                            wgt::parse::SettingInfo::ScreenOrientation::AUTO;
+  auto orientaion_setting =
+      app_data_->setting_info() != NULL
+          ? app_data_->setting_info()->screen_orientation()
+          :
+          // TODO(sngn.lee): check default value
+          wgt::parse::SettingInfo::ScreenOrientation::AUTO;
   if (orientaion_setting != wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
     return;
   }
@@ -622,9 +595,9 @@ void WebApplication::OnOrientationLock(
 }
 
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
-  bool enabled = app_data_->setting_info() != NULL ?
-                 app_data_->setting_info()->hwkey_enabled() :
-                 true;
+  bool enabled = app_data_->setting_info() != NULL
+                     ? app_data_->setting_info()->hwkey_enabled()
+                     : true;
   if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
   } else if (enabled && kKeyNameMenu == keyname) {
@@ -636,7 +609,7 @@ void WebApplication::OnLanguageChanged() {
   locale_manager_->UpdateSystemLocale();
   ewk_context_cache_clear(ewk_context_);
   auto it = view_stack_.begin();
-  for ( ; it != view_stack_.end(); ++it) {
+  for (; it != view_stack_.end(); ++it) {
     (*it)->Reload();
   }
 }
@@ -649,14 +622,14 @@ void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
     int dlog_level = DLOG_DEBUG;
     switch (level) {
       case EWK_CONSOLE_MESSAGE_LEVEL_WARNING:
-          dlog_level = DLOG_WARN;
-          break;
+        dlog_level = DLOG_WARN;
+        break;
       case EWK_CONSOLE_MESSAGE_LEVEL_ERROR:
-          dlog_level = DLOG_ERROR;
-          break;
+        dlog_level = DLOG_ERROR;
+        break;
       default:
-          dlog_level = DLOG_DEBUG;
-          break;
+        dlog_level = DLOG_DEBUG;
+        break;
     }
     LOGGER_RAW(dlog_level, kConsoleMessageLogTag) << msg;
   }
@@ -668,30 +641,33 @@ void WebApplication::OnLowMemory() {
 }
 
 bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
-  return !(app_data_->setting_info() != NULL ?
-           app_data_->setting_info()->context_menu_enabled() :
-           true);
+  return !(app_data_->setting_info() != NULL
+               ? app_data_->setting_info()->context_menu_enabled()
+               : true);
 }
 
 void WebApplication::OnLoadStart(WebView* /*view*/) {
   LOGGER(DEBUG) << "LoadStart";
 }
+
 void WebApplication::OnLoadFinished(WebView* /*view*/) {
   LOGGER(DEBUG) << "LoadFinished";
+  splash_screen_->HideSplashScreen(SplashScreen::HideReason::LOADFINISHED);
 }
+
 void WebApplication::OnRendered(WebView* /*view*/) {
   STEP_PROFILE_END("URL Set -> Rendered");
   STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
+  splash_screen_->HideSplashScreen(SplashScreen::HideReason::RENDERED);
 }
 
 void WebApplication::LaunchInspector(common::AppControl* appcontrol) {
-  unsigned int port =
-    ewk_context_inspector_server_start(ewk_context_, 0);
+  unsigned int port = ewk_context_inspector_server_start(ewk_context_, 0);
   std::stringstream ss;
   ss << port;
   std::map<std::string, std::vector<std::string>> data;
-  data[kPortKey] = { ss.str() };
+  data[kPortKey] = {ss.str()};
   appcontrol->Reply(data);
 }
 
@@ -720,12 +696,11 @@ bool WebApplication::OnDidNavigation(WebView* /*view*/,
 }
 
 void WebApplication::OnNotificationPermissionRequest(
-    WebView*,
-    const std::string& url,
+    WebView*, const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = common::AppDB::GetInstance();
-  std::string reminder = db->Get(kDBPrivateSection,
-                                 kNotificationPermissionPrefix + url);
+  std::string reminder =
+      db->Get(kDBPrivateSection, kNotificationPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
     return;
@@ -748,25 +723,25 @@ void WebApplication::OnNotificationPermissionRequest(
   popup->SetBody(popup_string::kPopupBodyWebNotification);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
-      bool result = popup->GetButtonResult();
-      bool remember = popup->GetCheckBoxResult();
-      if (remember) {
-        db->Set(kDBPrivateSection, kNotificationPermissionPrefix + url,
-                result ? "allowed" : "denied");
-      }
-      result_handler(result);
-    }, this);
+      [db, result_handler, url](Popup* popup, void* /*user_data*/) {
+        bool result = popup->GetButtonResult();
+        bool remember = popup->GetCheckBoxResult();
+        if (remember) {
+          db->Set(kDBPrivateSection, kNotificationPermissionPrefix + url,
+                  result ? "allowed" : "denied");
+        }
+        result_handler(result);
+      },
+      this);
   popup->Show();
 }
 
 void WebApplication::OnGeolocationPermissionRequest(
-    WebView*,
-    const std::string& url,
+    WebView*, const std::string& url,
     std::function<void(bool)> result_handler) {
   auto db = common::AppDB::GetInstance();
-  std::string reminder = db->Get(kDBPrivateSection,
-                                 kGeolocationPermissionPrefix + url);
+  std::string reminder =
+      db->Get(kDBPrivateSection, kGeolocationPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
     return;
@@ -793,26 +768,24 @@ void WebApplication::OnGeolocationPermissionRequest(
   popup->SetBody(popup_string::kPopupBodyGeoLocation);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
-      bool result = popup->GetButtonResult();
-      bool remember = popup->GetCheckBoxResult();
-      if (remember) {
-        db->Set(kDBPrivateSection, kGeolocationPermissionPrefix + url,
-                result ? "allowed" : "denied");
-      }
-      result_handler(result);
-    }, this);
+      [db, result_handler, url](Popup* popup, void* /*user_data*/) {
+        bool result = popup->GetButtonResult();
+        bool remember = popup->GetCheckBoxResult();
+        if (remember) {
+          db->Set(kDBPrivateSection, kGeolocationPermissionPrefix + url,
+                  result ? "allowed" : "denied");
+        }
+        result_handler(result);
+      },
+      this);
   popup->Show();
 }
 
-
-void WebApplication::OnQuotaExceed(
-    WebView*,
-    const std::string& url,
-    std::function<void(bool)> result_handler) {
+void WebApplication::OnQuotaExceed(WebView*, const std::string& url,
+                                   std::function<void(bool)> result_handler) {
   auto db = common::AppDB::GetInstance();
-  std::string reminder = db->Get(kDBPrivateSection,
-                                 kQuotaPermissionPrefix + url);
+  std::string reminder =
+      db->Get(kDBPrivateSection, kQuotaPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
     return;
@@ -835,26 +808,23 @@ void WebApplication::OnQuotaExceed(
   popup->SetBody(popup_string::kPopupBodyWebStorage);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
-      bool result = popup->GetButtonResult();
-      bool remember = popup->GetCheckBoxResult();
-      if (remember) {
-        db->Set(kDBPrivateSection, kQuotaPermissionPrefix + url,
-                result ? "allowed" : "denied");
-      }
-      result_handler(result);
-    }, this);
+      [db, result_handler, url](Popup* popup, void* /*user_data*/) {
+        bool result = popup->GetButtonResult();
+        bool remember = popup->GetCheckBoxResult();
+        if (remember) {
+          db->Set(kDBPrivateSection, kQuotaPermissionPrefix + url,
+                  result ? "allowed" : "denied");
+        }
+        result_handler(result);
+      },
+      this);
   popup->Show();
 }
 
 void WebApplication::OnAuthenticationRequest(
-      WebView*,
-      const std::string& /*url*/,
-      const std::string& /*message*/,
-      std::function<void(bool submit,
-                         const std::string& id,
-                         const std::string& password)
-                   > result_handler) {
+    WebView*, const std::string& /*url*/, const std::string& /*message*/,
+    std::function<void(bool submit, const std::string& id,
+                       const std::string& password)> result_handler) {
   Popup* popup = Popup::CreatePopup(window_);
   popup->SetButtonType(Popup::ButtonType::LoginCancelButton);
   popup->SetFirstEntry(popup_string::kPopupLabelAuthusername,
@@ -863,24 +833,22 @@ void WebApplication::OnAuthenticationRequest(
                         Popup::EntryType::PwEdit);
   popup->SetTitle(popup_string::kPopupTitleAuthRequest);
   popup->SetBody(popup_string::kPopupBodyAuthRequest);
-  popup->SetResultHandler(
-    [result_handler](Popup* popup, void* /*user_data*/) {
-      bool result = popup->GetButtonResult();
-      std::string id = popup->GetFirstEntryResult();
-      std::string passwd = popup->GetSecondEntryResult();
-      result_handler(result, id, passwd);
-    }, this);
+  popup->SetResultHandler([result_handler](Popup* popup, void* /*user_data*/) {
+                            bool result = popup->GetButtonResult();
+                            std::string id = popup->GetFirstEntryResult();
+                            std::string passwd = popup->GetSecondEntryResult();
+                            result_handler(result, id, passwd);
+                          },
+                          this);
   popup->Show();
 }
 
 void WebApplication::OnCertificateAllowRequest(
-      WebView*,
-      const std::string& /*url*/,
-      const std::string& pem,
-      std::function<void(bool allow)> result_handler) {
+    WebView*, const std::string& /*url*/, const std::string& pem,
+    std::function<void(bool allow)> result_handler) {
   auto db = common::AppDB::GetInstance();
-  std::string reminder = db->Get(kDBPrivateSection,
-                                 kCertificateAllowPrefix + pem);
+  std::string reminder =
+      db->Get(kDBPrivateSection, kCertificateAllowPrefix + pem);
   if (reminder == "allowed") {
     result_handler(true);
     return;
@@ -895,25 +863,25 @@ void WebApplication::OnCertificateAllowRequest(
   popup->SetBody(popup_string::kPopupBodyCert);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, pem](Popup* popup, void* /*user_data*/) {
-      bool result = popup->GetButtonResult();
-      bool remember = popup->GetCheckBoxResult();
-      if (remember) {
-        db->Set(kDBPrivateSection, kCertificateAllowPrefix + pem,
-                result ? "allowed" : "denied");
-      }
-      result_handler(result);
-    }, this);
+      [db, result_handler, pem](Popup* popup, void* /*user_data*/) {
+        bool result = popup->GetButtonResult();
+        bool remember = popup->GetCheckBoxResult();
+        if (remember) {
+          db->Set(kDBPrivateSection, kCertificateAllowPrefix + pem,
+                  result ? "allowed" : "denied");
+        }
+        result_handler(result);
+      },
+      this);
   popup->Show();
 }
 
 void WebApplication::OnUsermediaPermissionRequest(
-      WebView*,
-      const std::string& url,
-      std::function<void(bool)> result_handler) {
+    WebView*, const std::string& url,
+    std::function<void(bool)> result_handler) {
   auto db = common::AppDB::GetInstance();
-  std::string reminder = db->Get(kDBPrivateSection,
-                                 kUsermediaPermissionPrefix + url);
+  std::string reminder =
+      db->Get(kDBPrivateSection, kUsermediaPermissionPrefix + url);
   if (reminder == "allowed") {
     result_handler(true);
     return;
@@ -940,15 +908,16 @@ void WebApplication::OnUsermediaPermissionRequest(
   popup->SetBody(popup_string::kPopupBodyUserMedia);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
-    [db, result_handler, url](Popup* popup, void* /*user_data*/) {
-      bool result = popup->GetButtonResult();
-      bool remember = popup->GetCheckBoxResult();
-      if (remember) {
-        db->Set(kDBPrivateSection, kUsermediaPermissionPrefix + url,
-                result ? "allowed" : "denied");
-      }
-      result_handler(result);
-    }, this);
+      [db, result_handler, url](Popup* popup, void* /*user_data*/) {
+        bool result = popup->GetButtonResult();
+        bool remember = popup->GetCheckBoxResult();
+        if (remember) {
+          db->Set(kDBPrivateSection, kUsermediaPermissionPrefix + url,
+                  result ? "allowed" : "denied");
+        }
+        result_handler(result);
+      },
+      this);
   popup->Show();
 }
 

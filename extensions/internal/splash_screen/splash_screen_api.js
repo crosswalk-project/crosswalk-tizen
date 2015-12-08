@@ -14,23 +14,8 @@
  *    limitations under the License.
  */
 
-#ifndef XWALK_EXTENSIONS_RENDERER_OBJECT_TOOLS_MODULE_H_
-#define XWALK_EXTENSIONS_RENDERER_OBJECT_TOOLS_MODULE_H_
+var native = new xwalk.utils.NativeManager(extension);
 
-#include "extensions/renderer/xwalk_module_system.h"
-
-namespace extensions {
-
-class ObjectToolsModule : public XWalkNativeModule {
- public:
-  ObjectToolsModule();
-  ~ObjectToolsModule() override;
-
- private:
-  v8::Handle<v8::Object> NewInstance() override;
-  v8::Persistent<v8::Function> create_function_;
+window.screen.show = function() {
+  native.sendRuntimeMessage('tizen://hide_splash_screen');
 };
-
-}  // namespace extensions
-
-#endif  // XWALK_EXTENSIONS_RENDERER_OBJECT_TOOLS_MODULE_H_

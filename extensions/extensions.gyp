@@ -88,5 +88,24 @@
         },
       ],
     }, # end of target 'widget_plugin'
+    {
+      'target_name': 'splash_screen_plugin',
+      'type': 'shared_library',
+      'dependencies': [
+        '../common/common.gyp:xwalk_tizen_common',
+      ],
+      'sources': [
+        'internal/splash_screen/splash_screen_api.js',
+        'internal/splash_screen/splash_screen_extension.cc',
+      ],
+      'copies': [
+        {
+          'destination': '<(SHARED_INTERMEDIATE_DIR)',
+          'files': [
+            'internal/splash_screen/splash_screen.json'
+          ],
+        },
+      ],
+    }, # end of target 'splash_screen_plugin'
   ], # end of targets
 }
