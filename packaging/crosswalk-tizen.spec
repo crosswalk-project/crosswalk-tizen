@@ -14,13 +14,20 @@ URL:        https://www.tizen.org
 Source0:    %{name}-%{version}.tar.gz
 Source1001: %{name}.manifest
 
-################ disable builds in X11 repos ###############
+################ disable builds in X11 repos #################
 # currently, crosswalk-tizen is not needed on X11 profiles
 # see TINF-965
 %if %{with x}
 ExclusiveArch:
 %endif
-############################################################
+##############################################################
+
+########## disable builds in wearable profile ################
+# currently, crosswalk-tizen doesn't support wearable profile
+%if "%{?profile}" == "wearable"
+ExclusiveArch:
+%endif
+##############################################################
 
 BuildRequires: boost-devel
 BuildRequires: edje-tools
