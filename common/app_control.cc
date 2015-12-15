@@ -18,6 +18,7 @@
 
 #include <appsvc.h>
 #include <app_control_internal.h>
+#include <bundle_internal.h>
 
 #include <algorithm>
 #include <memory>
