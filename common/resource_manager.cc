@@ -182,7 +182,9 @@ bool ResourceManager::Resource::operator==(const Resource& res) {
 
 ResourceManager::ResourceManager(ApplicationData* application_data,
                                  LocaleManager* locale_manager)
-    : application_data_(application_data), locale_manager_(locale_manager) {
+    : application_data_(application_data),
+      locale_manager_(locale_manager),
+      security_model_version_(0) {
   if (application_data != NULL) {
     appid_ = application_data->tizen_application_info()->id();
     if (application_data->csp_info() != NULL ||
@@ -200,16 +202,20 @@ ResourceManager::GetDefaultResource() {
   std::string src;
   std::string type;
   std::string encoding = kDefaultEncoding;
-  auto content_info = application_data_->content_info();
-  if (content_info) {
-    src = content_info->src();
-    type = content_info->type();
-    encoding = content_info->encoding();
-    LOGGER(DEBUG) << "src: " << src;
-    LOGGER(DEBUG) << "type: " << type;
-    LOGGER(DEBUG) << "encoding: " << encoding;
-  } else {
-    LOGGER(DEBUG) << "content_info is null";
+
+  std::shared_ptr<const wgt::parse::ContentInfo> content_info;
+  if (application_data_) {
+    content_info.reset(application_data_->content_info());
+    if (content_info) {
+      src = content_info->src();
+      type = content_info->type();
+      encoding = content_info->encoding();
+      LOGGER(DEBUG) << "src: " << src;
+      LOGGER(DEBUG) << "type: " << type;
+      LOGGER(DEBUG) << "encoding: " << encoding;
+    } else {
+      LOGGER(DEBUG) << "content_info is null";
+    }
   }
 
   // Check that tizen:content src is external page
@@ -579,7 +585,16 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
 
   // Read filesize
   fseek(src, 0, SEEK_END);
-  size_t src_len = ftell(src);
+
+  size_t src_len = 0;
+  int ret = ftell(src);
+  if (ret < 0) {
+    LOGGER(ERROR) << "Cannot get filesize of " << src_path;
+    return path;
+  } else {
+    src_len = static_cast<size_t>(ret);
+  }
+
   if (src_len == 0) {
     // if the file exists and is empty, bypass it
     fclose(src);
