@@ -205,7 +205,7 @@ ResourceManager::GetDefaultResource() {
 
   std::shared_ptr<const wgt::parse::ContentInfo> content_info;
   if (application_data_) {
-    content_info.reset(application_data_->content_info());
+    content_info = application_data_->content_info();
     if (content_info) {
       src = content_info->src();
       type = content_info->type();
@@ -616,7 +616,6 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
   static bool is_global = false;
   static bool is_preload = false;
 
-  int ret;
   std::string pkg_id = application_data_->pkg_id();
   if (!inited) {
     inited = true;
