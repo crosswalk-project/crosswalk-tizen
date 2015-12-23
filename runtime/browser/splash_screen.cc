@@ -100,10 +100,11 @@ SplashScreen::SplashScreen(
     runtime::NativeWindow* window,
     std::shared_ptr<const wgt::parse::SplashScreenInfo> ss_info,
     const std::string& app_path)
-    : window_(window),
-      ss_info_(ss_info),
+    : ss_info_(ss_info),
+      window_(window),
       image_(nullptr),
       background_(nullptr),
+      background_image_(nullptr),
       is_active_(false) {
   LOGGER(DEBUG) << "start of create splash screen";
   if (ss_info == nullptr) return;

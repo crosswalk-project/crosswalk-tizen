@@ -162,26 +162,27 @@ void Popup::SetButtonType(ButtonType type) {
   enable_button_ = true;
   switch (type) {
     case ButtonType::OkButton:
-    button1_ = AddButton(this, popup_string::kPopupButtonOk,
-                         kContentButton1);
-    break;
+      button1_ = AddButton(this, popup_string::kPopupButtonOk,
+                           kContentButton1);
+      break;
     case ButtonType::OkCancelButton:
-    button1_ = AddButton(this, popup_string::kPopupButtonCancel,
-                         kContentButton1);
-    button2_ = AddButton(this, popup_string::kPopupButtonOk,
-                         kContentButton2);
+      button1_ = AddButton(this, popup_string::kPopupButtonCancel,
+                           kContentButton1);
+      button2_ = AddButton(this, popup_string::kPopupButtonOk,
+                           kContentButton2);
+      break;
     case ButtonType::LoginCancelButton:
-    button1_ = AddButton(this, popup_string::kPopupButtonCancel,
-                         kContentButton1);
-    button2_ = AddButton(this, popup_string::kPopupButtonLogin,
-                         kContentButton2);
-    break;
+      button1_ = AddButton(this, popup_string::kPopupButtonCancel,
+                           kContentButton1);
+      button2_ = AddButton(this, popup_string::kPopupButtonLogin,
+                           kContentButton2);
+      break;
     case ButtonType::AllowDenyButton:
-    button1_ = AddButton(this, popup_string::kPopupButtonDeny,
-                         kContentButton1);
-    button2_ = AddButton(this, popup_string::kPopupButtonAllow,
-                         kContentButton2);
-    break;
+      button1_ = AddButton(this, popup_string::kPopupButtonDeny,
+                           kContentButton1);
+      button2_ = AddButton(this, popup_string::kPopupButtonAllow,
+                           kContentButton2);
+      break;
   }
 }
 

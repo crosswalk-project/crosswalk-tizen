@@ -366,7 +366,9 @@ WidgetPreferenceDB* WidgetPreferenceDB::GetInstance() {
   return &instance;
 }
 
-WidgetPreferenceDB::WidgetPreferenceDB() {
+WidgetPreferenceDB::WidgetPreferenceDB()
+    : appdata_(nullptr),
+      locale_manager_(nullptr) {
 }
 WidgetPreferenceDB::~WidgetPreferenceDB() {
 }

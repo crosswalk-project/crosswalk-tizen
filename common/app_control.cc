@@ -194,10 +194,11 @@ std::vector<std::string> AppControl::data_array(const std::string& key) const {
   const char** data_array = appsvc_get_data_array(app_control_bundle_,
                                                   key.c_str(), &data_array_len);
   std::vector<std::string> data_vector;
-
-  if (data_array_len > 0) {
-    for (int i = 0; i < data_array_len; i++) {
-      data_vector.push_back(data_array[i]);
+  if (data_array) {  // checking whether the 'data_array' is valid
+    if (data_array_len > 0) {
+      for (int i = 0; i < data_array_len; i++) {
+        data_vector.push_back(data_array[i]);
+      }
     }
   }
   return data_vector;
