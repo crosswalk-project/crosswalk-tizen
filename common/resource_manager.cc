@@ -590,6 +590,7 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
   int ret = ftell(src);
   if (ret < 0) {
     LOGGER(ERROR) << "Cannot get filesize of " << src_path;
+    fclose(src);
     return path;
   } else {
     src_len = static_cast<size_t>(ret);
