@@ -50,7 +50,7 @@ static bool BundleAddDataArray(bundle* target, const std::string& key,
   int n = value_array.size();
   std::vector<const char*> v;
   std::for_each(value_array.begin(), value_array.end(),
-                [&v] (std::string str) {
+                [&v] (const std::string& str) {
                   v.push_back(static_cast<const char*>(str.c_str()));
                 });
 
