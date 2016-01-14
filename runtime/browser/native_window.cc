@@ -16,12 +16,7 @@
 
 #include "runtime/browser/native_window.h"
 
-#if defined(HAVE_X11)
-#include <Ecore_X.h>
-#elif defined(HAVE_WAYLAND)
 #include <Ecore_Wayland.h>
-#endif
-
 #include <cstdint>
 
 #include "common/logger.h"
@@ -51,17 +46,7 @@ void NativeWindow::Initialize() {
   window_ = CreateWindowInternal();
   elm_win_conformant_set(window_, EINA_TRUE);
   int w, h;
-#if defined(HAVE_X11)
-  uint16_t pid = getpid();
-  ecore_x_window_prop_property_set(
-    elm_win_xwindow_get(window_),
-    ECORE_X_ATOM_NET_WM_PID,
-    ECORE_X_ATOM_CARDINAL, 32, &pid, 1);
-  ecore_x_vsync_animator_tick_source_set(elm_win_xwindow_get(window_));
-  ecore_x_window_size_get(ecore_x_window_root_first_get(), &w, &h);
-#elif defined(HAVE_WAYLAND)
   ecore_wl_screen_size_get(&w, &h);
-#endif
   evas_object_resize(window_, w, h);
   elm_win_autodel_set(window_, EINA_TRUE);
   evas_object_smart_callback_add(window_, "delete,request",

@@ -37,9 +37,6 @@
         'browser/notification_manager.h',
         'browser/notification_manager.cc',
       ],
-      'defines': [
-        'HAVE_WAYLAND',
-      ],
       'variables': {
         'packages': [
           'capi-appfw-application',
