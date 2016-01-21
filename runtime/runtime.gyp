@@ -50,7 +50,7 @@
           'elementary',
           'deviced',
           'manifest-parser',
-          'manifest-handlers',
+          'wgt-manifest-handlers',
           'notification',
         ],
       },

@@ -16,9 +16,9 @@
 
 #include "common/application_data.h"
 
-#include <manifest_handlers/application_manifest_constants.h>
-#include <manifest_handlers/widget_config_parser.h>
 #include <package_manager.h>
+#include <wgt_manifest_handlers/application_manifest_constants.h>
+#include <wgt_manifest_handlers/widget_config_parser.h>
 
 #include <vector>
 

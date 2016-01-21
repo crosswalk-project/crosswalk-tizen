@@ -25,8 +25,8 @@
 
 #include <Elementary.h>
 
-#include "manifest_handlers/splash_screen_handler.h"
 #include "runtime/browser/native_window.h"
+#include "wgt_manifest_handlers/splash_screen_handler.h"
 
 namespace runtime {
 
