@@ -18,7 +18,7 @@
 #define XWALK_RUNTIME_BROWSER_WEB_VIEW_H_
 
 #include <Elementary.h>
-#include <ewk_ipc_message.h>
+#include <ewk_chromium.h>
 #include <functional>
 #include <string>
 
