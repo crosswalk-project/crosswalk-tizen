@@ -5,7 +5,7 @@ msgid "IDS_BR_POP_STARTING_DOWNLOAD_ING"
 msgstr "다운로드를 시작하는 중..."
 
 msgid "IDS_BR_BODY_SECURITY_CERTIFICATE_PROBLEM_MSG"
-msgstr "URL을 검색하거나 입력하세요"
+msgstr "이 사이트의 보안 인증서에 문제가 있습니다"
 
 msgid "IDS_BR_SK_CANCEL"
 msgstr "취소"
