@@ -24,8 +24,8 @@
 #include <Evas_Legacy.h>
 
 #include "common/logger.h"
-#include "manifest_handlers/splash_screen_handler.h"
 #include "runtime/browser/native_window.h"
+#include "wgt_manifest_handlers/splash_screen_handler.h"
 
 using ScreenOrientation = runtime::NativeWindow::ScreenOrientation;
 

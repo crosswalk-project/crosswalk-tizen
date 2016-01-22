@@ -50,7 +50,7 @@
           'uuid',
           'libwebappenc',
           'manifest-parser',
-          'manifest-handlers',
+          'wgt-manifest-handlers',
           'pkgmgr-info',
           'glib-2.0',
         ],
