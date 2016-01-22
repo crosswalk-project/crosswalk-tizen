@@ -18,7 +18,7 @@
 #define XWALK_EXTENSIONS_RENDERER_RUNTIME_IPC_CLIENT_H_
 
 #include <v8/v8.h>
-#include <ewk_ipc_message.h>
+#include <ewk_chromium.h>
 
 #include <functional>
 #include <map>

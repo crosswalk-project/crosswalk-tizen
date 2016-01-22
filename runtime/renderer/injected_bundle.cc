@@ -15,7 +15,7 @@
  */
 
 #include <Ecore.h>
-#include <ewk_ipc_message.h>
+#include <ewk_chromium.h>
 #include <unistd.h>
 #include <v8.h>
 
