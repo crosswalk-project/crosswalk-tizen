@@ -470,10 +470,14 @@ void XWalkModuleSystem::MarkModulesWithTrampoline() {
 
   ExtensionModules::iterator it = extension_modules_.begin();
   while (it != extension_modules_.end()) {
-    it = std::adjacent_find(it, extension_modules_.end(),
-                            &ExtensionModuleEntry::IsPrefix);
-    if (it == extension_modules_.end())
-      break;
+    const std::string& n = (*it).name;
+    // Top level modules won't be mared with trampoline
+    if (std::find(n.begin(), n.end(), '.') != n.end()) {
+      it = std::adjacent_find(it, extension_modules_.end(),
+                              &ExtensionModuleEntry::IsPrefix);
+      if (it == extension_modules_.end())
+        break;
+    }
     it->use_trampoline = false;
     ++it;
   }
