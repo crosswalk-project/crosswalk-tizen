@@ -82,7 +82,7 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
   extensions::XWalkExtensionRendererController& controller =
       extensions::XWalkExtensionRendererController::GetInstance();
-  controller.InitializeExtensions(tizen_id);
+  controller.InitializeExtensions();
   STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
 }
 

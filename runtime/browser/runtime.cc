@@ -41,17 +41,6 @@ static NativeWindow* CreateNativeWindow() {
   return window;
 }
 
-static void ExecExtensionProcess(const std::string& appid) {
-  pid_t pid = -1;
-  if ((pid = fork()) < 0) {
-    LOGGER(ERROR) << "Failed to fork child process for extension process.";
-  }
-  if (pid == 0) {
-    execl(kExtensionExecPath,
-          kExtensionExecPath, appid.c_str(), NULL);
-  }
-}
-
 }  // namespace
 
 Runtime::Runtime()
@@ -88,9 +77,6 @@ bool Runtime::OnCreate() {
   appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeName, "xwalk-tizen");
   appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeAppID, appid);
   appdb->Remove(kAppDBRuntimeSection, kAppDBRuntimeBundle);
-
-  // Exec ExtensionProcess
-  ExecExtensionProcess(appid);
 
   // Init WebApplication
   native_window_ = CreateNativeWindow();

@@ -8,8 +8,8 @@
 
 #include <map>
 
-#include "extensions/extension/xwalk_extension.h"
-#include "extensions/extension/xwalk_extension_instance.h"
+#include "extensions/common/xwalk_extension.h"
+#include "extensions/common/xwalk_extension_instance.h"
 #include "extensions/public/XW_Extension.h"
 #include "extensions/public/XW_Extension_EntryPoints.h"
 #include "extensions/public/XW_Extension_Permissions.h"

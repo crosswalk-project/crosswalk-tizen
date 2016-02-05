@@ -28,8 +28,7 @@ class XWalkExtensionModule : public XWalkExtensionClient::InstanceHandler {
  public:
   XWalkExtensionModule(XWalkExtensionClient* client,
                   XWalkModuleSystem* module_system,
-                  const std::string& extension_name,
-                  const std::string& extension_code);
+                  const std::string& extension_name);
   virtual ~XWalkExtensionModule();
 
   // TODO(cmarcelo): Make this return a v8::Handle<v8::Object>, and
@@ -72,7 +71,6 @@ class XWalkExtensionModule : public XWalkExtensionClient::InstanceHandler {
   v8::Persistent<v8::Function> message_listener_;
 
   std::string extension_name_;
-  std::string extension_code_;
 
   XWalkExtensionClient* client_;
   XWalkModuleSystem* module_system_;

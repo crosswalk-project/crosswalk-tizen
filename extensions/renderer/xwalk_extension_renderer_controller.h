@@ -21,7 +21,7 @@ class XWalkExtensionRendererController {
   void DidCreateScriptContext(v8::Handle<v8::Context> context);
   void WillReleaseScriptContext(v8::Handle<v8::Context> context);
 
-  bool InitializeExtensions(const std::string& appid);
+  void InitializeExtensions();
 
  private:
   XWalkExtensionRendererController();

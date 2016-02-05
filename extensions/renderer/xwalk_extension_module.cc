@@ -48,12 +48,10 @@ const char* kXWalkExtensionModule = "kXWalkExtensionModule";
 
 XWalkExtensionModule::XWalkExtensionModule(XWalkExtensionClient* client,
                                            XWalkModuleSystem* module_system,
-                                           const std::string& extension_name,
-                                           const std::string& extension_code)
-    : extension_name_(extension_name),
-      extension_code_(extension_code),
-      client_(client),
-      module_system_(module_system) {
+                                           const std::string& extension_name) :
+    extension_name_(extension_name),
+    client_(client),
+    module_system_(module_system) {
   v8::Isolate* isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handle_scope(isolate);
   v8::Handle<v8::Object> function_data = v8::Object::New(isolate);
@@ -270,12 +268,22 @@ v8::Handle<v8::Value> RunString(const std::string& code,
 void XWalkExtensionModule::LoadExtensionCode(
     v8::Handle<v8::Context> context, v8::Handle<v8::Function> require_native) {
   instance_id_ = client_->CreateInstance(extension_name_, this);
+  if (instance_id_.empty()) {
+    LOGGER(ERROR) << "Failed to create an instance of " << extension_name_;
+    return;
+  }
+
+
+
+  XWalkExtension* ext = client_->GetExtension(extension_name_);
+  if (ext == nullptr) {
+    LOGGER(ERROR) << "Failed to get an extension " << extension_name_;
+    return;
+  }
+  std::string wrapped_api_code =
+      WrapAPICode(ext->GetJavascriptCode(), extension_name_);
 
   std::string exception;
-  if (extension_code_.empty()) {
-    extension_code_ = client_->GetExtensionJavascriptAPICode(extension_name_);
-  }
-  std::string wrapped_api_code = WrapAPICode(extension_code_, extension_name_);
   v8::Handle<v8::Value> result = RunString(wrapped_api_code, &exception);
 
   if (!result->IsFunction()) {

@@ -317,8 +317,6 @@ void XWalkModuleSystem::Initialize() {
   v8::Handle<v8::Function> require_native =
       require_native_template->GetFunction();
 
-
-
   MarkModulesWithTrampoline();
 
   auto it = extension_modules_.begin();
@@ -467,19 +465,29 @@ bool XWalkModuleSystem::ExtensionModuleEntry::IsPrefix(
 // will. So we'll only load code for "tizen" extension.
 void XWalkModuleSystem::MarkModulesWithTrampoline() {
   std::sort(extension_modules_.begin(), extension_modules_.end());
-
-  ExtensionModules::iterator it = extension_modules_.begin();
-  while (it != extension_modules_.end()) {
-    const std::string& n = (*it).name;
-    // Top level modules won't be mared with trampoline
-    if (std::find(n.begin(), n.end(), '.') != n.end()) {
+  {
+    ExtensionModules::iterator it = extension_modules_.begin();
+    while (it != extension_modules_.end()) {
       it = std::adjacent_find(it, extension_modules_.end(),
                               &ExtensionModuleEntry::IsPrefix);
       if (it == extension_modules_.end())
         break;
+      it->use_trampoline = false;
+      ++it;
     }
-    it->use_trampoline = false;
-    ++it;
+  }
+
+  // NOTE: Special Case for Security Reason
+  // xwalk module should not be trampolined even it does not have any children.
+  {
+    ExtensionModules::iterator it = extension_modules_.begin();
+    while (it != extension_modules_.end()) {
+      if ("xwalk" == (*it).name) {
+        it->use_trampoline = false;
+        break;
+      }
+      ++it;
+    }
   }
 }
 

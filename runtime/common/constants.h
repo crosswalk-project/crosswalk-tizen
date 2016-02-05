@@ -20,7 +20,6 @@
 namespace runtime {
 
 extern const char kRuntimeExecName[];
-extern const char kExtensionExecPath[];
 
 extern const char kAppDBRuntimeSection[];
 extern const char kAppDBRuntimeAppID[];
