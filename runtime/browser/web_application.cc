@@ -600,6 +600,12 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
                      : true;
   if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
+    // NOTE: This code is added for backward compatibility.
+    // If the 'backbutton_presence' is true, WebView should be navigated back.
+    if (app_data_->setting_info() &&
+        app_data_->setting_info()->backbutton_presence()) {
+      view->Backward();
+    }
   } else if (enabled && kKeyNameMenu == keyname) {
     view->EvalJavascript(kMenuKeyEventScript);
   }

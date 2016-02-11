@@ -129,6 +129,10 @@ void WebViewImpl::Reload() {
   ewk_view_reload(ewk_view_);
 }
 
+void WebViewImpl::Backward() {
+  ewk_view_back(ewk_view_);
+}
+
 void WebViewImpl::SetVisibility(bool show) {
   ewk_view_visibility_set(ewk_view_, show ? EINA_TRUE : EINA_FALSE);
 }
@@ -813,7 +817,6 @@ void WebViewImpl::InitUsermediaCallback() {
       LOGGER(DEBUG) << "Getusermedia Permission Result : " << result;
       ewk_user_media_permission_reply(request, result);
     };
-    std::string test = url.str();
     self->listener_->OnUsermediaPermissionRequest(self->view_,
                                                   url.str(),
                                                   result_handler);
@@ -851,8 +854,9 @@ void WebViewImpl::OnKeyEvent(Eext_Callback_Type key_type) {
     return;
   }
 
-  if (listener_)
+  if (listener_) {
     listener_->OnHardwareKey(view_, keyname);
+  }
 }
 
 void WebViewImpl::SetEventListener(WebView::EventListener* listener) {
