@@ -4,39 +4,6 @@
   ],
   'targets': [
     {
-      'target_name': 'xwalk_extension',
-      'type': 'executable',
-      'dependencies': [
-        '../common/common.gyp:xwalk_tizen_common',
-      ],
-      'sources': [
-        'common/constants.h',
-        'common/constants.cc',
-        'extension/xwalk_extension.h',
-        'extension/xwalk_extension.cc',
-        'extension/xwalk_extension_instance.h',
-        'extension/xwalk_extension_instance.cc',
-        'extension/xwalk_extension_adapter.h',
-        'extension/xwalk_extension_adapter.cc',
-        'extension/xwalk_extension_server.h',
-        'extension/xwalk_extension_server.cc',
-        'extension/xwalk_extension_process.cc',
-      ],
-      'defines': [
-        'PLUGIN_LAZY_LOADING',
-      ],
-      'variables': {
-        'packages': [
-          'ecore',
-        ],
-      },
-      'link_settings': {
-        'ldflags': [
-          '-ldl',
-        ],
-      },
-    }, # end of target 'xwalk_extension'
-    {
       'target_name': 'xwalk_extension_renderer',
       'type': 'static_library',
       'dependencies': [
@@ -45,6 +12,14 @@
       'sources': [
         'common/constants.h',
         'common/constants.cc',
+        'common/xwalk_extension.h',
+        'common/xwalk_extension.cc',
+        'common/xwalk_extension_instance.h',
+        'common/xwalk_extension_instance.cc',
+        'common/xwalk_extension_adapter.h',
+        'common/xwalk_extension_adapter.cc',
+        'common/xwalk_extension_manager.h',
+        'common/xwalk_extension_manager.cc',
         'renderer/xwalk_extension_client.h',
         'renderer/xwalk_extension_client.cc',
         'renderer/xwalk_extension_module.h',

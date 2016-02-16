@@ -3,13 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "extensions/extension/xwalk_extension.h"
+#include "extensions/common/xwalk_extension.h"
 
 #include <dlfcn.h>
 #include <string>
 
 #include "common/logger.h"
-#include "extensions/extension/xwalk_extension_adapter.h"
+#include "extensions/common/xwalk_extension_adapter.h"
 #include "extensions/public/XW_Extension.h"
 
 namespace extensions {
@@ -19,7 +19,6 @@ XWalkExtension::XWalkExtension(const std::string& path,
   : initialized_(false),
     library_path_(path),
     xw_extension_(0),
-    use_trampoline_(true),
     lazy_loading_(false),
     delegate_(delegate),
     created_instance_callback_(NULL),
@@ -38,7 +37,6 @@ XWalkExtension::XWalkExtension(const std::string& path,
     xw_extension_(0),
     name_(name),
     entry_points_(entry_points),
-    use_trampoline_(true),
     lazy_loading_(true),
     delegate_(delegate),
     created_instance_callback_(NULL),
@@ -98,6 +96,11 @@ XWalkExtensionInstance* XWalkExtension::CreateInstance() {
   XWalkExtensionAdapter* adapter = XWalkExtensionAdapter::GetInstance();
   XW_Instance xw_instance = adapter->GetNextXWInstance();
   return new XWalkExtensionInstance(this, xw_instance);
+}
+
+std::string XWalkExtension::GetJavascriptCode() {
+  Initialize();
+  return javascript_api_;
 }
 
 void XWalkExtension::GetRuntimeVariable(const char* key, char* value,

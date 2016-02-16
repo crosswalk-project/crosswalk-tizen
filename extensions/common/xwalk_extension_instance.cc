@@ -3,9 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "extensions/extension/xwalk_extension_instance.h"
+#include "extensions/common/xwalk_extension_instance.h"
 
-#include "extensions/extension/xwalk_extension_adapter.h"
+#include "extensions/common/xwalk_extension_adapter.h"
 #include "extensions/public/XW_Extension_SyncMessage.h"
 
 namespace extensions {

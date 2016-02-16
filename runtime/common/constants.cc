@@ -19,7 +19,6 @@
 namespace runtime {
 
 const char kRuntimeExecName[] = "xwalk_runtime";
-const char kExtensionExecPath[] = "/usr/bin/xwalk_extension";
 
 const char kAppDBRuntimeSection[] = "Runtime";
 const char kAppDBRuntimeAppID[] = "app_id";
