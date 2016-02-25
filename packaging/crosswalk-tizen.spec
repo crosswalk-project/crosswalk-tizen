@@ -42,6 +42,7 @@ BuildRequires: pkgconfig(pkgmgr-info)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(uuid)
 BuildRequires: pkgconfig(launchpad)
+BuildRequires: pkgconfig(ttrace)
 
 Requires: /usr/bin/systemctl
 

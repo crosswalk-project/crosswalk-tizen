@@ -53,6 +53,7 @@
           'wgt-manifest-handlers',
           'pkgmgr-info',
           'glib-2.0',
+          'ttrace',
         ],
       },
       'direct_dependent_settings': {

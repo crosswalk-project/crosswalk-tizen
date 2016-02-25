@@ -33,7 +33,7 @@ void PrintProfileLog(const char* func, const char* tag);
 
 class ScopeProfile {
  public:
-  explicit ScopeProfile(const char* step);
+  explicit ScopeProfile(const char* step, const bool isStep);
   ~ScopeProfile();
   void Reset();
   void End();
@@ -41,6 +41,7 @@ class ScopeProfile {
   std::string step_;
   struct timespec start_;
   bool expired_;
+  bool isStep_;
 };
 
 class StepProfile {
@@ -59,7 +60,7 @@ class StepProfile {
 }  // namespace common
 
 #define SCOPE_PROFILE() \
-  common::ScopeProfile __profile(__FUNCTION__);
+  common::ScopeProfile __profile(__FUNCTION__, false);
 
 #define STEP_PROFILE_START(x) \
   common::StepProfile::GetInstance()->Start(x)
