@@ -36,6 +36,10 @@
         'browser/vibration_manager.cc',
         'browser/notification_manager.h',
         'browser/notification_manager.cc',
+        'browser/prelauncher.h',
+        'browser/prelauncher.cc',
+        'browser/preload_manager.h',
+        'browser/preload_manager.cc',
       ],
       'variables': {
         'packages': [
@@ -49,6 +53,7 @@
           'manifest-parser',
           'wgt-manifest-handlers',
           'notification',
+          'launchpad',
         ],
       },
     }, # end of target 'xwalk_runtime'

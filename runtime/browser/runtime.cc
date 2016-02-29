@@ -28,6 +28,7 @@
 #include "common/profiler.h"
 #include "runtime/browser/native_app_window.h"
 #include "runtime/common/constants.h"
+#include "runtime/browser/preload_manager.h"
 
 namespace runtime {
 
@@ -36,7 +37,8 @@ namespace {
 static NativeWindow* CreateNativeWindow() {
   SCOPE_PROFILE();
   // TODO(wy80.choi) : consider other type of native window.
-  NativeWindow* window = new NativeAppWindow();
+  auto cached = PreloadManager::GetInstance()->GetCachedNativeWindow();
+  NativeWindow* window = cached != nullptr ? cached : new NativeAppWindow();
   window->Initialize();
   return window;
 }
@@ -210,6 +212,7 @@ int Runtime::Exec(int argc, char* argv[]) {
                            low_memory,
                            this);
   STEP_PROFILE_START("ui_app_main -> OnCreate");
+
   return ui_app_main(argc, argv, &ops, this);
 }
 

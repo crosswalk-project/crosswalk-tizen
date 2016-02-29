@@ -342,12 +342,12 @@ bool WebApplication::Initialize() {
 }
 
 void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
+  // send widget info to injected bundle
+  ewk_context_tizen_app_id_set(ewk_context_, appid_.c_str());
+
   // Setup View
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
-
-  // send widget info to injected bundle
-  ewk_context_tizen_app_id_set(ewk_context_, appid_.c_str());
 
   std::unique_ptr<common::ResourceManager::Resource> res =
       resource_manager_->GetStartResource(appcontrol.get());
@@ -370,6 +370,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   // in Wearable, webkit can render contents before show window
   // but Mobile, webkit can't render contents before show window
   window_->Show();
+  window_->Active();
 
   launched_ = true;
 }

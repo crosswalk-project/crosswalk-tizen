@@ -41,6 +41,9 @@ BuildRequires: pkgconfig(notification)
 BuildRequires: pkgconfig(pkgmgr-info)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(uuid)
+BuildRequires: pkgconfig(launchpad)
+
+Requires: /usr/bin/systemctl
 
 %description
 Crosswalk Runtime and AppShell for Tizen 3.0 and later
@@ -99,6 +102,7 @@ install -p -m 644 out/Default/gen/splash_screen.json %{buildroot}%{extension_pat
 # xwalk_runtime
 install -p -m 755 out/Default/xwalk_runtime %{buildroot}%{_bindir}
 ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt
+ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt-loader
 
 # xwalk_runtime_resources
 for file in $(find out/Default/gen/locales -type f -name *.mo); do
@@ -125,3 +129,5 @@ rm -fr %{buildroot}
 %attr(644,root,root) %{extension_path}/splash_screen.json
 %attr(755,root,root) %{_bindir}/xwalk_runtime
 %attr(755,root,root) %{_bindir}/wrt
+%attr(755,root,root) %{_bindir}/wrt-loader
+%caps(cap_mac_admin,cap_mac_override,cap_setgid=ei) %{_bindir}/xwalk_runtime

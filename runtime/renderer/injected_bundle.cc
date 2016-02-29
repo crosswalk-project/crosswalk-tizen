@@ -18,6 +18,7 @@
 #include <ewk_chromium.h>
 #include <unistd.h>
 #include <v8.h>
+#include <dlfcn.h>
 
 #include <memory>
 #include <string>
@@ -34,16 +35,42 @@
 #include "extensions/renderer/xwalk_module_system.h"
 
 namespace runtime {
+
+static const char* kPreloadLibs[] = {
+  "/usr/lib/tizen-extensions-crosswalk/libtizen.so",
+  "/usr/lib/tizen-extensions-crosswalk/libtizen_common.so",
+  "/usr/lib/tizen-extensions-crosswalk/libtizen_application.so",
+  "/usr/lib/tizen-extensions-crosswalk/libtizen_utils.so",
+  NULL
+};
+
+static void PreloadLibrary() {
+  for (int i = 0; kPreloadLibs[i]; i++) {
+    LOGGER(DEBUG) << "Preload libs : " << kPreloadLibs[i];
+    void* handle = dlopen(kPreloadLibs[i], RTLD_NOW|RTLD_GLOBAL);
+    if (handle == nullptr) {
+      LOGGER(DEBUG) << "Fail to load libs : " << dlerror();
+    }
+  }
+}
+
 class BundleGlobalData {
- public :
+ public:
   static BundleGlobalData* GetInstance() {
     static BundleGlobalData instance;
     return &instance;
   }
+  void PreInitialize() {
+    if (preInitialized)
+      return;
+    preInitialized = true;
+    locale_manager_.reset(new common::LocaleManager);
+  }
   void Initialize(const std::string& app_id) {
+    PreInitialize();
     app_data_.reset(new common::ApplicationData(app_id));
     app_data_->LoadManifestData();
-    locale_manager_.reset(new common::LocaleManager);
+    // PreInitialized locale_manager_.reset(new common::LocaleManager);
     locale_manager_->EnableAutoUpdate(true);
     if (app_data_->widget_info() != NULL &&
         !app_data_->widget_info()->default_locale().empty()) {
@@ -65,12 +92,14 @@ class BundleGlobalData {
   }
 
  private:
-  BundleGlobalData() {}
+  BundleGlobalData() : preInitialized(false) {}
   ~BundleGlobalData() {}
   std::unique_ptr<common::ResourceManager> resource_manager_;
   std::unique_ptr<common::LocaleManager> locale_manager_;
   std::unique_ptr<common::ApplicationData> app_data_;
+  bool preInitialized;
 };
+
 }  //  namespace runtime
 
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
@@ -78,12 +107,6 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
   ecore_init();
   runtime::BundleGlobalData::GetInstance()->Initialize(tizen_id);
-
-  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
-  extensions::XWalkExtensionRendererController& controller =
-      extensions::XWalkExtensionRendererController::GetInstance();
-  controller.InitializeExtensions();
-  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
 }
 
 extern "C" void DynamicPluginStartSession(const char* tizen_id,
@@ -166,5 +189,12 @@ extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
 }
 
 extern "C" void DynamicPreloading() {
-  // LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
+  LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
+  runtime::PreloadLibrary();
+  runtime::BundleGlobalData::GetInstance()->PreInitialize();
+
+  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
+  auto& controller = extensions::XWalkExtensionRendererController::GetInstance();
+  controller.InitializeExtensions();
+  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
 }
