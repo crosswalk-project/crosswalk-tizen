@@ -17,6 +17,7 @@
 #include "common/profiler.h"
 
 #include <math.h>
+#include <ttrace.h>
 
 #include "common/logger.h"
 #include "common/string_utils.h"
@@ -41,19 +42,36 @@ void PrintProfileLog(const char* func, const char* tag) {
                 << func << ":" << tag;
 }
 
-ScopeProfile::ScopeProfile(const char* step) : step_(step), expired_(false) {
+ScopeProfile::ScopeProfile(const char* step, const bool isStep)
+  : step_(step), expired_(false), isStep_(isStep) {
   clock_gettime(CLOCK_REALTIME, &start_);
   PrintProfileLog(step, "START");
+
+  if(isStep_)
+    traceAsyncBegin(TTRACE_TAG_WEB, 0, "%s%s", "XWALK:", step_.c_str());
+  else
+    traceBegin(TTRACE_TAG_WEB,"%s%s", "XWALK:", step_.c_str());
 }
 
 ScopeProfile::~ScopeProfile() {
-  if (!expired_)
+  if (!expired_) {
     PrintProfileTime(step_.c_str(), start_);
+
+    if(isStep_)
+      traceAsyncEnd(TTRACE_TAG_WEB, 0, "%s%s", "XWALK:", step_.c_str());
+    else
+      traceEnd(TTRACE_TAG_WEB);
+  }
 }
 
 void ScopeProfile::Reset() {
   clock_gettime(CLOCK_REALTIME, &start_);
   PrintProfileLog(step_.c_str(), "START-updated");
+
+  if(isStep_)
+    traceAsyncEnd(TTRACE_TAG_WEB, 0, "%s%s", "XWALK:", step_.c_str());
+  else
+    traceEnd(TTRACE_TAG_WEB);
 }
 
 void ScopeProfile::End() {
@@ -73,7 +91,7 @@ StepProfile::~StepProfile() {
 }
 
 void StepProfile::Start(const char* step) {
-  map_[step].reset(new ScopeProfile(step));
+  map_[step].reset(new ScopeProfile(step, true));
 }
 
 void StepProfile::End(const char* step) {
