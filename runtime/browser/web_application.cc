@@ -227,6 +227,13 @@ WebApplication::WebApplication(
 
 WebApplication::~WebApplication() {
   if (ewk_context_) ewk_context_delete(ewk_context_);
+
+  window_->SetContent(NULL);
+  auto it = view_stack_.begin();
+  for (; it != view_stack_.end(); ++it) {
+    delete *it;
+  }
+  view_stack_.clear();
 }
 
 bool WebApplication::Initialize() {
