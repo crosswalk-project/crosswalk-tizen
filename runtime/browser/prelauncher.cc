@@ -70,13 +70,8 @@ void ChangePrivilegeForThreads(const std::string& appid) {
       if (tid == current_tid)
         continue;
       syscall(__NR_tkill, tid, SIGUSR1);
-
-      // It is workaround code
-      // Delete Me, If does not crashed on Note4
-      // I don't know why crashed in Kernel with below log
-      // unhandled level 2 translation fault (11) at 0x00000080, esr 0x92000006
-      LOGGER(DEBUG) << "Send signal " << tid;
     }
+    sync();
     closedir(dir);
   }
   signal(SIGUSR1, oldhandler);
