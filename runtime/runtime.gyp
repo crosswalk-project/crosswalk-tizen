@@ -56,6 +56,11 @@
           'launchpad',
         ],
       },
+      'conditions': [
+        ['profile == "wearable"', {
+          'defines': ['PROFILE_WEARABLE'],
+        }],
+      ],
     }, # end of target 'xwalk_runtime'
     {
       'target_name': 'xwalk_injected_bundle',

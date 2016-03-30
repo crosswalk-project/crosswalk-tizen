@@ -29,6 +29,11 @@ class Ewk_Context;
 namespace runtime {
 class WebViewImpl;
 
+enum class RotaryEventType {
+  CLOCKWISE,  // Rotary is rotated clockwise direction
+  COUNTER_CLOCKWISE  // Rotary is rotated counter clockwise direction
+};
+
 class WebView {
  public:
   class EventListener {
@@ -87,6 +92,11 @@ class WebView {
         WebView* /*view*/,
         const std::string& /*url*/,
         std::function<void(bool)> /*result_handler*/) {}
+#ifdef PROFILE_WEARABLE
+    virtual void OnRotaryEvent(
+        WebView* /*view*/,
+        RotaryEventType /*type*/) {}
+#endif  // PROFILE_WEARABLE
   };
 
   WebView(NativeWindow* window, Ewk_Context* context);
