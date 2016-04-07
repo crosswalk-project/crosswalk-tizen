@@ -58,6 +58,7 @@ const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
 const char* kConsoleMessageLogTag = "ConsoleMessage";
 
 const char* kDebugKey = "debug";
+const char* kVerboseKey = "verbose";
 const char* kPortKey = "port";
 
 const char* kAppControlEventScript =
@@ -206,6 +207,7 @@ WebApplication::WebApplication(
     NativeWindow* window, std::unique_ptr<common::ApplicationData> app_data)
     : launched_(false),
       debug_mode_(false),
+      verbose_mode_(false),
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       window_(window),
@@ -373,6 +375,9 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
     debug_mode_ = true;
     LaunchInspector(appcontrol.get());
   }
+  if (appcontrol->data(kVerboseKey) == "true") {
+    verbose_mode_ = true;
+  }
 
   // TODO(sngn.lee): check the below code location.
   // in Wearable, webkit can render contents before show window
@@ -414,6 +419,9 @@ void WebApplication::AppControl(
   if (!debug_mode_ && appcontrol->data(kDebugKey) == "true") {
     debug_mode_ = true;
     LaunchInspector(appcontrol.get());
+  }
+  if (!verbose_mode_ && appcontrol->data(kVerboseKey) == "true") {
+    verbose_mode_ = true;
   }
   window_->Active();
 }
@@ -632,7 +640,7 @@ void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
   static bool enabled = (getenv(kConsoleLogEnableKey) != NULL);
   enabled = true;
 
-  if (debug_mode_ || enabled) {
+  if (debug_mode_ || verbose_mode_ || enabled) {
     int dlog_level = DLOG_DEBUG;
     switch (level) {
       case EWK_CONSOLE_MESSAGE_LEVEL_WARNING:

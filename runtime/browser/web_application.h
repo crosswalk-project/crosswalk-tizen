@@ -100,6 +100,7 @@ class WebApplication : public WebView::EventListener {
 
   bool launched_;
   bool debug_mode_;
+  bool verbose_mode_;
   Ewk_Context* ewk_context_;
   NativeWindow* window_;
   std::string appid_;
