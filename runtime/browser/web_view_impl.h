@@ -75,6 +75,9 @@ class WebViewImpl {
   void InitCertificateAllowCallback();
   void InitPopupWaitCallback();
   void InitUsermediaCallback();
+#ifdef PROFILE_WEARABLE
+  void InitRotaryEventCallback();
+#endif  // PROFILE_WEARABLE
 
   NativeWindow* window_;
   Ewk_Context* context_;

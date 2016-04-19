@@ -654,6 +654,30 @@ void WebApplication::OnLowMemory() {
   ewk_context_notify_low_memory(ewk_context_);
 }
 
+#ifdef PROFILE_WEARABLE
+void WebApplication::OnRotaryEvent(WebView* /*view*/,
+                                   RotaryEventType type) {
+  LOGGER(DEBUG) << "OnRotaryEvent";
+  std::stringstream script;
+  script
+    << "(function(){"
+    << "var __event = document.createEvent(\"CustomEvent\");\n"
+    << "var __detail = {};\n"
+    << "__event.initCustomEvent(\"rotarydetent\", true, true, __detail);\n"
+    << "__event.detail.direction = \""
+    << (type == RotaryEventType::CLOCKWISE ? "CW" : "CCW")
+    << "\";\n"
+    << "document.dispatchEvent(__event);\n"
+    << "\n"
+    << "for (var i=0; i < window.frames.length; i++)\n"
+    << "{ window.frames[i].document.dispatchEvent(__event); }"
+    << "})()";
+  std::string kRotaryEventScript = script.str();
+  if (view_stack_.size() > 0 && view_stack_.front() != NULL)
+    view_stack_.front()->EvalJavascript(kRotaryEventScript.c_str());
+}
+#endif  // PROFILE_WEARABLE
+
 bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
   return !(app_data_->setting_info() != NULL
                ? app_data_->setting_info()->context_menu_enabled()
