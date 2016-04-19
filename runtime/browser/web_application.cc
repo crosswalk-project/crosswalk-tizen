@@ -97,6 +97,7 @@ const char* kLocationPrivilege = "http://tizen.org/privilege/location";
 const char* kStoragePrivilege = "http://tizen.org/privilege/unlimitedstorage";
 const char* kUsermediaPrivilege = "http://tizen.org/privilege/mediacapture";
 const char* kNotiIconFile = "noti_icon.png";
+const char* kFileScheme = "file://";
 
 const char* kVisibilitySuspendFeature = "visibility,suspend";
 const char* kMediastreamRecordFeature = "mediastream,record";
@@ -611,6 +612,13 @@ void WebApplication::OnOrientationLock(
 }
 
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
+  // NOTE: This code is added to enable back-key on remote URL
+  if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
+    LOGGER(DEBUG) << "Back to previous page for remote URL";
+    view->Backward();
+    return;
+  }
+
   bool enabled = app_data_->setting_info() != NULL
                      ? app_data_->setting_info()->hwkey_enabled()
                      : true;
