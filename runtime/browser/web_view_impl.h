@@ -76,9 +76,9 @@ class WebViewImpl {
   void InitPopupWaitCallback();
   void InitUsermediaCallback();
   void InitEditorClientImeCallback();
-#ifdef PROFILE_WEARABLE
+#ifdef ROTARY_EVENT_FEATURE_SUPPORT
   void InitRotaryEventCallback();
-#endif  // PROFILE_WEARABLE
+#endif  // ROTARY_EVENT_FEATURE_SUPPORT
 
   NativeWindow* window_;
   Ewk_Context* context_;

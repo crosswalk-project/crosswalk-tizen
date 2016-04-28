@@ -44,6 +44,19 @@ BuildRequires: pkgconfig(uuid)
 BuildRequires: pkgconfig(launchpad)
 BuildRequires: pkgconfig(ttrace)
 
+%if "%{?profile}" == "mobile"
+%define tizen_feature_rotary_event_support     0
+%endif
+
+%if "%{?profile}" == "wearable"
+%define tizen_feature_rotary_event_support     1
+%endif
+
+%if "%{?profile}" == "tv"
+%define tizen_feature_rotary_event_support     0
+%endif
+
+
 Requires: /usr/bin/systemctl
 
 %description
@@ -65,6 +78,9 @@ GYP_OPTIONS="$GYP_OPTIONS -Dbuild_type=Debug"
 %else
 GYP_OPTIONS="$GYP_OPTIONS -Dbuild_type=Release"
 %endif
+
+# Feature flags
+GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_rotary_event_support=%{?tizen_feature_rotary_event_support}"
 
 # Extension Path
 GYP_OPTIONS="$GYP_OPTIONS -Dextension_path=%{extension_path}"

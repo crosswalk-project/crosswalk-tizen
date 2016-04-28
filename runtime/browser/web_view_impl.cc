@@ -202,9 +202,9 @@ void WebViewImpl::Initialize() {
   InitPopupWaitCallback();
   InitUsermediaCallback();
   InitEditorClientImeCallback();
-#ifdef PROFILE_WEARABLE
+#ifdef ROTARY_EVENT_FEATURE_SUPPORT
   InitRotaryEventCallback();
-#endif  // PROFILE_WEARABLE
+#endif  // ROTARY_EVENT_FEATURE_SUPPORT
 
   Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
   ewk_settings_scripts_can_open_windows_set(settings, EINA_TRUE);
@@ -882,7 +882,7 @@ void WebViewImpl::InitEditorClientImeCallback() {
   smart_callbacks_["editorclient,ime,closed"] = ime_closed_callback;
 }
 
-#ifdef PROFILE_WEARABLE
+#ifdef ROTARY_EVENT_FEATURE_SUPPORT
 void WebViewImpl::InitRotaryEventCallback() {
   auto rotary_callback = [](void* user_data,
                          Evas_Object*,
@@ -904,7 +904,7 @@ void WebViewImpl::InitRotaryEventCallback() {
   eext_rotary_object_event_callback_add(ewk_view_, rotary_callback, this);
   eext_rotary_object_event_activated_set(ewk_view_, EINA_TRUE);
 }
-#endif  // PROFILE_WEARABLE
+#endif  // ROTARY_EVENT_FEATURE_SUPPORT
 
 std::string WebViewImpl::GetUrl() {
   return std::string(ewk_view_url_get(ewk_view_));

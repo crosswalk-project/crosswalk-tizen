@@ -102,11 +102,11 @@ class WebView {
     virtual void OnSoftKeyboardChangeEvent(
         WebView* /*view*/,
         SoftKeyboardChangeEventValue /*softkeyboard_value*/) {}
-#ifdef PROFILE_WEARABLE
+#ifdef ROTARY_EVENT_FEATURE_SUPPORT
     virtual void OnRotaryEvent(
         WebView* /*view*/,
         RotaryEventType /*type*/) {}
-#endif  // PROFILE_WEARABLE
+#endif  // ROTARY_EVENT_FEATURE_SUPPORT
   };
 
   WebView(NativeWindow* window, Ewk_Context* context);
