@@ -671,6 +671,28 @@ void WebApplication::OnLowMemory() {
   ewk_context_notify_low_memory(ewk_context_);
 }
 
+void WebApplication::OnSoftKeyboardChangeEvent(WebView* /*view*/,
+                               SoftKeyboardChangeEventValue softkeyboard_value) {
+  LOGGER(DEBUG) << "OnSoftKeyboardChangeEvent";
+  std::stringstream script;
+  script
+    << "(function(){"
+    << "var __event = document.createEvent(\"CustomEvent\");\n"
+    << "var __detail = {};\n"
+    << "__event.initCustomEvent(\"softkeyboardchange\",true,true,__detail);\n"
+    << "__event.state = \"" << softkeyboard_value.state << "\";\n"
+    << "__event.width = " << softkeyboard_value.width << ";\n"
+    << "__event.height = " << softkeyboard_value.height << ";\n"
+    << "document.dispatchEvent(__event);\n"
+    << "\n"
+    << "for (var i=0; i < window.frames.length; i++)\n"
+    << "{ window.frames[i].document.dispatchEvent(__event); }"
+    << "})()";
+  std::string kSoftKeyboardScript = script.str();
+  if (view_stack_.size() > 0 && view_stack_.front() != NULL)
+    view_stack_.front()->EvalJavascript(kSoftKeyboardScript.c_str());
+}
+
 #ifdef PROFILE_WEARABLE
 void WebApplication::OnRotaryEvent(WebView* /*view*/,
                                    RotaryEventType type) {

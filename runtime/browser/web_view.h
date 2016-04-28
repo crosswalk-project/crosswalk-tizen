@@ -34,6 +34,13 @@ enum class RotaryEventType {
   COUNTER_CLOCKWISE  // Rotary is rotated counter clockwise direction
 };
 
+class SoftKeyboardChangeEventValue {
+ public:
+  std::string state;
+  int width;
+  int height;
+};
+
 class WebView {
  public:
   class EventListener {
@@ -92,6 +99,9 @@ class WebView {
         WebView* /*view*/,
         const std::string& /*url*/,
         std::function<void(bool)> /*result_handler*/) {}
+    virtual void OnSoftKeyboardChangeEvent(
+        WebView* /*view*/,
+        SoftKeyboardChangeEventValue /*softkeyboard_value*/) {}
 #ifdef PROFILE_WEARABLE
     virtual void OnRotaryEvent(
         WebView* /*view*/,

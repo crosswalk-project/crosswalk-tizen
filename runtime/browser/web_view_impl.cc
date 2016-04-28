@@ -80,7 +80,9 @@ WebViewImpl::WebViewImpl(WebView* view,
       view_(view),
       fullscreen_(false),
       evas_smart_class_(NULL),
-      internal_popup_opened_(false) {
+      internal_popup_opened_(false),
+      ime_width_(0),
+      ime_height_(0) {
   Initialize();
 }
 
@@ -199,6 +201,7 @@ void WebViewImpl::Initialize() {
   InitCertificateAllowCallback();
   InitPopupWaitCallback();
   InitUsermediaCallback();
+  InitEditorClientImeCallback();
 #ifdef PROFILE_WEARABLE
   InitRotaryEventCallback();
 #endif  // PROFILE_WEARABLE
@@ -826,6 +829,57 @@ void WebViewImpl::InitUsermediaCallback() {
     return EINA_TRUE;
   };
   ewk_view_user_media_permission_callback_set(ewk_view_, callback, this);
+}
+
+void WebViewImpl::InitEditorClientImeCallback() {
+  auto ime_changed_callback = [](void* user_data,
+                           Evas_Object*,
+                           void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+
+    Eina_Rectangle *rect = static_cast<Eina_Rectangle *>(event_info);
+    self->ime_width_ = rect->w;
+    self->ime_height_ = rect->h;
+  };
+
+  auto ime_opened_callback = [](void* user_data,
+                           Evas_Object*,
+                           void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+
+    SoftKeyboardChangeEventValue softkeyboard_value;
+    softkeyboard_value.state = "on";
+    softkeyboard_value.width = self->ime_width_;
+    softkeyboard_value.height = self->ime_height_;
+
+    self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
+  };
+
+  auto ime_closed_callback = [](void* user_data,
+                           Evas_Object*,
+                           void* event_info) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+
+    SoftKeyboardChangeEventValue softkeyboard_value;
+    softkeyboard_value.state = "off";
+
+    self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
+  };
+  evas_object_smart_callback_add(ewk_view_,
+                                 "inputmethod,changed",
+                                 ime_changed_callback,
+                                 this);
+  evas_object_smart_callback_add(ewk_view_,
+                                 "editorclient,ime,opened",
+                                 ime_opened_callback,
+                                 this);
+  evas_object_smart_callback_add(ewk_view_,
+                                 "editorclient,ime,closed",
+                                 ime_closed_callback,
+                                 this);
+  smart_callbacks_["inputmethod,changed"] = ime_changed_callback;
+  smart_callbacks_["editorclient,ime,opened"] = ime_opened_callback;
+  smart_callbacks_["editorclient,ime,closed"] = ime_closed_callback;
 }
 
 #ifdef PROFILE_WEARABLE

@@ -89,9 +89,11 @@ class WebApplication : public WebView::EventListener {
   virtual void OnUsermediaPermissionRequest(
       WebView* view, const std::string& url,
       std::function<void(bool)> result_handler);
+  virtual void OnSoftKeyboardChangeEvent(
+      WebView* view, SoftKeyboardChangeEventValue softkeyboard_value);
 #ifdef PROFILE_WEARABLE
-  virtual void OnRotaryEvent(WebView* view,
-      RotaryEventType type);
+  virtual void OnRotaryEvent(
+      WebView* view, RotaryEventType type);
 #endif  // PROFILE_WEARABLE
 
  private:

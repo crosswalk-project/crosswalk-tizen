@@ -75,6 +75,7 @@ class WebViewImpl {
   void InitCertificateAllowCallback();
   void InitPopupWaitCallback();
   void InitUsermediaCallback();
+  void InitEditorClientImeCallback();
 #ifdef PROFILE_WEARABLE
   void InitRotaryEventCallback();
 #endif  // PROFILE_WEARABLE
@@ -91,6 +92,8 @@ class WebViewImpl {
   Evas_Smart* evas_smart_class_;
   Ewk_View_Smart_Class ewk_smart_class_;
   bool internal_popup_opened_;
+  size_t ime_width_;
+  size_t ime_height_;
 };
 }  // namespace runtime
 
