@@ -19,6 +19,7 @@
 #include <app.h>
 #include <Ecore.h>
 #include <ewk_chromium.h>
+#include <aul.h>
 
 #include <algorithm>
 #include <map>
@@ -714,6 +715,8 @@ void WebApplication::OnRendered(WebView* /*view*/) {
   STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
   splash_screen_->HideSplashScreen(SplashScreen::HideReason::RENDERED);
+
+  aul_prepare_candidate_process();
 }
 
 void WebApplication::LaunchInspector(common::AppControl* appcontrol) {
