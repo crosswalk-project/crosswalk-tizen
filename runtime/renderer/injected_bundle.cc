@@ -106,6 +106,12 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   SCOPE_PROFILE();
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
   ecore_init();
+
+  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
+  auto& controller = extensions::XWalkExtensionRendererController::GetInstance();
+  controller.InitializeExtensions();
+  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
+
   runtime::BundleGlobalData::GetInstance()->Initialize(tizen_id);
 }
 
@@ -151,6 +157,8 @@ extern "C" void DynamicPluginStopSession(
 
 extern "C" void DynamicUrlParsing(
     std::string* old_url, std::string* new_url, const char* /*tizen_id*/) {
+  SCOPE_PROFILE();
+
   auto res_manager =
       runtime::BundleGlobalData::GetInstance()->resource_manager();
   if (res_manager == NULL) {

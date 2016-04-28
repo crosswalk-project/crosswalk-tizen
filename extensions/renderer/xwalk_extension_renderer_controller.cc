@@ -44,7 +44,8 @@ XWalkExtensionRendererController::GetInstance() {
 }
 
 XWalkExtensionRendererController::XWalkExtensionRendererController()
-    : extensions_client_(new XWalkExtensionClient()) {
+    : initialized_(false),
+      extensions_client_(new XWalkExtensionClient()) {
 }
 
 XWalkExtensionRendererController::~XWalkExtensionRendererController() {
@@ -78,7 +79,12 @@ void XWalkExtensionRendererController::WillReleaseScriptContext(
 }
 
 void XWalkExtensionRendererController::InitializeExtensions() {
+  if (initialized_) {
+    LOGGER(DEBUG) << "already initialized";
+    return;
+  }
   extensions_client_->Initialize();
+  initialized_ = true;
 }
 
 }  // namespace extensions

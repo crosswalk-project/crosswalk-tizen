@@ -28,6 +28,7 @@ class XWalkExtensionRendererController {
   virtual ~XWalkExtensionRendererController();
 
  private:
+  bool initialized_;
   std::unique_ptr<XWalkExtensionClient> extensions_client_;
 };
 
