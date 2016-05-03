@@ -58,7 +58,6 @@ const char* kKeyNameMenu = "menu";
 const char* kConsoleLogEnableKey = "WRT_CONSOLE_LOG_ENABLE";
 const char* kConsoleMessageLogTag = "ConsoleMessage";
 
-const char* kDebugKey = "debug";
 const char* kVerboseKey = "verbose";
 const char* kPortKey = "port";
 
@@ -373,7 +372,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   view_stack_.push_front(view);
 
 
-  if (appcontrol->data(kDebugKey) == "true") {
+  if (appcontrol->data(AUL_K_DEBUG) == "1") {
     debug_mode_ = true;
     LaunchInspector(appcontrol.get());
   }
@@ -418,7 +417,7 @@ void WebApplication::AppControl(
     window_->SetContent(view->evas_object());
   }
 
-  if (!debug_mode_ && appcontrol->data(kDebugKey) == "true") {
+  if (!debug_mode_ && appcontrol->data(AUL_K_DEBUG) == "1") {
     debug_mode_ = true;
     LaunchInspector(appcontrol.get());
   }
