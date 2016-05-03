@@ -41,7 +41,7 @@ class WebViewImpl {
   void Suspend();
   void Resume();
   void Reload();
-  void Backward();
+  bool Backward();
   void SetVisibility(bool show);
   bool EvalJavascript(const std::string& script);
   void SetAppInfo(const std::string& app_name, const std::string& version);

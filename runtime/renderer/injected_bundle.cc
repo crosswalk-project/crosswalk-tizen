@@ -157,8 +157,6 @@ extern "C" void DynamicPluginStopSession(
 
 extern "C" void DynamicUrlParsing(
     std::string* old_url, std::string* new_url, const char* /*tizen_id*/) {
-  SCOPE_PROFILE();
-
   auto res_manager =
       runtime::BundleGlobalData::GetInstance()->resource_manager();
   if (res_manager == NULL) {

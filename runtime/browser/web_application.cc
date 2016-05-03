@@ -495,7 +495,7 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
   window_->SetContent(new_view->evas_object());
 }
 
-void WebApplication::OnClosedWebView(WebView* view) {
+void WebApplication::RemoveWebViewFromStack(WebView* view) {
   if (view_stack_.size() == 0) return;
 
   WebView* current = view_stack_.front();
@@ -522,6 +522,10 @@ void WebApplication::OnClosedWebView(WebView* view) {
                     return EINA_FALSE;
                   },
                   view);
+}
+
+void WebApplication::OnClosedWebView(WebView* view) {
+    RemoveWebViewFromStack(view);
 }
 
 void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
@@ -616,7 +620,9 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
   // NOTE: This code is added to enable back-key on remote URL
   if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
     LOGGER(DEBUG) << "Back to previous page for remote URL";
-    view->Backward();
+    if (!view->Backward()) {
+      RemoveWebViewFromStack(view_stack_.front());
+    }
     return;
   }
 
@@ -629,7 +635,9 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
     // If the 'backbutton_presence' is true, WebView should be navigated back.
     if (app_data_->setting_info() &&
         app_data_->setting_info()->backbutton_presence()) {
-      view->Backward();
+      if (!view->Backward()) {
+        RemoveWebViewFromStack(view_stack_.front());
+      }
     }
   } else if (enabled && kKeyNameMenu == keyname) {
     view->EvalJavascript(kMenuKeyEventScript);

@@ -53,8 +53,8 @@ void WebView::Reload() {
   impl_->Reload();
 }
 
-void WebView::Backward() {
-  impl_->Backward();
+bool WebView::Backward() {
+  return impl_->Backward();
 }
 
 void WebView::SetVisibility(bool show) {
