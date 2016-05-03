@@ -131,8 +131,12 @@ void WebViewImpl::Reload() {
   ewk_view_reload(ewk_view_);
 }
 
-void WebViewImpl::Backward() {
-  ewk_view_back(ewk_view_);
+bool WebViewImpl::Backward() {
+  if (ewk_view_back_possible(ewk_view_)) {
+    ewk_view_back(ewk_view_);
+    return EINA_TRUE;
+  }
+  return EINA_FALSE;
 }
 
 void WebViewImpl::SetVisibility(bool show) {
