@@ -577,6 +577,11 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
     src_path.erase(0, strlen(kSchemeTypeFile));
   }
 
+  // Remove the parameters at the end of an href attribute
+  size_t end_of_path = src_path.find_first_of("?#");
+  if (end_of_path != std::string::npos)
+    src_path = src_path.substr(0, end_of_path);
+
   FILE *src = fopen(src_path.c_str(), "rb");
   if (!src) {
     LOGGER(ERROR) << "Cannot open file for decryption: " << src_path;
