@@ -700,7 +700,7 @@ void WebApplication::OnSoftKeyboardChangeEvent(WebView* /*view*/,
     view_stack_.front()->EvalJavascript(kSoftKeyboardScript.c_str());
 }
 
-#ifdef PROFILE_WEARABLE
+#ifdef ROTARY_EVENT_FEATURE_SUPPORT
 void WebApplication::OnRotaryEvent(WebView* /*view*/,
                                    RotaryEventType type) {
   LOGGER(DEBUG) << "OnRotaryEvent";
@@ -722,7 +722,7 @@ void WebApplication::OnRotaryEvent(WebView* /*view*/,
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->EvalJavascript(kRotaryEventScript.c_str());
 }
-#endif  // PROFILE_WEARABLE
+#endif  // ROTARY_EVENT_FEATURE_SUPPORT
 
 bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
   return !(app_data_->setting_info() != NULL

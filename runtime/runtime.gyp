@@ -60,6 +60,9 @@
         ['profile == "wearable"', {
           'defines': ['PROFILE_WEARABLE'],
         }],
+        ['tizen_feature_rotary_event_support == 1', {
+          'defines': ['ROTARY_EVENT_FEATURE_SUPPORT'],
+        }],
       ],
     }, # end of target 'xwalk_runtime'
     {
