@@ -778,7 +778,19 @@ bool WebApplication::OnDidNavigation(WebView* /*view*/,
   if (ProcessWellKnownScheme(url)) {
     return false;
   }
-  return resource_manager_->AllowNavigation(url);
+
+  // send launch request for blocked URL to guarrenty backward-compatibility.
+  if (resource_manager_->AllowNavigation(url)) {
+    return true;
+  } else {
+    LOGGER(DEBUG) << "URL is blocked. send launch request for URL : " << url;
+    std::unique_ptr<common::AppControl> request(
+      common::AppControl::MakeAppcontrolFromURL(url));
+    if (request.get() == NULL || !request->LaunchRequest()) {
+      LOGGER(ERROR) << "Fail to send appcontrol request";
+    }
+    return false;
+  }
 }
 
 void WebApplication::OnNotificationPermissionRequest(
