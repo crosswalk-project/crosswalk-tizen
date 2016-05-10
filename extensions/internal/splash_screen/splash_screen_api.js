@@ -14,8 +14,9 @@
  *    limitations under the License.
  */
 
-var native = new xwalk.utils.NativeManager(extension);
-
+var sendRuntimeMessage = extension.sendRuntimeMessage ||  function() {
+  console.error('Runtime did not implement extension.sendRuntimeMessage!');
+};
 window.screen.show = function() {
-  native.sendRuntimeMessage('tizen://hide_splash_screen');
+  sendRuntimeMessage('tizen://hide_splash_screen');
 };
