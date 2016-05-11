@@ -42,7 +42,8 @@ int real_main(int argc, char* argv[]) {
       const_cast<char*>("--no-sandbox"),
       const_cast<char*>("--enable-file-cookies"),
       const_cast<char*>("--allow-file-access-from-files"),
-      const_cast<char*>("--allow-universal-access-from-files")
+      const_cast<char*>("--allow-universal-access-from-files"),
+      const_cast<char*>("--single-process")
     };
     const int chromium_arg_cnt =
         sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);
@@ -72,7 +73,8 @@ int main(int argc, char* argv[]) {
         const_cast<char*>("--no-sandbox"),
         const_cast<char*>("--enable-file-cookies"),
         const_cast<char*>("--allow-file-access-from-files"),
-        const_cast<char*>("--allow-universal-access-from-files")
+        const_cast<char*>("--allow-universal-access-from-files"),
+        const_cast<char*>("--single-process")
       };
       const int chromium_arg_cnt =
           sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);

@@ -32,7 +32,6 @@ BuildRequires: pkgconfig(ecore)
 BuildRequires: pkgconfig(ecore-wayland)
 BuildRequires: pkgconfig(efl-extension)
 BuildRequires: pkgconfig(elementary)
-BuildRequires: pkgconfig(gio-2.0)
 BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(libwebappenc)
 BuildRequires: pkgconfig(wgt-manifest-handlers)
@@ -43,6 +42,7 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(uuid)
 BuildRequires: pkgconfig(launchpad)
 BuildRequires: pkgconfig(ttrace)
+BuildRequires: pkgconfig(jsoncpp)
 
 %if "%{?profile}" == "mobile"
 %define tizen_feature_rotary_event_support     0
@@ -122,6 +122,9 @@ install -p -m 755 out/Default/xwalk_runtime %{buildroot}%{_bindir}
 ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt
 ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt-loader
 
+# xwalk extension shared
+install -p -m 644 out/Default/lib/libxwalk_extension_shared.so %{buildroot}%{_libdir}
+
 # xwalk_runtime_resources
 for file in $(find out/Default/gen/locales -type f -name *.mo); do
   install -m 644 -D $file %{buildroot}%{_datadir}/locale/${file#out/Default/gen/locales/}
@@ -141,6 +144,7 @@ rm -fr %{buildroot}
 %attr(644,root,root) %{_datadir}/edje/xwalk/*.edj
 %attr(644,root,root) %{_libdir}/libxwalk_tizen_common.so
 %attr(644,root,root) %{_libdir}/libxwalk_injected_bundle.so
+%attr(644,root,root) %{_libdir}/libxwalk_extension_shared.so
 %attr(644,root,root) %{extension_path}/libwidget_plugin.so
 %attr(644,root,root) %{extension_path}/widget.json
 %attr(644,root,root) %{extension_path}/libsplash_screen_plugin.so

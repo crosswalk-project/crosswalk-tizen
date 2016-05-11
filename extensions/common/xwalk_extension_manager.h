@@ -19,11 +19,13 @@ class XWalkExtensionManager : public XWalkExtension::XWalkExtensionDelegate {
   typedef std::map<std::string, XWalkExtension*> ExtensionMap;
 
   XWalkExtensionManager();
-  ~XWalkExtensionManager();
+  virtual ~XWalkExtensionManager();
 
   ExtensionMap extensions() const { return extensions_; }
 
   void LoadExtensions(bool meta_only = true);
+  void PreloadExtensions();
+
  private:
   // override
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);

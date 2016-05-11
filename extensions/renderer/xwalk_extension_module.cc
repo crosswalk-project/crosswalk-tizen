@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "common/logger.h"
+#include "common/profiler.h"
 #include "extensions/renderer/runtime_ipc_client.h"
 #include "extensions/renderer/xwalk_extension_client.h"
 #include "extensions/renderer/xwalk_module_system.h"
@@ -48,10 +49,12 @@ const char* kXWalkExtensionModule = "kXWalkExtensionModule";
 
 XWalkExtensionModule::XWalkExtensionModule(XWalkExtensionClient* client,
                                            XWalkModuleSystem* module_system,
-                                           const std::string& extension_name) :
-    extension_name_(extension_name),
-    client_(client),
-    module_system_(module_system) {
+                                           const std::string& extension_name,
+                                           const std::string& extension_code)
+    : extension_name_(extension_name),
+      extension_code_(extension_code),
+      client_(client),
+      module_system_(module_system) {
   v8::Isolate* isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handle_scope(isolate);
   v8::Handle<v8::Object> function_data = v8::Object::New(isolate);
@@ -108,7 +111,7 @@ XWalkExtensionModule::~XWalkExtensionModule() {
   message_listener_.Reset();
 
   if (!instance_id_.empty())
-    client_->DestroyInstance(instance_id_);
+    client_->DestroyInstance(module_system_->GetV8Context(), instance_id_);
 }
 
 namespace {
@@ -267,21 +270,21 @@ v8::Handle<v8::Value> RunString(const std::string& code,
 
 void XWalkExtensionModule::LoadExtensionCode(
     v8::Handle<v8::Context> context, v8::Handle<v8::Function> require_native) {
-  instance_id_ = client_->CreateInstance(extension_name_, this);
+  instance_id_ = client_->CreateInstance(context, extension_name_, this);
   if (instance_id_.empty()) {
     LOGGER(ERROR) << "Failed to create an instance of " << extension_name_;
     return;
   }
 
-
-
-  XWalkExtension* ext = client_->GetExtension(extension_name_);
-  if (ext == nullptr) {
-    LOGGER(ERROR) << "Failed to get an extension " << extension_name_;
-    return;
+  if (extension_code_.empty()) {
+    extension_code_ = client_->GetAPIScript(context, extension_name_);
+    if (extension_code_.empty()) {
+      LOGGER(ERROR) << "Failed to get API script of " << extension_name_;
+      return;
+    }
   }
-  std::string wrapped_api_code =
-      WrapAPICode(ext->GetJavascriptCode(), extension_name_);
+
+  std::string wrapped_api_code = WrapAPICode(extension_code_, extension_name_);
 
   std::string exception;
   v8::Handle<v8::Value> result = RunString(wrapped_api_code, &exception);
@@ -347,7 +350,8 @@ void XWalkExtensionModule::PostMessageCallback(
   v8::String::Utf8Value value(info[0]->ToString());
 
   // CHECK(module->instance_id_);
-  module->client_->PostMessageToNative(module->instance_id_,
+  module->client_->PostMessageToNative(module->module_system_->GetV8Context(),
+                                       module->instance_id_,
                                        std::string(*value));
   result.Set(true);
 }
@@ -366,8 +370,10 @@ void XWalkExtensionModule::SendSyncMessageCallback(
 
   // CHECK(module->instance_id_);
   std::string reply =
-      module->client_->SendSyncMessageToNative(module->instance_id_,
-                                               std::string(*value));
+      module->client_->SendSyncMessageToNative(
+          module->module_system_->GetV8Context(),
+          module->instance_id_,
+          std::string(*value));
 
   // If we tried to send a message to an instance that became invalid,
   // then reply will be NULL.

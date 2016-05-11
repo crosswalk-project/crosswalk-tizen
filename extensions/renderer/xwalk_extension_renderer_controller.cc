@@ -5,6 +5,7 @@
 
 #include "extensions/renderer/xwalk_extension_renderer_controller.h"
 
+#include <Ecore.h>
 #include <v8/v8.h>
 #include <string>
 #include <utility>
@@ -17,6 +18,7 @@
 #include "extensions/renderer/xwalk_extension_module.h"
 #include "extensions/renderer/xwalk_module_system.h"
 #include "extensions/renderer/xwalk_v8tools_module.h"
+#include "extensions/renderer/runtime_ipc_client.h"
 
 namespace extensions {
 
@@ -24,14 +26,16 @@ namespace {
 
 void CreateExtensionModules(XWalkExtensionClient* client,
                             XWalkModuleSystem* module_system) {
-  SCOPE_PROFILE();
+  const XWalkExtensionClient::ExtensionAPIMap& extensions =
+      client->extension_apis();
 
-  auto extensions = client->GetExtensions();
   for (auto it = extensions.begin(); it != extensions.end(); ++it) {
+    XWalkExtensionClient::ExtensionCodePoints* codepoint = it->second;
     std::unique_ptr<XWalkExtensionModule> module(
-        new XWalkExtensionModule(client, module_system, it->first));
-    module_system->RegisterExtensionModule(
-        std::move(module), it->second->entry_points());
+        new XWalkExtensionModule(client, module_system,
+                                 it->first, codepoint->api));
+    module_system->RegisterExtensionModule(std::move(module),
+                                           codepoint->entry_points);
   }
 }
 
@@ -44,8 +48,7 @@ XWalkExtensionRendererController::GetInstance() {
 }
 
 XWalkExtensionRendererController::XWalkExtensionRendererController()
-    : initialized_(false),
-      extensions_client_(new XWalkExtensionClient()) {
+    : extensions_client_(new XWalkExtensionClient()) {
 }
 
 XWalkExtensionRendererController::~XWalkExtensionRendererController() {
@@ -53,11 +56,9 @@ XWalkExtensionRendererController::~XWalkExtensionRendererController() {
 
 void XWalkExtensionRendererController::DidCreateScriptContext(
     v8::Handle<v8::Context> context) {
-  SCOPE_PROFILE();
   XWalkModuleSystem* module_system = new XWalkModuleSystem(context);
   XWalkModuleSystem::SetModuleSystemInContext(
       std::unique_ptr<XWalkModuleSystem>(module_system), context);
-
   module_system->RegisterNativeModule(
         "v8tools",
         std::unique_ptr<XWalkNativeModule>(new XWalkV8ToolsModule));
@@ -68,7 +69,9 @@ void XWalkExtensionRendererController::DidCreateScriptContext(
         "objecttools",
         std::unique_ptr<XWalkNativeModule>(new ObjectToolsModule));
 
+  extensions_client_->Initialize();
   CreateExtensionModules(extensions_client_.get(), module_system);
+
   module_system->Initialize();
 }
 
@@ -78,13 +81,29 @@ void XWalkExtensionRendererController::WillReleaseScriptContext(
   XWalkModuleSystem::ResetModuleSystemFromContext(context);
 }
 
-void XWalkExtensionRendererController::InitializeExtensions() {
-  if (initialized_) {
-    LOGGER(DEBUG) << "already initialized";
-    return;
+void XWalkExtensionRendererController::OnReceivedIPCMessage(
+    const Ewk_IPC_Wrt_Message_Data* data) {
+
+  Eina_Stringshare* type = ewk_ipc_wrt_message_data_type_get(data);
+
+#define TYPE_BEGIN(x) (!strncmp(type, x, strlen(x)))
+  if (TYPE_BEGIN("xwalk://"))  {
+    Eina_Stringshare* id = ewk_ipc_wrt_message_data_id_get(data);
+    Eina_Stringshare* msg = ewk_ipc_wrt_message_data_value_get(data);
+    extensions_client_->OnReceivedIPCMessage(id, msg);
+    eina_stringshare_del(id);
+    eina_stringshare_del(msg);
+  } else {
+    RuntimeIPCClient* ipc = RuntimeIPCClient::GetInstance();
+    ipc->HandleMessageFromRuntime(data);
   }
+#undef TYPE_BEGIN
+
+  eina_stringshare_del(type);
+}
+
+void XWalkExtensionRendererController::InitializeExtensionClient() {
   extensions_client_->Initialize();
-  initialized_ = true;
 }
 
 }  // namespace extensions

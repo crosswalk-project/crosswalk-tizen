@@ -36,24 +36,6 @@
 
 namespace runtime {
 
-static const char* kPreloadLibs[] = {
-  "/usr/lib/tizen-extensions-crosswalk/libtizen.so",
-  "/usr/lib/tizen-extensions-crosswalk/libtizen_common.so",
-  "/usr/lib/tizen-extensions-crosswalk/libtizen_application.so",
-  "/usr/lib/tizen-extensions-crosswalk/libtizen_utils.so",
-  NULL
-};
-
-static void PreloadLibrary() {
-  for (int i = 0; kPreloadLibs[i]; i++) {
-    LOGGER(DEBUG) << "Preload libs : " << kPreloadLibs[i];
-    void* handle = dlopen(kPreloadLibs[i], RTLD_NOW|RTLD_GLOBAL);
-    if (handle == nullptr) {
-      LOGGER(DEBUG) << "Fail to load libs : " << dlerror();
-    }
-  }
-}
-
 class BundleGlobalData {
  public:
   static BundleGlobalData* GetInstance() {
@@ -106,11 +88,6 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   SCOPE_PROFILE();
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
   ecore_init();
-
-  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
-  auto& controller = extensions::XWalkExtensionRendererController::GetInstance();
-  controller.InitializeExtensions();
-  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
 
   runtime::BundleGlobalData::GetInstance()->Initialize(tizen_id);
 }
@@ -189,18 +166,15 @@ extern "C" void DynamicDatabaseAttach(int /*attach*/) {
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
   LOGGER(DEBUG) << "InjectedBundle::DynamicOnIPCMessage !!";
-  extensions::RuntimeIPCClient* rc =
-      extensions::RuntimeIPCClient::GetInstance();
-  rc->HandleMessageFromRuntime(&data);
+  extensions::XWalkExtensionRendererController& controller =
+    extensions::XWalkExtensionRendererController::GetInstance();
+  controller.OnReceivedIPCMessage(&data);
 }
 
 extern "C" void DynamicPreloading() {
   LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
-  runtime::PreloadLibrary();
   runtime::BundleGlobalData::GetInstance()->PreInitialize();
-
-  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
-  auto& controller = extensions::XWalkExtensionRendererController::GetInstance();
-  controller.InitializeExtensions();
-  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
+  extensions::XWalkExtensionRendererController& controller =
+    extensions::XWalkExtensionRendererController::GetInstance();
+  controller.InitializeExtensionClient();
 }

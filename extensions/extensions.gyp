@@ -4,8 +4,8 @@
   ],
   'targets': [
     {
-      'target_name': 'xwalk_extension_renderer',
-      'type': 'static_library',
+      'target_name': 'xwalk_extension_shared',
+      'type': 'shared_library',
       'dependencies': [
         '../common/common.gyp:xwalk_tizen_common',
       ],
@@ -20,6 +20,8 @@
         'common/xwalk_extension_adapter.cc',
         'common/xwalk_extension_manager.h',
         'common/xwalk_extension_manager.cc',
+        'common/xwalk_extension_server.h',
+        'common/xwalk_extension_server.cc',
         'renderer/xwalk_extension_client.h',
         'renderer/xwalk_extension_client.cc',
         'renderer/xwalk_extension_module.h',
@@ -37,13 +39,26 @@
         'renderer/runtime_ipc_client.h',
         'renderer/runtime_ipc_client.cc',
       ],
+      'cflags': [
+        '-fvisibility=default',
+      ],
       'variables': {
         'packages': [
           'chromium-efl',
           'elementary',
         ],
       },
-    }, # end of target 'xwalk_extension_renderer'
+      'direct_dependent_settings': {
+        'libraries': [
+          '-lxwalk_extension_shared',
+        ],
+        'variables': {
+          'packages': [
+            'jsoncpp',
+          ],
+        },
+      },
+    }, # end of target 'xwalk_extension_static'
     {
       'target_name': 'widget_plugin',
       'type': 'shared_library',

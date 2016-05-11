@@ -19,15 +19,13 @@
 
 namespace extensions {
 
-extern const char kDBusNameForExtension[];
-extern const char kDBusInterfaceNameForExtension[];
 extern const char kMethodGetExtensions[];
 extern const char kMethodCreateInstance[];
 extern const char kMethodDestroyInstance[];
 extern const char kMethodSendSyncMessage[];
 extern const char kMethodPostMessage[];
-extern const char kSignalOnMessageToJS[];
-extern const char kMethodGetJavascriptCode[];
+extern const char kMethodGetAPIScript[];
+extern const char kMethodPostMessageToJS[];
 
 }  // namespace extensions
 

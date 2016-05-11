@@ -8,6 +8,7 @@
       'type': 'executable',
       'dependencies': [
         '../common/common.gyp:xwalk_tizen_common',
+        '../extensions/extensions.gyp:xwalk_extension_shared',
         'resources/resources.gyp:xwalk_runtime_resources',
       ],
       'sources': [
@@ -70,7 +71,7 @@
       'type': 'shared_library',
       'dependencies': [
         '../common/common.gyp:xwalk_tizen_common',
-        '../extensions/extensions.gyp:xwalk_extension_renderer',
+        '../extensions/extensions.gyp:xwalk_extension_shared',
       ],
       'sources': [
         'renderer/injected_bundle.cc',

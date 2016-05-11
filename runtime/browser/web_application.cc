@@ -43,6 +43,7 @@
 #include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/web_view.h"
 #include "runtime/browser/splash_screen.h"
+#include "extensions/common/xwalk_extension_server.h"
 
 #ifndef INJECTED_BUNDLE_PATH
 #error INJECTED_BUNDLE_PATH is not set.
@@ -241,6 +242,10 @@ WebApplication::~WebApplication() {
 
 bool WebApplication::Initialize() {
   SCOPE_PROFILE();
+
+  auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+  extension_server->SetupIPC(ewk_context_);
+
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
 
@@ -529,65 +534,71 @@ void WebApplication::OnClosedWebView(WebView* view) {
 
 void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
                                           Ewk_IPC_Wrt_Message_Data* msg) {
-  Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
-  Eina_Stringshare* msg_ref_id = ewk_ipc_wrt_message_data_reference_id_get(msg);
+  SCOPE_PROFILE();
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
-  Eina_Stringshare* msg_value = ewk_ipc_wrt_message_data_value_get(msg);
 
-  LOGGER(DEBUG) << "RecvMsg: id = " << msg_id;
-  LOGGER(DEBUG) << "RecvMsg: refid = " << msg_ref_id;
-  LOGGER(DEBUG) << "RecvMsg: type = " << msg_type;
-  LOGGER(DEBUG) << "RecvMsg: value = " << msg_value;
-
+#define TYPE_BEGIN(x) (!strncmp(msg_type, x, strlen(x)))
 #define TYPE_IS(x) (!strcmp(msg_type, x))
-  if (TYPE_IS("tizen://hide")) {
-    // One Way Message
-    window_->InActive();
-  } else if (TYPE_IS("tizen://exit")) {
-    // One Way Message
-    ecore_idler_add(ExitAppIdlerCallback, this);
-  } else if (TYPE_IS("tizen://changeUA")) {
-    // Async Message
-    // Change UserAgent of current WebView
-    bool ret = false;
-    if (view_stack_.size() > 0 && view_stack_.front() != NULL) {
-      ret = view_stack_.front()->SetUserAgent(std::string(msg_value));
+
+  if (TYPE_BEGIN("xwalk://")) {
+    auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+    extension_server->HandleIPCMessage(msg);
+  } else {
+    Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
+    Eina_Stringshare* msg_ref_id =
+        ewk_ipc_wrt_message_data_reference_id_get(msg);
+    Eina_Stringshare* msg_value = ewk_ipc_wrt_message_data_value_get(msg);
+
+    if (TYPE_IS("tizen://hide")) {
+      // One Way Message
+      window_->InActive();
+    } else if (TYPE_IS("tizen://exit")) {
+      // One Way Message
+      ecore_idler_add(ExitAppIdlerCallback, this);
+    } else if (TYPE_IS("tizen://changeUA")) {
+      // Async Message
+      // Change UserAgent of current WebView
+      bool ret = false;
+      if (view_stack_.size() > 0 && view_stack_.front() != NULL) {
+        ret = view_stack_.front()->SetUserAgent(std::string(msg_value));
+      }
+      // Send response
+      Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+      ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+      ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+      if (ret)
+        ewk_ipc_wrt_message_data_value_set(ans, "success");
+      else
+        ewk_ipc_wrt_message_data_value_set(ans, "failed");
+      if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+        LOGGER(ERROR) << "Failed to send response";
+      }
+      ewk_ipc_wrt_message_data_del(ans);
+    } else if (TYPE_IS("tizen://deleteAllCookies")) {
+      Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+      ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+      ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+      if (ClearCookie(ewk_context_))
+        ewk_ipc_wrt_message_data_value_set(ans, "success");
+      else
+        ewk_ipc_wrt_message_data_value_set(ans, "failed");
+      if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+        LOGGER(ERROR) << "Failed to send response";
+      }
+      ewk_ipc_wrt_message_data_del(ans);
+    } else if (TYPE_IS("tizen://hide_splash_screen")) {
+      splash_screen_->HideSplashScreen(SplashScreen::HideReason::CUSTOM);
     }
-    // Send response
-    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
-    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
-    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
-    if (ret)
-      ewk_ipc_wrt_message_data_value_set(ans, "success");
-    else
-      ewk_ipc_wrt_message_data_value_set(ans, "failed");
-    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
-      LOGGER(ERROR) << "Failed to send response";
-    }
-    ewk_ipc_wrt_message_data_del(ans);
-  } else if (TYPE_IS("tizen://deleteAllCookies")) {
-    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
-    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
-    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
-    if (ClearCookie(ewk_context_))
-      ewk_ipc_wrt_message_data_value_set(ans, "success");
-    else
-      ewk_ipc_wrt_message_data_value_set(ans, "failed");
-    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
-      LOGGER(ERROR) << "Failed to send response";
-    }
-    ewk_ipc_wrt_message_data_del(ans);
-  } else if (TYPE_IS("tizen://hide_splash_screen")) {
-    splash_screen_->HideSplashScreen(SplashScreen::HideReason::CUSTOM);
+
+    eina_stringshare_del(msg_ref_id);
+    eina_stringshare_del(msg_id);
+    eina_stringshare_del(msg_value);
   }
 
-
 #undef TYPE_IS
+#undef TYPE_BEGIN
 
-  eina_stringshare_del(msg_value);
   eina_stringshare_del(msg_type);
-  eina_stringshare_del(msg_ref_id);
-  eina_stringshare_del(msg_id);
 }
 
 void WebApplication::OnOrientationLock(
