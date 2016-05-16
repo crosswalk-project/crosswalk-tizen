@@ -219,9 +219,8 @@ ResourceManager::GetDefaultResource() {
   }
 
   // Check that tizen:content src is external page
-  if (content_info && content_info->is_tizen_content()
-      && (utils::StartsWith(src, kSchemeTypeHttp) ||
-          utils::StartsWith(src, kSchemeTypeHttps))) {
+  if (utils::StartsWith(src, kSchemeTypeHttp) ||
+      utils::StartsWith(src, kSchemeTypeHttps)) {
     LOGGER(DEBUG) << "tizen content_info's src is an external page";
     return std::unique_ptr<Resource>(new Resource(src, type, encoding));
   }
