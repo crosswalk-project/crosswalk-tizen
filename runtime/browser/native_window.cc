@@ -130,7 +130,10 @@ void NativeWindow::SetContent(Evas_Object* content) {
   // issue elm_object_part_content_unset() on it first.
 
   evas_object_show(content);
-  elm_object_part_content_unset(layout_, "elm.swallow.content");
+
+  // Hide unseted evas object to avoid focus and event callback problem.
+  evas_object_hide(
+    elm_object_part_content_unset(layout_, "elm.swallow.content"));
   elm_object_part_content_set(layout_, "elm.swallow.content", content);
   content_ = content;
 
