@@ -715,8 +715,6 @@ void WebApplication::OnRendered(WebView* /*view*/) {
   STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
   splash_screen_->HideSplashScreen(SplashScreen::HideReason::RENDERED);
-
-  aul_prepare_candidate_process();
 }
 
 void WebApplication::LaunchInspector(common::AppControl* appcontrol) {
