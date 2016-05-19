@@ -40,7 +40,7 @@ class SplashScreen;
 class WebApplication : public WebView::EventListener {
  public:
   WebApplication(NativeWindow* window,
-                 std::unique_ptr<common::ApplicationData> app_data);
+                 common::ApplicationData* app_data);
   virtual ~WebApplication();
 
   void AppControl(std::unique_ptr<common::AppControl> appcontrol);
@@ -112,10 +112,10 @@ class WebApplication : public WebView::EventListener {
   NativeWindow* window_;
   std::string appid_;
   std::string app_data_path_;
+  common::ApplicationData* app_data_;
   std::list<WebView*> view_stack_;
   std::unique_ptr<SplashScreen> splash_screen_;
   std::unique_ptr<common::LocaleManager> locale_manager_;
-  std::unique_ptr<common::ApplicationData> app_data_;
   std::unique_ptr<common::ResourceManager> resource_manager_;
   std::function<void(void)> terminator_;
   int security_model_version_;

@@ -50,22 +50,26 @@ class BundleGlobalData {
   }
   void Initialize(const std::string& app_id) {
     PreInitialize();
-    app_data_.reset(new common::ApplicationData(app_id));
-    app_data_->LoadManifestData();
+
+    auto appdata_manager = common::ApplicationDataManager::GetInstance();
+    common::ApplicationData* app_data =
+        appdata_manager->GetApplicationData(app_id);
+
+    app_data->LoadManifestData();
     // PreInitialized locale_manager_.reset(new common::LocaleManager);
     locale_manager_->EnableAutoUpdate(true);
-    if (app_data_->widget_info() != NULL &&
-        !app_data_->widget_info()->default_locale().empty()) {
+    if (app_data->widget_info() != NULL &&
+        !app_data->widget_info()->default_locale().empty()) {
       locale_manager_->SetDefaultLocale(
-          app_data_->widget_info()->default_locale());
+          app_data->widget_info()->default_locale());
     }
-    resource_manager_.reset(new common::ResourceManager(app_data_.get(),
+    resource_manager_.reset(new common::ResourceManager(app_data,
                             locale_manager_.get()));
     resource_manager_->set_base_resource_path(
-        app_data_->application_path());
+        app_data->application_path());
 
     auto widgetdb = extensions::WidgetPreferenceDB::GetInstance();
-    widgetdb->Initialize(app_data_.get(),
+    widgetdb->Initialize(app_data,
                          locale_manager_.get());
   }
 
@@ -78,7 +82,7 @@ class BundleGlobalData {
   ~BundleGlobalData() {}
   std::unique_ptr<common::ResourceManager> resource_manager_;
   std::unique_ptr<common::LocaleManager> locale_manager_;
-  std::unique_ptr<common::ApplicationData> app_data_;
+
   bool preInitialized;
 };
 

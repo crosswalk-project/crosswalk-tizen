@@ -206,7 +206,7 @@ static bool ProcessWellKnownScheme(const std::string& url) {
 }  // namespace
 
 WebApplication::WebApplication(
-    NativeWindow* window, std::unique_ptr<common::ApplicationData> app_data)
+    NativeWindow* window, common::ApplicationData* app_data)
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
@@ -214,8 +214,8 @@ WebApplication::WebApplication(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       window_(window),
       appid_(app_data->app_id()),
+      app_data_(app_data),
       locale_manager_(new common::LocaleManager()),
-      app_data_(std::move(app_data)),
       terminator_(NULL) {
   std::unique_ptr<char, decltype(std::free)*> path{app_get_data_path(),
                                                    std::free};
@@ -224,7 +224,7 @@ WebApplication::WebApplication(
   splash_screen_.reset(new SplashScreen(
       window_, app_data_->splash_screen_info(), app_data_->application_path()));
   resource_manager_.reset(
-      new common::ResourceManager(app_data_.get(), locale_manager_.get()));
+      new common::ResourceManager(app_data_, locale_manager_.get()));
   resource_manager_->set_base_resource_path(app_data_->application_path());
   Initialize();
 }
@@ -277,7 +277,7 @@ bool WebApplication::Initialize() {
                                               this);
   InitializeNotificationCallback(ewk_context_, this);
 
-  if (FindPrivilege(app_data_.get(), kFullscreenPrivilege)) {
+  if (FindPrivilege(app_data_, kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kFullscreenFeature, true);
   }
@@ -819,7 +819,7 @@ void WebApplication::OnNotificationPermissionRequest(
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_.get(), kNotificationPrivilege)) {
+      FindPrivilege(app_data_, kNotificationPrivilege)) {
     result_handler(true);
     return;
   }
@@ -859,7 +859,7 @@ void WebApplication::OnGeolocationPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_.get(), kLocationPrivilege)) {
+  if (!FindPrivilege(app_data_, kLocationPrivilege)) {
     result_handler(false);
     return;
   }
@@ -904,7 +904,7 @@ void WebApplication::OnQuotaExceed(WebView*, const std::string& url,
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_.get(), kStoragePrivilege)) {
+      FindPrivilege(app_data_, kStoragePrivilege)) {
     result_handler(true);
     return;
   }
@@ -999,7 +999,7 @@ void WebApplication::OnUsermediaPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_.get(), kUsermediaPrivilege)) {
+  if (!FindPrivilege(app_data_, kUsermediaPrivilege)) {
     result_handler(false);
     return;
   }
