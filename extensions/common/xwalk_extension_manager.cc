@@ -74,6 +74,7 @@ void XWalkExtensionManager::LoadExtensions(bool meta_only) {
   ext_pattern.append(kExtensionPrefix);
   ext_pattern.append("*");
   ext_pattern.append(kExtensionSuffix);
+
   StringSet files;
   {
     glob_t glob_result;

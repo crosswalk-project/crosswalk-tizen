@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "common/logger.h"
+#include "common/profiler.h"
 #include "extensions/renderer/xwalk_extension_module.h"
 
 namespace extensions {
@@ -309,6 +310,7 @@ v8::Handle<v8::Object> XWalkModuleSystem::RequireNative(
 }
 
 void XWalkModuleSystem::Initialize() {
+  SCOPE_PROFILE();
   v8::Isolate* isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handle_scope(isolate);
   v8::Handle<v8::Context> context = GetV8Context();

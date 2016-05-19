@@ -41,6 +41,7 @@ XWalkExtensionClient::~XWalkExtensionClient() {
 }
 
 void XWalkExtensionClient::Initialize() {
+  SCOPE_PROFILE();
   if (!extension_apis_.empty()) {
     return;
   }

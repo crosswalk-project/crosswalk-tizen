@@ -56,6 +56,7 @@ XWalkExtensionRendererController::~XWalkExtensionRendererController() {
 
 void XWalkExtensionRendererController::DidCreateScriptContext(
     v8::Handle<v8::Context> context) {
+  SCOPE_PROFILE();
   XWalkModuleSystem* module_system = new XWalkModuleSystem(context);
   XWalkModuleSystem::SetModuleSystemInContext(
       std::unique_ptr<XWalkModuleSystem>(module_system), context);

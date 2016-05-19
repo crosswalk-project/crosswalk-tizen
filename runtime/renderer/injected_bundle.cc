@@ -86,7 +86,6 @@ class BundleGlobalData {
 
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   SCOPE_PROFILE();
-  LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
   ecore_init();
 
   runtime::BundleGlobalData::GetInstance()->Initialize(tizen_id);
@@ -105,18 +104,15 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
   extensions::XWalkModuleSystem::SetModuleSystemInContext(
       std::unique_ptr<extensions::XWalkModuleSystem>(), context);
 
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!" << tizen_id;
   if (base_url == NULL || common::utils::StartsWith(base_url, "http")) {
     LOGGER(ERROR) << "External url not allowed plugin loading.";
     return;
   }
 
-  STEP_PROFILE_START("Initialize RuntimeIPCClient");
   // Initialize RuntimeIPCClient
   extensions::RuntimeIPCClient* rc =
       extensions::RuntimeIPCClient::GetInstance();
   rc->SetRoutingId(context, routing_handle);
-  STEP_PROFILE_END("Initialize RuntimeIPCClient");
 
   extensions::XWalkExtensionRendererController& controller =
       extensions::XWalkExtensionRendererController::GetInstance();
@@ -125,8 +121,7 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
 
 extern "C" void DynamicPluginStopSession(
     const char* tizen_id, v8::Handle<v8::Context> context) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStopSession !!" << tizen_id;
-
+  SCOPE_PROFILE();
   extensions::XWalkExtensionRendererController& controller =
       extensions::XWalkExtensionRendererController::GetInstance();
   controller.WillReleaseScriptContext(context);
@@ -165,14 +160,14 @@ extern "C" void DynamicDatabaseAttach(int /*attach*/) {
 }
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicOnIPCMessage !!";
+  SCOPE_PROFILE();
   extensions::XWalkExtensionRendererController& controller =
     extensions::XWalkExtensionRendererController::GetInstance();
   controller.OnReceivedIPCMessage(&data);
 }
 
 extern "C" void DynamicPreloading() {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
+  SCOPE_PROFILE();
   runtime::BundleGlobalData::GetInstance()->PreInitialize();
   extensions::XWalkExtensionRendererController& controller =
     extensions::XWalkExtensionRendererController::GetInstance();
