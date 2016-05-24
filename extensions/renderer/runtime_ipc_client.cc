@@ -40,9 +40,15 @@ void RuntimeIPCClient::JSCallback::Call(v8::Isolate* isolate,
                                         v8::Handle<v8::Value> args[]) {
   if (!callback_.IsEmpty()) {
     v8::HandleScope handle_scope(isolate);
+    v8::TryCatch try_catch(isolate);
     v8::Handle<v8::Function> func =
         v8::Local<v8::Function>::New(isolate, callback_);
     func->Call(func, 1, args);
+    if (try_catch.HasCaught()) {
+      LOGGER(ERROR) << "Exception when running Javascript callback";
+      v8::String::Utf8Value exception_str(try_catch.Exception());
+      LOGGER(ERROR) << (*exception_str);
+    }
   }
 }
 
