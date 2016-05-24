@@ -102,6 +102,10 @@ class BundleGlobalData {
 
 }  //  namespace runtime
 
+extern "C" unsigned int DynamicPluginVersion(void) {
+  return 1;
+}
+
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   SCOPE_PROFILE();
   LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
@@ -118,9 +122,6 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
 extern "C" void DynamicPluginStartSession(const char* tizen_id,
                                           v8::Handle<v8::Context> context,
                                           int routing_handle,
-                                          double /*scale*/,
-                                          const char* /*bundle*/,
-                                          const char* /*theme*/,
                                           const char* base_url) {
   SCOPE_PROFILE();
 
