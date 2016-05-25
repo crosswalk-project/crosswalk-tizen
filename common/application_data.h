@@ -110,6 +110,21 @@ class ApplicationData {
   std::string app_id_;
 };
 
+
+class ApplicationDataManager {
+ public:
+  static ApplicationDataManager* GetInstance();
+
+  ApplicationData* GetApplicationData(const std::string& appid);
+
+ private:
+  ApplicationDataManager();
+  virtual ~ApplicationDataManager();
+
+  std::map<std::string, std::unique_ptr<ApplicationData>> cache_;
+};
+
+
 }  // namespace common
 
 #endif  // XWALK_COMMON_APPLICATION_DATA_H_

@@ -6,22 +6,19 @@
 #ifndef XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_CLIENT_H_
 #define XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_CLIENT_H_
 
+#include <v8/v8.h>
+
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "extensions/common/xwalk_extension.h"
-#include "extensions/common/xwalk_extension_instance.h"
-#include "extensions/common/xwalk_extension_manager.h"
+#include "extensions/renderer/xwalk_module_system.h"
 
 namespace extensions {
 
 class XWalkExtensionClient {
  public:
-  typedef std::map<std::string, XWalkExtension*> ExtensionMap;
-  typedef std::map<std::string, XWalkExtensionInstance*> InstanceMap;
-
   struct InstanceHandler {
     virtual void HandleMessageFromNative(const std::string& msg) = 0;
    protected:
@@ -33,21 +30,39 @@ class XWalkExtensionClient {
 
   void Initialize();
 
-  XWalkExtension* GetExtension(const std::string& extension_name);
-  ExtensionMap GetExtensions();
-
-  std::string CreateInstance(const std::string& extension_name,
+  std::string CreateInstance(v8::Handle<v8::Context> context,
+                             const std::string& extension_name,
                              InstanceHandler* handler);
-  void DestroyInstance(const std::string& instance_id);
+  void DestroyInstance(v8::Handle<v8::Context> context,
+                       const std::string& instance_id);
 
-  void PostMessageToNative(const std::string& instance_id,
+  void PostMessageToNative(v8::Handle<v8::Context> context,
+                           const std::string& instance_id,
                            const std::string& msg);
-  std::string SendSyncMessageToNative(const std::string& instance_id,
+  std::string SendSyncMessageToNative(v8::Handle<v8::Context> context,
+                                      const std::string& instance_id,
                                       const std::string& msg);
 
+  std::string GetAPIScript(v8::Handle<v8::Context> context,
+                           const std::string& extension_name);
+
+  void OnReceivedIPCMessage(const std::string& instance_id,
+                            const std::string& msg);
+
+  struct ExtensionCodePoints {
+    std::string api;
+    std::vector<std::string> entry_points;
+  };
+
+  typedef std::map<std::string, ExtensionCodePoints*> ExtensionAPIMap;
+
+  const ExtensionAPIMap& extension_apis() const { return extension_apis_; }
+
  private:
-  XWalkExtensionManager manager_;
-  InstanceMap instances_;
+  ExtensionAPIMap extension_apis_;
+
+  typedef std::map<std::string, InstanceHandler*> HandlerMap;
+  HandlerMap handlers_;
 };
 
 }  // namespace extensions

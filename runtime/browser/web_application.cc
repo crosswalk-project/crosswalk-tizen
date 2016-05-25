@@ -43,6 +43,7 @@
 #include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/web_view.h"
 #include "runtime/browser/splash_screen.h"
+#include "extensions/common/xwalk_extension_server.h"
 
 #ifndef INJECTED_BUNDLE_PATH
 #error INJECTED_BUNDLE_PATH is not set.
@@ -205,7 +206,7 @@ static bool ProcessWellKnownScheme(const std::string& url) {
 }  // namespace
 
 WebApplication::WebApplication(
-    NativeWindow* window, std::unique_ptr<common::ApplicationData> app_data)
+    NativeWindow* window, common::ApplicationData* app_data)
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
@@ -213,8 +214,8 @@ WebApplication::WebApplication(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       window_(window),
       appid_(app_data->app_id()),
+      app_data_(app_data),
       locale_manager_(new common::LocaleManager()),
-      app_data_(std::move(app_data)),
       terminator_(NULL) {
   std::unique_ptr<char, decltype(std::free)*> path{app_get_data_path(),
                                                    std::free};
@@ -223,7 +224,7 @@ WebApplication::WebApplication(
   splash_screen_.reset(new SplashScreen(
       window_, app_data_->splash_screen_info(), app_data_->application_path()));
   resource_manager_.reset(
-      new common::ResourceManager(app_data_.get(), locale_manager_.get()));
+      new common::ResourceManager(app_data_, locale_manager_.get()));
   resource_manager_->set_base_resource_path(app_data_->application_path());
   Initialize();
 }
@@ -241,6 +242,10 @@ WebApplication::~WebApplication() {
 
 bool WebApplication::Initialize() {
   SCOPE_PROFILE();
+
+  auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+  extension_server->SetupIPC(ewk_context_);
+
   // ewk setting
   ewk_context_cache_model_set(ewk_context_, EWK_CACHE_MODEL_DOCUMENT_BROWSER);
 
@@ -272,7 +277,7 @@ bool WebApplication::Initialize() {
                                               this);
   InitializeNotificationCallback(ewk_context_, this);
 
-  if (FindPrivilege(app_data_.get(), kFullscreenPrivilege)) {
+  if (FindPrivilege(app_data_, kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kFullscreenFeature, true);
   }
@@ -529,65 +534,71 @@ void WebApplication::OnClosedWebView(WebView* view) {
 
 void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
                                           Ewk_IPC_Wrt_Message_Data* msg) {
-  Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
-  Eina_Stringshare* msg_ref_id = ewk_ipc_wrt_message_data_reference_id_get(msg);
+  SCOPE_PROFILE();
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
-  Eina_Stringshare* msg_value = ewk_ipc_wrt_message_data_value_get(msg);
 
-  LOGGER(DEBUG) << "RecvMsg: id = " << msg_id;
-  LOGGER(DEBUG) << "RecvMsg: refid = " << msg_ref_id;
-  LOGGER(DEBUG) << "RecvMsg: type = " << msg_type;
-  LOGGER(DEBUG) << "RecvMsg: value = " << msg_value;
-
+#define TYPE_BEGIN(x) (!strncmp(msg_type, x, strlen(x)))
 #define TYPE_IS(x) (!strcmp(msg_type, x))
-  if (TYPE_IS("tizen://hide")) {
-    // One Way Message
-    window_->InActive();
-  } else if (TYPE_IS("tizen://exit")) {
-    // One Way Message
-    ecore_idler_add(ExitAppIdlerCallback, this);
-  } else if (TYPE_IS("tizen://changeUA")) {
-    // Async Message
-    // Change UserAgent of current WebView
-    bool ret = false;
-    if (view_stack_.size() > 0 && view_stack_.front() != NULL) {
-      ret = view_stack_.front()->SetUserAgent(std::string(msg_value));
+
+  if (TYPE_BEGIN("xwalk://")) {
+    auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+    extension_server->HandleIPCMessage(msg);
+  } else {
+    Eina_Stringshare* msg_id = ewk_ipc_wrt_message_data_id_get(msg);
+    Eina_Stringshare* msg_ref_id =
+        ewk_ipc_wrt_message_data_reference_id_get(msg);
+    Eina_Stringshare* msg_value = ewk_ipc_wrt_message_data_value_get(msg);
+
+    if (TYPE_IS("tizen://hide")) {
+      // One Way Message
+      window_->InActive();
+    } else if (TYPE_IS("tizen://exit")) {
+      // One Way Message
+      ecore_idler_add(ExitAppIdlerCallback, this);
+    } else if (TYPE_IS("tizen://changeUA")) {
+      // Async Message
+      // Change UserAgent of current WebView
+      bool ret = false;
+      if (view_stack_.size() > 0 && view_stack_.front() != NULL) {
+        ret = view_stack_.front()->SetUserAgent(std::string(msg_value));
+      }
+      // Send response
+      Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+      ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+      ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+      if (ret)
+        ewk_ipc_wrt_message_data_value_set(ans, "success");
+      else
+        ewk_ipc_wrt_message_data_value_set(ans, "failed");
+      if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+        LOGGER(ERROR) << "Failed to send response";
+      }
+      ewk_ipc_wrt_message_data_del(ans);
+    } else if (TYPE_IS("tizen://deleteAllCookies")) {
+      Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
+      ewk_ipc_wrt_message_data_type_set(ans, msg_type);
+      ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
+      if (ClearCookie(ewk_context_))
+        ewk_ipc_wrt_message_data_value_set(ans, "success");
+      else
+        ewk_ipc_wrt_message_data_value_set(ans, "failed");
+      if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
+        LOGGER(ERROR) << "Failed to send response";
+      }
+      ewk_ipc_wrt_message_data_del(ans);
+    } else if (TYPE_IS("tizen://hide_splash_screen")) {
+      splash_screen_->HideSplashScreen(SplashScreen::HideReason::CUSTOM);
     }
-    // Send response
-    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
-    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
-    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
-    if (ret)
-      ewk_ipc_wrt_message_data_value_set(ans, "success");
-    else
-      ewk_ipc_wrt_message_data_value_set(ans, "failed");
-    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
-      LOGGER(ERROR) << "Failed to send response";
-    }
-    ewk_ipc_wrt_message_data_del(ans);
-  } else if (TYPE_IS("tizen://deleteAllCookies")) {
-    Ewk_IPC_Wrt_Message_Data* ans = ewk_ipc_wrt_message_data_new();
-    ewk_ipc_wrt_message_data_type_set(ans, msg_type);
-    ewk_ipc_wrt_message_data_reference_id_set(ans, msg_id);
-    if (ClearCookie(ewk_context_))
-      ewk_ipc_wrt_message_data_value_set(ans, "success");
-    else
-      ewk_ipc_wrt_message_data_value_set(ans, "failed");
-    if (!ewk_ipc_wrt_message_send(ewk_context_, ans)) {
-      LOGGER(ERROR) << "Failed to send response";
-    }
-    ewk_ipc_wrt_message_data_del(ans);
-  } else if (TYPE_IS("tizen://hide_splash_screen")) {
-    splash_screen_->HideSplashScreen(SplashScreen::HideReason::CUSTOM);
+
+    eina_stringshare_del(msg_ref_id);
+    eina_stringshare_del(msg_id);
+    eina_stringshare_del(msg_value);
   }
 
-
 #undef TYPE_IS
+#undef TYPE_BEGIN
 
-  eina_stringshare_del(msg_value);
   eina_stringshare_del(msg_type);
-  eina_stringshare_del(msg_ref_id);
-  eina_stringshare_del(msg_id);
 }
 
 void WebApplication::OnOrientationLock(
@@ -808,7 +819,7 @@ void WebApplication::OnNotificationPermissionRequest(
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_.get(), kNotificationPrivilege)) {
+      FindPrivilege(app_data_, kNotificationPrivilege)) {
     result_handler(true);
     return;
   }
@@ -848,7 +859,7 @@ void WebApplication::OnGeolocationPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_.get(), kLocationPrivilege)) {
+  if (!FindPrivilege(app_data_, kLocationPrivilege)) {
     result_handler(false);
     return;
   }
@@ -893,7 +904,7 @@ void WebApplication::OnQuotaExceed(WebView*, const std::string& url,
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_.get(), kStoragePrivilege)) {
+      FindPrivilege(app_data_, kStoragePrivilege)) {
     result_handler(true);
     return;
   }
@@ -988,7 +999,7 @@ void WebApplication::OnUsermediaPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_.get(), kUsermediaPrivilege)) {
+  if (!FindPrivilege(app_data_, kUsermediaPrivilege)) {
     result_handler(false);
     return;
   }

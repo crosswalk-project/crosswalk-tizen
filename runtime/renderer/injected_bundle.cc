@@ -36,24 +36,6 @@
 
 namespace runtime {
 
-static const char* kPreloadLibs[] = {
-  "/usr/lib/tizen-extensions-crosswalk/libtizen.so",
-  "/usr/lib/tizen-extensions-crosswalk/libtizen_common.so",
-  "/usr/lib/tizen-extensions-crosswalk/libtizen_application.so",
-  "/usr/lib/tizen-extensions-crosswalk/libtizen_utils.so",
-  NULL
-};
-
-static void PreloadLibrary() {
-  for (int i = 0; kPreloadLibs[i]; i++) {
-    LOGGER(DEBUG) << "Preload libs : " << kPreloadLibs[i];
-    void* handle = dlopen(kPreloadLibs[i], RTLD_NOW|RTLD_GLOBAL);
-    if (handle == nullptr) {
-      LOGGER(DEBUG) << "Fail to load libs : " << dlerror();
-    }
-  }
-}
-
 class BundleGlobalData {
  public:
   static BundleGlobalData* GetInstance() {
@@ -68,22 +50,26 @@ class BundleGlobalData {
   }
   void Initialize(const std::string& app_id) {
     PreInitialize();
-    app_data_.reset(new common::ApplicationData(app_id));
-    app_data_->LoadManifestData();
+
+    auto appdata_manager = common::ApplicationDataManager::GetInstance();
+    common::ApplicationData* app_data =
+        appdata_manager->GetApplicationData(app_id);
+
+    app_data->LoadManifestData();
     // PreInitialized locale_manager_.reset(new common::LocaleManager);
     locale_manager_->EnableAutoUpdate(true);
-    if (app_data_->widget_info() != NULL &&
-        !app_data_->widget_info()->default_locale().empty()) {
+    if (app_data->widget_info() != NULL &&
+        !app_data->widget_info()->default_locale().empty()) {
       locale_manager_->SetDefaultLocale(
-          app_data_->widget_info()->default_locale());
+          app_data->widget_info()->default_locale());
     }
-    resource_manager_.reset(new common::ResourceManager(app_data_.get(),
+    resource_manager_.reset(new common::ResourceManager(app_data,
                             locale_manager_.get()));
     resource_manager_->set_base_resource_path(
-        app_data_->application_path());
+        app_data->application_path());
 
     auto widgetdb = extensions::WidgetPreferenceDB::GetInstance();
-    widgetdb->Initialize(app_data_.get(),
+    widgetdb->Initialize(app_data,
                          locale_manager_.get());
   }
 
@@ -96,7 +82,7 @@ class BundleGlobalData {
   ~BundleGlobalData() {}
   std::unique_ptr<common::ResourceManager> resource_manager_;
   std::unique_ptr<common::LocaleManager> locale_manager_;
-  std::unique_ptr<common::ApplicationData> app_data_;
+
   bool preInitialized;
 };
 
@@ -108,13 +94,7 @@ extern "C" unsigned int DynamicPluginVersion(void) {
 
 extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   SCOPE_PROFILE();
-  LOGGER(DEBUG) << "InjectedBundle::DynamicSetWidgetInfo !!" << tizen_id;
   ecore_init();
-
-  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
-  auto& controller = extensions::XWalkExtensionRendererController::GetInstance();
-  controller.InitializeExtensions();
-  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
 
   runtime::BundleGlobalData::GetInstance()->Initialize(tizen_id);
 }
@@ -129,18 +109,15 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
   extensions::XWalkModuleSystem::SetModuleSystemInContext(
       std::unique_ptr<extensions::XWalkModuleSystem>(), context);
 
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStartSession !!" << tizen_id;
   if (base_url == NULL || common::utils::StartsWith(base_url, "http")) {
     LOGGER(ERROR) << "External url not allowed plugin loading.";
     return;
   }
 
-  STEP_PROFILE_START("Initialize RuntimeIPCClient");
   // Initialize RuntimeIPCClient
   extensions::RuntimeIPCClient* rc =
       extensions::RuntimeIPCClient::GetInstance();
   rc->SetRoutingId(context, routing_handle);
-  STEP_PROFILE_END("Initialize RuntimeIPCClient");
 
   extensions::XWalkExtensionRendererController& controller =
       extensions::XWalkExtensionRendererController::GetInstance();
@@ -149,8 +126,7 @@ extern "C" void DynamicPluginStartSession(const char* tizen_id,
 
 extern "C" void DynamicPluginStopSession(
     const char* tizen_id, v8::Handle<v8::Context> context) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPluginStopSession !!" << tizen_id;
-
+  SCOPE_PROFILE();
   extensions::XWalkExtensionRendererController& controller =
       extensions::XWalkExtensionRendererController::GetInstance();
   controller.WillReleaseScriptContext(context);
@@ -189,19 +165,16 @@ extern "C" void DynamicDatabaseAttach(int /*attach*/) {
 }
 
 extern "C" void DynamicOnIPCMessage(const Ewk_IPC_Wrt_Message_Data& data) {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicOnIPCMessage !!";
-  extensions::RuntimeIPCClient* rc =
-      extensions::RuntimeIPCClient::GetInstance();
-  rc->HandleMessageFromRuntime(&data);
+  SCOPE_PROFILE();
+  extensions::XWalkExtensionRendererController& controller =
+    extensions::XWalkExtensionRendererController::GetInstance();
+  controller.OnReceivedIPCMessage(&data);
 }
 
 extern "C" void DynamicPreloading() {
-  LOGGER(DEBUG) << "InjectedBundle::DynamicPreloading !!";
-  runtime::PreloadLibrary();
+  SCOPE_PROFILE();
   runtime::BundleGlobalData::GetInstance()->PreInitialize();
-
-  STEP_PROFILE_START("Initialize XWalkExtensionRendererController");
-  auto& controller = extensions::XWalkExtensionRendererController::GetInstance();
-  controller.InitializeExtensions();
-  STEP_PROFILE_END("Initialize XWalkExtensionRendererController");
+  extensions::XWalkExtensionRendererController& controller =
+    extensions::XWalkExtensionRendererController::GetInstance();
+  controller.InitializeExtensionClient();
 }

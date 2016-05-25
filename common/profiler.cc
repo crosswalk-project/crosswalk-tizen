@@ -25,6 +25,7 @@
 namespace common {
 
 namespace {
+
 void PrintProfileTime(const char* step, const struct timespec& start) {
   struct timespec end;
   clock_gettime(CLOCK_REALTIME, &end);
@@ -38,14 +39,25 @@ void PrintProfileTime(const char* step, const struct timespec& start) {
 }  //  namespace
 
 void PrintProfileLog(const char* func, const char* tag) {
-  LOGGER(DEBUG) << "[PROF] [" << utils::GetCurrentMilliSeconds() << "] "
-                << func << ":" << tag;
+  LOGGER_RAW(DLOG_DEBUG, LOGGER_TAG)
+      << "[PROF] [" << utils::GetCurrentMilliSeconds() << "] "
+      << func << ":" << tag;
 }
 
 ScopeProfile::ScopeProfile(const char* step, const bool isStep)
   : step_(step), expired_(false), isStep_(isStep) {
   clock_gettime(CLOCK_REALTIME, &start_);
-  PrintProfileLog(step, "START");
+
+  if (!isStep) {
+    // Remove return type and parameter info from __PRETTY_FUNCTION__
+    int se = step_.find_first_of('(');
+    int ss = step_.find_last_of(' ', se) + 1;
+    if (ss < se) {
+      step_ = step_.substr(ss, se - ss);
+    }
+  }
+
+  PrintProfileLog(step_.c_str(), "START");
 
   if(isStep_)
     traceAsyncBegin(TTRACE_TAG_WEB, 0, "%s%s", "XWALK:", step_.c_str());

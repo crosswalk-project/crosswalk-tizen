@@ -68,8 +68,8 @@ bool Runtime::OnCreate() {
   std::string appid = cmd->GetAppIdFromCommandLine(kRuntimeExecName);
 
   // Load Manifest
-  std::unique_ptr<common::ApplicationData>
-      appdata(new common::ApplicationData(appid));
+  auto appdata_manager = common::ApplicationDataManager::GetInstance();
+  common::ApplicationData* appdata = appdata_manager->GetApplicationData(appid);
   if (!appdata->LoadManifestData()) {
     return false;
   }
@@ -83,7 +83,7 @@ bool Runtime::OnCreate() {
   // Init WebApplication
   native_window_ = CreateNativeWindow();
   STEP_PROFILE_START("WebApplication Create");
-  application_ = new WebApplication(native_window_, std::move(appdata));
+  application_ = new WebApplication(native_window_, appdata);
   STEP_PROFILE_END("WebApplication Create");
   application_->set_terminator([](){ ui_app_exit(); });
 

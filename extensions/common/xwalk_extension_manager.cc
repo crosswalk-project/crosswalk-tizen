@@ -5,6 +5,7 @@
 #include "extensions/common/xwalk_extension_manager.h"
 
 #include <glob.h>
+#include <dlfcn.h>
 
 #include <fstream>
 #include <set>
@@ -20,6 +21,10 @@
 #include "extensions/common/constants.h"
 #include "extensions/common/xwalk_extension.h"
 
+#ifndef EXTENSION_PATH
+  #error EXTENSION_PATH is not set.
+#endif
+
 namespace extensions {
 
 namespace {
@@ -30,6 +35,14 @@ const char kExtensionPrefix[] = "lib";
 const char kExtensionSuffix[] = ".so";
 const char kExtensionMetadataSuffix[] = ".json";
 
+static const char* kPreloadLibs[] = {
+  EXTENSION_PATH"/libtizen.so",
+  EXTENSION_PATH"/libtizen_common.so",
+  EXTENSION_PATH"/libtizen_application.so",
+  EXTENSION_PATH"/libtizen_utils.so",
+  NULL
+};
+
 }  // namespace
 
 XWalkExtensionManager::XWalkExtensionManager() {
@@ -38,22 +51,30 @@ XWalkExtensionManager::XWalkExtensionManager() {
 XWalkExtensionManager::~XWalkExtensionManager() {
 }
 
+void XWalkExtensionManager::PreloadExtensions() {
+  for (int i = 0; kPreloadLibs[i]; i++) {
+    LOGGER(DEBUG) << "Preload libs : " << kPreloadLibs[i];
+    void* handle = dlopen(kPreloadLibs[i], RTLD_NOW|RTLD_GLOBAL);
+    if (handle == nullptr) {
+      LOGGER(WARN) << "Fail to load libs : " << dlerror();
+    }
+  }
+}
+
 void XWalkExtensionManager::LoadExtensions(bool meta_only) {
   if (!extensions_.empty()) {
     return;
   }
 
-#ifdef EXTENSION_PATH
   std::string extension_path(EXTENSION_PATH);
-#else
-  #error EXTENSION_PATH is not set.
-#endif
+
   // Gets all extension files in the EXTENSION_PATH
   std::string ext_pattern(extension_path);
   ext_pattern.append("/");
   ext_pattern.append(kExtensionPrefix);
   ext_pattern.append("*");
   ext_pattern.append(kExtensionSuffix);
+
   StringSet files;
   {
     glob_t glob_result;
@@ -131,11 +152,7 @@ void XWalkExtensionManager::RegisterExtension(XWalkExtension* extension) {
 
 void XWalkExtensionManager::RegisterExtensionsByMeta(
     const std::string& meta_path, StringSet* files) {
-#ifdef EXTENSION_PATH
   std::string extension_path(EXTENSION_PATH);
-#else
-  #error EXTENSION_PATH is not set.
-#endif
 
   std::ifstream metafile(meta_path.c_str());
   if (!metafile.is_open()) {

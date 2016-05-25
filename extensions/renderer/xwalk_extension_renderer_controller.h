@@ -6,7 +6,9 @@
 #ifndef XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_RENDERER_CONTROLLER_H_
 #define XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_RENDERER_CONTROLLER_H_
 
+#include <ewk_chromium.h>
 #include <v8/v8.h>
+
 #include <memory>
 #include <string>
 
@@ -21,14 +23,15 @@ class XWalkExtensionRendererController {
   void DidCreateScriptContext(v8::Handle<v8::Context> context);
   void WillReleaseScriptContext(v8::Handle<v8::Context> context);
 
-  void InitializeExtensions();
+  void OnReceivedIPCMessage(const Ewk_IPC_Wrt_Message_Data* data);
+
+  void InitializeExtensionClient();
 
  private:
   XWalkExtensionRendererController();
   virtual ~XWalkExtensionRendererController();
 
  private:
-  bool initialized_;
   std::unique_ptr<XWalkExtensionClient> extensions_client_;
 };
 

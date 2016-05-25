@@ -242,4 +242,25 @@ bool ApplicationData::LoadManifestData() {
   return true;
 }
 
+// static
+ApplicationDataManager* ApplicationDataManager::GetInstance() {
+  static ApplicationDataManager self;
+  return &self;
+}
+
+ApplicationDataManager::ApplicationDataManager() {
+}
+
+ApplicationDataManager::~ApplicationDataManager() {
+}
+
+ApplicationData* ApplicationDataManager::GetApplicationData(
+    const std::string& appid) {
+  auto it = cache_.find(appid);
+  if (it == cache_.end()) {
+    cache_[appid].reset(new ApplicationData(appid));
+  }
+  return cache_[appid].get();
+}
+
 }  // namespace common

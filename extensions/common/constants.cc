@@ -18,14 +18,13 @@
 
 namespace extensions {
 
-const char kDBusNameForExtension[] = "Extension";
-const char kDBusInterfaceNameForExtension[] = "org.tizen.xwalk.Extension";
-const char kMethodGetExtensions[] = "GetExtensions";
-const char kMethodCreateInstance[] = "CreateInstance";
-const char kMethodDestroyInstance[] = "DestroyInstance";
-const char kMethodSendSyncMessage[] = "SendSyncMessage";
-const char kMethodPostMessage[] = "PostMessage";
-const char kSignalOnMessageToJS[] = "OnMessageToJS";
-const char kMethodGetJavascriptCode[] = "GetJavascriptCode";
+const char kMethodGetExtensions[] = "xwalk://GetExtensions";
+const char kMethodCreateInstance[] = "xwalk://CreateInstance";
+const char kMethodDestroyInstance[] = "xwalk://DestroyInstance";
+const char kMethodSendSyncMessage[] = "xwalk://SendSyncMessage";
+const char kMethodPostMessage[] = "xwalk://PostMessage";
+const char kMethodGetAPIScript[] = "xwalk://GetAPIScript";
+const char kMethodPostMessageToJS[] = "xwalk://PostMessageToJS";
+
 
 }  // namespace extensions

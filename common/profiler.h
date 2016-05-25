@@ -60,7 +60,7 @@ class StepProfile {
 }  // namespace common
 
 #define SCOPE_PROFILE() \
-  common::ScopeProfile __profile(__FUNCTION__, false);
+  common::ScopeProfile __profile(__PRETTY_FUNCTION__, false);
 
 #define STEP_PROFILE_START(x) \
   common::StepProfile::GetInstance()->Start(x)

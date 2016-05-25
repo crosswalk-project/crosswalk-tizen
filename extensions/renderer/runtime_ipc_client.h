@@ -46,11 +46,34 @@ class RuntimeIPCClient {
 
   // Send message to BrowserProcess without reply
   void SendMessage(v8::Handle<v8::Context> context,
-                   const std::string& type, const std::string& value);
+                   const std::string& type,
+                   const std::string& value);
+
+  void SendMessage(v8::Handle<v8::Context> context,
+                   const std::string& type,
+                   const std::string& id,
+                   const std::string& value);
+
+  void SendMessage(v8::Handle<v8::Context> context,
+                   const std::string& type,
+                   const std::string& id,
+                   const std::string& ref_id,
+                   const std::string& value);
 
   // Send message to BrowserProcess synchronous with reply
   std::string SendSyncMessage(v8::Handle<v8::Context> context,
                               const std::string& type,
+                              const std::string& value);
+
+  std::string SendSyncMessage(v8::Handle<v8::Context> context,
+                              const std::string& type,
+                              const std::string& id,
+                              const std::string& value);
+
+  std::string SendSyncMessage(v8::Handle<v8::Context> context,
+                              const std::string& type,
+                              const std::string& id,
+                              const std::string& ref_id,
                               const std::string& value);
 
   // Send message to BrowserProcess asynchronous,

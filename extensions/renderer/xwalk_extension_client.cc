@@ -5,9 +5,10 @@
 
 #include "extensions/renderer/xwalk_extension_client.h"
 
-#include <gio/gio.h>
-#include <glib.h>
+#include <Ecore.h>
 #include <unistd.h>
+#include <v8/v8.h>
+#include <json/json.h>
 
 #include <string>
 
@@ -15,114 +16,111 @@
 #include "common/profiler.h"
 #include "common/string_utils.h"
 #include "extensions/common/constants.h"
+#include "extensions/common/xwalk_extension_server.h"
+#include "extensions/renderer/runtime_ipc_client.h"
 
 namespace extensions {
+
+namespace {
+  void* CreateInstanceInMainloop(void* data) {
+    const char* extension_name = static_cast<const char*>(data);
+    XWalkExtensionServer* server = XWalkExtensionServer::GetInstance();
+    std::string instance_id = server->CreateInstance(extension_name);
+    return static_cast<void*>(new std::string(instance_id));
+  }
+}  // namespace
 
 XWalkExtensionClient::XWalkExtensionClient() {
 }
 
 XWalkExtensionClient::~XWalkExtensionClient() {
+  for (auto it = extension_apis_.begin(); it != extension_apis_.end(); ++it) {
+    delete it->second;
+  }
+  extension_apis_.clear();
 }
 
 void XWalkExtensionClient::Initialize() {
-  manager_.LoadExtensions();
-}
-
-XWalkExtension* XWalkExtensionClient::GetExtension(
-    const std::string& extension_name) {
-  // find extension with given the extension name
-  ExtensionMap extensions = manager_.extensions();
-  auto it = extensions.find(extension_name);
-  if (it == extensions.end()) {
-    LOGGER(ERROR) << "No such extension '" << extension_name << "'";
-    return nullptr;
+  SCOPE_PROFILE();
+  if (!extension_apis_.empty()) {
+    return;
   }
 
-  return it->second;
-}
-
-XWalkExtensionClient::ExtensionMap XWalkExtensionClient::GetExtensions() {
-  return manager_.extensions();
+  XWalkExtensionServer* server = XWalkExtensionServer::GetInstance();
+  Json::Value reply = server->GetExtensions();
+  for (auto it = reply.begin(); it != reply.end(); ++it) {
+    ExtensionCodePoints* codepoint = new ExtensionCodePoints;
+    Json::Value entry_points = (*it)["entry_points"];
+    for (auto ep = entry_points.begin(); ep != entry_points.end(); ++ep) {
+      codepoint->entry_points.push_back((*ep).asString());
+    }
+    std::string name = (*it)["name"].asString();
+    extension_apis_[name] = codepoint;
+  }
 }
 
 std::string XWalkExtensionClient::CreateInstance(
+    v8::Handle<v8::Context> context,
     const std::string& extension_name, InstanceHandler* handler) {
-  std::string instance_id = common::utils::GenerateUUID();
+  void* ret = ecore_main_loop_thread_safe_call_sync(
+      CreateInstanceInMainloop,
+      static_cast<void*>(const_cast<char*>(extension_name.data())));
+  std::string* sp = static_cast<std::string*>(ret);
+  std::string instance_id = *sp;
+  delete sp;
 
-  // find extension with given the extension name
-  ExtensionMap extensions = manager_.extensions();
-  auto it = extensions.find(extension_name);
-  if (it == extensions.end()) {
-    LOGGER(ERROR) << "No such extension '" << extension_name << "'";
-    return std::string();
-  }
-
-  // create instance
-  XWalkExtensionInstance* instance = it->second->CreateInstance();
-  if (!instance) {
-    LOGGER(ERROR) << "Failed to create instance of extension '"
-                  << extension_name << "'";
-    return std::string();
-  }
-
-  // set callbacks
-  using std::placeholders::_1;
-  instance->SetPostMessageCallback([handler](const std::string& msg) {
-    if (handler) {
-      handler->HandleMessageFromNative(msg);
-    }
-  });
-
-  instances_[instance_id] = instance;
+  handlers_[instance_id] = handler;
   return instance_id;
 }
 
-void XWalkExtensionClient::DestroyInstance(const std::string& instance_id) {
-  // find instance with the given instance id
-  auto it = instances_.find(instance_id);
-  if (it == instances_.end()) {
-    LOGGER(ERROR) << "No such instance '" << instance_id << "'";
+void XWalkExtensionClient::DestroyInstance(
+    v8::Handle<v8::Context> context, const std::string& instance_id) {
+  auto it = handlers_.find(instance_id);
+  if (it == handlers_.end()) {
+    LOGGER(WARN) << "Failed to destory invalid instance id: " << instance_id;
     return;
   }
+  RuntimeIPCClient* ipc = RuntimeIPCClient::GetInstance();
+  ipc->SendMessage(context, kMethodDestroyInstance, instance_id, "");
 
-  // destroy the instance
-  XWalkExtensionInstance* instance = it->second;
-  delete instance;
-
-  instances_.erase(it);
+  handlers_.erase(it);
 }
 
 void XWalkExtensionClient::PostMessageToNative(
+    v8::Handle<v8::Context> context,
     const std::string& instance_id, const std::string& msg) {
-  // find instance with the given instance id
-  auto it = instances_.find(instance_id);
-  if (it == instances_.end()) {
-    LOGGER(ERROR) << "No such instance '" << instance_id << "'";
-    return;
-  }
-
-  // Post a message
-  XWalkExtensionInstance* instance = it->second;
-  instance->HandleMessage(msg);
+  RuntimeIPCClient* ipc = RuntimeIPCClient::GetInstance();
+  ipc->SendMessage(context, kMethodPostMessage, instance_id, msg);
 }
 
 std::string XWalkExtensionClient::SendSyncMessageToNative(
+    v8::Handle<v8::Context> context,
     const std::string& instance_id, const std::string& msg) {
-  // find instance with the given instance id
-  auto it = instances_.find(instance_id);
-  if (it == instances_.end()) {
-    LOGGER(ERROR) << "No such instance '" << instance_id << "'";
-    return std::string();
+  RuntimeIPCClient* ipc = RuntimeIPCClient::GetInstance();
+  std::string reply =
+      ipc->SendSyncMessage(context, kMethodSendSyncMessage, instance_id, msg);
+  return reply;
+}
+
+std::string XWalkExtensionClient::GetAPIScript(
+    v8::Handle<v8::Context> context,
+    const std::string& extension_name) {
+  XWalkExtensionServer* server = XWalkExtensionServer::GetInstance();
+  return server->GetAPIScript(extension_name);
+}
+
+void XWalkExtensionClient::OnReceivedIPCMessage(
+    const std::string& instance_id, const std::string& msg) {
+  auto it = handlers_.find(instance_id);
+  if (it == handlers_.end()) {
+    LOGGER(WARN) << "Failed to post the message. Invalid instance id.";
+    return;
   }
 
-  // Post a message and receive a reply message
-  std::string reply;
-  XWalkExtensionInstance* instance = it->second;
-  instance->SetSendSyncReplyCallback([&reply](const std::string& msg) {
-    reply = msg;
-  });
-  instance->HandleSyncMessage(msg);
-  return reply;
+  if (!it->second)
+    return;
+
+  it->second->HandleMessageFromNative(msg);
 }
 
 }  // namespace extensions

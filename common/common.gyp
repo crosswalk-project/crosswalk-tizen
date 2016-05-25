@@ -9,10 +9,6 @@
       'sources': [
         'command_line.h',
         'command_line.cc',
-        'dbus_client.h',
-        'dbus_client.cc',
-        'dbus_server.h',
-        'dbus_server.cc',
         'file_utils.h',
         'file_utils.cc',
         'string_utils.h',
@@ -46,7 +42,6 @@
           'capi-appfw-package-manager',
           'capi-system-system-settings',
           'dlog',
-          'gio-2.0',
           'uuid',
           'libwebappenc',
           'manifest-parser',
@@ -63,7 +58,6 @@
         'variables': {
           'packages': [
             'dlog',
-            'gio-2.0',
           ],
         },
       },
