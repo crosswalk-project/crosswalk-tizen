@@ -14,27 +14,24 @@
  *    limitations under the License.
  */
 
-#ifndef XWALK_RUNTIME_BROWSER_RUNTIME_H_
-#define XWALK_RUNTIME_BROWSER_RUNTIME_H_
+#include "runtime/browser/native_ime_window.h"
+#include "common/logger.h"
 
-#include <app.h>
-#include <memory>
-#include <string>
-
-#include "common/application_data.h"
+#include <inputmethod.h>
+#include <Elementary.h>
 
 namespace runtime {
 
-class Runtime {
- public:
-  virtual ~Runtime() = 0;
+NativeImeWindow::NativeImeWindow() {
+}
 
-  virtual int Exec(int argc, char* argv[]) = 0;
+NativeImeWindow::~NativeImeWindow() {
+}
 
-  static std::unique_ptr<Runtime> MakeRuntime(
-    common::ApplicationData* app_data);
-};
+Evas_Object* NativeImeWindow::CreateWindowInternal() {
+  elm_config_accel_preference_set("opengl");
+  return ime_get_main_window();
+}
+
 
 }  // namespace runtime
-
-#endif  // XWALK_RUNTIME_BROWSER_RUNTIME_H_

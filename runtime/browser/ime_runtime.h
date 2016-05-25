@@ -14,38 +14,40 @@
  *    limitations under the License.
  */
 
+#ifndef XWALK_RUNTIME_BROWSER_IME_RUNTIME_H_
+#define XWALK_RUNTIME_BROWSER_IME_RUNTIME_H_
+
 #include <app.h>
-#include <memory>
+#include <inputmethod.h>
 #include <string>
 
 #include "common/application_data.h"
-#include "common/command_line.h"
-#include "runtime/common/constants.h"
 #include "runtime/browser/runtime.h"
-#include "runtime/browser/ui_runtime.h"
-#ifdef IME_FEATURE_SUPPORT
-#include "runtime/browser/ime_runtime.h"
-#endif  // IME_FEATURE_SUPPORT
+#include "runtime/browser/native_window.h"
+#include "runtime/browser/ime_application.h"
 
 namespace runtime {
 
-Runtime::~Runtime() {
-}
+class ImeRuntime : public Runtime {
+ public:
+  ImeRuntime(common::ApplicationData* app_data);
+  virtual ~ImeRuntime();
 
-std::unique_ptr<Runtime> Runtime::MakeRuntime(
-    common::ApplicationData* app_data) {
-  if (app_data->app_type() == common::ApplicationData::UI) {
-    return std::unique_ptr<Runtime>(new UiRuntime(app_data));
-  }
-#ifdef IME_FEATURE_SUPPORT
-  else if (app_data->app_type() == common::ApplicationData::IME) {
-    return std::unique_ptr<Runtime>(new ImeRuntime(app_data));
-  }
-#endif  // IME_FEATURE_SUPPORT
-  else {
-    return std::unique_ptr<Runtime>(new UiRuntime(app_data));
-  }
-}
+  virtual int Exec(int argc, char* argv[]);
 
+ protected:
+  virtual void OnCreate();
+  virtual void OnTerminate();
+  virtual void OnShow(int context_id, ime_context_h context);
+  virtual void OnHide(int context_id);
+  virtual void OnAppControl();
+
+ private:
+  WebApplication* application_;
+  NativeWindow* native_window_;
+  common::ApplicationData* app_data_;
+};
 
 }  // namespace runtime
+
+#endif  // XWALK_RUNTIME_BROWSER_IME_RUNTIME_H_

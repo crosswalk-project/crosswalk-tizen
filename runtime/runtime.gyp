@@ -17,6 +17,8 @@
         'browser/runtime_process.cc',
         'browser/runtime.h',
         'browser/runtime.cc',
+        'browser/ui_runtime.h',
+        'browser/ui_runtime.cc',
         'browser/native_window.h',
         'browser/native_window.cc',
         'browser/native_app_window.h',
@@ -58,11 +60,33 @@
         ],
       },
       'conditions': [
+        ['profile == "mobile"', {
+          'defines': ['PROFILE_MOBILE'],
+        }],
         ['profile == "wearable"', {
           'defines': ['PROFILE_WEARABLE'],
         }],
+        ['profile == "tv"', {
+          'defines': ['PROFILE_TV'],
+        }],
         ['tizen_feature_rotary_event_support == 1', {
           'defines': ['ROTARY_EVENT_FEATURE_SUPPORT'],
+        }],
+        ['tizen_feature_web_ime_support == 1', {
+          'defines': ['IME_FEATURE_SUPPORT'],
+          'sources': [
+            'browser/ime_runtime.h',
+            'browser/ime_runtime.cc',
+            'browser/ime_application.h',
+            'browser/ime_application.cc',
+            'browser/native_ime_window.h',
+            'browser/native_ime_window.cc',
+          ],
+          'variables': {
+            'packages': [
+              'capi-ui-inputmethod',
+            ],
+          },
         }],
       ],
     }, # end of target 'xwalk_runtime'

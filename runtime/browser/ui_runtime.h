@@ -14,38 +14,41 @@
  *    limitations under the License.
  */
 
+#ifndef XWALK_RUNTIME_BROWSER_UI_RUNTIME_H_
+#define XWALK_RUNTIME_BROWSER_UI_RUNTIME_H_
+
 #include <app.h>
-#include <memory>
 #include <string>
 
 #include "common/application_data.h"
-#include "common/command_line.h"
-#include "runtime/common/constants.h"
 #include "runtime/browser/runtime.h"
-#include "runtime/browser/ui_runtime.h"
-#ifdef IME_FEATURE_SUPPORT
-#include "runtime/browser/ime_runtime.h"
-#endif  // IME_FEATURE_SUPPORT
+#include "runtime/browser/native_window.h"
+#include "runtime/browser/web_application.h"
 
 namespace runtime {
 
-Runtime::~Runtime() {
-}
+class UiRuntime : public Runtime {
+ public:
+  UiRuntime(common::ApplicationData* app_data);
+  virtual ~UiRuntime();
 
-std::unique_ptr<Runtime> Runtime::MakeRuntime(
-    common::ApplicationData* app_data) {
-  if (app_data->app_type() == common::ApplicationData::UI) {
-    return std::unique_ptr<Runtime>(new UiRuntime(app_data));
-  }
-#ifdef IME_FEATURE_SUPPORT
-  else if (app_data->app_type() == common::ApplicationData::IME) {
-    return std::unique_ptr<Runtime>(new ImeRuntime(app_data));
-  }
-#endif  // IME_FEATURE_SUPPORT
-  else {
-    return std::unique_ptr<Runtime>(new UiRuntime(app_data));
-  }
-}
+  virtual int Exec(int argc, char* argv[]);
 
+ protected:
+  virtual bool OnCreate();
+  virtual void OnTerminate();
+  virtual void OnPause();
+  virtual void OnResume();
+  virtual void OnAppControl(app_control_h app_control);
+  virtual void OnLanguageChanged(const std::string& language);
+  virtual void OnLowMemory();
+
+ private:
+  WebApplication* application_;
+  NativeWindow* native_window_;
+  common::ApplicationData* app_data_;
+};
 
 }  // namespace runtime
+
+#endif  // XWALK_RUNTIME_BROWSER_UI_RUNTIME_H_

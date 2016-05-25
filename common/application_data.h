@@ -41,6 +41,13 @@ namespace common {
 
 class ApplicationData {
  public:
+  enum AppType {
+    UI = 0
+#ifdef IME_FEATURE_SUPPORT
+    ,IME
+#endif  // IME_FEATURE_SUPPORT
+  };
+
   explicit ApplicationData(const std::string& appid);
   ~ApplicationData();
 
@@ -76,6 +83,7 @@ class ApplicationData {
   const std::string application_path() const { return application_path_; }
   const std::string pkg_id() const { return pkg_id_; }
   const std::string app_id() const { return app_id_; }
+  ApplicationData::AppType app_type() { return app_type_; }
 
  private:
   std::shared_ptr<const wgt::parse::AppControlInfoList>
@@ -104,10 +112,12 @@ class ApplicationData {
     csp_info_;
   std::shared_ptr<const wgt::parse::CSPInfo>
     csp_report_info_;
+  ApplicationData::AppType GetAppType();
 
   std::string application_path_;
   std::string pkg_id_;
   std::string app_id_;
+  ApplicationData::AppType app_type_;
 };
 
 
