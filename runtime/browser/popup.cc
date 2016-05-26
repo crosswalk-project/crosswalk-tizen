@@ -123,7 +123,7 @@ static Evas_Object* AddCheckBox(Evas_Object* parent) {
   Evas_Object* check = elm_check_add(parent);
   elm_object_style_set(check, kStyleDefault);
   elm_object_style_set(check, "multiline");
-  evas_object_size_hint_align_set(check, 0.1, 0.0);
+  evas_object_size_hint_align_set(check, EVAS_HINT_FILL, EVAS_HINT_FILL);
   elm_check_state_set(check, EINA_TRUE);
   return check;
 }
@@ -249,6 +249,18 @@ void Popup::SetBody(const std::string& str_id) {
   elm_label_line_wrap_set(label, ELM_WRAP_MIXED);
   elm_object_domain_translatable_part_text_set(
       label, 0, kTextDomainRuntime, str_id.c_str());
+  evas_object_color_set(label, 0, 0, 0, 255);
+  evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  elm_box_pack_end(box_, label);
+  evas_object_show(label);
+}
+
+void Popup::SetUrl(const std::string& url) {
+  Evas_Object* label = elm_label_add(box_);
+  elm_object_style_set(label, kStyleLabel);
+  elm_label_line_wrap_set(label, ELM_WRAP_MIXED);
+  elm_object_text_set(label, url.c_str());
   evas_object_color_set(label, 0, 0, 0, 255);
   evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
