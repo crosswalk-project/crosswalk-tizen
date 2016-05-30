@@ -14,27 +14,32 @@
  *    limitations under the License.
  */
 
-#ifndef XWALK_RUNTIME_BROWSER_RUNTIME_H_
-#define XWALK_RUNTIME_BROWSER_RUNTIME_H_
-
-#include <app.h>
 #include <memory>
-#include <string>
 
 #include "common/application_data.h"
+#include "common/logger.h"
+#include "runtime/browser/native_window.h"
+#include "runtime/browser/web_view.h"
+#include "runtime/browser/ime_application.h"
 
 namespace runtime {
 
-class Runtime {
- public:
-  virtual ~Runtime() = 0;
+ImeApplication::ImeApplication(
+    NativeWindow* window, common::ApplicationData* app_data)
+    : WebApplication(window, app_data) {
+}
 
-  virtual int Exec(int argc, char* argv[]) = 0;
+ImeApplication::~ImeApplication() {
+}
 
-  static std::unique_ptr<Runtime> MakeRuntime(
-    common::ApplicationData* app_data);
-};
+// override
+void ImeApplication::OnLoadFinished(WebView* view) {
+  this->WebApplication::OnLoadFinished(view);
+
+  LOGGER(DEBUG) << "LoadFinished";
+  const char* kImeActivateFunctionCallScript =
+      "(function(){WebHelperClient.impl.activate();})()";
+  view->EvalJavascript(kImeActivateFunctionCallScript);
+}
 
 }  // namespace runtime
-
-#endif  // XWALK_RUNTIME_BROWSER_RUNTIME_H_

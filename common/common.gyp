@@ -51,6 +51,11 @@
           'ttrace',
         ],
       },
+      'conditions': [
+        ['tizen_feature_web_ime_support == 1', {
+          'defines': ['IME_FEATURE_SUPPORT'],
+        }],
+      ],
       'direct_dependent_settings': {
         'libraries': [
           '-lxwalk_tizen_common',

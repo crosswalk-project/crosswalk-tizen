@@ -18,10 +18,12 @@
 
 #include <Elementary.h>
 
+#include "common/application_data.h"
 #include "common/command_line.h"
 #include "common/logger.h"
 #include "common/profiler.h"
 #include "runtime/browser/runtime.h"
+#include "runtime/common/constants.h"
 #include "runtime/browser/prelauncher.h"
 #include "runtime/browser/preload_manager.h"
 
@@ -32,6 +34,16 @@ int real_main(int argc, char* argv[]) {
   STEP_PROFILE_START("Start -> OnCreate");
   // Parse commandline.
   common::CommandLine::Init(argc, argv);
+
+  common::CommandLine* cmd = common::CommandLine::ForCurrentProcess();
+  std::string appid = cmd->GetAppIdFromCommandLine(runtime::kRuntimeExecName);
+
+  // Load Manifest
+  auto appdata_manager = common::ApplicationDataManager::GetInstance();
+  common::ApplicationData* appdata = appdata_manager->GetApplicationData(appid);
+  if (!appdata->LoadManifestData()) {
+    return false;
+  }
 
   // Default behavior, run as runtime.
   LOGGER(INFO) << "Runtime process has been created.";
@@ -53,8 +65,10 @@ int real_main(int argc, char* argv[]) {
   int ret = 0;
   // Runtime's destructor should be called before ewk_shutdown()
   {
-    runtime::Runtime runtime;
-    ret = runtime.Exec(argc, argv);
+    std::unique_ptr<runtime::Runtime> runtime =
+        runtime::Runtime::MakeRuntime(appdata);
+    ret = runtime->Exec(argc, argv);
+    runtime.reset();
   }
   ewk_shutdown();
   exit(ret);

@@ -34,6 +34,10 @@ const char* kPathSeparator = "/";
 const char* kConfigXml = "config.xml";
 const char* kResWgtPath = "res/wgt";
 
+#ifdef IME_FEATURE_SUPPORT
+const char* kImeCategory = "http://tizen.org/category/ime";
+#endif  // IME_FEATURE_SUPPORT
+
 static std::string GetPackageIdByAppId(const std::string& appid) {
   char* pkgid = NULL;
   package_manager_get_package_id_by_app_id(appid.c_str(), &pkgid);
@@ -149,6 +153,22 @@ std::shared_ptr<const wgt::parse::CSPInfo>
 }
 
 
+ApplicationData::AppType ApplicationData::GetAppType() {
+  if (category_info_list_) {
+    auto category_list = category_info_list_->categories;
+    auto it = category_list.begin();
+    auto end = category_list.end();
+    for (; it != end; ++it) {
+#ifdef IME_FEATURE_SUPPORT
+      if (*it == kImeCategory) {
+        return IME;
+      }
+#endif  // IME_FEATURE_SUPPORT
+    }
+  }
+  return UI;
+}
+
 bool ApplicationData::LoadManifestData() {
   SCOPE_PROFILE();
   std::string config_xml_path(application_path_ + kConfigXml);
@@ -238,6 +258,8 @@ bool ApplicationData::LoadManifestData() {
   if (setting_info_.get() == NULL) {
     setting_info_.reset(new wgt::parse::SettingInfo);
   }
+
+  app_type_ = GetAppType();
 
   return true;
 }
