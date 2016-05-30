@@ -69,6 +69,9 @@ class WebApplication : public WebView::EventListener {
   virtual void OnRendered(WebView* view);
   virtual void OnLanguageChanged();
   virtual void OnLowMemory();
+  virtual void OnTimeTick(long time);
+  virtual void OnAmbientTick(long time);
+  virtual void OnAmbientChanged(bool ambient_mode);
   virtual bool OnContextMenuDisabled(WebView* view);
   virtual bool OnDidNavigation(WebView* view, const std::string& url);
   virtual void OnNotificationPermissionRequest(

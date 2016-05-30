@@ -46,6 +46,9 @@ class ApplicationData {
 #ifdef IME_FEATURE_SUPPORT
     ,IME
 #endif  // IME_FEATURE_SUPPORT
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+    ,WATCH
+#endif  // WATCH_FACE_FEATURE_SUPPORT
   };
 
   explicit ApplicationData(const std::string& appid);

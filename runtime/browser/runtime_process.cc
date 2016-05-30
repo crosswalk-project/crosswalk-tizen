@@ -18,6 +18,11 @@
 
 #include <Elementary.h>
 
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+#include <bundle_internal.h>
+#include <Ecore_Wayland.h>
+#endif  // WATCH_FACE_FEATURE_SUPPORT
+
 #include "common/application_data.h"
 #include "common/command_line.h"
 #include "common/logger.h"
@@ -28,6 +33,48 @@
 #include "runtime/browser/preload_manager.h"
 
 bool g_prelaunch = false;
+
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+static int setWatchEnv(int argc, char **argv) {
+  bundle *kb = NULL;
+  char *wayland_display = NULL;
+  char *xdg_runtime_dir = NULL;
+  char *width_str = NULL;
+  char *height_str = NULL;
+
+  if (argc <= 0 || argv == NULL) {
+    errno = EINVAL;
+    LOGGER(ERROR) << "argument are invalid";
+    return -1;
+  }
+
+  kb = bundle_import_from_argv(argc, argv);
+  if (kb) {
+    bundle_get_str(kb, "XDG_RUNTIME_DIR", &xdg_runtime_dir);
+    bundle_get_str(kb, "WAYLAND_DISPLAY", &wayland_display);
+    bundle_get_str(kb, "WATCH_WIDTH", &width_str);
+    bundle_get_str(kb, "WATCH_HEIGHT", &height_str);
+
+    if (xdg_runtime_dir) {
+      LOGGER(DEBUG) << "senenv: " << xdg_runtime_dir;
+      setenv("XDG_RUNTIME_DIR", xdg_runtime_dir, 1);
+    } else {
+      LOGGER(ERROR) << "failed to get xdgruntimedir";
+    }
+
+    if (wayland_display) {
+      LOGGER(DEBUG) << "setenv: " << wayland_display;
+      setenv("WAYLAND_DISPLAY", wayland_display, 1);
+    } else {
+      LOGGER(ERROR) << "failed to get waylanddisplay";
+    }
+    bundle_free(kb);
+  } else {
+    LOGGER(ERROR) << "failed to get launch argv";
+  }
+  return 0;
+}
+#endif  // WATCH_FACE_FEATURE_SUPPORT
 
 int real_main(int argc, char* argv[]) {
   STEP_PROFILE_START("Start -> Launch Completed");
@@ -45,6 +92,12 @@ int real_main(int argc, char* argv[]) {
     return false;
   }
 
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+  if (appdata->app_type() == common::ApplicationData::WATCH) {
+    setWatchEnv(argc, argv);
+  }
+#endif  // WATCH_FACE_FEATURE_SUPPORT
+
   // Default behavior, run as runtime.
   LOGGER(INFO) << "Runtime process has been created.";
   if (!g_prelaunch) {
@@ -60,6 +113,13 @@ int real_main(int argc, char* argv[]) {
     const int chromium_arg_cnt =
         sizeof(chromium_arg_options) / sizeof(chromium_arg_options[0]);
     ewk_set_arguments(chromium_arg_cnt, chromium_arg_options);
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+  } else {
+    if (appdata->app_type() == common::ApplicationData::WATCH) {
+      ecore_wl_shutdown();
+      ecore_wl_init(NULL);
+    }
+#endif  // WATCH_FACE_FEATURE_SUPPORT
   }
 
   int ret = 0;

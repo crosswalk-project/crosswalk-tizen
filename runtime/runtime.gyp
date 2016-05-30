@@ -88,6 +88,21 @@
             ],
           },
         }],
+        ['tizen_feature_watch_face_support == 1', {
+          'defines': ['WATCH_FACE_FEATURE_SUPPORT'],
+          'sources': [
+            'browser/watch_runtime.h',
+            'browser/watch_runtime.cc',
+            'browser/native_watch_window.h',
+            'browser/native_watch_window.cc',
+          ],
+          'variables': {
+            'packages': [
+              'capi-appfw-watch-application',
+              'appcore-watch',
+            ],
+          },
+        }],
       ],
     }, # end of target 'xwalk_runtime'
     {

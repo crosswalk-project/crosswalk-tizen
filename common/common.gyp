@@ -54,6 +54,8 @@
       'conditions': [
         ['tizen_feature_web_ime_support == 1', {
           'defines': ['IME_FEATURE_SUPPORT'],
+        ['tizen_feature_watch_face_support == 1', {
+          'defines': ['WATCH_FACE_FEATURE_SUPPORT'],
         }],
       ],
       'direct_dependent_settings': {
