@@ -37,6 +37,10 @@ const char* kResWgtPath = "res/wgt";
 #ifdef IME_FEATURE_SUPPORT
 const char* kImeCategory = "http://tizen.org/category/ime";
 #endif  // IME_FEATURE_SUPPORT
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+const char* kIdleClockCategory = "com.samsung.wmanager.WATCH_CLOCK";
+const char* kWearableClockCategory = "http://tizen.org/category/wearable_clock";
+#endif  // WATCH_FACE_FEATURE_SUPPORT
 
 static std::string GetPackageIdByAppId(const std::string& appid) {
   char* pkgid = NULL;
@@ -164,6 +168,11 @@ ApplicationData::AppType ApplicationData::GetAppType() {
         return IME;
       }
 #endif  // IME_FEATURE_SUPPORT
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+      if (*it == kIdleClockCategory || *it == kWearableClockCategory) {
+        return WATCH;
+      }
+#endif  // WATCH_FACE_FEATURE_SUPPORT
     }
   }
   return UI;

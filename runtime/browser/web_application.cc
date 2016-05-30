@@ -91,6 +91,15 @@ const char* kMenuKeyEventScript =
     "for (var i=0; i < window.frames.length; i++)\n"
     "{ window.frames[i].document.dispatchEvent(__event); }"
     "})()";
+const char* kAmbientTickEventScript =
+    "(function(){"
+    "var __event = document.createEvent(\"CustomEvent\");\n"
+    "__event.initCustomEvent(\"timetick\", true, true);\n"
+    "document.dispatchEvent(__event);\n"
+    "\n"
+    "for (var i=0; i < window.frames.length; i++)\n"
+    "{ window.frames[i].document.dispatchEvent(__event); }"
+    "})()";
 const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
 const char* kFullscreenFeature = "fullscreen";
 const char* kNotificationPrivilege = "http://tizen.org/privilege/notification";
@@ -733,6 +742,40 @@ void WebApplication::OnRotaryEvent(WebView* /*view*/,
     view_stack_.front()->EvalJavascript(kRotaryEventScript.c_str());
 }
 #endif  // ROTARY_EVENT_FEATURE_SUPPORT
+
+void WebApplication::OnTimeTick(long time) {
+#if 0
+  LOGGER(DEBUG) << "TimeTick";
+  if (view_stack_.size() > 0 && view_stack_.front() != NULL)
+    view_stack_.front()->EvalJavascript(kAmbientTickEventScript);
+#endif
+}
+
+void WebApplication::OnAmbientTick(long time) {
+  LOGGER(DEBUG) << "AmbientTick";
+  if (view_stack_.size() > 0 && view_stack_.front() != NULL)
+    view_stack_.front()->EvalJavascript(kAmbientTickEventScript);
+}
+
+void WebApplication::OnAmbientChanged(bool ambient_mode) {
+  LOGGER(DEBUG) << "AmbientChanged";
+  std::stringstream script;
+  script
+    << "(function(){"
+    << "var __event = document.createEvent(\"CustomEvent\");\n"
+    << "var __detail = {};\n"
+    << "__event.initCustomEvent(\"ambientmodechanged\",true,true,__detail);\n"
+    << "__event.detail.ambientMode = "
+    << (ambient_mode ? "true" : "false") << ";\n"
+    << "document.dispatchEvent(__event);\n"
+    << "\n"
+    << "for (var i=0; i < window.frames.length; i++)\n"
+    << "{ window.frames[i].document.dispatchEvent(__event); }"
+    << "})()";
+  std::string kAmbientChangedEventScript = script.str();
+  if (view_stack_.size() > 0 && view_stack_.front() != NULL)
+    view_stack_.front()->EvalJavascript(kAmbientChangedEventScript.c_str());
+}
 
 bool WebApplication::OnContextMenuDisabled(WebView* /*view*/) {
   return !(app_data_->setting_info() != NULL

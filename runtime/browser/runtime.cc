@@ -26,6 +26,9 @@
 #ifdef IME_FEATURE_SUPPORT
 #include "runtime/browser/ime_runtime.h"
 #endif  // IME_FEATURE_SUPPORT
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+#include "runtime/browser/watch_runtime.h"
+#endif  // WATCH_FACE_FEATURE_SUPPORT
 
 namespace runtime {
 
@@ -42,6 +45,11 @@ std::unique_ptr<Runtime> Runtime::MakeRuntime(
     return std::unique_ptr<Runtime>(new ImeRuntime(app_data));
   }
 #endif  // IME_FEATURE_SUPPORT
+#ifdef WATCH_FACE_FEATURE_SUPPORT
+  else if (app_data->app_type() == common::ApplicationData::WATCH) {
+    return std::unique_ptr<Runtime>(new WatchRuntime(app_data));
+  }
+#endif  // WATCH_FACE_FEATURE_SUPPORT
   else {
     return std::unique_ptr<Runtime>(new UiRuntime(app_data));
   }
