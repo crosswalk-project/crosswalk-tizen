@@ -64,6 +64,7 @@ class Popup {
   // etc.
   void SetTitle(const std::string& str_id);
   void SetBody(const std::string& str_id);
+  void SetUrl(const std::string& url);
   void SetResultHandler(std::function
       <void(Popup* popup, void* user_data)> handler, void* user_data);
 

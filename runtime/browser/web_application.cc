@@ -951,7 +951,7 @@ void WebApplication::OnAuthenticationRequest(
 }
 
 void WebApplication::OnCertificateAllowRequest(
-    WebView*, const std::string& /*url*/, const std::string& pem,
+    WebView*, const std::string& url, const std::string& pem,
     std::function<void(bool allow)> result_handler) {
   auto db = common::AppDB::GetInstance();
   std::string reminder =
@@ -968,6 +968,7 @@ void WebApplication::OnCertificateAllowRequest(
   popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
   popup->SetTitle(popup_string::kPopupTitleCert);
   popup->SetBody(popup_string::kPopupBodyCert);
+  popup->SetUrl(url);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
       [db, result_handler, pem](Popup* popup, void* /*user_data*/) {
