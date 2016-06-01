@@ -496,6 +496,8 @@ void WebApplication::Terminate() {
   } else {
     elm_exit();
   }
+  auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+  extension_server->Shutdown();
 }
 
 void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
@@ -542,7 +544,6 @@ void WebApplication::OnClosedWebView(WebView* view) {
 
 void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
                                           Ewk_IPC_Wrt_Message_Data* msg) {
-  SCOPE_PROFILE();
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
 
 #define TYPE_BEGIN(x) (!strncmp(msg_type, x, strlen(x)))

@@ -108,6 +108,13 @@ void XWalkExtensionManager::LoadExtensions(bool meta_only) {
   }
 }
 
+void XWalkExtensionManager::UnloadExtensions() {
+  for (auto it = extensions_.begin(); it != extensions_.end(); ++it) {
+    delete it->second;
+  }
+  extensions_.clear();
+}
+
 bool XWalkExtensionManager::RegisterSymbols(XWalkExtension* extension) {
   std::string name = extension->name();
 

@@ -26,6 +26,8 @@ class XWalkExtensionManager : public XWalkExtension::XWalkExtensionDelegate {
   void LoadExtensions(bool meta_only = true);
   void PreloadExtensions();
 
+  void UnloadExtensions();
+
  private:
   // override
   void GetRuntimeVariable(const char* key, char* value, size_t value_len);
