@@ -48,8 +48,10 @@ void XWalkExtensionAdapter::UnregisterExtension(XWalkExtension* extension) {
     LOGGER(WARN) << "xw_extension (" << xw_extension << ") is invalid.";
     return;
   }
-  if (extension_map_.find(xw_extension) != extension_map_.end())
-    extension_map_.erase(xw_extension);
+  auto it = extension_map_.find(xw_extension);
+  if (it != extension_map_.end()) {
+    extension_map_.erase(it);
+  }
 }
 
 void XWalkExtensionAdapter::RegisterInstance(
@@ -70,8 +72,10 @@ void XWalkExtensionAdapter::UnregisterInstance(
     LOGGER(WARN) << "xw_instance (" << xw_instance << ") is invalid.";
     return;
   }
-  if (instance_map_.find(xw_instance) != instance_map_.end())
-    instance_map_.erase(xw_instance);
+  auto it = instance_map_.find(xw_instance);
+  if (it != instance_map_.end()) {
+    instance_map_.erase(it);
+  }
 }
 
 const void* XWalkExtensionAdapter::GetInterface(const char* name) {

@@ -28,6 +28,8 @@ class XWalkExtensionServer {
 
   void HandleIPCMessage(Ewk_IPC_Wrt_Message_Data* data);
 
+  void Shutdown();
+
  private:
   XWalkExtensionServer();
   virtual ~XWalkExtensionServer();

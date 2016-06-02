@@ -49,7 +49,6 @@ XWalkExtension::XWalkExtension(const std::string& path,
 XWalkExtension::~XWalkExtension() {
   if (!initialized_)
     return;
-
   if (shutdown_callback_)
     shutdown_callback_(xw_extension_);
   XWalkExtensionAdapter::GetInstance()->UnregisterExtension(this);

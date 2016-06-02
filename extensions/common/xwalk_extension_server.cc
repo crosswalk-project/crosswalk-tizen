@@ -37,6 +37,14 @@ void XWalkExtensionServer::Preload() {
   manager_.PreloadExtensions();
 }
 
+void XWalkExtensionServer::Shutdown() {
+  for (auto it = instances_.begin(); it != instances_.end(); ++it) {
+    delete it->second;
+  }
+  instances_.clear();
+  manager_.UnloadExtensions();
+}
+
 Json::Value XWalkExtensionServer::GetExtensions() {
   Json::Value out;
   auto extensions = manager_.extensions();
