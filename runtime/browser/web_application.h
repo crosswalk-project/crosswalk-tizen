@@ -41,6 +41,9 @@ class WebApplication : public WebView::EventListener {
  public:
   WebApplication(NativeWindow* window,
                  common::ApplicationData* app_data);
+  WebApplication(NativeWindow* window,
+                 common::ApplicationData* app_data,
+                 Ewk_Context* context);
   virtual ~WebApplication();
 
   void AppControl(std::unique_ptr<common::AppControl> appcontrol);
@@ -112,6 +115,7 @@ class WebApplication : public WebView::EventListener {
   bool debug_mode_;
   bool verbose_mode_;
   Ewk_Context* ewk_context_;
+  bool has_ownership_of_ewk_context_;
   NativeWindow* window_;
   std::string appid_;
   std::string app_data_path_;

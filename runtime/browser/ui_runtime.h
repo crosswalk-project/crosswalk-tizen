@@ -25,6 +25,8 @@
 #include "runtime/browser/native_window.h"
 #include "runtime/browser/web_application.h"
 
+class Ewk_Context;
+
 namespace runtime {
 
 class UiRuntime : public Runtime {
@@ -44,8 +46,11 @@ class UiRuntime : public Runtime {
   virtual void OnLowMemory();
 
  private:
-  WebApplication* application_;
-  NativeWindow* native_window_;
+  void ResetWebApplication(NativeWindow::Type windowType);
+
+  std::unique_ptr<NativeWindow> native_window_;
+  std::unique_ptr<WebApplication> application_;
+  Ewk_Context* context_;
   common::ApplicationData* app_data_;
 };
 

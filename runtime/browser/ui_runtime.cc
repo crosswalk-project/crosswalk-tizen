@@ -14,9 +14,14 @@
  *    limitations under the License.
  */
 
+#include "runtime/browser/runtime.h"
+
 #include <ewk_chromium.h>
+#include <Ecore.h>
+
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "common/application_data.h"
 #include "common/app_control.h"
@@ -26,38 +31,88 @@
 #include "common/profiler.h"
 #include "runtime/common/constants.h"
 #include "runtime/browser/native_app_window.h"
+#include "runtime/browser/notification_window.h"
 #include "runtime/browser/preload_manager.h"
-#include "runtime/browser/runtime.h"
 #include "runtime/browser/ui_runtime.h"
 
 namespace runtime {
 
 namespace {
 
-static NativeWindow* CreateNativeWindow() {
+const char kCategoryAlwaysOnTop[] = "http://tizen.org/category/always_on_top";
+
+static NativeWindow* CreateNativeWindow(NativeWindow::Type windowType) {
   SCOPE_PROFILE();
-  // TODO(wy80.choi) : consider other type of native window.
-  auto cached = PreloadManager::GetInstance()->GetCachedNativeWindow();
-  NativeWindow* window = cached != nullptr ? cached : new NativeAppWindow();
+
+  NativeWindow* window;
+
+  switch (windowType) {
+    case NativeWindow::Type::NORMAL: {
+      auto cached = PreloadManager::GetInstance()->GetCachedNativeWindow();
+      window = cached != nullptr ? cached : new NativeAppWindow();
+    }
+    break;
+    case NativeWindow::Type::NOTIFICATION: {
+      PreloadManager::GetInstance()->ReleaseCachedNativeWindow();
+      NotificationWindow* win = new NotificationWindow();
+      window = win;
+    }
+    break;
+  }
+
   window->Initialize();
   return window;
+}
+
+bool HasAlwaysTopCategory(
+    const std::vector<std::string>& category_info_list) {
+  for (const auto& category : category_info_list) {
+      if (strcmp(category.c_str(), kCategoryAlwaysOnTop) == 0)
+        return true;
+    }
+    return false;
+}
+
+bool AlwaysTopRequested(common::AppControl* appcontrol) {
+  return appcontrol->data("always_on_top") == "true";
 }
 
 }  // namespace
 
 UiRuntime::UiRuntime(common::ApplicationData* app_data)
-    : application_(NULL),
-      native_window_(NULL),
+    : native_window_(nullptr),
+      application_(nullptr),
+      context_(
+        ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       app_data_(app_data) {
 }
 
 UiRuntime::~UiRuntime() {
-  if (application_) {
-    delete application_;
-  }
-  if (native_window_) {
-    delete native_window_;
-  }
+  application_.reset();
+  native_window_.reset();
+  if (context_)
+      ewk_context_delete(context_);
+}
+
+void UiRuntime::ResetWebApplication(NativeWindow::Type windowType) {
+  STEP_PROFILE_START("Runtime ResetWebApplication");
+
+  LOGGER(DEBUG) << "runtime.cc ResetWebApplication() started";
+
+  application_.reset();
+  native_window_.reset();
+
+  native_window_.reset(CreateNativeWindow(windowType));
+  LOGGER(DEBUG) << "runtime.cc Created native window";
+  application_.reset(new WebApplication(native_window_.get(),
+                                        app_data_,
+                                        context_));
+  LOGGER(DEBUG) << "runtime.cc created web application";
+  application_->set_terminator([](){ ui_app_exit(); });
+
+  LOGGER(DEBUG) << "runtime.cc ResetWebApplication() finished";
+
+  STEP_PROFILE_END("Runtime ResetWebApplication");
 }
 
 bool UiRuntime::OnCreate() {
@@ -74,12 +129,7 @@ bool UiRuntime::OnCreate() {
   appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeAppID, appid);
   appdb->Remove(kAppDBRuntimeSection, kAppDBRuntimeBundle);
 
-  // Init WebApplication
-  native_window_ = CreateNativeWindow();
-  STEP_PROFILE_START("WebApplication Create");
-  application_ = new WebApplication(native_window_, app_data_);
-  STEP_PROFILE_END("WebApplication Create");
-  application_->set_terminator([](){ ui_app_exit(); });
+  ResetWebApplication(NativeWindow::Type::NORMAL);
 
   setlocale(LC_ALL, "");
   bindtextdomain(kTextDomainRuntime, kTextLocalePath);
@@ -109,6 +159,30 @@ void UiRuntime::OnAppControl(app_control_h app_control) {
   common::AppDB* appdb = common::AppDB::GetInstance();
   appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeBundle,
              appcontrol->encoded_bundle());
+
+  bool reset_webapp = false;
+  NativeWindow::Type type;
+  if (AlwaysTopRequested(appcontrol.get()) &&
+      HasAlwaysTopCategory(app_data_->category_info_list()->categories)) {
+    if (native_window_->type() != NativeWindow::Type::NOTIFICATION) {
+      type = NativeWindow::Type::NOTIFICATION;
+      reset_webapp = true;
+    }
+  } else {
+    if (native_window_->type() != NativeWindow::Type::NORMAL) {
+      type = NativeWindow::Type::NORMAL;
+      reset_webapp = true;
+    }
+  }
+
+  if (reset_webapp) {
+    ResetWebApplication(type);
+    // TODO(t.iwanek): there is still problem with rendering content if
+    // window is replaced ewk won't render page.
+    // This looks the same as for workaround removed in: PR #80
+    native_window_->Show();
+  }
+
   if (application_->launched()) {
     application_->AppControl(std::move(appcontrol));
   } else {

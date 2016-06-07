@@ -23,6 +23,8 @@
         'browser/native_window.cc',
         'browser/native_app_window.h',
         'browser/native_app_window.cc',
+        'browser/notification_window.h',
+        'browser/notification_window.cc',
         'browser/web_application.h',
         'browser/web_application.cc',
         'browser/web_view.h',
@@ -47,6 +49,7 @@
       'variables': {
         'packages': [
           'capi-appfw-application',
+          'capi-ui-efl-util',
           'chromium-efl',
           'ecore',
           'ecore-wayland',
