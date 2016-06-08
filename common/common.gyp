@@ -39,6 +39,7 @@
           'appsvc',
           'aul',
           'capi-appfw-application',
+          'capi-appfw-app-manager',
           'capi-appfw-package-manager',
           'capi-system-system-settings',
           'dlog',

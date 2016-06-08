@@ -84,7 +84,7 @@ class ApplicationData {
     csp_report_info() const;
 
   const std::string application_path() const { return application_path_; }
-  const std::string pkg_id() const { return pkg_id_; }
+  const std::string pkg_id() const;
   const std::string app_id() const { return app_id_; }
   ApplicationData::AppType app_type() { return app_type_; }
 
@@ -118,9 +118,10 @@ class ApplicationData {
   ApplicationData::AppType GetAppType();
 
   std::string application_path_;
-  std::string pkg_id_;
+  mutable std::string pkg_id_;
   std::string app_id_;
   ApplicationData::AppType app_type_;
+  bool loaded_;
 };
 
 
