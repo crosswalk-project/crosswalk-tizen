@@ -1,0 +1,6 @@
+[LOADER]
+NAME              wrt-loader                  
+EXE               /usr/bin/wrt-loader
+APP_TYPE          webapp
+DETECTION_METHOD  TIMEOUT|DEMAND
+TIMEOUT           5000

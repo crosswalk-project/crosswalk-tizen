@@ -13,6 +13,7 @@ License:    Apache-2.0 and BSD-3-Clause
 URL:        https://www.tizen.org
 Source0:    %{name}-%{version}.tar.gz
 Source1001: %{name}.manifest
+Source1002: wrt.loader
 
 BuildRequires: boost-devel
 BuildRequires: edje-tools
@@ -124,6 +125,10 @@ mkdir -p %{buildroot}%{extension_path}
 cp LICENSE %{buildroot}%{_datadir}/license/%{name}
 cat LICENSE.BSD >> %{buildroot}%{_datadir}/license/%{name}
 
+# Loader script file
+mkdir -p %{buildroot}%{_datadir}/aul/
+cp %{SOURCE1002} %{buildroot}%{_datadir}/aul/
+
 # xwalk_common
 install -p -m 644 out/Default/lib/libxwalk_tizen_common.so %{buildroot}%{_libdir}
 
@@ -170,4 +175,5 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/xwalk_runtime
 %attr(755,root,root) %{_bindir}/wrt
 %attr(755,root,root) %{_bindir}/wrt-loader
+%attr(644,root,root) %{_datadir}/aul/wrt.loader
 %caps(cap_mac_admin,cap_mac_override,cap_setgid=ei) %{_bindir}/xwalk_runtime
