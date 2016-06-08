@@ -19,6 +19,8 @@
 #include <package_manager.h>
 #include <wgt_manifest_handlers/application_manifest_constants.h>
 #include <wgt_manifest_handlers/widget_config_parser.h>
+#include <app_manager.h>
+#include <app_common.h>
 
 #include <vector>
 
@@ -32,7 +34,7 @@ namespace {
 
 const char* kPathSeparator = "/";
 const char* kConfigXml = "config.xml";
-const char* kResWgtPath = "res/wgt";
+const char* kWgtPath = "wgt";
 
 #ifdef IME_FEATURE_SUPPORT
 const char* kImeCategory = "http://tizen.org/category/ime";
@@ -42,53 +44,15 @@ const char* kIdleClockCategory = "com.samsung.wmanager.WATCH_CLOCK";
 const char* kWearableClockCategory = "http://tizen.org/category/wearable_clock";
 #endif  // WATCH_FACE_FEATURE_SUPPORT
 
-static std::string GetPackageIdByAppId(const std::string& appid) {
-  char* pkgid = NULL;
-  package_manager_get_package_id_by_app_id(appid.c_str(), &pkgid);
-
-  std::unique_ptr<char, decltype(std::free)*>
-    pkgid_ptr {pkgid, std::free};
-
-  if (pkgid != NULL) {
-    return std::string(pkgid_ptr.get());
-  } else {
-    LOGGER(ERROR) << "Failed to get package id";
-    return std::string();
-  }
-}
-
-static std::string GetPackageRootPath(const std::string& pkgid) {
-  package_info_h pkg_info = NULL;
-  if (package_manager_get_package_info(
-        pkgid.c_str(), &pkg_info) != PACKAGE_MANAGER_ERROR_NONE) {
-    return std::string();
-  }
-
-  char* pkg_root_path = NULL;
-  package_info_get_root_path(pkg_info, &pkg_root_path);
-
-  std::unique_ptr<char, decltype(std::free)*>
-    path_ptr {pkg_root_path, std::free};
-
-  package_info_destroy(pkg_info);
-
-  if (pkg_root_path != NULL) {
-    return std::string(path_ptr.get());
-  } else {
-    LOGGER(ERROR) << "Failed to get package root path";
-    return std::string();
-  }
-}
-
-}  // namespace
-
 ApplicationData::ApplicationData(const std::string& appid)
   : app_id_(appid),
     loaded_(false) {
-  pkg_id_ = GetPackageIdByAppId(appid);
-  if (!pkg_id_.empty())
-    application_path_ = GetPackageRootPath(pkg_id_) + kPathSeparator
-                        + kResWgtPath + kPathSeparator;
+  SCOPE_PROFILE();
+  char* res_path = app_get_resource_path();
+  if (res_path != NULL) {
+    application_path_ = std::string(res_path) + kWgtPath + kPathSeparator;
+    free(res_path);
+  }
 }
 
 ApplicationData::~ApplicationData() {}
@@ -158,6 +122,23 @@ std::shared_ptr<const wgt::parse::CSPInfo>
   return csp_report_info_;
 }
 
+const std::string ApplicationData::pkg_id() const {
+  SCOPE_PROFILE();
+  if (pkg_id_.empty()) {
+    app_info_h app_info;
+    int ret = app_info_create(app_id_.c_str(), &app_info);
+    if (ret == APP_MANAGER_ERROR_NONE) {
+      char* pkg = NULL;
+      ret = app_info_get_package(app_info, &pkg);
+      if (ret == APP_MANAGER_ERROR_NONE && pkg != NULL) {
+        pkg_id_ = pkg;
+        free(pkg);
+      }
+      app_info_destroy(app_info);
+    }
+  }
+  return pkg_id_;
+}
 
 ApplicationData::AppType ApplicationData::GetAppType() {
   if (category_info_list_) {
