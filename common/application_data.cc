@@ -44,6 +44,8 @@ const char* kIdleClockCategory = "com.samsung.wmanager.WATCH_CLOCK";
 const char* kWearableClockCategory = "http://tizen.org/category/wearable_clock";
 #endif  // WATCH_FACE_FEATURE_SUPPORT
 
+}  // namespace
+
 ApplicationData::ApplicationData(const std::string& appid)
   : app_id_(appid),
     loaded_(false) {
