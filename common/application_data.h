@@ -121,6 +121,7 @@ class ApplicationData {
   std::string pkg_id_;
   std::string app_id_;
   ApplicationData::AppType app_type_;
+  bool loaded_;
 };
 
 

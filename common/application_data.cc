@@ -82,7 +82,9 @@ static std::string GetPackageRootPath(const std::string& pkgid) {
 
 }  // namespace
 
-ApplicationData::ApplicationData(const std::string& appid) : app_id_(appid) {
+ApplicationData::ApplicationData(const std::string& appid)
+  : app_id_(appid),
+    loaded_(false) {
   pkg_id_ = GetPackageIdByAppId(appid);
   if (!pkg_id_.empty())
     application_path_ = GetPackageRootPath(pkg_id_) + kPathSeparator
@@ -179,7 +181,12 @@ ApplicationData::AppType ApplicationData::GetAppType() {
 }
 
 bool ApplicationData::LoadManifestData() {
+  if (loaded_) {
+    return true;
+  }
+
   SCOPE_PROFILE();
+
   std::string config_xml_path(application_path_ + kConfigXml);
   if (!utils::Exists(config_xml_path)) {
     LOGGER(ERROR) << "Failed to load manifest data : No such file '"
@@ -269,6 +276,8 @@ bool ApplicationData::LoadManifestData() {
   }
 
   app_type_ = GetAppType();
+
+  loaded_ = true;
 
   return true;
 }
