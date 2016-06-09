@@ -12,6 +12,7 @@
 #include "extensions/common/xwalk_extension_instance.h"
 #include "extensions/public/XW_Extension.h"
 #include "extensions/public/XW_Extension_SyncMessage.h"
+#include "extensions/public/XW_Extension_Message_2.h"
 
 namespace extensions {
 
@@ -73,6 +74,7 @@ class XWalkExtension {
   XW_ShutdownCallback shutdown_callback_;
   XW_HandleMessageCallback handle_msg_callback_;
   XW_HandleSyncMessageCallback handle_sync_msg_callback_;
+  XW_HandleBinaryMessageCallback handle_binary_msg_callback_;
 };
 
 }  // namespace extensions

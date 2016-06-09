@@ -24,6 +24,7 @@ class XWalkExtensionManager : public XWalkExtension::XWalkExtensionDelegate {
   ExtensionMap extensions() const { return extensions_; }
 
   void LoadExtensions(bool meta_only = true);
+  void LoadUserExtensions(const std::string app_path);
   void PreloadExtensions();
 
   void UnloadExtensions();

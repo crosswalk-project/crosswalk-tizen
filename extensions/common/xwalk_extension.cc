@@ -25,7 +25,8 @@ XWalkExtension::XWalkExtension(const std::string& path,
     destroyed_instance_callback_(NULL),
     shutdown_callback_(NULL),
     handle_msg_callback_(NULL),
-    handle_sync_msg_callback_(NULL) {
+    handle_sync_msg_callback_(NULL),
+    handle_binary_msg_callback_(NULL) {
 }
 
 XWalkExtension::XWalkExtension(const std::string& path,
@@ -43,7 +44,8 @@ XWalkExtension::XWalkExtension(const std::string& path,
     destroyed_instance_callback_(NULL),
     shutdown_callback_(NULL),
     handle_msg_callback_(NULL),
-    handle_sync_msg_callback_(NULL) {
+    handle_sync_msg_callback_(NULL),
+    handle_binary_msg_callback_(NULL) {
 }
 
 XWalkExtension::~XWalkExtension() {

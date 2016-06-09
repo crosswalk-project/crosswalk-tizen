@@ -15,6 +15,7 @@
 #include "extensions/public/XW_Extension_Permissions.h"
 #include "extensions/public/XW_Extension_Runtime.h"
 #include "extensions/public/XW_Extension_SyncMessage.h"
+#include "extensions/public/XW_Extension_Message_2.h"
 
 namespace extensions {
 
@@ -78,6 +79,10 @@ class XWalkExtensionAdapter {
       XW_Extension xw_extension, const char* api_name);
   static int PermissionsRegisterPermissions(
       XW_Extension xw_extension, const char* perm_table);
+  static void MessagingRegisterBinaryMessageCallback(
+      XW_Extension xw_extension, XW_HandleBinaryMessageCallback handle_message);
+  static void MessagingPostBinaryMessage(
+      XW_Instance xw_instance, const char* message, size_t size);
 
   ExtensionMap extension_map_;
   InstanceMap instance_map_;

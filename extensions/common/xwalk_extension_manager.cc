@@ -6,6 +6,7 @@
 
 #include <glob.h>
 #include <dlfcn.h>
+#include <sys/utsname.h>
 
 #include <fstream>
 #include <set>
@@ -42,6 +43,11 @@ static const char* kPreloadLibs[] = {
   EXTENSION_PATH"/libtizen_utils.so",
   NULL
 };
+
+const char kUserPluginsDirectory[] = "plugin/";
+const char kArchArmv7l[] = "armv7l";
+const char kArchI586[] = "i586";
+const char kArchDefault[] = "default";
 
 }  // namespace
 
@@ -106,6 +112,50 @@ void XWalkExtensionManager::LoadExtensions(bool meta_only) {
       RegisterExtension(ext);
     }
   }
+}
+
+void XWalkExtensionManager::LoadUserExtensions(const std::string app_path) {
+  if (app_path.empty()) {
+    LOGGER(ERROR) << "Failed to get package root path";
+    return;
+  }
+  LOGGER(DEBUG) << "app path is : " <<app_path;
+  std::string app_ext_pattern(app_path);
+  app_ext_pattern.append(kUserPluginsDirectory);
+  struct utsname u;
+  if (0 == uname(&u)) {
+    std::string machine = u.machine;
+    if (!machine.empty()) {
+      if (machine == kArchArmv7l) {
+        app_ext_pattern.append(kArchArmv7l);
+      } else if (machine == kArchI586) {
+        app_ext_pattern.append(kArchI586);
+      } else {
+        app_ext_pattern.append(kArchDefault);
+      }
+    } else {
+      LOGGER(ERROR) << "cannot get machine info";
+      app_ext_pattern.append(kArchDefault);
+    }
+    app_ext_pattern.append("/");
+  }
+  app_ext_pattern.append("*");
+  app_ext_pattern.append(kExtensionSuffix);
+
+  LOGGER(DEBUG) << "plugins directory : " << app_ext_pattern;
+  StringSet files;
+  {
+    glob_t glob_result;
+    glob(app_ext_pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
+    for (unsigned int i = 0; i < glob_result.gl_pathc; ++i) {
+      files.insert(glob_result.gl_pathv[i]);
+    }
+  }
+  for (auto it = files.begin(); it != files.end(); ++it) {
+    XWalkExtension* ext = new XWalkExtension(*it, this);
+    RegisterExtension(ext);
+  }
+  LOGGER(DEBUG) << "finish load user extension plugins";
 }
 
 void XWalkExtensionManager::UnloadExtensions() {

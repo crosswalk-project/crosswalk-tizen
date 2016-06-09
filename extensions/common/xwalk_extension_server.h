@@ -29,6 +29,7 @@ class XWalkExtensionServer {
   void HandleIPCMessage(Ewk_IPC_Wrt_Message_Data* data);
 
   void Shutdown();
+  void LoadUserExtensions(const std::string app_path);
 
  private:
   XWalkExtensionServer();
