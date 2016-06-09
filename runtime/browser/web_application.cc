@@ -393,12 +393,6 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
     verbose_mode_ = true;
   }
 
-  // TODO(sngn.lee): check the below code location.
-  // in Wearable, webkit can render contents before show window
-  // but Mobile, webkit can't render contents before show window
-  window_->Show();
-  window_->Active();
-
   launched_ = true;
 }
 
@@ -798,6 +792,10 @@ void WebApplication::OnRendered(WebView* /*view*/) {
   STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
   splash_screen_->HideSplashScreen(SplashScreen::HideReason::RENDERED);
+
+  // Show window after frame rendered.
+  window_->Show();
+  window_->Active();
 }
 
 void WebApplication::LaunchInspector(common::AppControl* appcontrol) {
