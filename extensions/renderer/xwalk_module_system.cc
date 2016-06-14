@@ -38,6 +38,7 @@ void RequireNativeCallback(const v8::FunctionCallbackInfo<v8::Value>& info) {
   if (module_system_value.IsEmpty() || module_system_value->IsUndefined()) {
     LOGGER(ERROR) << "Trying to use requireNative from already "
                   << "destroyed module system!";
+    result.SetUndefined();
     return;
   }
 
@@ -46,6 +47,10 @@ void RequireNativeCallback(const v8::FunctionCallbackInfo<v8::Value>& info) {
 
   if (info.Length() < 1) {
     // TODO(cmarcelo): Throw appropriate exception or warning.
+    result.SetUndefined();
+    return;
+  }
+  if (!module_system) {
     result.SetUndefined();
     return;
   }
