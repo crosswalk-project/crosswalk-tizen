@@ -122,5 +122,9 @@ void XWalkExtensionClient::OnReceivedIPCMessage(
 
   it->second->HandleMessageFromNative(msg);
 }
+void XWalkExtensionClient::LoadUserExtensions(const std::string app_path) {
+  XWalkExtensionServer* server = XWalkExtensionServer::GetInstance();
+  server->LoadUserExtensions(app_path);
+}
 
 }  // namespace extensions

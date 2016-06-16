@@ -48,6 +48,7 @@ class XWalkExtensionClient {
 
   void OnReceivedIPCMessage(const std::string& instance_id,
                             const std::string& msg);
+  void LoadUserExtensions(const std::string app_path);
 
   struct ExtensionCodePoints {
     std::string api;

@@ -99,6 +99,16 @@ const void* XWalkExtensionAdapter::GetInterface(const char* name) {
     return &messagingInterface1;
   }
 
+  if (!strcmp(name, XW_MESSAGING_INTERFACE_2)) {
+    static const XW_MessagingInterface_2 messagingInterface2 = {
+      MessagingRegister,
+      MessagingPostMessage,
+      MessagingRegisterBinaryMessageCallback,
+      MessagingPostBinaryMessage
+    };
+    return &messagingInterface2;
+  }
+
   if (!strcmp(name, XW_INTERNAL_SYNC_MESSAGING_INTERFACE_1)) {
     static const XW_Internal_SyncMessagingInterface_1
         syncMessagingInterface1 = {
@@ -290,6 +300,21 @@ int XWalkExtensionAdapter::PermissionsRegisterPermissions(
     return extension->RegisterPermissions(perm_table);
   else
     return XW_ERROR;
+}
+
+void XWalkExtensionAdapter::MessagingRegisterBinaryMessageCallback(
+  XW_Extension xw_extension, XW_HandleBinaryMessageCallback handle_message) {
+  XWalkExtension* extension = GetExtension(xw_extension);
+  CHECK(extension, xw_extension);
+  RETURN_IF_INITIALIZED(extension);
+  extension->handle_binary_msg_callback_ = handle_message;
+}
+
+void XWalkExtensionAdapter::MessagingPostBinaryMessage(
+  XW_Instance xw_instance, const char* message, size_t size) {
+  XWalkExtensionInstance* instance = GetExtensionInstance(xw_instance);
+  CHECK(instance, xw_instance);
+  instance->PostMessageToJS(message);
 }
 
 #undef CHECK

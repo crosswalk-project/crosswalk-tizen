@@ -221,5 +221,8 @@ void XWalkExtensionServer::HandleGetAPIScript(
 
   eina_stringshare_del(extension_name);
 }
+void XWalkExtensionServer::LoadUserExtensions(const std::string app_path) {
+  manager_.LoadUserExtensions(app_path);
+}
 
 }  // namespace extensions

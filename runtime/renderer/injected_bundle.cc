@@ -97,6 +97,12 @@ extern "C" void DynamicSetWidgetInfo(const char* tizen_id) {
   ecore_init();
 
   runtime::BundleGlobalData::GetInstance()->Initialize(tizen_id);
+  extensions::XWalkExtensionRendererController& controller =
+    extensions::XWalkExtensionRendererController::GetInstance();
+  auto appdata_manager = common::ApplicationDataManager::GetInstance();
+  common::ApplicationData* app_data =
+    appdata_manager->GetApplicationData(tizen_id);
+  controller.LoadUserExtensions(app_data->application_path());
 }
 
 extern "C" void DynamicPluginStartSession(const char* tizen_id,

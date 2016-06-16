@@ -26,6 +26,7 @@ class XWalkExtensionRendererController {
   void OnReceivedIPCMessage(const Ewk_IPC_Wrt_Message_Data* data);
 
   void InitializeExtensionClient();
+  void LoadUserExtensions(const std::string app_path);
 
  private:
   XWalkExtensionRendererController();
