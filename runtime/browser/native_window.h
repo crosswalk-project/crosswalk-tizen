@@ -34,6 +34,10 @@ class NativeWindow {
     NATURAL = 4,
     ANY = 5
   };
+  enum class Type {
+    NORMAL = 0,
+    NOTIFICATION = 1
+  };
   typedef std::function<void(int)> RotationHandler;
   NativeWindow();
   virtual ~NativeWindow();
@@ -54,9 +58,12 @@ class NativeWindow {
   void InActive();
   void FullScreen(bool enable);
   ScreenOrientation natural_orientation() const { return natural_orientation_;}
+  Type type() const { return window_type_;}
 
  protected:
   virtual Evas_Object* CreateWindowInternal() = 0;
+  Evas_Object* window_;
+  Type window_type_;
 
  private:
   static void DidDeleteRequested(void* data, Evas_Object* obj,
@@ -65,7 +72,6 @@ class NativeWindow {
   void DidRotation(int degree);
 
   bool initialized_;
-  Evas_Object* window_;
   Evas_Object* layout_;
   Evas_Object* content_;
   int rotation_;

@@ -215,17 +215,52 @@ static bool ProcessWellKnownScheme(const std::string& url) {
 }  // namespace
 
 WebApplication::WebApplication(
-    NativeWindow* window, common::ApplicationData* app_data)
+    NativeWindow* window,
+    common::ApplicationData* app_data)
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
+      has_ownership_of_ewk_context_(true),
       window_(window),
       appid_(app_data->app_id()),
       app_data_(app_data),
       locale_manager_(new common::LocaleManager()),
       terminator_(NULL) {
+  Initialize();
+}
+
+WebApplication::WebApplication(
+    NativeWindow* window,
+    common::ApplicationData* app_data,
+    Ewk_Context* context)
+    : launched_(false),
+      debug_mode_(false),
+      verbose_mode_(false),
+      ewk_context_(context),
+      has_ownership_of_ewk_context_(false),
+      window_(window),
+      appid_(app_data->app_id()),
+      app_data_(app_data),
+      locale_manager_(new common::LocaleManager()),
+      terminator_(NULL) {
+  Initialize();
+}
+
+WebApplication::~WebApplication() {
+  window_->SetContent(NULL);
+  auto it = view_stack_.begin();
+  for (; it != view_stack_.end(); ++it) {
+    delete *it;
+  }
+  view_stack_.clear();
+  if (ewk_context_ && has_ownership_of_ewk_context_)
+    ewk_context_delete(ewk_context_);
+}
+
+bool WebApplication::Initialize() {
+  SCOPE_PROFILE();
   std::unique_ptr<char, decltype(std::free)*> path{app_get_data_path(),
                                                    std::free};
   app_data_path_ = path.get();
@@ -235,22 +270,6 @@ WebApplication::WebApplication(
   resource_manager_.reset(
       new common::ResourceManager(app_data_, locale_manager_.get()));
   resource_manager_->set_base_resource_path(app_data_->application_path());
-  Initialize();
-}
-
-WebApplication::~WebApplication() {
-  if (ewk_context_) ewk_context_delete(ewk_context_);
-
-  window_->SetContent(NULL);
-  auto it = view_stack_.begin();
-  for (; it != view_stack_.end(); ++it) {
-    delete *it;
-  }
-  view_stack_.clear();
-}
-
-bool WebApplication::Initialize() {
-  SCOPE_PROFILE();
 
   auto extension_server = extensions::XWalkExtensionServer::GetInstance();
   extension_server->SetupIPC(ewk_context_);

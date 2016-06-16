@@ -30,8 +30,9 @@ namespace {
 
 
 NativeWindow::NativeWindow()
-    : initialized_(false),
-      window_(NULL),
+    : window_(NULL),
+      window_type_(Type::NORMAL),
+      initialized_(false),
       layout_(NULL),
       content_(NULL),
       rotation_(0),
@@ -39,6 +40,8 @@ NativeWindow::NativeWindow()
 }
 
 NativeWindow::~NativeWindow() {
+  if (window_)
+    evas_object_del(window_);
 }
 
 void NativeWindow::Initialize() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Samsung Electronics Co., Ltd All Rights Reserved
+ * Copyright (c) 2016 Samsung Electronics Co., Ltd All Rights Reserved
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,28 +14,24 @@
  *    limitations under the License.
  */
 
+#ifndef XWALK_RUNTIME_BROWSER_NOTIFICATION_WINDOW_H_
+#define XWALK_RUNTIME_BROWSER_NOTIFICATION_WINDOW_H_
 
-
-#ifndef XWALK_RUNTIME_BROWSER_PRELOAD_MANAGER_H_
-#define XWALK_RUNTIME_BROWSER_PRELOAD_MANAGER_H_
-
-#include <memory>
-
+#include <runtime/browser/native_window.h>
 
 namespace runtime {
-class NativeWindow;
-class PreloadManager {
+
+class NotificationWindow : public NativeWindow {
  public:
-  static PreloadManager* GetInstance();
-  void CreateCacheComponet();
-  NativeWindow* GetCachedNativeWindow();
-  void ReleaseCachedNativeWindow();
+  NotificationWindow();
+  virtual ~NotificationWindow() = default;
+
+  Evas_Object* CreateWindowInternal() override;
 
  private:
-  PreloadManager();
-  std::unique_ptr<NativeWindow> cached_window_;
+  static void SetAlwaysOnTop(Evas_Object* window, bool enable);
 };
 
 }  // namespace runtime
 
-#endif   // XWALK_RUNTIME_BROWSER_PRELOAD_MANAGER_H_
+#endif  // XWALK_RUNTIME_BROWSER_NOTIFICATION_WINDOW_H_

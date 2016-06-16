@@ -55,4 +55,8 @@ NativeWindow* PreloadManager::GetCachedNativeWindow() {
   return cached_window_ ? cached_window_.release() : nullptr;
 }
 
+void PreloadManager::ReleaseCachedNativeWindow() {
+  cached_window_.reset(nullptr);
+}
+
 }  //  namespace runtime
