@@ -7,7 +7,7 @@
 #ifndef XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_MODULE_H_
 #define XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_MODULE_H_
 
-#include <v8/v8.h>
+#include <v8.h>
 
 #include <memory>
 #include <string>

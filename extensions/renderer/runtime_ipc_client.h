@@ -17,7 +17,7 @@
 #ifndef XWALK_EXTENSIONS_RENDERER_RUNTIME_IPC_CLIENT_H_
 #define XWALK_EXTENSIONS_RENDERER_RUNTIME_IPC_CLIENT_H_
 
-#include <v8/v8.h>
+#include <v8.h>
 #include <ewk_chromium.h>
 
 #include <functional>

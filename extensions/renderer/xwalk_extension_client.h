@@ -6,7 +6,7 @@
 #ifndef XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_CLIENT_H_
 #define XWALK_EXTENSIONS_RENDERER_XWALK_EXTENSION_CLIENT_H_
 
-#include <v8/v8.h>
+#include <v8.h>
 
 #include <map>
 #include <memory>

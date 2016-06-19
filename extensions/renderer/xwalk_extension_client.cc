@@ -7,7 +7,7 @@
 
 #include <Ecore.h>
 #include <unistd.h>
-#include <v8/v8.h>
+#include <v8.h>
 #include <json/json.h>
 
 #include <string>
