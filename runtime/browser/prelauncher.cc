@@ -43,8 +43,10 @@ int SmackLabelSetForTask(const std::string& label) {
   snprintf(path, sizeof(path), "/proc/%d/attr/current", tid);
   fd = open(path, O_WRONLY);
   if (fd < 0)
-      return -1;
+    return -1;
   ret = write(fd, label.c_str(), label.length());
+  if (syncfs(fd) < 0)
+    return -1;
   close(fd);
   return (ret < 0) ? -1 : 0;
 }
@@ -71,7 +73,6 @@ void ChangePrivilegeForThreads(const std::string& appid) {
         continue;
       syscall(__NR_tkill, tid, SIGUSR1);
     }
-    sync();
     closedir(dir);
   }
   signal(SIGUSR1, oldhandler);
