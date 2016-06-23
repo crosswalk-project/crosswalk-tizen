@@ -313,9 +313,14 @@ bool WebApplication::Initialize() {
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->background_support_enabled()) {
     ewk_context_tizen_extensible_api_string_set(
-        ewk_context_, kVisibilitySuspendFeature, true);
+                                ewk_context_, kVisibilitySuspendFeature, true);
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kBackgroundMusicFeature, true);
+  } else {
+    ewk_context_tizen_extensible_api_string_set(
+                               ewk_context_, kVisibilitySuspendFeature, false);
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                               kBackgroundMusicFeature, false);
   }
   ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                               kMediastreamRecordFeature, true);
