@@ -51,7 +51,6 @@ class WebViewImpl {
 
   void SetEventListener(WebView::EventListener* listener);
   Evas_Object* evas_object() const;
-  std::string mime() const { return mime_; }
 
  private:
   void OnKeyEvent(Eext_Callback_Type key_type);
@@ -80,6 +79,8 @@ class WebViewImpl {
   void InitRotaryEventCallback();
 #endif  // ROTARY_EVENT_FEATURE_SUPPORT
 
+  std::function<bool (const char*, const char*, char**, void*)> mime_set_cb_;
+
   NativeWindow* window_;
   Ewk_Context* context_;
   Evas_Object* ewk_view_;
@@ -88,7 +89,6 @@ class WebViewImpl {
   WebView* view_;
   std::map<const std::string, Evas_Smart_Cb> smart_callbacks_;
   bool fullscreen_;
-  std::string mime_;
   Evas_Smart* evas_smart_class_;
   Ewk_View_Smart_Class ewk_smart_class_;
   bool internal_popup_opened_;
