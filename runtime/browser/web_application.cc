@@ -406,6 +406,17 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   STEP_PROFILE_START("URL Set -> Rendered");
 
   window_->SetContent(view->evas_object());
+
+  // rotate and resize window forcibily for landscape mode.
+  // window rotate event is generated after window show. so
+  // when app get width and height from viewport, wrong value can be returned.
+  if (app_data_->setting_info()->screen_orientation() ==
+             wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
+    LOGGER(DEBUG) << "rotate and resize window for landscape mode";
+    elm_win_rotation_with_resize_set(window_->evas_object(), 270);
+    evas_norender(evas_object_evas_get(window_->evas_object()));
+  }
+
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
 
