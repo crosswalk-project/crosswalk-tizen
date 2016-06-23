@@ -16,7 +16,7 @@
 
 #include "extensions/renderer/object_tools_module.h"
 
-#include <v8/v8.h>
+#include <v8.h>
 
 #include <string>
 

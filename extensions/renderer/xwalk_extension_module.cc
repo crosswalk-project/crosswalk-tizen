@@ -6,7 +6,7 @@
 
 #include "extensions/renderer/xwalk_extension_module.h"
 
-#include <v8/v8.h>
+#include <v8.h>
 #include <stdarg.h>
 #include <stdio.h>
 

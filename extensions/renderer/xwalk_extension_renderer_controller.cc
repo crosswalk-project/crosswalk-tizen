@@ -6,7 +6,7 @@
 #include "extensions/renderer/xwalk_extension_renderer_controller.h"
 
 #include <Ecore.h>
-#include <v8/v8.h>
+#include <v8.h>
 #include <string>
 #include <utility>
 

@@ -44,6 +44,7 @@
       ],
       'variables': {
         'packages': [
+          'v8',
           'chromium-efl',
           'elementary',
         ],
@@ -54,6 +55,7 @@
         ],
         'variables': {
           'packages': [
+            'v8',
             'jsoncpp',
           ],
         },
