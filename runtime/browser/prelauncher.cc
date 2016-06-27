@@ -45,8 +45,10 @@ int SmackLabelSetForTask(const std::string& label) {
   if (fd < 0)
     return -1;
   ret = write(fd, label.c_str(), label.length());
-  if (syncfs(fd) < 0)
+  if (syncfs(fd) < 0) {
+    close(fd);
     return -1;
+  }
   close(fd);
   return (ret < 0) ? -1 : 0;
 }
