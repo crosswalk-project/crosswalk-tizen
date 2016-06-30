@@ -32,6 +32,7 @@
 
 namespace runtime {
 
+/* Already changed the privilege from the launchpad.
 namespace {
 std::string g_smacklabel;
 
@@ -81,7 +82,7 @@ void ChangePrivilegeForThreads(const std::string& appid) {
 }
 
 }  // namespace
-
+*/
 
 PreLauncher::PreLauncher() {
   ecore_init();
@@ -144,7 +145,8 @@ int PreLauncher::Prelaunch(int argc, char* argv[],
                    const char *appid, const char *pkgid,
                    const char *pkg_type, void *user_data) {
     PreLauncher* launcher = static_cast<PreLauncher*>(user_data);
-    ChangePrivilegeForThreads(appid);
+    /* Already changed the privilege from the launchpad. */
+    //ChangePrivilegeForThreads(appid);
     launcher->didstart_(app_path);
     return 0;
   };
