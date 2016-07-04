@@ -177,4 +177,3 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt
 %attr(755,root,root) %{_bindir}/wrt-loader
 %attr(644,root,root) %{_datadir}/aul/wrt.loader
-%caps(cap_mac_admin,cap_mac_override,cap_setgid=ei) %{_bindir}/xwalk_runtime
