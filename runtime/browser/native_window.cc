@@ -171,7 +171,7 @@ void NativeWindow::SetContent(Evas_Object* content) {
   evas_object_hide(
     elm_object_part_content_unset(focus_, "elm.swallow.content"));
   elm_object_part_content_set(focus_, "elm.swallow.content", content);
-  ewk_view_focus_set(focus_, EINA_TRUE);
+  elm_object_focus_set(focus_, EINA_TRUE);
   content_ = content;
 
   // attached webview was resized by evas_norender API
