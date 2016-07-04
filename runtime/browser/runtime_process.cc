@@ -139,6 +139,7 @@ int real_main(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
   if (strcmp(argv[0], "/usr/bin/wrt-loader") == 0) {
     elm_init(argc, argv);
+    elm_config_cache_flush_enabled_set(EINA_TRUE);
     auto preload = [argv](void) {
       g_prelaunch = true;
       ewk_init();
