@@ -145,7 +145,10 @@ bool WebViewImpl::Backward() {
 }
 
 void WebViewImpl::SetVisibility(bool show) {
-  ewk_view_visibility_set(ewk_view_, show ? EINA_TRUE : EINA_FALSE);
+  ewk_view_page_visibility_state_set(ewk_view_,
+                                     show ? EWK_PAGE_VISIBILITY_STATE_VISIBLE :
+                                            EWK_PAGE_VISIBILITY_STATE_HIDDEN,
+                                     EINA_FALSE);
 }
 
 
