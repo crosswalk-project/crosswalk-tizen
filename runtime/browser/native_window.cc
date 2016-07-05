@@ -90,9 +90,10 @@ void NativeWindow::Initialize() {
   evas_object_show(top_layout);
 
   // focus
-  Evas_Object* focus = elm_button_add(top_layout);
-  elm_theme_extension_add(NULL, kEdjePath);
-  elm_object_style_set(focus, "wrt");
+  Evas_Object* focus = elm_bg_add(top_layout);
+  evas_object_size_hint_align_set(focus, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  evas_object_size_hint_weight_set(focus, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  elm_object_focus_allow_set(focus, EINA_TRUE);
   elm_object_part_content_set(top_layout, "elm.swallow.content", focus);
   EVAS_SIZE_EXPAND_FILL(focus);
   elm_access_object_unregister(focus);
