@@ -48,7 +48,8 @@ XWalkExtensionRendererController::GetInstance() {
 }
 
 XWalkExtensionRendererController::XWalkExtensionRendererController()
-    : extensions_client_(new XWalkExtensionClient()) {
+    : exit_requested(false),
+      extensions_client_(new XWalkExtensionClient()) {
 }
 
 XWalkExtensionRendererController::~XWalkExtensionRendererController() {
@@ -57,6 +58,12 @@ XWalkExtensionRendererController::~XWalkExtensionRendererController() {
 void XWalkExtensionRendererController::DidCreateScriptContext(
     v8::Handle<v8::Context> context) {
   SCOPE_PROFILE();
+
+  // Skip plugin loading after application exit request.
+  if (exit_requested) {
+    return;
+  }
+
   XWalkModuleSystem* module_system = new XWalkModuleSystem(context);
   XWalkModuleSystem::SetModuleSystemInContext(
       std::unique_ptr<XWalkModuleSystem>(module_system), context);
