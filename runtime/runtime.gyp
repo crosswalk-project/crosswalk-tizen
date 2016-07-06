@@ -106,6 +106,9 @@
             ],
           },
         }],
+        ['tizen_feature_manual_rotate_support == 1', {
+          'defines': ['MANUAL_ROTATE_FEATURE_SUPPORT'],
+        }],
       ],
     }, # end of target 'xwalk_runtime'
     {

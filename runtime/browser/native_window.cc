@@ -260,4 +260,17 @@ void NativeWindow::FullScreen(bool enable) {
       enable ? ELM_WIN_INDICATOR_TRANSPARENT : ELM_WIN_INDICATOR_OPAQUE);
 }
 
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+void NativeWindow::EnableManualRotation(bool enable) {
+  LOGGER(DEBUG) << "set manual rotation : " << (enable ? "enabled" : "disabled");
+  elm_win_wm_rotation_manual_rotation_done_set(window_, enable ? EINA_TRUE : EINA_FALSE);
+}
+
+void NativeWindow::ManualRotationDone() {
+  if (EINA_TRUE == elm_win_wm_rotation_manual_rotation_done_get(window_)) {
+    elm_win_wm_rotation_manual_rotation_done(window_);
+  }
+}
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
+
 }  // namespace runtime

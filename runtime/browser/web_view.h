@@ -107,6 +107,9 @@ class WebView {
         WebView* /*view*/,
         RotaryEventType /*type*/) {}
 #endif  // ROTARY_EVENT_FEATURE_SUPPORT
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+    virtual void OnRotatePrepared(WebView* /*view*/) {}
+#endif // MANUAL_ROTATE_FEATURE_SUPPORT
   };
 
   WebView(NativeWindow* window, Ewk_Context* context);

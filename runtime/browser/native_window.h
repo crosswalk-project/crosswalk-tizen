@@ -59,6 +59,10 @@ class NativeWindow {
   void FullScreen(bool enable);
   ScreenOrientation natural_orientation() const { return natural_orientation_;}
   Type type() const { return window_type_;}
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+  void EnableManualRotation(bool enable);
+  void ManualRotationDone();
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
 
  protected:
   virtual Evas_Object* CreateWindowInternal() = 0;

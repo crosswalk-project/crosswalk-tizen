@@ -51,18 +51,21 @@ BuildRequires: pkgconfig(jsoncpp)
 %define tizen_feature_rotary_event_support     0
 %define tizen_feature_web_ime_support          0
 %define tizen_feature_watch_face_support       0
+%define tizen_feature_manual_rotate_support    1
 %endif
 
 %if "%{?profile}" == "wearable"
 %define tizen_feature_rotary_event_support     1
 %define tizen_feature_web_ime_support          1
 %define tizen_feature_watch_face_support       1
+%define tizen_feature_manual_rotate_support    0
 %endif
 
 %if "%{?profile}" == "tv"
 %define tizen_feature_rotary_event_support     0
 %define tizen_feature_web_ime_support          1
 %define tizen_feature_watch_face_support       0
+%define tizen_feature_manual_rotate_support    0
 %endif
 
 %if 0%{?tizen_feature_web_ime_support}
@@ -101,6 +104,7 @@ GYP_OPTIONS="$GYP_OPTIONS -Dbuild_type=Release"
 GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_rotary_event_support=%{?tizen_feature_rotary_event_support}"
 GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_web_ime_support=%{?tizen_feature_web_ime_support}"
 GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_watch_face_support=%{?tizen_feature_watch_face_support}"
+GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_manual_rotate_support=%{?tizen_feature_manual_rotate_support}"
 
 # Extension Path
 GYP_OPTIONS="$GYP_OPTIONS -Dextension_path=%{extension_path}"

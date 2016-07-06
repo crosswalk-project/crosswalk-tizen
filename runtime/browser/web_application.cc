@@ -388,6 +388,11 @@ bool WebApplication::Initialize() {
     security_model_version_ = 1;
   }
 
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+  // Set manual rotation
+  window_->EnableManualRotation(true);
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
+
   return true;
 }
 
@@ -840,6 +845,12 @@ void WebApplication::OnRendered(WebView* /*view*/) {
   window_->Show();
   window_->Active();
 }
+
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+void WebApplication::OnRotatePrepared(WebView* /*view*/) {
+  window_->ManualRotationDone();
+}
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
 
 void WebApplication::LaunchInspector(common::AppControl* appcontrol) {
   unsigned int port = ewk_context_inspector_server_start(ewk_context_, 0);
