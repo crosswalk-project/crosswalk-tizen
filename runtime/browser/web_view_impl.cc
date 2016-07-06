@@ -342,6 +342,22 @@ void WebViewImpl::InitLoaderCallback() {
   smart_callbacks_["load,finished"] = loadfinished_callback;
   smart_callbacks_["load,progress"] = loadprogress_callback;
   smart_callbacks_["frame,rendered"] = rendered_callback;
+
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+  // rotate prepared callback
+  auto rotateprepared_callback = [](void* user_data,
+                              Evas_Object*,
+                              void*) {
+    WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (self->listener_)
+      self->listener_->OnRotatePrepared(self->view_);
+  };
+  evas_object_smart_callback_add(ewk_view_,
+                                 "rotate,prepared",
+                                 rotateprepared_callback,
+                                 this);
+  smart_callbacks_["rotate,prepared"] = rotateprepared_callback;
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
 }
 
 void WebViewImpl::InitPolicyDecideCallback() {
@@ -802,12 +818,18 @@ void WebViewImpl::InitPopupWaitCallback() {
       [](void* user_data, Evas_Object* /*obj*/, void*) {
         WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
         self->internal_popup_opened_ = true;
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+        self->window_->EnableManualRotation(false);
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
       }, this);
   evas_object_smart_callback_add(ewk_view_,
       "popup,reply,wait,finish",
       [](void* user_data, Evas_Object* /*obj*/, void*) {
         WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
         self->internal_popup_opened_ = false;
+#ifdef MANUAL_ROTATE_FEATURE_SUPPORT
+        self->window_->EnableManualRotation(true);
+#endif  // MANUAL_ROTATE_FEATURE_SUPPORT
       }, this);
 }
 
