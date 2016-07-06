@@ -34,7 +34,6 @@ Evas_Object* NativeWatchWindow::CreateWindowInternal() {
   watch_app_get_elm_win(&window);
   elm_win_alpha_set(window, EINA_TRUE);
   evas_object_render_op_set(window, EVAS_RENDER_COPY);
-  evas_object_show(window);
   return window;
 }
 
