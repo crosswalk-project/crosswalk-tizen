@@ -28,6 +28,8 @@ class XWalkExtensionRendererController {
   void InitializeExtensionClient();
   void LoadUserExtensions(const std::string app_path);
 
+  bool exit_requested;
+
  private:
   XWalkExtensionRendererController();
   virtual ~XWalkExtensionRendererController();

@@ -15,6 +15,7 @@
  */
 
 #include "extensions/renderer/runtime_ipc_client.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 
 #include "common/logger.h"
 #include "common/profiler.h"
@@ -99,6 +100,12 @@ void RuntimeIPCClient::SendMessage(v8::Handle<v8::Context> context,
                                    const std::string& id,
                                    const std::string& ref_id,
                                    const std::string& value) {
+  if (!strcmp(type.c_str(), "tizen://exit")) {
+    extensions::XWalkExtensionRendererController& controller =
+      extensions::XWalkExtensionRendererController::GetInstance();
+    controller.exit_requested = true;
+  }
+
   int routing_id = GetRoutingId(context);
   if (routing_id < 1) {
     LOGGER(ERROR) << "Invalid routing handle for IPC.";
