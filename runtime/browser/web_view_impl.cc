@@ -525,7 +525,7 @@ void WebViewImpl::InitConsoleMessageCallback() {
 
     std::stringstream buf;
     if (line_number) {
-        buf << common::utils::BaseName(ewk_console_message_source_get(msg))
+        buf << ewk_console_message_source_get(msg)
             << ":" << line_number << ": ";
     }
     buf << ewk_console_message_text_get(msg);

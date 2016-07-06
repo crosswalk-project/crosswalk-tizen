@@ -127,6 +127,7 @@ const char* kDBPrivateSection = "private";
 
 const char* kDefaultCSPRule =
     "default-src *; script-src 'self'; style-src 'self'; object-src 'none';";
+const char* kResWgtPath = "res/wgt/";
 
 bool FindPrivilege(common::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -705,6 +706,12 @@ void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
   static bool enabled = (getenv(kConsoleLogEnableKey) != NULL);
   enabled = true;
 
+  std::string split_msg = msg;
+  std::size_t pos = msg.find(kResWgtPath);
+  if (pos != std::string::npos) {
+    split_msg = msg.substr(pos + strlen(kResWgtPath));
+  }
+
   if (debug_mode_ || verbose_mode_ || enabled) {
     int dlog_level = DLOG_DEBUG;
     switch (level) {
@@ -718,7 +725,8 @@ void WebApplication::OnConsoleMessage(const std::string& msg, int level) {
         dlog_level = DLOG_DEBUG;
         break;
     }
-    LOGGER_RAW(dlog_level, kConsoleMessageLogTag) << msg;
+    LOGGER_RAW(dlog_level, kConsoleMessageLogTag)
+      << "[" << app_data_->pkg_id() << "] " << split_msg;
   }
 }
 
