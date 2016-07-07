@@ -125,7 +125,6 @@ std::shared_ptr<const wgt::parse::CSPInfo>
 }
 
 const std::string ApplicationData::pkg_id() const {
-  SCOPE_PROFILE();
   if (pkg_id_.empty()) {
     app_info_h app_info;
     int ret = app_info_create(app_id_.c_str(), &app_info);
