@@ -20,6 +20,7 @@ BuildRequires: edje-tools
 BuildRequires: gettext
 BuildRequires: ninja
 BuildRequires: python
+BuildRequires: model-build-features
 BuildRequires: pkgconfig(appsvc)
 BuildRequires: pkgconfig(aul)
 BuildRequires: pkgconfig(bundle)
@@ -105,6 +106,7 @@ GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_rotary_event_support=%{?tizen_feature_
 GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_web_ime_support=%{?tizen_feature_web_ime_support}"
 GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_watch_face_support=%{?tizen_feature_watch_face_support}"
 GYP_OPTIONS="$GYP_OPTIONS -Dtizen_feature_manual_rotate_support=%{?tizen_feature_manual_rotate_support}"
+GYP_OPTIONS="$GYP_OPTIONS -Dtizen_model_formfactor=%{?model_build_feature_formfactor}"
 
 # Extension Path
 GYP_OPTIONS="$GYP_OPTIONS -Dextension_path=%{extension_path}"
@@ -123,6 +125,7 @@ mkdir -p %{buildroot}%{_libdir}
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/license
 mkdir -p %{buildroot}%{_datadir}/locale
+mkdir -p %{buildroot}%{_datadir}/icons/xwalk
 mkdir -p %{buildroot}%{_datadir}/edje/xwalk
 mkdir -p %{buildroot}%{extension_path}
 
@@ -133,6 +136,9 @@ cat LICENSE.BSD >> %{buildroot}%{_datadir}/license/%{name}
 # Loader script file
 mkdir -p %{buildroot}%{_datadir}/aul/
 cp %{SOURCE1002} %{buildroot}%{_datadir}/aul/
+
+# Popup icon
+cp runtime/resources/icons/*.png %{buildroot}%{_datadir}/icons/xwalk/
 
 # xwalk_common
 install -p -m 644 out/Default/lib/libxwalk_tizen_common.so %{buildroot}%{_libdir}
@@ -169,6 +175,7 @@ rm -fr %{buildroot}
 %manifest %{name}.manifest
 %attr(644,root,root) %{_datadir}/license/%{name}
 %attr(755,root,root) %{_datadir}/locale/*
+%attr(644,root,root) %{_datadir}/icons/xwalk/*
 %attr(644,root,root) %{_datadir}/edje/xwalk/*.edj
 %attr(644,root,root) %{_libdir}/libxwalk_tizen_common.so
 %attr(644,root,root) %{_libdir}/libxwalk_injected_bundle.so
