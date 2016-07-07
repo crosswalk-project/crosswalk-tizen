@@ -576,6 +576,7 @@ void WebViewImpl::InitCustomContextMenuCallback() {
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_FRAME_IN_NEW_WINDOW:
         case EWK_CONTEXT_MENU_ITEM_TAG_SEARCH_WEB:
         case EWK_CONTEXT_MENU_ITEM_TAG_DOWNLOAD_IMAGE_TO_DISK:
+        case EWK_CONTEXT_MENU_ITEM_TAG_DOWNLOAD_LINK_TO_DISK:
           ewk_context_menu_item_remove(contextmenu, item);
           break;
         default:
