@@ -70,6 +70,8 @@
         'locales/ur.po',
         'locales/vi.po',
         'locales/zh_CN.po',
+        'icons/tw_ic_popup_btn_check.png',
+        'icons/tw_ic_popup_btn_delete.png',
       ],
     }, # end of target 'xwalk_runtime_resources_locales'
   ],

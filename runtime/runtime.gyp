@@ -72,6 +72,9 @@
         ['profile == "tv"', {
           'defines': ['PROFILE_TV'],
         }],
+        ['tizen_model_formfactor == "circle"', {
+          'defines': ['MODEL_FORMFACTOR_CIRCLE'],
+        }],
         ['tizen_feature_rotary_event_support == 1', {
           'defines': ['ROTARY_EVENT_FEATURE_SUPPORT'],
         }],

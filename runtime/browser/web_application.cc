@@ -1062,8 +1062,8 @@ void WebApplication::OnCertificateAllowRequest(
   Popup* popup = Popup::CreatePopup(window_);
   popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
   popup->SetTitle(popup_string::kPopupTitleCert);
-  popup->SetBody(popup_string::kPopupBodyCert);
-  popup->SetUrl(url);
+  popup->SetBody(popup_string::GetText(
+                 popup_string::kPopupBodyCert)+" ["+url+"]");
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
       [db, result_handler, pem](Popup* popup, void* /*user_data*/) {

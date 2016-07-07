@@ -28,11 +28,32 @@ namespace {
 
 const char* kWRTEdjePath = "/usr/share/edje/xwalk/xwalk_tizen.edj";
 
+#ifdef MODEL_FORMFACTOR_CIRCLE
+const char* kWRTIconDeletePath = "/usr/share/icons/xwalk/tw_ic_popup_btn_delete.png";
+const char* kWRTIconCheckPath = "/usr/share/icons/xwalk/tw_ic_popup_btn_check.png";
+
+const char* kLayoutTheme = "content/circle/buttons2";
+const char* kContentTitle = "elm.text.title";
+const char* kContentText = "elm.text";
+
+const char* kStylePopup = "circle";
+const char* kStyleCheck = "small";
+const char* kStyleButtonLeft = "popup/circle/left";
+const char* kStyleButtonRight = "popup/circle/right";
+#else
+const char* kLayoutTheme = "default";
 const char* kContentTitle = "title,text";
+const char* kContentText = NULL;
+
+const char* kStylePopup = "default";
+const char* kStyleCheck = "default";
+const char* kStyleButtonLeft = "popup";
+const char* kStyleButtonRight = "popup";
+#endif  // MODEL_FORMFACTOR_CIRCLE
+
 const char* kContentButton1 = "button1";
 const char* kContentButton2 = "button2";
 
-const char* kStyleDefault = "default";
 const char* kStyleLabel = "popup/default";
 const char* kStyleButton = "popup";
 const char* kStyleEditPw = "editfield/password/popup";
@@ -54,16 +75,28 @@ static void ButtonClickedCallback(void* data,
 }
 
 // caution: not Evas_Object* but Popup*
-static Evas_Object* AddButton(Popup* popup,
-                              const char* str_id, const char* content) {
+static Evas_Object* AddButton(Popup* popup, const char* str_id,
+                                  const char* content,
+                                  const char* style_button) {
   Evas_Object* btn = elm_button_add(popup->popup());
-  elm_object_style_set(btn, kStyleButton);
+  elm_object_style_set(btn, style_button);
   elm_object_domain_translatable_part_text_set(btn, 0,
                                                kTextDomainRuntime,
                                                str_id);
   elm_object_part_content_set(popup->popup(), content, btn);
   evas_object_smart_callback_add(btn, kStateClicked,
                                  ButtonClickedCallback, popup);
+#ifdef MODEL_FORMFACTOR_CIRCLE
+  Evas_Object* icon = elm_image_add(btn);
+  if (!strcmp(content, kContentButton1)) {
+    elm_image_file_set(icon, kWRTIconDeletePath, NULL);
+  } else {
+    elm_image_file_set(icon, kWRTIconCheckPath, NULL);
+  }
+  evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  elm_object_part_content_set(btn, "elm.swallow.content", icon);
+  evas_object_show(icon);
+#endif  // MODEL_FORMFACTOR_CIRCLE
   return btn;
 }
 
@@ -121,9 +154,11 @@ static Evas_Object* AddEntrySet(Evas_Object* parent,
 
 static Evas_Object* AddCheckBox(Evas_Object* parent) {
   Evas_Object* check = elm_check_add(parent);
-  elm_object_style_set(check, kStyleDefault);
-  elm_object_style_set(check, "multiline");
+  elm_object_style_set(check, kStyleCheck);
   evas_object_size_hint_align_set(check, EVAS_HINT_FILL, EVAS_HINT_FILL);
+#ifndef MODEL_FORMFACTOR_CIRCLE
+  elm_object_style_set(check, "multiline");
+#endif  // MODEL_FORMFACTOR_CIRCLE
   elm_check_state_set(check, EINA_TRUE);
   return check;
 }
@@ -136,7 +171,21 @@ std::set<Popup*> Popup::opened_popups_;
 Popup* Popup::CreatePopup(NativeWindow* window) {
   Evas_Object* popup = elm_popup_add(window->evas_object());
   evas_object_size_hint_weight_set(popup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  elm_object_style_set(popup, kStyleDefault);
+  elm_object_style_set(popup, kStylePopup);
+
+  Evas_Object* layout = elm_layout_add(popup);
+  elm_layout_theme_set(layout, "layout", "popup", kLayoutTheme);
+#ifdef MODEL_FORMFACTOR_CIRCLE
+  elm_object_content_set(popup, layout);
+
+  Evas_Object* box = elm_box_add(layout);
+  elm_box_padding_set(box, 0, 10);
+  evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  elm_object_part_content_set(layout, "elm.swallow.content", box);
+  evas_object_show(box);
+#else
+  //elm_object_content_set(popup, layout);
 
   Evas_Object* box = elm_box_add(popup);
   elm_box_padding_set(box, 0, 10);
@@ -144,10 +193,12 @@ Popup* Popup::CreatePopup(NativeWindow* window) {
   evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
   elm_object_part_content_set(popup, "default", box);
   evas_object_show(box);
+#endif  // MODEL_FORMFACTOR_CIRCLE
 
   evas_object_event_callback_add(popup, EVAS_CALLBACK_RESIZE, NULL, NULL);
 
-  return new Popup(popup, box);
+  return new Popup(popup, layout, box);
+
 }
 
 void Popup::ForceCloseAllPopup() {
@@ -163,25 +214,25 @@ void Popup::SetButtonType(ButtonType type) {
   switch (type) {
     case ButtonType::OkButton:
       button1_ = AddButton(this, popup_string::kPopupButtonOk,
-                           kContentButton1);
+                           kContentButton1, kStyleButton);
       break;
     case ButtonType::OkCancelButton:
       button1_ = AddButton(this, popup_string::kPopupButtonCancel,
-                           kContentButton1);
+                           kContentButton1, kStyleButtonLeft);
       button2_ = AddButton(this, popup_string::kPopupButtonOk,
-                           kContentButton2);
+                           kContentButton2, kStyleButtonRight);
       break;
     case ButtonType::LoginCancelButton:
       button1_ = AddButton(this, popup_string::kPopupButtonCancel,
-                           kContentButton1);
+                           kContentButton1, kStyleButtonLeft);
       button2_ = AddButton(this, popup_string::kPopupButtonLogin,
-                           kContentButton2);
+                           kContentButton2, kStyleButtonRight);
       break;
     case ButtonType::AllowDenyButton:
       button1_ = AddButton(this, popup_string::kPopupButtonDeny,
-                           kContentButton1);
+                           kContentButton1, kStyleButtonLeft);
       button2_ = AddButton(this, popup_string::kPopupButtonAllow,
-                           kContentButton2);
+                           kContentButton2, kStyleButtonRight);
       break;
   }
 }
@@ -224,10 +275,14 @@ void Popup::SetCheckBox(const std::string& str_id) {
   check_box_ = AddCheckBox(box_);
   if (!str_id.empty()) {
     elm_object_domain_translatable_part_text_set(
-        check_box_, 0,
+        check_box_, kContentText,
         kTextDomainRuntime,
         str_id.c_str());
   }
+#ifdef MODEL_FORMFACTOR_CIRCLE
+  elm_object_part_content_set(box_, "elm.swallow.checkbox", check_box_);
+  evas_object_size_hint_min_set(check_box_, 0, 80);
+#endif  // MODEL_FORMFACTOR_CIRCLE
   elm_box_pack_end(box_, check_box_);
   evas_object_show(check_box_);
 }
@@ -238,7 +293,12 @@ bool Popup::GetCheckBoxResult() const {
 
 void Popup::SetTitle(const std::string& str_id) {
   elm_object_domain_translatable_part_text_set(
-      popup_, kContentTitle,
+#ifdef MODEL_FORMFACTOR_CIRCLE
+      layout_,
+#else
+      popup_,
+#endif  // MODEL_FORMFACTOR_CIRCLE
+      kContentTitle,
       kTextDomainRuntime,
       str_id.c_str());
 }
@@ -247,23 +307,15 @@ void Popup::SetBody(const std::string& str_id) {
   Evas_Object* label = elm_label_add(box_);
   elm_object_style_set(label, kStyleLabel);
   elm_label_line_wrap_set(label, ELM_WRAP_MIXED);
-  elm_object_domain_translatable_part_text_set(
-      label, 0, kTextDomainRuntime, str_id.c_str());
-  evas_object_color_set(label, 0, 0, 0, 255);
+  elm_object_part_text_set(label, kContentText, str_id.c_str());
   evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_box_pack_end(box_, label);
-  evas_object_show(label);
-}
-
-void Popup::SetUrl(const std::string& url) {
-  Evas_Object* label = elm_label_add(box_);
-  elm_object_style_set(label, kStyleLabel);
-  elm_label_line_wrap_set(label, ELM_WRAP_MIXED);
-  elm_object_text_set(label, url.c_str());
+#ifdef MODEL_FORMFACTOR_CIRCLE
+  evas_object_color_set(label, 255, 255, 255, 255);
+  elm_object_part_content_set(box_, "elm.swallow.label", label);
+#else
   evas_object_color_set(label, 0, 0, 0, 255);
-  evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
+#endif  // MODEL_FORMFACTOR_CIRCLE
   elm_box_pack_end(box_, label);
   evas_object_show(label);
 }
@@ -313,8 +365,8 @@ void Popup::Result(bool is_positive) {
   handler_(this, user_data_);
 }
 
-Popup::Popup(Evas_Object* popup, Evas_Object* box)
-  : popup_(popup), box_(box), button1_(NULL), button2_(NULL),
+Popup::Popup(Evas_Object* popup, Evas_Object* layout, Evas_Object* box)
+  : popup_(popup), layout_(layout), box_(box), button1_(NULL), button2_(NULL),
     entry1_(NULL), entry2_(NULL), check_box_(NULL), user_data_(NULL),
     enable_button_(false), result_button_(false), enable_entry_(false),
     enable_check_box_(false), result_check_box_(false) {}

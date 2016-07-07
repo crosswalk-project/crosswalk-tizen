@@ -64,7 +64,6 @@ class Popup {
   // etc.
   void SetTitle(const std::string& str_id);
   void SetBody(const std::string& str_id);
-  void SetUrl(const std::string& url);
   void SetResultHandler(std::function
       <void(Popup* popup, void* user_data)> handler, void* user_data);
 
@@ -77,10 +76,11 @@ class Popup {
   Evas_Object* popup() { return popup_; }
 
  private:
-  Popup(Evas_Object* popup, Evas_Object* box);
+  Popup(Evas_Object* popup, Evas_Object* layout, Evas_Object* box);
   ~Popup();
 
   Evas_Object* popup_;
+  Evas_Object* layout_;
   Evas_Object* box_;
   Evas_Object* button1_;
   Evas_Object* button2_;
