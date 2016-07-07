@@ -58,6 +58,7 @@ void NativeWindow::Initialize() {
   int w, h;
   ecore_wl_screen_size_get(&w, &h);
   evas_object_resize(window_, w, h);
+  elm_win_size_base_set(window_, w, h);
   elm_win_autodel_set(window_, EINA_TRUE);
   evas_object_smart_callback_add(window_, "delete,request",
                                  DidDeleteRequested, this);
