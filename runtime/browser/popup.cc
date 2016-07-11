@@ -174,26 +174,25 @@ Popup* Popup::CreatePopup(NativeWindow* window) {
   elm_object_style_set(popup, kStylePopup);
 
   Evas_Object* layout = elm_layout_add(popup);
-  elm_layout_theme_set(layout, "layout", "popup", kLayoutTheme);
 #ifdef MODEL_FORMFACTOR_CIRCLE
+  elm_layout_theme_set(layout, "layout", "popup", kLayoutTheme);
   elm_object_content_set(popup, layout);
 
   Evas_Object* box = elm_box_add(layout);
-  elm_box_padding_set(box, 0, 10);
-  evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_object_part_content_set(layout, "elm.swallow.content", box);
-  evas_object_show(box);
 #else
-  //elm_object_content_set(popup, layout);
-
   Evas_Object* box = elm_box_add(popup);
+#endif  // MODEL_FORMFACTOR_CIRCLE
+
   elm_box_padding_set(box, 0, 10);
   evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+#ifdef MODEL_FORMFACTOR_CIRCLE
+  elm_object_part_content_set(layout, "elm.swallow.content", box);
+#else
   elm_object_part_content_set(popup, "default", box);
-  evas_object_show(box);
 #endif  // MODEL_FORMFACTOR_CIRCLE
+  evas_object_show(box);
 
   evas_object_event_callback_add(popup, EVAS_CALLBACK_RESIZE, NULL, NULL);
 
@@ -307,7 +306,9 @@ void Popup::SetBody(const std::string& str_id) {
   Evas_Object* label = elm_label_add(box_);
   elm_object_style_set(label, kStyleLabel);
   elm_label_line_wrap_set(label, ELM_WRAP_MIXED);
-  elm_object_part_text_set(label, kContentText, str_id.c_str());
+  elm_object_domain_translatable_part_text_set(
+                                   label, kContentText, kTextDomainRuntime,
+                                   elm_entry_utf8_to_markup(str_id.c_str()));
   evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
 #ifdef MODEL_FORMFACTOR_CIRCLE
