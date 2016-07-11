@@ -130,7 +130,10 @@ int real_main(int argc, char* argv[]) {
     ret = runtime->Exec(argc, argv);
     runtime.reset();
   }
+#ifndef PROFILE_WEARABLE
+  LOGGER(DEBUG) << "ewk_shutdown() called";
   ewk_shutdown();
+#endif
   exit(ret);
 
   return EXIT_SUCCESS;
