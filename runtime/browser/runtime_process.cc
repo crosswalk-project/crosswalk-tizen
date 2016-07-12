@@ -116,8 +116,9 @@ int real_main(int argc, char* argv[]) {
 #ifdef WATCH_FACE_FEATURE_SUPPORT
   } else {
     if (appdata->app_type() == common::ApplicationData::WATCH) {
-      ecore_wl_shutdown();
-      ecore_wl_init(NULL);
+      // Below code will be enabled after testing
+      //ecore_wl_shutdown();
+      //ecore_wl_init(NULL);
     }
 #endif  // WATCH_FACE_FEATURE_SUPPORT
   }
@@ -130,10 +131,7 @@ int real_main(int argc, char* argv[]) {
     ret = runtime->Exec(argc, argv);
     runtime.reset();
   }
-#ifndef PROFILE_WEARABLE
-  LOGGER(DEBUG) << "ewk_shutdown() called";
   ewk_shutdown();
-#endif
   exit(ret);
 
   return EXIT_SUCCESS;
