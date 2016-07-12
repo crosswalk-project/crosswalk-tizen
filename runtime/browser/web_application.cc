@@ -426,6 +426,15 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
 
+#ifdef PROFILE_WEARABLE
+  // ewk_view_bg_color_set is not working at webview initialization.
+  if (app_data_->app_type() == common::ApplicationData::WATCH) {
+    view->SetBGColor(0, 0, 0, 255);
+  } else {
+    view->SetBGColor(0, 0, 0, 0);
+  }
+#endif  // PROFILE_WEARABLE
+
   if (appcontrol->data(AUL_K_DEBUG) == "1") {
     debug_mode_ = true;
     LaunchInspector(appcontrol.get());
