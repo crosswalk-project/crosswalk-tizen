@@ -307,7 +307,8 @@ void Popup::SetBody(const std::string& str_id) {
   Evas_Object* label = elm_label_add(box_);
   elm_object_style_set(label, kStyleLabel);
   elm_label_line_wrap_set(label, ELM_WRAP_MIXED);
-  elm_object_part_text_set(label, kContentText, str_id.c_str());
+  elm_object_domain_translatable_part_text_set(
+                     label, kContentText, kTextDomainRuntime, str_id.c_str());
   evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
 #ifdef MODEL_FORMFACTOR_CIRCLE
