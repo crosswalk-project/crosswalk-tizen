@@ -188,3 +188,4 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt
 %attr(755,root,root) %{_bindir}/wrt-loader
 %attr(644,root,root) %{_datadir}/aul/wrt.loader
+%caps(cap_sys_admin,cap_setgid=ei) %{_bindir}/wrt-loader
