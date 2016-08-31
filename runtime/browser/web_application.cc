@@ -52,7 +52,6 @@
 namespace runtime {
 
 namespace {
-// TODO(sngn.lee) : It should be declare in common header
 const char* kKeyNameBack = "back";
 const char* kKeyNameMenu = "menu";
 
@@ -363,12 +362,6 @@ bool WebApplication::Initialize() {
         app_data_->widget_info()->default_locale());
   }
 
-  // TODO(sngn.lee): Find the path of certificate file
-  // ewk_context_certificate_file_set(ewk_context_, .... );
-
-  // TODO(sngn.lee): find the proxy url
-  // ewk_context_proxy_uri_set(ewk_context_, ... );
-
   if (app_data_->csp_info() != NULL || app_data_->csp_report_info() != NULL ||
       app_data_->allowed_navigation_info() != NULL) {
     security_model_version_ = 2;
@@ -657,7 +650,6 @@ void WebApplication::OnOrientationLock(
       app_data_->setting_info() != NULL
           ? app_data_->setting_info()->screen_orientation()
           :
-          // TODO(sngn.lee): check default value
           wgt::parse::SettingInfo::ScreenOrientation::AUTO;
   if (orientaion_setting != wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
     return;
@@ -871,8 +863,6 @@ void WebApplication::SetupWebView(WebView* view) {
       view->SetCSPRule(csp_report_rule_, true);
     }
   }
-
-  // TODO(sngn.lee): set UserAgent to WebView
 }
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,

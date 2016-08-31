@@ -17,7 +17,6 @@
 #ifndef XWALK_RUNTIME_BROWSER_VIBRATION_MANAGER_H_
 #define XWALK_RUNTIME_BROWSER_VIBRATION_MANAGER_H_
 
-// TODO(sngn.lee): this class will move to src/platform/ directory
 namespace runtime {
 namespace platform {
 class VibrationManager {
