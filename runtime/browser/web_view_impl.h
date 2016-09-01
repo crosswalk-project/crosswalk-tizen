@@ -54,6 +54,7 @@ class WebViewImpl {
 
   void SetEventListener(WebView::EventListener* listener);
   Evas_Object* evas_object() const;
+  Evas_Object* native_view() const;
 
  private:
   void OnKeyEvent(Eext_Callback_Type key_type);
@@ -87,6 +88,7 @@ class WebViewImpl {
   NativeWindow* window_;
   Ewk_Context* context_;
   Evas_Object* ewk_view_;
+  Evas_Object* native_view_;
   WebView::EventListener* listener_;
   int rotation_handler_id_;
   WebView* view_;

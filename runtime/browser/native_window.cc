@@ -17,7 +17,6 @@
 #include "runtime/browser/native_window.h"
 
 #include <Ecore_Wayland.h>
-#include <ewk_chromium.h>
 #include <cstdint>
 
 #include "common/arraysize.h"
@@ -28,8 +27,6 @@ namespace runtime {
 namespace {
 const char* kEdjePath = "/usr/share/edje/xwalk/xwalk_tizen.edj";
 const char* kWinowRotationEventKey = "wm,rotation,changed";
-const char* kWinowFocusedEventKey = "focused";
-const char* kWinowUnfocusedEventKey = "unfocused";
 
 const int kPortraitNaturalAngle[] = {
   0,  // PORTRAIT_PRIMARY
@@ -71,7 +68,7 @@ NativeWindow::NativeWindow()
     : window_(NULL),
       window_type_(Type::NORMAL),
       initialized_(false),
-      focus_(NULL),
+      layout_(NULL),
       content_(NULL),
       rotation_(0),
       handler_id_(0) {
@@ -124,40 +121,7 @@ void NativeWindow::Initialize() {
   EVAS_SIZE_EXPAND_FILL(top_layout);
   elm_object_content_set(conformant, top_layout);
   evas_object_show(top_layout);
-
-  // focus
-  Evas_Object* focus = elm_bg_add(top_layout);
-  evas_object_size_hint_align_set(focus, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  evas_object_size_hint_weight_set(focus, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  elm_object_focus_allow_set(focus, EINA_TRUE);
-  elm_object_part_content_set(top_layout, "elm.swallow.content", focus);
-  EVAS_SIZE_EXPAND_FILL(focus);
-  elm_access_object_unregister(focus);
-  evas_object_show(focus);
-  focus_ = focus;
-
-  // focus callback
-  auto focus_callback = [](void* user_data,
-                           Evas_Object*,
-                           void*) -> void {
-    NativeWindow* window = static_cast<NativeWindow*>(user_data);
-    window->DidFocusChanged(true);
-  };
-  auto unfocus_callback = [](void* user_data,
-                             Evas_Object*,
-                             void*) -> void {
-    NativeWindow* window = static_cast<NativeWindow*>(user_data);
-    window->DidFocusChanged(false);
-  };
-
-  evas_object_smart_callback_add(focus,
-                                 kWinowFocusedEventKey,
-                                 focus_callback,
-                                 this);
-  evas_object_smart_callback_add(focus,
-                                 kWinowUnfocusedEventKey,
-                                 unfocus_callback,
-                                 this);
+  layout_ = top_layout;
 
   // Rotation
   auto rotation_callback = [](void* user_data,
@@ -205,10 +169,11 @@ void NativeWindow::SetContent(Evas_Object* content) {
   // issue elm_object_part_content_unset() on it first.
 
   evas_object_show(content);
+
+  // Hide unseted evas object to avoid focus and event callback problem.
   evas_object_hide(
-    elm_object_part_content_unset(focus_, "elm.swallow.content"));
-  elm_object_part_content_set(focus_, "elm.swallow.content", content);
-  elm_object_focus_set(focus_, EINA_TRUE);
+    elm_object_part_content_unset(layout_, "elm.swallow.content"));
+  elm_object_part_content_set(layout_, "elm.swallow.content", content);
   content_ = content;
 
   // attached webview was resized by evas_norender API
@@ -220,12 +185,6 @@ void NativeWindow::DidRotation(int degree) {
   auto it = handler_table_.begin();
   for ( ; it != handler_table_.end(); ++it) {
     it->second(degree);
-  }
-}
-
-void NativeWindow::DidFocusChanged(bool got) {
-  if (content_ != NULL) {
-    ewk_view_focus_set(content_, got ? EINA_TRUE : EINA_FALSE);
   }
 }
 
