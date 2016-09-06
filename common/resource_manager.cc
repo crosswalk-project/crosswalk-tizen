@@ -649,22 +649,26 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
     }
   }
 
-  wae_app_type_e app_type = WAE_DOWNLOADED_NORMAL_APP;
-  if (is_global) {
-    app_type = WAE_DOWNLOADED_GLOBAL_APP;
-  } else if (is_preload) {
-    app_type = WAE_PRELOADED_APP;
-  }
-
   // decrypt buffer with wae functions
   uint8_t* dst_buf = nullptr;
   size_t dst_len = 0;
-  ret = wae_decrypt_web_application(pkg_id.c_str(),
-                                    app_type,
+
+  if (is_global) {
+    ret = wae_decrypt_global_web_application(pkg_id.c_str(),
+                                             is_preload,
+                                             reinterpret_cast<uint8_t*>(src_buf.get()),
+                                             src_len,
+                                             &dst_buf,
+                                             &dst_len);
+  } else {
+    ret = wae_decrypt_web_application(getuid(),
+                                    pkg_id.c_str(),
                                     reinterpret_cast<uint8_t*>(src_buf.get()),
                                     src_len,
                                     &dst_buf,
                                     &dst_len);
+  }
+
   if (WAE_ERROR_NONE != ret) {
     switch (ret) {
     case WAE_ERROR_INVALID_PARAMETER:
