@@ -90,4 +90,10 @@ void WebView::SetDefaultEncoding(const std::string& encoding) {
   impl_->SetDefaultEncoding(encoding);
 }
 
+#ifdef PROFILE_WEARABLE
+void WebView::SetBGColor(int r, int g, int b, int a) {
+  impl_->SetBGColor(r, g, b, a);
+}
+#endif  // PROFILE_WEARABLE
+
 }  // namespace runtime
