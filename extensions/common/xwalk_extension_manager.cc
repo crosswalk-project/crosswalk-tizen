@@ -119,7 +119,6 @@ void XWalkExtensionManager::LoadUserExtensions(const std::string app_path) {
     LOGGER(ERROR) << "Failed to get package root path";
     return;
   }
-  LOGGER(DEBUG) << "app path is : " <<app_path;
   std::string app_ext_pattern(app_path);
   app_ext_pattern.append(kUserPluginsDirectory);
   struct utsname u;
@@ -142,7 +141,6 @@ void XWalkExtensionManager::LoadUserExtensions(const std::string app_path) {
   app_ext_pattern.append("*");
   app_ext_pattern.append(kExtensionSuffix);
 
-  LOGGER(DEBUG) << "plugins directory : " << app_ext_pattern;
   StringSet files;
   {
     glob_t glob_result;

@@ -25,6 +25,7 @@ extern const char kAppDBRuntimeSection[];
 extern const char kAppDBRuntimeAppID[];
 extern const char kAppDBRuntimeName[];
 extern const char kAppDBRuntimeBundle[];
+extern const char kAppDBRuntimeBackgroundSupport[];
 
 extern const char kTextLocalePath[];
 extern const char kTextDomainRuntime[];

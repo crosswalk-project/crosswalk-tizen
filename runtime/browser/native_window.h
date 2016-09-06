@@ -53,6 +53,7 @@ class NativeWindow {
   int AddRotationHandler(RotationHandler handler);
   void RemoveRotationHandler(int id);
   int rotation() const { return rotation_; }
+  ScreenOrientation orientation() const;
   void Show();
   void Active();
   void InActive();

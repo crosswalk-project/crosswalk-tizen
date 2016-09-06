@@ -52,7 +52,6 @@
 namespace runtime {
 
 namespace {
-// TODO(sngn.lee) : It should be declare in common header
 const char* kKeyNameBack = "back";
 const char* kKeyNameMenu = "menu";
 
@@ -265,7 +264,24 @@ bool WebApplication::Initialize() {
   std::unique_ptr<char, decltype(std::free)*> path{app_get_data_path(),
                                                    std::free};
   app_data_path_ = path.get();
-  LOGGER(DEBUG) << "path is " << path.get();
+
+  if (app_data_->setting_info() != NULL &&
+      app_data_->setting_info()->screen_orientation() ==
+          wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kRotationLockFeature, true);
+    window_->SetAutoRotation();
+  } else if (app_data_->setting_info() != NULL &&
+             app_data_->setting_info()->screen_orientation() ==
+                 wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
+    window_->SetRotationLock(NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
+  } else if (app_data_->setting_info() != NULL &&
+             app_data_->setting_info()->screen_orientation() ==
+                 wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
+    window_->SetRotationLock(
+        NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY);
+  }
+
   splash_screen_.reset(new SplashScreen(
       window_, app_data_->splash_screen_info(), app_data_->application_path()));
   resource_manager_.reset(
@@ -327,22 +343,6 @@ bool WebApplication::Initialize() {
                                               kMediastreamRecordFeature, true);
   ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                               kEncryptedDatabaseFeature, true);
-  if (app_data_->setting_info() != NULL &&
-      app_data_->setting_info()->screen_orientation() ==
-          wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
-    ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kRotationLockFeature, true);
-    window_->SetAutoRotation();
-  } else if (app_data_->setting_info() != NULL &&
-             app_data_->setting_info()->screen_orientation() ==
-                 wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
-    window_->SetRotationLock(NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
-  } else if (app_data_->setting_info() != NULL &&
-             app_data_->setting_info()->screen_orientation() ==
-                 wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
-    window_->SetRotationLock(
-        NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY);
-  }
 
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->sound_mode() ==
@@ -362,12 +362,6 @@ bool WebApplication::Initialize() {
     locale_manager_->SetDefaultLocale(
         app_data_->widget_info()->default_locale());
   }
-
-  // TODO(sngn.lee): Find the path of certificate file
-  // ewk_context_certificate_file_set(ewk_context_, .... );
-
-  // TODO(sngn.lee): find the proxy url
-  // ewk_context_proxy_uri_set(ewk_context_, ... );
 
   if (app_data_->csp_info() != NULL || app_data_->csp_report_info() != NULL ||
       app_data_->allowed_navigation_info() != NULL) {
@@ -425,6 +419,13 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
 
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
+
+#ifdef PROFILE_WEARABLE
+  // ewk_view_bg_color_set is not working at webview initialization.
+  if (app_data_->app_type() == common::ApplicationData::WATCH) {
+    view->SetBGColor(0, 0, 0, 255);
+  }
+#endif  // PROFILE_WEARABLE
 
   if (appcontrol->data(AUL_K_DEBUG) == "1") {
     debug_mode_ = true;
@@ -657,7 +658,6 @@ void WebApplication::OnOrientationLock(
       app_data_->setting_info() != NULL
           ? app_data_->setting_info()->screen_orientation()
           :
-          // TODO(sngn.lee): check default value
           wgt::parse::SettingInfo::ScreenOrientation::AUTO;
   if (orientaion_setting != wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
     return;
@@ -871,8 +871,6 @@ void WebApplication::SetupWebView(WebView* view) {
       view->SetCSPRule(csp_report_rule_, true);
     }
   }
-
-  // TODO(sngn.lee): set UserAgent to WebView
 }
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,
@@ -1063,7 +1061,7 @@ void WebApplication::OnCertificateAllowRequest(
   popup->SetButtonType(Popup::ButtonType::AllowDenyButton);
   popup->SetTitle(popup_string::kPopupTitleCert);
   popup->SetBody(popup_string::GetText(
-                 popup_string::kPopupBodyCert)+" ["+url+"]");
+                 popup_string::kPopupBodyCert) + "\n\n" + url);
   popup->SetCheckBox(popup_string::kPopupCheckRememberPreference);
   popup->SetResultHandler(
       [db, result_handler, pem](Popup* popup, void* /*user_data*/) {

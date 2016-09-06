@@ -17,6 +17,7 @@
 #include "common/resource_manager.h"
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <aul.h>
 #include <pkgmgr-info.h>
 #include <stdio.h>
@@ -581,41 +582,6 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
   if (end_of_path != std::string::npos)
     src_path = src_path.substr(0, end_of_path);
 
-  FILE *src = fopen(src_path.c_str(), "rb");
-  if (!src) {
-    LOGGER(ERROR) << "Cannot open file for decryption: " << src_path;
-    return path;
-  }
-
-  // Read filesize
-  fseek(src, 0, SEEK_END);
-
-  size_t src_len = 0;
-  int ret = ftell(src);
-  if (ret < 0) {
-    LOGGER(ERROR) << "Cannot get filesize of " << src_path;
-    fclose(src);
-    return path;
-  } else {
-    src_len = static_cast<size_t>(ret);
-  }
-
-  if (src_len == 0) {
-    // if the file exists and is empty, bypass it
-    fclose(src);
-    return path;
-  }
-  rewind(src);
-
-  // Read buffer from the source file
-  std::unique_ptr<char[]> src_buf(new char[src_len]);
-  if (src_len != fread(src_buf.get(), sizeof(char), src_len, src)) {
-    LOGGER(ERROR) << "Read error, file: " << src_path;
-    fclose(src);
-    return path;
-  }
-  fclose(src);
-
   // checking web app type
   static bool inited = false;
   static bool is_global = false;
@@ -625,7 +591,7 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
   if (!inited) {
     inited = true;
     pkgmgrinfo_pkginfo_h handle;
-    ret = pkgmgrinfo_pkginfo_get_usr_pkginfo(pkg_id.c_str(), getuid(), &handle);
+    int ret = pkgmgrinfo_pkginfo_get_usr_pkginfo(pkg_id.c_str(), getuid(), &handle);
     if (ret != PMINFO_R_OK) {
       LOGGER(ERROR) << "Could not get handle for pkginfo : pkg_id = "
                     << pkg_id;
@@ -649,58 +615,114 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
     }
   }
 
-  wae_app_type_e app_type = WAE_DOWNLOADED_NORMAL_APP;
-  if (is_global) {
-    app_type = WAE_DOWNLOADED_GLOBAL_APP;
-  } else if (is_preload) {
-    app_type = WAE_PRELOADED_APP;
-  }
+  struct stat buf;
+  memset(&buf, 0, sizeof(buf));
+  if (stat(src_path.c_str(), &buf) == 0) {
+    const std::size_t file_size = buf.st_size;
+    std::unique_ptr<unsigned char[]> in_chunk;
 
-  // decrypt buffer with wae functions
-  uint8_t* dst_buf = nullptr;
-  size_t dst_len = 0;
-  ret = wae_decrypt_web_application(pkg_id.c_str(),
-                                    app_type,
-                                    reinterpret_cast<uint8_t*>(src_buf.get()),
-                                    src_len,
-                                    &dst_buf,
-                                    &dst_len);
-  if (WAE_ERROR_NONE != ret) {
-    switch (ret) {
-    case WAE_ERROR_INVALID_PARAMETER:
-      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_INVALID_PARAMETER";
-      break;
-    case WAE_ERROR_PERMISSION_DENIED:
-      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_PERMISSION_DENIED";
-      break;
-    case WAE_ERROR_NO_KEY:
-      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_NO_KEY";
-      break;
-    case WAE_ERROR_KEY_MANAGER:
-      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_KEY_MANAGER";
-      break;
-    case WAE_ERROR_CRYPTO:
-      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_CRYPTO";
-      break;
-    case WAE_ERROR_UNKNOWN:
-      LOGGER(ERROR) << "Error during decryption: WAE_ERROR_UNKNOWN";
-      break;
-    default:
-      LOGGER(ERROR) << "Error during decryption: UNKNOWN";
-      break;
+    if (0 == file_size) {
+      LOGGER(ERROR) << src_path.c_str() << " size is 0, so decryption is skiped";
+      return path;
     }
-    return path;
+
+    FILE *src = fopen(src_path.c_str(), "rb");
+    if (src == NULL) {
+      LOGGER(ERROR) << "Cannot open file for decryption: " << path;
+      return path;
+    }
+
+    // Read buffer from the source file
+    std::unique_ptr<unsigned char[]> decrypted_str(new unsigned char[file_size]);
+    int decrypted_size = 0;
+
+    do {
+      unsigned char get_dec_size[4];
+      memset(get_dec_size, 0x00, sizeof(get_dec_size));
+
+      size_t read_size =
+        fread(get_dec_size, sizeof(unsigned char), sizeof(get_dec_size), src);
+      if (0 != read_size) {
+        unsigned int read_buf_size = 0;
+        std::istringstream(std::string((char*)get_dec_size)) >> read_buf_size;
+        if (read_buf_size == 0) {
+          LOGGER(ERROR) << "Failed to read resource";
+          fclose(src);
+          return path;
+        }
+        in_chunk.reset(new unsigned char[read_buf_size]);
+
+        size_t dec_read_size =
+          fread(in_chunk.get(), sizeof(unsigned char), read_buf_size, src);
+        if (0 != dec_read_size) {
+          unsigned char* decrypted_data = nullptr;
+          size_t decrypted_len = 0;
+          int ret;
+          if (is_global) {
+            ret = wae_decrypt_global_web_application(pkg_id.c_str(),
+                                                     is_preload,
+                                                     in_chunk.get(),
+                                                     (int)dec_read_size,
+                                                     &decrypted_data,
+                                                     &decrypted_len);
+          } else {
+            ret = wae_decrypt_web_application(getuid(),
+                                              pkg_id.c_str(),
+                                              in_chunk.get(),
+                                              (int)dec_read_size,
+                                              &decrypted_data,
+                                              &decrypted_len);
+          }
+
+          if (WAE_ERROR_NONE != ret) {
+            LOGGER(ERROR) << "Error during decryption: ";
+            switch (ret) {
+            case WAE_ERROR_INVALID_PARAMETER:
+              LOGGER(ERROR) << "WAE_ERROR_INVALID_PARAMETER";
+              break;
+            case WAE_ERROR_PERMISSION_DENIED:
+              LOGGER(ERROR) << "WAE_ERROR_PERMISSION_DENIED";
+              break;
+            case WAE_ERROR_NO_KEY:
+              LOGGER(ERROR) << "WAE_ERROR_NO_KEY";
+              break;
+            case WAE_ERROR_KEY_MANAGER:
+              LOGGER(ERROR) << "WAE_ERROR_KEY_MANAGER";
+              break;
+            case WAE_ERROR_CRYPTO:
+              LOGGER(ERROR) << "WAE_ERROR_CRYPTO";
+              break;
+            case WAE_ERROR_UNKNOWN:
+              LOGGER(ERROR) << "WAE_ERROR_UNKNOWN";
+              break;
+            default:
+              LOGGER(ERROR) << "UNKNOWN";
+              break;
+            }
+            fclose(src);
+            return path;
+          }
+
+          memcpy(decrypted_str.get() + decrypted_size, decrypted_data, decrypted_len);
+          decrypted_size += decrypted_len;
+          std::free(decrypted_data);
+        }
+      }
+    } while(0 == std::feof(src));
+    fclose(src);
+    memset(decrypted_str.get() + decrypted_size, '\n', file_size - decrypted_size);
+
+    // change to data schem
+    std::stringstream dst_str;
+    std::string content_type = GetMimeFromUri(path);
+    std::string encoded = utils::Base64Encode(decrypted_str.get(), decrypted_size);
+    dst_str << "data:" << content_type << ";base64," << encoded;
+
+    decrypted_str.reset(new unsigned char[file_size]);
+
+    return dst_str.str();
   }
-
-  // change to data schem
-  std::stringstream dst_str;
-  std::string content_type = GetMimeFromUri(path);
-  std::string encoded = utils::Base64Encode(dst_buf, dst_len);
-  dst_str << "data:" << content_type << ";base64," << encoded;
-
-  std::free(dst_buf);
-
-  return dst_str.str();
+  return path;
 }
 
 }  // namespace common

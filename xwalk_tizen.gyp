@@ -7,6 +7,7 @@
         'common/common.gyp:*',
         'extensions/extensions.gyp:*',
         'runtime/runtime.gyp:*',
+        'loader/loader.gyp:*',
       ],
     }, # end of target 'xwalk_tizen'
   ], # end of targets

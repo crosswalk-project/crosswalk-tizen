@@ -79,6 +79,11 @@ bool WatchRuntime::OnCreate() {
   common::AppDB* appdb = common::AppDB::GetInstance();
   appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeName, "xwalk-tizen");
   appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeAppID, appid);
+  if (app_data_->setting_info()->background_support_enabled()) {
+    appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeBackgroundSupport, "true");
+  } else {
+    appdb->Set(kAppDBRuntimeSection, kAppDBRuntimeBackgroundSupport, "false");
+  }
   appdb->Remove(kAppDBRuntimeSection, kAppDBRuntimeBundle);
 
   // Init WebApplication
@@ -95,6 +100,14 @@ bool WatchRuntime::OnCreate() {
 }
 
 void WatchRuntime::OnTerminate() {
+  if (application_) {
+    delete application_;
+    application_ = nullptr;
+  }
+  if (native_window_) {
+    delete native_window_;
+    native_window_ = nullptr;
+  }
 }
 
 void WatchRuntime::OnPause() {
