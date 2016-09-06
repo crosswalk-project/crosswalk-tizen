@@ -20,15 +20,50 @@
 #include <ewk_chromium.h>
 #include <cstdint>
 
+#include "common/arraysize.h"
 #include "common/logger.h"
 
 namespace runtime {
 
 namespace {
-  const char* kEdjePath = "/usr/share/edje/xwalk/xwalk_tizen.edj";
-  const char* kWinowRotationEventKey = "wm,rotation,changed";
-  const char* kWinowFocusedEventKey = "focused";
-  const char* kWinowUnfocusedEventKey = "unfocused";
+const char* kEdjePath = "/usr/share/edje/xwalk/xwalk_tizen.edj";
+const char* kWinowRotationEventKey = "wm,rotation,changed";
+const char* kWinowFocusedEventKey = "focused";
+const char* kWinowUnfocusedEventKey = "unfocused";
+
+const int kPortraitNaturalAngle[] = {
+  0,  // PORTRAIT_PRIMARY
+  180,  // PORTRAIT_SECONDARY
+  270,  // LANDSCAPE_PRIMARY
+  90,  // LANDSCAPE_SECONDARY
+  0,  // NATURAL
+  -1  // ANY
+};
+const int kLandscapeNaturalAngle[] = {
+  270,  // PORTRAIT_PRIMARY
+  90,  // PORTRAIT_SECONDARY
+  0,  // LANDSCAPE_PRIMARY
+  180,  // LANDSCAPE_SECONDARY
+  0,  // NATURAL
+  -1,  // ANY
+};
+
+NativeWindow::ScreenOrientation NativeAngleToOrientation(
+    int angle, NativeWindow::ScreenOrientation natural_orientation) {
+  auto& convert_table =
+      natural_orientation == NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY ?
+          kPortraitNaturalAngle :
+          kLandscapeNaturalAngle;
+  unsigned index = ARRAYSIZE(convert_table) - 1;
+  for (unsigned i = 0; i < ARRAYSIZE(convert_table); ++i) {
+    if (convert_table[i] == angle) {
+      index = i;
+      break;
+    }
+  }
+  return static_cast<NativeWindow::ScreenOrientation>(index);
+}
+
 }  // namespace
 
 
@@ -204,6 +239,10 @@ void NativeWindow::RemoveRotationHandler(int id) {
   handler_table_.erase(id);
 }
 
+NativeWindow::ScreenOrientation NativeWindow::orientation() const {
+  return NativeAngleToOrientation(rotation_, natural_orientation_);
+}
+
 void NativeWindow::SetRotationLock(int degree) {
   if (degree != -1)
     rotation_ = degree % 360;
@@ -211,26 +250,10 @@ void NativeWindow::SetRotationLock(int degree) {
 }
 
 void NativeWindow::SetRotationLock(ScreenOrientation orientation) {
-  int portrait_natural_angle[] = {
-    0,  // PORTRAIT_PRIMARY
-    180,  // PORTRAIT_SECONDARY
-    270,  // LANDSCAPE_PRIMARY
-    90,  // LANDSCAPE_SECONDARY
-    0,  // NATURAL
-    -1  // ANY
-  };
-  int landscape_natural_angle[] = {
-    270,  // PORTRAIT_PRIMARY
-    90,  // PORTRAIT_SECONDARY
-    0,  // LANDSCAPE_PRIMARY
-    180,  // LANDSCAPE_SECONDARY
-    0,  // NATURAL
-    -1,  // ANY
-  };
   auto& convert_table =
       natural_orientation_ == ScreenOrientation::PORTRAIT_PRIMARY ?
-          portrait_natural_angle :
-          landscape_natural_angle;
+          kPortraitNaturalAngle :
+          kLandscapeNaturalAngle;
   SetRotationLock(convert_table[static_cast<int>(orientation)]);
 }
 
