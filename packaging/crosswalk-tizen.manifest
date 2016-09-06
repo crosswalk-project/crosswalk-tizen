@@ -4,5 +4,6 @@
     </request>
     <assign>
         <filesystem path="/usr/bin/wrt-loader" exec_label="User" />
+        <filesystem path="/usr/bin/xwalk_runtime" exec_label="none" />
     </assign>
 </manifest>
