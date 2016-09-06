@@ -24,6 +24,7 @@ const char kAppDBRuntimeSection[] = "Runtime";
 const char kAppDBRuntimeAppID[] = "app_id";
 const char kAppDBRuntimeName[] = "runtime_name";
 const char kAppDBRuntimeBundle[] = "encoded_bundle";
+const char kAppDBRuntimeBackgroundSupport[] = "background_support";
 
 const char kTextLocalePath[] = "/usr/share/locale";
 const char kTextDomainRuntime[] = "xwalk";
