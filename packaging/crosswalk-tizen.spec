@@ -154,7 +154,6 @@ install -p -m 644 out/Default/gen/splash_screen.json %{buildroot}%{extension_pat
 # xwalk_runtime
 install -p -m 755 out/Default/xwalk_runtime %{buildroot}%{_bindir}
 ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt
-ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt-loader
 
 # xwalk extension shared
 install -p -m 644 out/Default/lib/libxwalk_extension_shared.so %{buildroot}%{_libdir}
@@ -167,6 +166,9 @@ install -p -m 644 out/Default/gen/*.edj %{buildroot}%{_datadir}/edje/xwalk
 
 # xwalk_injected_bundle
 install -p -m 755 out/Default/lib/libxwalk_injected_bundle.so %{buildroot}%{_libdir}
+
+# wrt-loader
+install -p -m 755 out/Default/wrt-loader %{buildroot}%{_bindir}
 
 %clean
 rm -fr %{buildroot}

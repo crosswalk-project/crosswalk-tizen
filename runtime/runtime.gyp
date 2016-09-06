@@ -46,6 +46,9 @@
         'browser/preload_manager.h',
         'browser/preload_manager.cc',
       ],
+      'ldflags': [
+        '-pie',
+      ],
       'variables': {
         'packages': [
           'capi-appfw-application',

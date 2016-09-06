@@ -137,6 +137,7 @@ int real_main(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
+__attribute__((visibility("default")))
 int main(int argc, char* argv[]) {
   if (strcmp(argv[0], "/usr/bin/wrt-loader") == 0) {
     elm_init(argc, argv);
