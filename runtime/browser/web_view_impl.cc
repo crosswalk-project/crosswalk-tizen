@@ -1002,4 +1002,10 @@ void WebViewImpl::SetDefaultEncoding(const std::string& encoding) {
   }
 }
 
+#ifdef PROFILE_WEARABLE
+void WebViewImpl::SetBGColor(int r, int g, int b, int a) {
+  ewk_view_bg_color_set(ewk_view_, r, g, b, a);
+}
+#endif
+
 }  // namespace runtime

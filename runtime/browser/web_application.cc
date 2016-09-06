@@ -266,6 +266,24 @@ bool WebApplication::Initialize() {
                                                    std::free};
   app_data_path_ = path.get();
   LOGGER(DEBUG) << "path is " << path.get();
+
+  if (app_data_->setting_info() != NULL &&
+      app_data_->setting_info()->screen_orientation() ==
+          wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
+    ewk_context_tizen_extensible_api_string_set(ewk_context_,
+                                                kRotationLockFeature, true);
+    window_->SetAutoRotation();
+  } else if (app_data_->setting_info() != NULL &&
+             app_data_->setting_info()->screen_orientation() ==
+                 wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
+    window_->SetRotationLock(NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
+  } else if (app_data_->setting_info() != NULL &&
+             app_data_->setting_info()->screen_orientation() ==
+                 wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
+    window_->SetRotationLock(
+        NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY);
+  }
+
   splash_screen_.reset(new SplashScreen(
       window_, app_data_->splash_screen_info(), app_data_->application_path()));
   resource_manager_.reset(
@@ -327,22 +345,6 @@ bool WebApplication::Initialize() {
                                               kMediastreamRecordFeature, true);
   ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                               kEncryptedDatabaseFeature, true);
-  if (app_data_->setting_info() != NULL &&
-      app_data_->setting_info()->screen_orientation() ==
-          wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
-    ewk_context_tizen_extensible_api_string_set(ewk_context_,
-                                                kRotationLockFeature, true);
-    window_->SetAutoRotation();
-  } else if (app_data_->setting_info() != NULL &&
-             app_data_->setting_info()->screen_orientation() ==
-                 wgt::parse::SettingInfo::ScreenOrientation::PORTRAIT) {
-    window_->SetRotationLock(NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY);
-  } else if (app_data_->setting_info() != NULL &&
-             app_data_->setting_info()->screen_orientation() ==
-                 wgt::parse::SettingInfo::ScreenOrientation::LANDSCAPE) {
-    window_->SetRotationLock(
-        NativeWindow::ScreenOrientation::LANDSCAPE_PRIMARY);
-  }
 
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->sound_mode() ==
@@ -425,6 +427,13 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
 
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
+
+#ifdef PROFILE_WEARABLE
+  // ewk_view_bg_color_set is not working at webview initialization.
+  if (app_data_->app_type() == common::ApplicationData::WATCH) {
+    view->SetBGColor(0, 0, 0, 255);
+  }
+#endif  // PROFILE_WEARABLE
 
   if (appcontrol->data(AUL_K_DEBUG) == "1") {
     debug_mode_ = true;

@@ -40,8 +40,10 @@ wgt::parse::ScreenOrientation ChooseOrientation(
   auto orientation_pair = splash_map.end();
 
   if (screen_orientation ==
-      runtime::NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY) {
-     orientation_pair =
+      runtime::NativeWindow::ScreenOrientation::PORTRAIT_PRIMARY ||
+      screen_orientation ==
+      runtime::NativeWindow::ScreenOrientation::PORTRAIT_SECONDARY) {
+    orientation_pair =
          splash_map.find(wgt::parse::ScreenOrientation::PORTRAIT);
   } else {
     orientation_pair =
@@ -106,7 +108,7 @@ SplashScreen::SplashScreen(
   if (ss_info == nullptr) return;
   auto splash_map = ss_info->splash_screen_data();
   auto used_orientation =
-      ChooseOrientation(splash_map, window->natural_orientation());
+      ChooseOrientation(splash_map, window->orientation());
   if (used_orientation == wgt::parse::ScreenOrientation::NONE) return;
 
   auto dimensions = GetDimensions();
