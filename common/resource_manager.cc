@@ -637,11 +637,11 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
     int decrypted_size = 0;
 
     do {
-      unsigned char get_dec_size[4];
+      unsigned char get_dec_size[5];
       memset(get_dec_size, 0x00, sizeof(get_dec_size));
 
       size_t read_size =
-        fread(get_dec_size, sizeof(unsigned char), sizeof(get_dec_size), src);
+        fread(get_dec_size, 1, 4, src);
       if (0 != read_size) {
         unsigned int read_buf_size = 0;
         std::istringstream(std::string((char*)get_dec_size)) >> read_buf_size;
@@ -653,7 +653,7 @@ std::string ResourceManager::DecryptResource(const std::string& path) {
         in_chunk.reset(new unsigned char[read_buf_size]);
 
         size_t dec_read_size =
-          fread(in_chunk.get(), sizeof(unsigned char), read_buf_size, src);
+          fread(in_chunk.get(), 1, read_buf_size, src);
         if (0 != dec_read_size) {
           unsigned char* decrypted_data = nullptr;
           size_t decrypted_len = 0;
