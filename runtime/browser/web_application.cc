@@ -265,7 +265,6 @@ bool WebApplication::Initialize() {
   std::unique_ptr<char, decltype(std::free)*> path{app_get_data_path(),
                                                    std::free};
   app_data_path_ = path.get();
-  LOGGER(DEBUG) << "path is " << path.get();
 
   if (app_data_->setting_info() != NULL &&
       app_data_->setting_info()->screen_orientation() ==
