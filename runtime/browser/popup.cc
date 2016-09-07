@@ -41,7 +41,6 @@ const char* kStyleCheck = "small";
 const char* kStyleButtonLeft = "popup/circle/left";
 const char* kStyleButtonRight = "popup/circle/right";
 #else
-const char* kLayoutTheme = "default";
 const char* kContentTitle = "title,text";
 const char* kContentText = NULL;
 
