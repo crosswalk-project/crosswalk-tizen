@@ -75,10 +75,9 @@ class NativeWindow {
                                  void* event_info);
   static void DidProfileChanged(void* data, Evas_Object* obj, void* event_info);
   void DidRotation(int degree);
-  void DidFocusChanged(bool got);
 
   bool initialized_;
-  Evas_Object* focus_;
+  Evas_Object* layout_;
   Evas_Object* content_;
   int rotation_;
   int handler_id_;

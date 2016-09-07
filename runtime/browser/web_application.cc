@@ -405,7 +405,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   STEP_PROFILE_END("OnCreate -> URL Set");
   STEP_PROFILE_START("URL Set -> Rendered");
 
-  window_->SetContent(view->evas_object());
+  window_->SetContent(view->native_view());
 
   // rotate and resize window forcibily for landscape mode.
   // window rotate event is generated after window show. so
@@ -463,7 +463,7 @@ void WebApplication::AppControl(
     SetupWebView(view);
     view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri(), res->mime());
-    window_->SetContent(view->evas_object());
+    window_->SetContent(view->native_view());
   }
 
   if (!debug_mode_ && appcontrol->data(AUL_K_DEBUG) == "1") {
@@ -542,7 +542,7 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
 
   SetupWebView(new_view);
   view_stack_.push_front(new_view);
-  window_->SetContent(new_view->evas_object());
+  window_->SetContent(new_view->native_view());
 }
 
 void WebApplication::RemoveWebViewFromStack(WebView* view) {
@@ -562,7 +562,7 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
     Terminate();
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
-    window_->SetContent(view_stack_.front()->evas_object());
+    window_->SetContent(view_stack_.front()->native_view());
   }
 
   // Delete after the callback context(for ewk view) was not used

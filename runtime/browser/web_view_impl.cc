@@ -75,6 +75,7 @@ WebViewImpl::WebViewImpl(WebView* view,
     : window_(window),
       context_(context),
       ewk_view_(NULL),
+      native_view_(NULL),
       listener_(NULL),
       rotation_handler_id_(0),
       view_(view),
@@ -195,6 +196,7 @@ void WebViewImpl::Initialize() {
                                  evas_smart_class_,
                                  context_,
                                  page_group);
+  native_view_ = ewk_view_widget_get(ewk_view_);
   evas_object_data_set(ewk_view_, kSmartClassUserDataKey, this);
 
   InitKeyCallback();
@@ -947,6 +949,10 @@ std::string WebViewImpl::GetUrl() {
 
 Evas_Object* WebViewImpl::evas_object() const {
   return ewk_view_;
+}
+
+Evas_Object* WebViewImpl::native_view() const {
+  return native_view_;
 }
 
 void WebViewImpl::OnRotation(int degree) {
