@@ -43,6 +43,7 @@ class SqliteDB : public AppDB {
 
  private:
   void Initialize();
+  void MigrationAppdb();
   std::string app_data_path_;
   sqlite3* sqldb_;
 };
