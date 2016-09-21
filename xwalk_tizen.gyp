@@ -8,6 +8,7 @@
         'extensions/extensions.gyp:*',
         'runtime/runtime.gyp:*',
         'loader/loader.gyp:*',
+        'wrt-upgrade/wrt-upgrade.gyp:*',
       ],
     }, # end of target 'xwalk_tizen'
   ], # end of targets

@@ -128,6 +128,7 @@ mkdir -p %{buildroot}%{_datadir}/locale
 mkdir -p %{buildroot}%{_datadir}/icons/xwalk
 mkdir -p %{buildroot}%{_datadir}/edje/xwalk
 mkdir -p %{buildroot}%{extension_path}
+mkdir -p %{buildroot}%{_datadir}/upgrade/scripts
 
 # License files
 cp LICENSE %{buildroot}%{_datadir}/license/%{name}
@@ -170,6 +171,10 @@ install -p -m 755 out/Default/lib/libxwalk_injected_bundle.so %{buildroot}%{_lib
 # wrt-loader
 install -p -m 755 out/Default/wrt-loader %{buildroot}%{_bindir}
 
+# wrt-upgrade
+install -p -m 755 out/Default/wrt-upgrade %{buildroot}%{_bindir}
+install -p -m 644 out/Default/gen/310.wrt.upgrade.sh %{buildroot}%{_datadir}/upgrade/scripts/310.wrt.upgrade.sh
+
 %clean
 rm -fr %{buildroot}
 
@@ -190,4 +195,6 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt
 %attr(755,root,root) %{_bindir}/wrt-loader
 %attr(644,root,root) %{_datadir}/aul/wrt.loader
+%attr(755,root,root) %{_bindir}/wrt-upgrade
+%attr(755,root,root) %{_datadir}/upgrade/scripts/310.wrt.upgrade.sh
 %caps(cap_sys_admin,cap_setgid=ei) %{_bindir}/wrt-loader

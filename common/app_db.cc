@@ -23,12 +23,16 @@
 #include <app.h>
 #include <sqlite3.h>
 #include <unistd.h>
+#include <fstream>
 #endif
 
 #include <memory>
 
 #include "common/logger.h"
 #include "common/string_utils.h"
+#include "common/file_utils.h"
+#include "common/picojson.h"
+
 #ifndef USE_APP_PREFERENCE
 #include "common/app_db_sqlite.h"
 #endif
@@ -136,6 +140,72 @@ SqliteDB::~SqliteDB() {
   }
 }
 
+void SqliteDB::MigrationAppdb() {
+  // file check
+  std::string migration_path = app_data_path_ + ".runtime.migration";
+  if (!common::utils::Exists(migration_path)) {
+    return;
+  } else {
+    LOGGER(DEBUG) << "Migration file found : " << migration_path;
+  }
+
+  std::ifstream migration_file(migration_path);
+  if (!migration_file.is_open()) {
+    LOGGER(ERROR) << "Fail to open file";
+    return;
+  }
+  picojson::value v;
+  std::string err;
+  err = picojson::parse(v, migration_file);
+  if (!err.empty()) {
+    LOGGER(ERROR) << "Fail to parse file :" << err;
+    return;
+  }
+
+  LOGGER(DEBUG) << "Start to get list data";
+
+  picojson::array data_list;
+
+  if (!v.get("preference").is<picojson::null>()) {
+    picojson::array preference_list
+      = v.get("preference").get<picojson::array>();
+    data_list.insert(data_list.end(),
+                     preference_list.begin(),
+                     preference_list.end());
+  }
+  if (!v.get("certificate").is<picojson::null>()) {
+    picojson::array certificate_list
+      = v.get("certificate").get<picojson::array>();
+    data_list.insert(data_list.end(),
+                     certificate_list.begin(),
+                     certificate_list.end());
+  }
+  if (!v.get("security_origin").is<picojson::null>()) {
+    picojson::array security_origin_list
+      = v.get("security_origin").get<picojson::array>();
+    data_list.insert(data_list.end(),
+                     security_origin_list.begin(),
+                     security_origin_list.end());
+  }
+
+  for (auto it = data_list.begin(); it != data_list.end(); ++it) {
+    if (!it->is<picojson::object>()) continue;
+    std::string section = it->get("section").to_str();
+    std::string key = it->get("key").to_str();
+    std::string value = it->get("value").to_str();
+
+    LOGGER(DEBUG) << "INPUT[" << section << "][" << key << "][" << value << "]";
+    Set(section, key, value);
+  }
+
+  LOGGER(DEBUG) << "Migration complete";
+
+  if (0 != remove(migration_path.c_str())) {
+    LOGGER(ERROR) << "Fail to remove migration file";
+  }
+}
+
+
 void SqliteDB::Initialize() {
   if (app_data_path_.empty()) {
     LOGGER(ERROR) << "app data path was empty";
@@ -166,6 +236,7 @@ void SqliteDB::Initialize() {
     if (errmsg)
       sqlite3_free(errmsg);
   }
+  MigrationAppdb();
 }
 
 bool SqliteDB::HasKey(const std::string& section,
