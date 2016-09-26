@@ -32,58 +32,6 @@
 
 namespace runtime {
 
-/* Already changed the privilege from the launchpad.
-namespace {
-std::string g_smacklabel;
-
-int SmackLabelSetForTask(const std::string& label) {
-  int ret;
-  int fd;
-  char path[1024] = {0};
-  int tid = static_cast<int>(syscall(__NR_gettid));
-  snprintf(path, sizeof(path), "/proc/%d/attr/current", tid);
-  fd = open(path, O_WRONLY);
-  if (fd < 0)
-    return -1;
-  ret = write(fd, label.c_str(), label.length());
-  if (syncfs(fd) < 0) {
-    close(fd);
-    return -1;
-  }
-  close(fd);
-  return (ret < 0) ? -1 : 0;
-}
-
-void ChangePrivilegeForThreads(const std::string& appid) {
-  SCOPE_PROFILE();
-  g_smacklabel = "User::App::" + appid;
-  auto oldhandler = std::signal(SIGUSR1, [](int signo){
-    SmackLabelSetForTask(g_smacklabel);
-  });
-
-  int current_tid = static_cast<int>(syscall(__NR_gettid));
-
-  DIR* dir;
-  struct dirent entry;
-  struct dirent* result;
-
-  if ((dir = opendir("/proc/self/task")) != NULL) {
-    while (readdir_r(dir, &entry, &result) == 0 && result != NULL) {
-      if (strcmp(entry.d_name, ".") == 0 || strcmp(entry.d_name, "..") == 0)
-        continue;
-      int tid = atoi(entry.d_name);
-      if (tid == current_tid)
-        continue;
-      syscall(__NR_tkill, tid, SIGUSR1);
-    }
-    closedir(dir);
-  }
-  signal(SIGUSR1, oldhandler);
-}
-
-}  // namespace
-*/
-
 PreLauncher::PreLauncher() {
   ecore_init();
 }
@@ -145,8 +93,6 @@ int PreLauncher::Prelaunch(int argc, char* argv[],
                    const char *appid, const char *pkgid,
                    const char *pkg_type, void *user_data) {
     PreLauncher* launcher = static_cast<PreLauncher*>(user_data);
-    /* Already changed the privilege from the launchpad. */
-    //ChangePrivilegeForThreads(appid);
     launcher->didstart_(app_path);
     return 0;
   };
