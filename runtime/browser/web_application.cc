@@ -673,9 +673,11 @@ void WebApplication::OnOrientationLock(
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
   // NOTE: This code is added to enable back-key on remote URL
   if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
-    LOGGER(DEBUG) << "Back to previous page for remote URL";
-    if (!view->Backward()) {
-      RemoveWebViewFromStack(view_stack_.front());
+    if (kKeyNameBack == keyname) {
+      LOGGER(DEBUG) << "Back to previous page for remote URL";
+      if (!view->Backward()) {
+        RemoveWebViewFromStack(view_stack_.front());
+      }
     }
     return;
   }
