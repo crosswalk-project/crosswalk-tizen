@@ -73,10 +73,6 @@ Evas_Object* WebView::evas_object() const {
   return impl_->evas_object();
 }
 
-Evas_Object* WebView::native_view() const {
-  return impl_->native_view();
-}
-
 void WebView::SetAppInfo(const std::string& app_name,
                          const std::string& version) {
   impl_->SetAppInfo(app_name, version);

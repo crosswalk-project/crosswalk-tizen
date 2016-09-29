@@ -134,7 +134,6 @@ class WebView {
 
   void SetEventListener(EventListener* listener);
   Evas_Object* evas_object() const;
-  Evas_Object* native_view() const;
 
  private:
   WebViewImpl* impl_;
