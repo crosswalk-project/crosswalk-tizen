@@ -408,6 +408,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
 
   window_->SetContent(view->evas_object());
 
+#ifdef PROFILE_MOBILE
   // rotate and resize window forcibily for landscape mode.
   // window rotate event is generated after window show. so
   // when app get width and height from viewport, wrong value can be returned.
@@ -417,6 +418,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
     elm_win_rotation_with_resize_set(window_->evas_object(), 270);
     evas_norender(evas_object_evas_get(window_->evas_object()));
   }
+#endif  // PROFILE_MOBILE
 
   view->LoadUrl(res->uri(), res->mime());
   view_stack_.push_front(view);
