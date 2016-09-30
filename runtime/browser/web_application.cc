@@ -127,6 +127,7 @@ const char* kDBPrivateSection = "private";
 const char* kDefaultCSPRule =
     "default-src *; script-src 'self'; style-src 'self'; object-src 'none';";
 const char* kResWgtPath = "res/wgt/";
+const char* kAppControlMain = "http://tizen.org/appcontrol/operation/main";
 
 bool FindPrivilege(common::ApplicationData* app_data,
                    const std::string& privilege) {
@@ -454,6 +455,15 @@ void WebApplication::AppControl(
     } else {
       SendAppControlEvent();
     }
+  }
+
+  // handle http://tizen.org/appcontrol/operation/main operation specially.
+  // only menu-screen app can send launch request with main operation.
+  // in this case, web app should have to resume web app not reset.
+  if (do_reset && (appcontrol->operation() == kAppControlMain)){
+    LOGGER(DEBUG) << "resume app for main operation";
+    do_reset = false;
+    SendAppControlEvent();
   }
 
   if (do_reset) {
