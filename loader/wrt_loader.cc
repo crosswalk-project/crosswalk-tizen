@@ -19,7 +19,7 @@
 // loader file must have "User" execute label, because launchpad daemon runs 
 // with "System::Privileged" label.
 int main(int argc, char* argv[]) {
-  void* handle = dlopen("/usr/bin/xwalk_runtime", RTLD_LAZY);
+  void* handle = dlopen("/usr/bin/xwalk_runtime", RTLD_NOW);
   if (!handle) {
     dlog_print(DLOG_DEBUG, "XWALK", "Error loading xwalk_runtime");
     return false;
