@@ -5,7 +5,8 @@
 #ifndef XWALK_EXTENSIONS_XWALK_EXTENSION_SERVER_H_
 #define XWALK_EXTENSIONS_XWALK_EXTENSION_SERVER_H_
 
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 #include <json/json.h>
 
 #include <string>

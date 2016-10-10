@@ -18,7 +18,8 @@
 #define XWALK_EXTENSIONS_RENDERER_RUNTIME_IPC_CLIENT_H_
 
 #include <v8/v8.h>
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 
 #include <functional>
 #include <map>

@@ -18,7 +18,8 @@
 #define XWALK_RUNTIME_BROWSER_WEB_VIEW_H_
 
 #include <Elementary.h>
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 #include <functional>
 #include <string>
 

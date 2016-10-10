@@ -16,7 +16,6 @@
 
 #include "runtime/browser/runtime.h"
 
-#include <ewk_chromium.h>
 #include <Ecore.h>
 
 #include <memory>
