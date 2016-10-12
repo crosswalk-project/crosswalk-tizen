@@ -17,7 +17,8 @@
 #include "runtime/browser/native_window.h"
 
 #include <Ecore_Wayland.h>
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 #include <cstdint>
 
 #include "common/arraysize.h"

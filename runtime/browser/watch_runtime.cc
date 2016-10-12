@@ -14,7 +14,6 @@
  *    limitations under the License.
  */
 
-#include <ewk_chromium.h>
 #include <watch_app.h>
 #include <appcore-watch.h>
 

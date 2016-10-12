@@ -14,7 +14,6 @@
  *    limitations under the License.
  */
 
-#include <ewk_chromium.h>
 #include <Elementary.h>
 #include <inputmethod.h>
 

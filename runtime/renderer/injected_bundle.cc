@@ -15,7 +15,8 @@
  */
 
 #include <Ecore.h>
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 #include <unistd.h>
 #include <v8.h>
 #include <dlfcn.h>

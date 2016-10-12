@@ -17,7 +17,8 @@
 #include "runtime/browser/preload_manager.h"
 
 #include <Elementary.h>
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 #include <stdio.h>
 
 #include "common/logger.h"

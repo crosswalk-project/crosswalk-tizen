@@ -14,7 +14,8 @@
  *    limitations under the License.
  */
 
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 
 #include <Elementary.h>
 

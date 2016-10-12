@@ -18,7 +18,6 @@
 
 #include <app.h>
 #include <Ecore.h>
-#include <ewk_chromium.h>
 #include <aul.h>
 
 #include <algorithm>

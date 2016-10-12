@@ -17,7 +17,6 @@
 
 #include "runtime/browser/web_view_impl.h"
 
-#include <ewk_chromium.h>
 #include <functional>
 #include <sstream>
 

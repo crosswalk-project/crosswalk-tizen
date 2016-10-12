@@ -19,7 +19,8 @@
 
 #include <efl_extension.h>
 #include <Elementary.h>
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 
 #include <map>
 #include <string>
