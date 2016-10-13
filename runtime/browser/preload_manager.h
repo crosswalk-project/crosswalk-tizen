@@ -21,7 +21,6 @@
 
 #include <memory>
 
-
 namespace runtime {
 class NativeWindow;
 class PreloadManager {

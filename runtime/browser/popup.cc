@@ -14,7 +14,6 @@
  *    limitations under the License.
  */
 
-
 #include "runtime/browser/popup.h"
 
 #include "common/logger.h"
