@@ -219,6 +219,7 @@ void WebViewImpl::Initialize() {
 
   Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
   ewk_settings_scripts_can_open_windows_set(settings, EINA_TRUE);
+  ewk_settings_form_candidate_data_enabled_set(settings, EINA_TRUE);
   ewk_settings_default_text_encoding_name_set(settings, kDefaultEncoding);
 
   // TODO(sngn.lee): "protocolhandler,registration,requested"
