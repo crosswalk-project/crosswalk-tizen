@@ -16,7 +16,7 @@
 #include <dlfcn.h>
 #include <dlog.h>
 
-// loader file must have "User" execute label, because launchpad daemon runs 
+// loader file must have "User" execute label, because launchpad daemon runs
 // with "System::Privileged" label.
 int main(int argc, char* argv[]) {
   void* handle = dlopen("/usr/bin/xwalk_runtime", RTLD_NOW);
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
   MAIN_FUNC real_main = reinterpret_cast<MAIN_FUNC>(dlsym(handle, "main"));
   if (!real_main) {
     dlog_print(DLOG_DEBUG, "XWALK", "Error loading real_main");
-    return false;      
+    return false;
   }
 
   int ret = real_main(argc, argv);

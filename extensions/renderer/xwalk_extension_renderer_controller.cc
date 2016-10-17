@@ -113,6 +113,7 @@ void XWalkExtensionRendererController::OnReceivedIPCMessage(
 void XWalkExtensionRendererController::InitializeExtensionClient() {
   extensions_client_->Initialize();
 }
+
 void XWalkExtensionRendererController::LoadUserExtensions(
   const std::string app_path) {
   extensions_client_->LoadUserExtensions(app_path);

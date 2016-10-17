@@ -258,7 +258,6 @@ bool ApplicationData::LoadManifestData() {
   }
 
   app_type_ = GetAppType();
-
   loaded_ = true;
 
   return true;

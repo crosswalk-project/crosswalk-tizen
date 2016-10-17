@@ -16,7 +16,7 @@
       },
       'libraries' : [
         '-ldl',
-      ],      
+      ],
     }, # end of target 'wrt-loader'
   ],
 }
