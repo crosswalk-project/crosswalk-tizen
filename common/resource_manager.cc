@@ -118,6 +118,9 @@ static bool CompareMime(const std::string& info_mime,
 
 static bool CompareUri(const std::string& info_uri,
                        const std::string& request_uri) {
+  if (info_uri == "*")
+    return true;
+
   if (request_uri.empty())
     return info_uri.empty();
 
