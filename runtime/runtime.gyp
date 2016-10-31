@@ -48,6 +48,7 @@
       ],
       'ldflags': [
         '-pie',
+        '-export-dynamic',
       ],
       'variables': {
         'packages': [
