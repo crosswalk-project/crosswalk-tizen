@@ -179,6 +179,8 @@ void NativeWindow::Initialize() {
     natural_orientation_ = ScreenOrientation::PORTRAIT_PRIMARY;
   }
 
+  elm_win_indicator_mode_set(window_, ELM_WIN_INDICATOR_SHOW);
+
   initialized_ = true;
 }
 
