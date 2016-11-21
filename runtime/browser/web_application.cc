@@ -220,7 +220,7 @@ WebApplication::WebApplication(
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
-	  lang_changed_mode_(false),
+      lang_changed_mode_(false),
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       has_ownership_of_ewk_context_(true),
@@ -858,12 +858,12 @@ void WebApplication::OnRendered(WebView* /*view*/) {
 
   // Do not show(), active() for language change
   if(lang_changed_mode_ == false){
-	  // Show window after frame rendered.
-	  window_->Show();
-	  window_->Active();
+      // Show window after frame rendered.
+      window_->Show();
+      window_->Active();
   }
   else{
-	  lang_changed_mode_ = false;
+      lang_changed_mode_ = false;
   }
 }
 
