@@ -89,7 +89,7 @@ std::shared_ptr<const wgt::parse::SettingInfo>
   return setting_info_;
 }
 
-std::shared_ptr<const wgt::parse::SplashScreenInfo>
+std::shared_ptr<const wgt::parse::LaunchScreenInfo>
     ApplicationData::splash_screen_info() const {
   return splash_screen_info_;
 }
@@ -215,9 +215,9 @@ bool ApplicationData::LoadManifestData() {
         wgt::parse::SettingInfo::Key()));
 
   splash_screen_info_ =
-    std::static_pointer_cast<const wgt::parse::SplashScreenInfo>(
+    std::static_pointer_cast<const wgt::parse::LaunchScreenInfo>(
       widget_config_parser->GetManifestData(
-        wgt::parse::SplashScreenInfo::Key()));
+        wgt::parse::LaunchScreenInfo::Key()));
 
   tizen_application_info_ =
     std::static_pointer_cast<const wgt::parse::TizenApplicationInfo>(

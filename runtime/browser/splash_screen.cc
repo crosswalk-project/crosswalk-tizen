@@ -25,7 +25,7 @@
 
 #include "common/logger.h"
 #include "runtime/browser/native_window.h"
-#include "wgt_manifest_handlers/splash_screen_handler.h"
+#include "wgt_manifest_handlers/launch_screen_handler.h"
 
 using ScreenOrientation = runtime::NativeWindow::ScreenOrientation;
 
@@ -35,7 +35,7 @@ enum class BorderOption { REPEAT = 1, STRETCH, ROUND };
 
 wgt::parse::ScreenOrientation ChooseOrientation(
     const std::map<wgt::parse::ScreenOrientation,
-    wgt::parse::SplashScreenData>& splash_map,
+    wgt::parse::LaunchScreenData>& splash_map,
     ScreenOrientation screen_orientation) {
   auto orientation_pair = splash_map.end();
 
@@ -96,7 +96,7 @@ namespace runtime {
 
 SplashScreen::SplashScreen(
     runtime::NativeWindow* window,
-    std::shared_ptr<const wgt::parse::SplashScreenInfo> ss_info,
+    std::shared_ptr<const wgt::parse::LaunchScreenInfo> ss_info,
     const std::string& app_path)
     : ss_info_(ss_info),
       window_(window),
@@ -106,7 +106,7 @@ SplashScreen::SplashScreen(
       is_active_(false) {
   LOGGER(DEBUG) << "start of create splash screen";
   if (ss_info == nullptr) return;
-  auto splash_map = ss_info->splash_screen_data();
+  auto splash_map = ss_info->launch_screen_data();
   auto used_orientation =
       ChooseOrientation(splash_map, window->orientation());
   if (used_orientation == wgt::parse::ScreenOrientation::NONE) return;
@@ -153,7 +153,7 @@ std::pair<int, int> SplashScreen::GetDimensions() {
 }
 
 void SplashScreen::SetBackground(
-    const wgt::parse::SplashScreenData& splash_data, Evas_Object* parent,
+    const wgt::parse::LaunchScreenData& splash_data, Evas_Object* parent,
     const SplashScreenBound& bound, const std::string& app_path) {
   background_ = elm_bg_add(parent);
   if (!background_) return;
@@ -216,7 +216,7 @@ void SplashScreen::SetBackground(
 }
 
 void SplashScreen::SetImage(
-    const wgt::parse::SplashScreenData& splash_data, Evas_Object* parent,
+    const wgt::parse::LaunchScreenData& splash_data, Evas_Object* parent,
     const SplashScreenBound& bound, const std::string& app_path) {
   if (!background_) return;
   image_ = elm_image_add(background_);
