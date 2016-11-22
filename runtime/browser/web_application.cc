@@ -450,8 +450,8 @@ void WebApplication::AppControl(
 
   if (!do_reset) {
     std::string current_page = view_stack_.front()->GetUrl();
-    std::string localized_page =
-        resource_manager_->GetLocalizedPath(res->uri());
+    std::string localized_page = res->uri();
+
     if (current_page != localized_page) {
       do_reset = true;
     } else {
