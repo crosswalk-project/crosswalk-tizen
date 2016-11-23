@@ -132,7 +132,6 @@ class WebApplication : public WebView::EventListener {
   std::string csp_rule_;
   std::string csp_report_rule_;
   bool lang_changed_mode_;
-
 };
 
 }  // namespace runtime

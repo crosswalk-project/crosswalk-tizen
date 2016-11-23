@@ -26,7 +26,7 @@
 #include <Elementary.h>
 
 #include "runtime/browser/native_window.h"
-#include "wgt_manifest_handlers/splash_screen_handler.h"
+#include "wgt_manifest_handlers/launch_screen_handler.h"
 
 namespace runtime {
 
@@ -36,21 +36,21 @@ class SplashScreen {
   enum class HideReason { RENDERED, LOADFINISHED, CUSTOM };
 
   SplashScreen(NativeWindow* window,
-               std::shared_ptr<const wgt::parse::SplashScreenInfo> ss_info,
+               std::shared_ptr<const wgt::parse::LaunchScreenInfo> ss_info,
                const std::string& app_path);
   void HideSplashScreen(HideReason reason);
 
  private:
   std::pair<int, int> GetDimensions();
-  void SetBackground(const wgt::parse::SplashScreenData& splash_data,
+  void SetBackground(const wgt::parse::LaunchScreenData& splash_data,
                      Evas_Object* parent, const SplashScreenBound& bound,
                      const std::string& app_path);
 
-  void SetImage(const wgt::parse::SplashScreenData& splash_data,
+  void SetImage(const wgt::parse::LaunchScreenData& splash_data,
                 Evas_Object* parent, const SplashScreenBound& bound,
                 const std::string& app_path);
 
-  std::shared_ptr<const wgt::parse::SplashScreenInfo> ss_info_;
+  std::shared_ptr<const wgt::parse::LaunchScreenInfo> ss_info_;
   NativeWindow* window_;
   Evas_Object* image_;
   Evas_Object* background_;

@@ -24,12 +24,12 @@
 #include <wgt_manifest_handlers/content_handler.h>
 #include <wgt_manifest_handlers/csp_handler.h>
 #include <wgt_manifest_handlers/ime_handler.h>
+#include <wgt_manifest_handlers/launch_screen_handler.h>
 #include <wgt_manifest_handlers/metadata_handler.h>
 #include <wgt_manifest_handlers/navigation_handler.h>
 #include <wgt_manifest_handlers/permissions_handler.h>
 #include <wgt_manifest_handlers/service_handler.h>
 #include <wgt_manifest_handlers/setting_handler.h>
-#include <wgt_manifest_handlers/splash_screen_handler.h>
 #include <wgt_manifest_handlers/tizen_application_handler.h>
 #include <wgt_manifest_handlers/warp_handler.h>
 #include <wgt_manifest_handlers/widget_handler.h>
@@ -68,7 +68,7 @@ class ApplicationData {
     permissions_info() const;
   std::shared_ptr<const wgt::parse::SettingInfo>
     setting_info() const;
-  std::shared_ptr<const wgt::parse::SplashScreenInfo>
+  std::shared_ptr<const wgt::parse::LaunchScreenInfo>
     splash_screen_info() const;
   std::shared_ptr<const wgt::parse::TizenApplicationInfo>
     tizen_application_info() const;
@@ -101,7 +101,7 @@ class ApplicationData {
     permissions_info_;
   std::shared_ptr<const wgt::parse::SettingInfo>
     setting_info_;
-  std::shared_ptr<const wgt::parse::SplashScreenInfo>
+  std::shared_ptr<const wgt::parse::LaunchScreenInfo>
     splash_screen_info_;
   std::shared_ptr<const wgt::parse::TizenApplicationInfo>
     tizen_application_info_;
