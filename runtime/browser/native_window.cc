@@ -134,6 +134,7 @@ void NativeWindow::Initialize() {
   elm_object_part_content_set(top_layout, "elm.swallow.content", focus);
   EVAS_SIZE_EXPAND_FILL(focus);
   elm_access_object_unregister(focus);
+  elm_atspi_accessible_role_set(focus, ELM_ATSPI_ROLE_FILLER);
   evas_object_show(focus);
   focus_ = focus;
 
