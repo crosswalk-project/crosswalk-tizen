@@ -684,19 +684,22 @@ void WebApplication::OnOrientationLock(
 
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
   // NOTE: This code is added to enable back-key on remote URL
+  bool enabled = app_data_->setting_info() != NULL
+                     ? app_data_->setting_info()->hwkey_enabled()
+                     : true;
+
   if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
     if (kKeyNameBack == keyname) {
       LOGGER(DEBUG) << "Back to previous page for remote URL";
       if (!view->Backward()) {
+        if(enabled)
+          view->EvalJavascript(kBackKeyEventScript);
         RemoveWebViewFromStack(view_stack_.front());
       }
     }
     return;
   }
 
-  bool enabled = app_data_->setting_info() != NULL
-                     ? app_data_->setting_info()->hwkey_enabled()
-                     : true;
   if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
     // NOTE: This code is added for backward compatibility.
