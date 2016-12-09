@@ -364,6 +364,11 @@ bool WebApplication::Initialize() {
         app_data_->widget_info()->default_locale());
   }
 
+  if (app_data_->widget_info() != NULL &&
+        app_data_->widget_info()->view_modes() == "fullscreen") {
+      window_->FullScreen(true);
+  }
+
   if (app_data_->csp_info() != NULL || app_data_->csp_report_info() != NULL ||
       app_data_->allowed_navigation_info() != NULL) {
     security_model_version_ = 2;
