@@ -174,19 +174,11 @@ void NativeWindow::Initialize() {
                                  rotation_callback,
                                  this);
 
-#ifdef PROFILE_WEARABLE
-  if (w >= h) {
-    natural_orientation_ = ScreenOrientation::LANDSCAPE_PRIMARY;
-  } else {
-    natural_orientation_ = ScreenOrientation::PORTRAIT_PRIMARY;
-  }
-#else
   if (w > h) {
     natural_orientation_ = ScreenOrientation::LANDSCAPE_PRIMARY;
   } else {
     natural_orientation_ = ScreenOrientation::PORTRAIT_PRIMARY;
   }
-#endif
 
   elm_win_indicator_mode_set(window_, ELM_WIN_INDICATOR_SHOW);
 
