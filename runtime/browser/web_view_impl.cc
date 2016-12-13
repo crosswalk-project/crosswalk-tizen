@@ -890,7 +890,8 @@ void WebViewImpl::InitEditorClientImeCallback() {
     softkeyboard_value.width = self->ime_width_;
     softkeyboard_value.height = self->ime_height_;
 
-    self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
+    if (self->listener_)
+      self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
   };
 
   auto ime_closed_callback = [](void* user_data,
@@ -901,7 +902,8 @@ void WebViewImpl::InitEditorClientImeCallback() {
     SoftKeyboardChangeEventValue softkeyboard_value;
     softkeyboard_value.state = "off";
 
-    self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
+    if (self->listener_)
+      self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
   };
   evas_object_smart_callback_add(ewk_view_,
                                  "inputmethod,changed",

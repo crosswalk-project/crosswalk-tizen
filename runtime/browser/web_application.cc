@@ -567,10 +567,18 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
 
   WebView* current = view_stack_.front();
   if (current == view) {
+    // In order to prevent the crash issue due to the callback
+    // which occur after destroying WebApplication class,
+    // we have to set the 'SetEventListener' to NULL.
+    view->SetEventListener(NULL);
     view_stack_.pop_front();
   } else {
     auto found = std::find(view_stack_.begin(), view_stack_.end(), view);
     if (found != view_stack_.end()) {
+      // In order to prevent the crash issue due to the callback
+      // which occur after destroying WebApplication class,
+      // we have to set the 'SetEventListener' to NULL.
+      view->SetEventListener(NULL);
       view_stack_.erase(found);
     }
   }
