@@ -885,26 +885,28 @@ void WebViewImpl::InitEditorClientImeCallback() {
                            Evas_Object*,
                            void* event_info) {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_)
+      return;
 
     SoftKeyboardChangeEventValue softkeyboard_value;
     softkeyboard_value.state = "on";
     softkeyboard_value.width = self->ime_width_;
     softkeyboard_value.height = self->ime_height_;
 
-    if (self->listener_)
-      self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
+    self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
   };
 
   auto ime_closed_callback = [](void* user_data,
                            Evas_Object*,
                            void* event_info) {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_)
+      return;
 
     SoftKeyboardChangeEventValue softkeyboard_value;
     softkeyboard_value.state = "off";
 
-    if (self->listener_)
-      self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
+    self->listener_->OnSoftKeyboardChangeEvent(self->view_, softkeyboard_value);
   };
   evas_object_smart_callback_add(ewk_view_,
                                  "inputmethod,changed",
@@ -929,6 +931,9 @@ void WebViewImpl::InitRotaryEventCallback() {
                          Evas_Object*,
                          Eext_Rotary_Event_Info* event_info) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_)
+      return;
+
     Eext_Rotary_Event_Info* rotary = event_info;
 
     RotaryEventType type;
