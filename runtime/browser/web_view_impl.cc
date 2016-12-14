@@ -574,6 +574,7 @@ void WebViewImpl::InitCustomContextMenuCallback() {
       Ewk_Context_Menu_Item_Tag tag = ewk_context_menu_item_tag_get(item);
       switch (tag) {
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_IMAGE_IN_CURRENT_WINDOW:
+        case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_LINK:
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_IMAGE_IN_NEW_WINDOW:
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_LINK_IN_NEW_WINDOW:
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_FRAME_IN_NEW_WINDOW:
