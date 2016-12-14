@@ -173,7 +173,7 @@ install -p -m 755 out/Default/wrt-loader %{buildroot}%{_bindir}
 
 # wrt-upgrade
 install -p -m 755 out/Default/wrt-upgrade %{buildroot}%{_bindir}
-install -p -m 644 out/Default/gen/310.wrt.upgrade.sh %{buildroot}%{_datadir}/upgrade/scripts/310.wrt.upgrade.sh
+install -p -m 644 out/Default/gen/720.wrt.upgrade.sh %{buildroot}%{_datadir}/upgrade/scripts/720.wrt.upgrade.sh
 
 %clean
 rm -fr %{buildroot}
@@ -196,5 +196,5 @@ rm -fr %{buildroot}
 %attr(755,root,root) %{_bindir}/wrt-loader
 %attr(644,root,root) %{_datadir}/aul/wrt.loader
 %attr(755,root,root) %{_bindir}/wrt-upgrade
-%attr(755,root,root) %{_datadir}/upgrade/scripts/310.wrt.upgrade.sh
+%attr(755,root,root) %{_datadir}/upgrade/scripts/720.wrt.upgrade.sh
 %caps(cap_sys_admin,cap_setgid=ei) %{_bindir}/wrt-loader
