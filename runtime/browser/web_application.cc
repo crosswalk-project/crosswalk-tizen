@@ -444,6 +444,14 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   }
 
   launched_ = true;
+
+#ifdef PROFILE_MOBILE
+  if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
+    LOGGER(DEBUG) << "Show window after launch for remote URL";
+    window_->Show();
+    window_->Active();
+  }
+#endif  // PROFILE_MOBILE
 }
 
 void WebApplication::AppControl(
