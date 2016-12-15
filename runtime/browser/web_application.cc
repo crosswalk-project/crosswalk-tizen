@@ -444,6 +444,14 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   }
 
   launched_ = true;
+
+#ifdef PROFILE_MOBILE
+  if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
+    LOGGER(DEBUG) << "Show window after launch for remote URL";
+    window_->Show();
+    window_->Active();
+  }
+#endif  // PROFILE_MOBILE
 }
 
 void WebApplication::AppControl(
@@ -866,7 +874,7 @@ void WebApplication::OnLoadFinished(WebView* /*view*/) {
   splash_screen_->HideSplashScreen(SplashScreen::HideReason::LOADFINISHED);
 }
 
-void WebApplication::OnRendered(WebView* /*view*/) {
+void WebApplication::OnRendered(WebView* view) {
   STEP_PROFILE_END("URL Set -> Rendered");
   STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
@@ -875,8 +883,15 @@ void WebApplication::OnRendered(WebView* /*view*/) {
   // Do not show(), active() for language change
   if(lang_changed_mode_ == false){
       // Show window after frame rendered.
+#ifdef PROFILE_MOBILE
+      if (common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
+        window_->Show();
+        window_->Active();
+      }
+#else  // PROFILE_MOBILE
       window_->Show();
       window_->Active();
+#endif
   }
   else{
       lang_changed_mode_ = false;
