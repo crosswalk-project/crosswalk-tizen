@@ -1008,6 +1008,10 @@ void WebViewImpl::SetDefaultEncoding(const std::string& encoding) {
   }
 }
 
+void WebViewImpl::SetLongPolling(unsigned long longpolling) {
+    ewk_view_session_timeout_set(ewk_view_, longpolling);
+}
+
 #ifdef PROFILE_WEARABLE
 void WebViewImpl::SetBGColor(int r, int g, int b, int a) {
   ewk_view_bg_color_set(ewk_view_, r, g, b, a);
