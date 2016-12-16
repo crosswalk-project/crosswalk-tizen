@@ -117,6 +117,7 @@ class WebApplication : public WebView::EventListener {
   bool launched_;
   bool debug_mode_;
   bool verbose_mode_;
+  bool lang_changed_mode_;
   Ewk_Context* ewk_context_;
   bool has_ownership_of_ewk_context_;
   NativeWindow* window_;
@@ -131,7 +132,6 @@ class WebApplication : public WebView::EventListener {
   int security_model_version_;
   std::string csp_rule_;
   std::string csp_report_rule_;
-  bool lang_changed_mode_;
 };
 
 }  // namespace runtime

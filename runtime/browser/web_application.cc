@@ -923,6 +923,14 @@ void WebApplication::SetupWebView(WebView* view) {
       view->SetCSPRule(csp_report_rule_, true);
     }
   }
+
+// Setup longpolling value
+  if (app_data_->setting_info() != NULL &&
+     app_data_->setting_info()->long_polling()) {
+    boost::optional <unsigned int> polling_val(app_data_->setting_info()->long_polling());
+    unsigned long *ptr =  reinterpret_cast <unsigned long *> (&polling_val.get());
+    view->SetLongPolling(*ptr);
+  }
 }
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,
