@@ -725,8 +725,10 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
     view->EvalJavascript(kBackKeyEventScript);
     // NOTE: This code is added for backward compatibility.
     // If the 'backbutton_presence' is true, WebView should be navigated back.
-    if (app_data_->setting_info() &&
-        app_data_->setting_info()->backbutton_presence()) {
+    if ((app_data_->setting_info() != NULL &&
+         app_data_->setting_info()->backbutton_presence()) ||
+        (app_data_->widget_info() != NULL &&
+         app_data_->widget_info()->view_modes() == "windowed")) {
       if (!view->Backward()) {
         RemoveWebViewFromStack(view_stack_.front());
       }
