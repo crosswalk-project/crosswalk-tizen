@@ -214,6 +214,20 @@ static bool ProcessWellKnownScheme(const std::string& url) {
 
 }  // namespace
 
+std::vector<unsigned> ParseTizenVersion(const std::string& tizen_string) {
+  std::vector<unsigned> version(3, 0);
+  for (unsigned i = 0, index = 0; i < tizen_string.size(); i++) {
+    if ((i % 2) == 0) {
+      if (isdigit(tizen_string[i]) && index < version.size())
+        version[index++] = atoi(&tizen_string[i]);
+      else
+        return std::vector<unsigned>(3, 0);
+     } else if (tizen_string[i] != '.')
+        return std::vector<unsigned>(3, 0);
+  }
+  return version;
+}
+
 WebApplication::WebApplication(
     NativeWindow* window,
     common::ApplicationData* app_data)
@@ -403,6 +417,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   // Setup View
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
+  SetupWebViewTizenApplicationInfo(view);
 
   std::unique_ptr<common::ResourceManager::Resource> res =
       resource_manager_->GetStartResource(appcontrol.get());
@@ -932,6 +947,16 @@ void WebApplication::SetupWebView(WebView* view) {
     boost::optional <unsigned int> polling_val(app_data_->setting_info()->long_polling());
     unsigned long *ptr =  reinterpret_cast <unsigned long *> (&polling_val.get());
     view->SetLongPolling(*ptr);
+  }
+}
+
+void WebApplication::SetupWebViewTizenApplicationInfo(WebView* view) {
+  if (app_data_->tizen_application_info() != NULL &&
+      !app_data_->tizen_application_info()->required_version().empty()) {
+    Ewk_Settings* settings = ewk_view_settings_get(view->evas_object());
+    std::string tizen_version = app_data_->tizen_application_info()->required_version();
+    std::vector<unsigned> parsed_tizen_version = ParseTizenVersion(tizen_version);
+    ewk_settings_tizen_compatibility_mode_set(settings, parsed_tizen_version[0], parsed_tizen_version[1], parsed_tizen_version[2]);
   }
 }
 

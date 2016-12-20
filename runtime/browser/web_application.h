@@ -112,6 +112,7 @@ class WebApplication : public WebView::EventListener {
   void SendAppControlEvent();
   void LaunchInspector(common::AppControl* appcontrol);
   void SetupWebView(WebView* view);
+  void SetupWebViewTizenApplicationInfo(WebView* view);
   void RemoveWebViewFromStack(WebView* view);
 
   bool launched_;
