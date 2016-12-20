@@ -727,9 +727,9 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
   if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
     if (kKeyNameBack == keyname) {
       LOGGER(DEBUG) << "Back to previous page for remote URL";
+      if(enabled)
+        view->EvalJavascript(kBackKeyEventScript);
       if (!view->Backward()) {
-        if(enabled)
-          view->EvalJavascript(kBackKeyEventScript);
         RemoveWebViewFromStack(view_stack_.front());
       }
     }
