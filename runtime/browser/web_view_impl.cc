@@ -117,6 +117,10 @@ void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {
       return view->mime_set_cb_(url, mime, new_mime, data);
     };
     ewk_context_mime_override_callback_set(context_, mime_override_cb, this);
+  } else {
+    // In order to prevent crash issue, the callback should be released
+    // when the mime is empty.
+    ewk_context_mime_override_callback_set(context_, nullptr, nullptr);
   }
   ewk_view_url_set(ewk_view_, url.c_str());
 }
