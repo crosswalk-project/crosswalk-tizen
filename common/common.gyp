@@ -42,6 +42,7 @@
           'capi-appfw-app-manager',
           'capi-appfw-package-manager',
           'capi-system-system-settings',
+          'cynara-client',
           'dlog',
           'uuid',
           'libwebappenc',
