@@ -936,7 +936,7 @@ void WebViewImpl::InitRotaryEventCallback() {
                          Eext_Rotary_Event_Info* event_info) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (!self->listener_)
-      return;
+      return EINA_FALSE;
 
     Eext_Rotary_Event_Info* rotary = event_info;
 
