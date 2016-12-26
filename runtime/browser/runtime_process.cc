@@ -154,6 +154,7 @@ int real_main(int argc, char* argv[]) {
   }
 #endif
   ewk_shutdown();
+  elm_shutdown();
   elm_exit();
 
   return EXIT_SUCCESS;

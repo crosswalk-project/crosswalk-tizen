@@ -173,8 +173,17 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
 
 static Eina_Bool ExitAppIdlerCallback(void* data) {
   WebApplication* app = static_cast<WebApplication*>(data);
-  if (app)
-    app->Terminate();
+
+  if (app) {
+    std::list<WebView*> vstack = app->view_stack();
+    auto it = vstack.begin();
+
+    for (; it != vstack.end(); ++it) {
+      vstack.front()->SetVisibility(false);
+      ewk_view_page_close((*it)->evas_object());
+    }
+  }
+
   return ECORE_CALLBACK_CANCEL;
 }
 
@@ -238,6 +247,7 @@ WebApplication::WebApplication(
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       has_ownership_of_ewk_context_(true),
+      is_terminated_by_callback_(false),
       window_(window),
       appid_(app_data->app_id()),
       app_data_(app_data),
@@ -255,6 +265,7 @@ WebApplication::WebApplication(
       verbose_mode_(false),
       ewk_context_(context),
       has_ownership_of_ewk_context_(false),
+      is_terminated_by_callback_(false),
       window_(window),
       appid_(app_data->app_id()),
       app_data_(app_data),
@@ -567,6 +578,7 @@ void WebApplication::Suspend() {
 }
 
 void WebApplication::Terminate() {
+  is_terminated_by_callback_ = false;
   if (terminator_) {
     terminator_();
   } else {
@@ -586,28 +598,35 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
 }
 
 void WebApplication::RemoveWebViewFromStack(WebView* view) {
-  if (view_stack_.size() == 0) return;
+  if (view_stack_.size() == 0) {
+    if (is_terminated_by_callback_) {
+      Terminate();
+    } else {
+      return;
+    }
+  }
 
   WebView* current = view_stack_.front();
   if (current == view) {
-    // In order to prevent the crash issue due to the callback
-    // which occur after destroying WebApplication class,
-    // we have to set the 'SetEventListener' to NULL.
-    view->SetEventListener(NULL);
     view_stack_.pop_front();
   } else {
     auto found = std::find(view_stack_.begin(), view_stack_.end(), view);
     if (found != view_stack_.end()) {
-      // In order to prevent the crash issue due to the callback
-      // which occur after destroying WebApplication class,
-      // we have to set the 'SetEventListener' to NULL.
-      view->SetEventListener(NULL);
       view_stack_.erase(found);
     }
   }
 
   if (view_stack_.size() == 0) {
-    Terminate();
+    if (is_terminated_by_callback_) {
+      // In order to prevent the crash issue due to the callback
+      // which occur after destroying WebApplication class,
+      // we have to set the 'SetEventListener' to NULL.
+      view->SetEventListener(NULL);
+      Terminate();
+    } else {
+      ewk_view_page_close(view->evas_object());
+      return;
+    }
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
@@ -623,6 +642,7 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
 }
 
 void WebApplication::OnClosedWebView(WebView* view) {
+    is_terminated_by_callback_ = true;
     RemoveWebViewFromStack(view);
 }
 
