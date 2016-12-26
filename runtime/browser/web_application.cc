@@ -428,7 +428,7 @@ void WebApplication::SetupTizenVersion() {
         std::vector<unsigned> parsed_tizen_version = ParseTizenVersion(tizen_version);
         m_tizenCompatibilitySettings.m_major = parsed_tizen_version[0];
         m_tizenCompatibilitySettings.m_minor = parsed_tizen_version[1];
-        m_tizenCompatibilitySettings.m_release = parsed_tizen_version[0];
+        m_tizenCompatibilitySettings.m_release = parsed_tizen_version[2];
     }
 }
 
