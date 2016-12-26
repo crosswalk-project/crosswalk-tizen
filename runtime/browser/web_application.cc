@@ -421,9 +421,26 @@ bool WebApplication::Initialize() {
   return true;
 }
 
+void WebApplication::SetupTizenVersion() {
+    if (app_data_->tizen_application_info() != NULL &&
+            !app_data_->tizen_application_info()->required_version().empty()) {
+        std::string tizen_version = app_data_->tizen_application_info()->required_version();
+        std::vector<unsigned> parsed_tizen_version = ParseTizenVersion(tizen_version);
+        m_tizenCompatibilitySettings.m_major = parsed_tizen_version[0];
+        m_tizenCompatibilitySettings.m_minor = parsed_tizen_version[1];
+        m_tizenCompatibilitySettings.m_release = parsed_tizen_version[0];
+    }
+}
+
+bool WebApplication::tizenWebKitCompatibilityEnabled() const {
+  return m_tizenCompatibilitySettings.tizenWebKitCompatibilityEnabled();
+}
+
 void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   // send widget info to injected bundle
   ewk_context_tizen_app_id_set(ewk_context_, appid_.c_str());
+
+  SetupTizenVersion();
 
   // Setup View
   WebView* view = new WebView(window_, ewk_context_);
@@ -722,13 +739,20 @@ void WebApplication::OnOrientationLock(
   // Only top-most view can set the orientation relate operation
   if (view_stack_.front() != view) return;
 
-  auto orientaion_setting =
-      app_data_->setting_info() != NULL
-          ? app_data_->setting_info()->screen_orientation()
-          :
-          wgt::parse::SettingInfo::ScreenOrientation::AUTO;
-  if (orientaion_setting != wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
-    return;
+  // This is for 2.4 compatibility. Requested by Webengine Team.
+  //
+  // In Tizen 2.4 WebKit locking screen orientation was possible with Web API
+  // screen.lockOrientation(). This API was deprecated and replaced with
+  // screen.orientation.lock(). But for compatibility case we need to support
+  // old API.
+  if(!tizenWebKitCompatibilityEnabled()) {
+    auto orientaion_setting = app_data_->setting_info() != NULL
+        ? app_data_->setting_info()->screen_orientation()
+        : wgt::parse::SettingInfo::ScreenOrientation::AUTO;
+    if (wgt::parse::SettingInfo::ScreenOrientation::AUTO != orientaion_setting) {
+        // If Tizen version is 3.0, it return.
+        return;
+    }
   }
 
   if (lock) {
@@ -971,13 +995,13 @@ void WebApplication::SetupWebView(WebView* view) {
 }
 
 void WebApplication::SetupWebViewTizenApplicationInfo(WebView* view) {
-  if (app_data_->tizen_application_info() != NULL &&
-      !app_data_->tizen_application_info()->required_version().empty()) {
+  if (tizenWebKitCompatibilityEnabled()) {
     Ewk_Settings* settings = ewk_view_settings_get(view->evas_object());
-    std::string tizen_version = app_data_->tizen_application_info()->required_version();
-    std::vector<unsigned> parsed_tizen_version = ParseTizenVersion(tizen_version);
-    ewk_settings_tizen_compatibility_mode_set(settings, parsed_tizen_version[0], parsed_tizen_version[1], parsed_tizen_version[2]);
-  }
+    ewk_settings_tizen_compatibility_mode_set(settings,
+            m_tizenCompatibilitySettings.m_major,
+            m_tizenCompatibilitySettings.m_minor,
+            m_tizenCompatibilitySettings.m_release);
+    }
 }
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,
