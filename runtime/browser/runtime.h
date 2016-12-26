@@ -22,6 +22,7 @@
 #include <string>
 
 #include "common/application_data.h"
+#include "runtime/browser/web_application.h"
 
 namespace runtime {
 
@@ -31,8 +32,12 @@ class Runtime {
 
   virtual int Exec(int argc, char* argv[]) = 0;
 
+  static bool is_on_terminate_called;
   static std::unique_ptr<Runtime> MakeRuntime(
     common::ApplicationData* app_data);
+
+ protected:
+  void ClosePageFromOnTerminate(WebApplication* app);
 };
 
 }  // namespace runtime

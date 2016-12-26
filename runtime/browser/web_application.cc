@@ -44,6 +44,7 @@
 #include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/web_view.h"
 #include "runtime/browser/splash_screen.h"
+#include "runtime/browser/ui_runtime.h"
 #include "extensions/common/xwalk_extension_server.h"
 
 #ifndef INJECTED_BUNDLE_PATH
@@ -709,8 +710,12 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
 }
 
 void WebApplication::OnClosedWebView(WebView* view) {
-    is_terminated_by_callback_ = true;
-    RemoveWebViewFromStack(view);
+  is_terminated_by_callback_ = true;
+  RemoveWebViewFromStack(view);
+
+  if (runtime::Runtime::is_on_terminate_called) {
+    ecore_main_loop_quit();
+  }
 }
 
 void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,

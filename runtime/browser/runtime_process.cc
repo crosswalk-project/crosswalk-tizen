@@ -33,17 +33,10 @@
 #include "runtime/browser/prelauncher.h"
 #include "runtime/browser/preload_manager.h"
 
+#include "runtime/browser/ui_runtime.h"
+
 bool g_prelaunch = false;
 
-#ifdef IME_FEATURE_SUPPORT
-static Ecore_Timer* timeout = NULL;
-
-static Eina_Bool terminateDelayCallback(void* data) {
-  timeout = NULL;
-  ecore_main_loop_quit();
-  return ECORE_CALLBACK_CANCEL;
-}
-#endif
 #ifdef WATCH_FACE_FEATURE_SUPPORT
 static int setWatchEnv(int argc, char **argv) {
   bundle *kb = NULL;
@@ -139,20 +132,11 @@ int real_main(int argc, char* argv[]) {
     std::unique_ptr<runtime::Runtime> runtime =
         runtime::Runtime::MakeRuntime(appdata);
     ret = runtime->Exec(argc, argv);
+    if (runtime->is_on_terminate_called) {
+      ecore_main_loop_begin();
+    }
     runtime.reset();
   }
-#ifdef IME_FEATURE_SUPPORT
-  if (appdata->app_type() == common::ApplicationData::IME) {
-    timeout = ecore_timer_add(0.5, terminateDelayCallback, NULL);
-    // This timer is added because of deadlock issue.
-    // If default keyboard is switched from webapp keyboard to tizen keyboard
-    // before webapp keyboard is completely loaded, main loop waits
-    // until webview is closed where webview is waiting to finish load.
-    // This timer delays main loop shutdown until webview load is finished.
-    // FIXME: http://suprem.sec.samsung.net/jira/browse/TSAM-11361
-    ecore_main_loop_begin();
-  }
-#endif
   ewk_shutdown();
   elm_shutdown();
   elm_exit();
