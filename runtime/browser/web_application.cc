@@ -180,6 +180,7 @@ static Eina_Bool ExitAppIdlerCallback(void* data) {
 
     for (; it != vstack.end(); ++it) {
       vstack.front()->SetVisibility(false);
+      (*it)->Suspend();
       ewk_view_page_close((*it)->evas_object());
     }
   }
@@ -278,6 +279,7 @@ WebApplication::~WebApplication() {
   window_->SetContent(NULL);
   auto it = view_stack_.begin();
   for (; it != view_stack_.end(); ++it) {
+    (*it)->Suspend();
     delete *it;
   }
   view_stack_.clear();
@@ -641,6 +643,7 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
       view->SetEventListener(NULL);
       Terminate();
     } else {
+      view->Suspend();
       ewk_view_page_close(view->evas_object());
       return;
     }
