@@ -17,12 +17,14 @@
 #include "runtime/browser/web_application.h"
 
 #include <app.h>
-#include <Ecore.h>
 #include <aul.h>
+#include <cynara-client.h>
+#include <Ecore.h>
 
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <fstream>
 #include <sstream>
 #include <vector>
 
@@ -98,10 +100,12 @@ const char* kAmbientTickEventScript =
     "for (var i=0; i < window.frames.length; i++)\n"
     "{ window.frames[i].document.dispatchEvent(__event); }"
     "})()";
+const char* kCameraPrivilege = "http://tizen.org/privilege/camera";
 const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
 const char* kFullscreenFeature = "fullscreen";
 const char* kNotificationPrivilege = "http://tizen.org/privilege/notification";
 const char* kLocationPrivilege = "http://tizen.org/privilege/location";
+const char* kRecordPrivilege = "http://tizen.org/privilege/recorder";
 const char* kStoragePrivilege = "http://tizen.org/privilege/unlimitedstorage";
 const char* kUsermediaPrivilege = "http://tizen.org/privilege/mediacapture";
 const char* kNotiIconFile = "noti_icon.png";
@@ -128,15 +132,58 @@ const char* kDefaultCSPRule =
 const char* kResWgtPath = "res/wgt/";
 const char* kAppControlMain = "http://tizen.org/appcontrol/operation/main";
 
-bool FindPrivilege(common::ApplicationData* app_data,
+// Looking for added privilege by Application developer in config.xml.
+bool FindPrivilegeFromConfig(common::ApplicationData* app_data,
                    const std::string& privilege) {
   if (app_data->permissions_info().get() == NULL) return false;
+  LOGGER(INFO) << "Finding privilege from config.xml";
   auto it = app_data->permissions_info()->GetAPIPermissions().begin();
   auto end = app_data->permissions_info()->GetAPIPermissions().end();
   for (; it != end; ++it) {
     if (*it == privilege) return true;
   }
   return false;
+}
+
+// Looking for given default privilege when application installed.
+bool FindPrivilegeFromCynara(const std::string& privilege_name) {
+  LOGGER(INFO) << "Finding privilege from cynara db";
+  static constexpr char kSmackLabelFilePath[] = "/proc/self/attr/current";
+  std::ifstream file(kSmackLabelFilePath);
+  if (!file.is_open()) {
+    LOGGER(ERROR) << "Failed to open " << kSmackLabelFilePath;
+    return false;
+  }
+
+  int ret;
+  cynara* p_cynara = NULL;
+  ret = cynara_initialize(&p_cynara, 0);
+  if (CYNARA_API_SUCCESS != ret) {
+    LOGGER(ERROR) << "Failed. The result of cynara_initialize() : " << ret;
+    return false;
+  }
+
+  std::string uid = std::to_string(getuid());
+  std::string smack_label{std::istreambuf_iterator<char>(file),
+                          std::istreambuf_iterator<char>()};
+
+  bool result = false;
+  ret = cynara_check(p_cynara, smack_label.c_str(), "", uid.c_str(), privilege_name.c_str());
+  if (CYNARA_API_ACCESS_ALLOWED != ret) {
+    LOGGER(ERROR) << "Access denied. The result of cynara_check() : " << ret;
+  } else {
+    LOGGER(INFO) << "Access allowed! The result of cynara_check() : " << ret;
+    result = true;
+  }
+
+  if (p_cynara) {
+    ret = cynara_finish(p_cynara);
+    if (CYNARA_API_SUCCESS != ret) {
+      LOGGER(ERROR) << "Failed. The result of cynara_finish() : " << ret;
+    }
+  }
+
+  return result;
 }
 
 static void SendDownloadRequest(const std::string& url) {
@@ -350,7 +397,7 @@ bool WebApplication::Initialize() {
                                               this);
   InitializeNotificationCallback(ewk_context_, this);
 
-  if (FindPrivilege(app_data_, kFullscreenPrivilege)) {
+  if (FindPrivilegeFromConfig(app_data_, kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kFullscreenFeature, true);
   }
@@ -1046,7 +1093,7 @@ void WebApplication::OnNotificationPermissionRequest(
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_, kNotificationPrivilege)) {
+      FindPrivilegeFromConfig(app_data_, kNotificationPrivilege)) {
     result_handler(true);
     return;
   }
@@ -1086,7 +1133,8 @@ void WebApplication::OnGeolocationPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_, kLocationPrivilege)) {
+  if (!FindPrivilegeFromConfig(app_data_, kLocationPrivilege) &&
+      !FindPrivilegeFromCynara(kLocationPrivilege)) {
     result_handler(false);
     return;
   }
@@ -1131,7 +1179,7 @@ void WebApplication::OnQuotaExceed(WebView*, const std::string& url,
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_, kStoragePrivilege)) {
+      FindPrivilegeFromConfig(app_data_, kStoragePrivilege)) {
     result_handler(true);
     return;
   }
@@ -1227,7 +1275,8 @@ void WebApplication::OnUsermediaPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_, kUsermediaPrivilege)) {
+  if (!FindPrivilegeFromConfig(app_data_, kUsermediaPrivilege) &&
+      !(FindPrivilegeFromCynara(kCameraPrivilege) && FindPrivilegeFromCynara(kRecordPrivilege))) {
     result_handler(false);
     return;
   }
