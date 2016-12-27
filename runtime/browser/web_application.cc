@@ -711,6 +711,8 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
 
 void WebApplication::OnClosedWebView(WebView* view) {
   is_terminated_by_callback_ = true;
+  // Reply to javascript dialog for preventing freeze issue.
+  view->ReplyToJavascriptDialog();
   RemoveWebViewFromStack(view);
 
   if (runtime::Runtime::is_on_terminate_called) {
@@ -718,7 +720,7 @@ void WebApplication::OnClosedWebView(WebView* view) {
   }
 }
 
-void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
+void WebApplication::OnReceivedWrtMessage(WebView* view,
                                           Ewk_IPC_Wrt_Message_Data* msg) {
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
 
@@ -739,6 +741,8 @@ void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
       window_->InActive();
     } else if (TYPE_IS("tizen://exit")) {
       // One Way Message
+      // Reply to javascript dialog for preventing freeze issue.
+      view->ReplyToJavascriptDialog();
       ecore_idler_add(ExitAppIdlerCallback, this);
     } else if (TYPE_IS("tizen://changeUA")) {
       // Async Message

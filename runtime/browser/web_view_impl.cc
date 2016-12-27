@@ -87,12 +87,20 @@ WebViewImpl::WebViewImpl(WebView* view,
 
 WebViewImpl::~WebViewImpl() {
   if (internal_popup_opened_) {
+    internal_popup_opened_ = false;
     ewk_view_javascript_alert_reply(ewk_view_);
   }
   Deinitialize();
   evas_object_del(ewk_view_);
   if (evas_smart_class_ != NULL)
     evas_smart_free(evas_smart_class_);
+}
+
+void WebViewImpl::ReplyToJavascriptDialog() {
+  if (internal_popup_opened_) {
+    internal_popup_opened_ = false;
+    ewk_view_javascript_alert_reply(ewk_view_);
+  }
 }
 
 void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {

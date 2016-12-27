@@ -32,6 +32,10 @@ WebView::~WebView() {
   delete impl_;
 }
 
+void WebView::ReplyToJavascriptDialog() {
+  impl_->ReplyToJavascriptDialog();
+}
+
 void WebView::LoadUrl(const std::string& url, const std::string& mime) {
   impl_->LoadUrl(url, mime);
 }
