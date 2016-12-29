@@ -40,7 +40,7 @@ const char kPopupBodyCert[] =
 const char kPopupBodyGeoLocation[] =
   "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_ACCESS_YOUR_LOCATION_INFORMATION";
 const char kPopupBodyUserMedia[] =
-  "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_USE_THE_MEDIA_FILES_STORED_ON_YOUR_DEVICE";
+  "IDS_BR_POP_P1SS_HP2SS_IS_REQUESTING_PERMISSION_TO_USE_YOUR_CAMERA";
 const char kPopupBodyWebNotification[] =
   "IDS_WRT_BODY_ALLOWS_THIS_SITE_TO_DISPLAY_NOTIFICATIONS";
 const char kPopupBodyWebStorage[] =
