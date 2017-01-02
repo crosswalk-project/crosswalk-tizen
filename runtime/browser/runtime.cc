@@ -58,17 +58,8 @@ std::unique_ptr<Runtime> Runtime::MakeRuntime(
 }
 
 void Runtime::ClosePageFromOnTerminate(WebApplication* app) {
-  if (app) {
-    std::list<WebView*> vstack = app->view_stack();
-    auto it = vstack.begin();
-    if (it != vstack.end()) {
-      Runtime::is_on_terminate_called = true;
-      for (; it != vstack.end(); ++it) {
-        vstack.front()->SetVisibility(false);
-        ewk_view_page_close((*it)->evas_object());
-      }
-    }
-  }
+  if (app)
+    app->ClosePageFromOnTerminate();
 }
 
 }  // namespace runtime

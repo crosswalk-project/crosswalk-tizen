@@ -655,6 +655,17 @@ void WebApplication::Terminate() {
   extension_server->Shutdown();
 }
 
+void WebApplication::ClosePageFromOnTerminate() {
+  auto it = view_stack_.begin();
+  if (it != view_stack_.end()) {
+    runtime::Runtime::is_on_terminate_called = true;
+    for (; it != view_stack_.end(); ++it) {
+      view_stack_.front()->SetVisibility(false);
+      ewk_view_page_close((*it)->evas_object());
+    }
+  }
+}
+
 void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
   if (view_stack_.size() > 0 && view_stack_.front() != NULL)
     view_stack_.front()->SetVisibility(false);
