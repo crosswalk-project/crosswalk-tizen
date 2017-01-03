@@ -660,6 +660,7 @@ void WebApplication::ClosePageFromOnTerminate() {
   if (it != view_stack_.end()) {
     runtime::Runtime::is_on_terminate_called = true;
     for (; it != view_stack_.end(); ++it) {
+      (*it)->ReplyToJavascriptDialog();
       view_stack_.front()->SetVisibility(false);
       ewk_view_page_close((*it)->evas_object());
     }
