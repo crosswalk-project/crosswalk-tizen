@@ -579,6 +579,7 @@ void WebApplication::AppControl(
     ClearViewStack();
     WebView* view = view_stack_.front();
     SetupWebView(view);
+    SetupWebViewTizenApplicationInfo(view);
     view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri(), res->mime());
     window_->SetContent(view->evas_object());
@@ -672,6 +673,7 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
     view_stack_.front()->SetVisibility(false);
 
   SetupWebView(new_view);
+  SetupWebViewTizenApplicationInfo(new_view);
   view_stack_.push_front(new_view);
   window_->SetContent(new_view->evas_object());
 }
