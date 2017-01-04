@@ -28,6 +28,7 @@
 #include "common/command_line.h"
 #include "common/logger.h"
 #include "common/profiler.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "runtime/browser/runtime.h"
 #include "runtime/common/constants.h"
 #include "runtime/browser/prelauncher.h"
@@ -35,6 +36,7 @@
 
 #include "runtime/browser/ui_runtime.h"
 
+using namespace extensions;
 bool g_prelaunch = false;
 
 #ifdef WATCH_FACE_FEATURE_SUPPORT
@@ -132,16 +134,22 @@ int real_main(int argc, char* argv[]) {
     std::unique_ptr<runtime::Runtime> runtime =
         runtime::Runtime::MakeRuntime(appdata);
     ret = runtime->Exec(argc, argv);
-    if (runtime->is_on_terminate_called) {
-      LOGGER(INFO) << "Defer termination of main loop";
+    if (ret)
+      LOGGER(ERROR) << "Exec returns non zero.";
+    LOGGER(DEBUG) << "plugin_session_count : " <<
+        XWalkExtensionRendererController::plugin_session_count;
+    if (XWalkExtensionRendererController::plugin_session_count > 0) {
+      LOGGER(DEBUG) << "Defer termination of main loop";
       ecore_main_loop_begin();
     }
     runtime.reset();
   }
+  LOGGER(DEBUG) << "ewk_shutdown";
   ewk_shutdown();
   elm_shutdown();
   elm_exit();
 
+  LOGGER(DEBUG) << "EXIT_SUCCESS";
   return EXIT_SUCCESS;
 }
 

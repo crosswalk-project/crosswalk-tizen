@@ -106,6 +106,7 @@ class WebApplication : public WebView::EventListener {
 #ifdef MANUAL_ROTATE_FEATURE_SUPPORT
   virtual void OnRotatePrepared(WebView* view);
 #endif // MANUAL_ROTATE_FEATURE_SUPPORT
+  static Eina_Bool CheckPluginSession(void* user_data);
 
  private:
   bool Initialize();
@@ -130,6 +131,7 @@ class WebApplication : public WebView::EventListener {
   bool debug_mode_;
   bool verbose_mode_;
   bool lang_changed_mode_;
+  bool is_terminate_called_;
   Ewk_Context* ewk_context_;
   bool has_ownership_of_ewk_context_;
   NativeWindow* window_;

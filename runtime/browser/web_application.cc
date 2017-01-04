@@ -37,6 +37,7 @@
 #include "common/profiler.h"
 #include "common/resource_manager.h"
 #include "common/string_utils.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "runtime/browser/native_window.h"
 #include "runtime/browser/notification_manager.h"
 #include "runtime/browser/popup.h"
@@ -50,6 +51,10 @@
 #ifndef INJECTED_BUNDLE_PATH
 #error INJECTED_BUNDLE_PATH is not set.
 #endif
+
+#define TIMER_INTERVAL 0.1
+
+using namespace extensions;
 
 namespace runtime {
 
@@ -222,8 +227,10 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
 static Eina_Bool ExitAppIdlerCallback(void* data) {
   WebApplication* app = static_cast<WebApplication*>(data);
 
-  if (app)
+  if (app) {
+    LOGGER(DEBUG) << "Terminate";
     app->Terminate();
+  }
 
   return ECORE_CALLBACK_CANCEL;
 }
@@ -285,6 +292,7 @@ WebApplication::WebApplication(
       debug_mode_(false),
       verbose_mode_(false),
       lang_changed_mode_(false),
+      is_terminate_called_(false),
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       has_ownership_of_ewk_context_(true),
@@ -303,6 +311,7 @@ WebApplication::WebApplication(
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
+      is_terminate_called_(false),
       ewk_context_(context),
       has_ownership_of_ewk_context_(false),
       window_(window),
@@ -637,23 +646,28 @@ void WebApplication::Suspend() {
 }
 
 void WebApplication::Terminate() {
+  is_terminate_called_ = true;
   if (terminator_) {
+    LOGGER(DEBUG) << "terminator_";
     terminator_();
   } else {
+    LOGGER(ERROR) << "There's no registered terminator.";
     elm_exit();
   }
   auto extension_server = extensions::XWalkExtensionServer::GetInstance();
-  LOGGER(INFO) << "Shutdown extension server";
+  LOGGER(DEBUG) << "Shutdown extension server";
   extension_server->Shutdown();
 }
 
 void WebApplication::ClosePageFromOnTerminate() {
+  LOGGER(DEBUG);
   auto it = view_stack_.begin();
   if (it != view_stack_.end()) {
     runtime::Runtime::is_on_terminate_called = true;
     for (; it != view_stack_.end(); ++it) {
       (*it)->ReplyToJavascriptDialog();
       view_stack_.front()->SetVisibility(false);
+      LOGGER(DEBUG) << "ewk_view_page_close";
       ewk_view_page_close((*it)->evas_object());
     }
   }
@@ -692,7 +706,13 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
   }
 
   if (view_stack_.size() == 0) {
-    Terminate();
+    // If |Terminate()| hasn't been called,
+    // main loop shouldn't be terminated here.
+    if (!is_terminate_called_) {
+      auto extension_server = XWalkExtensionServer::GetInstance();
+      LOGGER(DEBUG) << "Shutdown extension server";
+      extension_server->Shutdown();
+    }
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
@@ -707,14 +727,43 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
                   view);
 }
 
+Eina_Bool WebApplication::CheckPluginSession(void* user_data)
+{
+  WebApplication* that = static_cast<WebApplication*>(user_data);
+  if(XWalkExtensionRendererController::plugin_session_count > 0) {
+    LOGGER(ERROR) << "plugin_session_count : " <<
+        XWalkExtensionRendererController::plugin_session_count;
+    return ECORE_CALLBACK_RENEW;
+  }
+  LOGGER(DEBUG) << "plugin_session_count : " <<
+      XWalkExtensionRendererController::plugin_session_count;
+  LOGGER(DEBUG) << "Execute deferred termination of main loop";
+  if (that->is_terminate_called_) {
+    ecore_main_loop_quit();
+  } else {
+    if (that->terminator_) {
+      LOGGER(DEBUG) << "terminator_";
+      that->terminator_();
+    } else {
+      LOGGER(ERROR) << "There's no registered terminator.";
+      elm_exit();
+    }
+  }
+  return ECORE_CALLBACK_CANCEL;
+}
+
 void WebApplication::OnClosedWebView(WebView* view) {
+  Ecore_Timer* timeout_id = NULL;
   // Reply to javascript dialog for preventing freeze issue.
   view->ReplyToJavascriptDialog();
   RemoveWebViewFromStack(view);
 
-  if (runtime::Runtime::is_on_terminate_called) {
-    LOGGER(INFO) << "Execute deferred termination of main loop";
-    ecore_main_loop_quit();
+  LOGGER(DEBUG) << "plugin_session_count : " <<
+      XWalkExtensionRendererController::plugin_session_count;
+  if (XWalkExtensionRendererController::plugin_session_count > 0) {
+    timeout_id = ecore_timer_add(TIMER_INTERVAL, CheckPluginSession, this);
+    if (!timeout_id)
+      LOGGER(ERROR) << "It's failed to create timer";
   }
 }
 
@@ -831,6 +880,7 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
       if(enabled)
         view->EvalJavascript(kBackKeyEventScript);
       if (!view->Backward()) {
+        LOGGER(DEBUG) << "Terminate";
         Terminate();
       }
     }
@@ -846,6 +896,7 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
         (app_data_->widget_info() != NULL &&
          app_data_->widget_info()->view_modes() == "windowed")) {
       if (!view->Backward()) {
+        LOGGER(DEBUG) << "Terminate";
         Terminate();
       }
     }

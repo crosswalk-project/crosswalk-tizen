@@ -22,6 +22,9 @@
 
 namespace extensions {
 
+// static
+int XWalkExtensionRendererController::plugin_session_count = 0;
+
 namespace {
 
 void CreateExtensionModules(XWalkExtensionClient* client,
@@ -81,12 +84,16 @@ void XWalkExtensionRendererController::DidCreateScriptContext(
   CreateExtensionModules(extensions_client_.get(), module_system);
 
   module_system->Initialize();
+  plugin_session_count++;
+  LOGGER(DEBUG) << "plugin_session_count : " << plugin_session_count;
 }
 
 void XWalkExtensionRendererController::WillReleaseScriptContext(
     v8::Handle<v8::Context> context) {
   v8::Context::Scope contextScope(context);
   XWalkModuleSystem::ResetModuleSystemFromContext(context);
+  plugin_session_count--;
+  LOGGER(DEBUG) << "plugin_session_count : " << plugin_session_count;
 }
 
 void XWalkExtensionRendererController::OnReceivedIPCMessage(
