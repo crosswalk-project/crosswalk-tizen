@@ -222,16 +222,8 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
 static Eina_Bool ExitAppIdlerCallback(void* data) {
   WebApplication* app = static_cast<WebApplication*>(data);
 
-  if (app) {
-    std::list<WebView*> vstack = app->view_stack();
-    auto it = vstack.begin();
-
-    for (; it != vstack.end(); ++it) {
-      vstack.front()->SetVisibility(false);
-      (*it)->Suspend();
-      ewk_view_page_close((*it)->evas_object());
-    }
-  }
+  if (app)
+    app->Terminate();
 
   return ECORE_CALLBACK_CANCEL;
 }
@@ -296,7 +288,6 @@ WebApplication::WebApplication(
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       has_ownership_of_ewk_context_(true),
-      is_terminated_by_callback_(false),
       window_(window),
       appid_(app_data->app_id()),
       app_data_(app_data),
@@ -314,7 +305,6 @@ WebApplication::WebApplication(
       verbose_mode_(false),
       ewk_context_(context),
       has_ownership_of_ewk_context_(false),
-      is_terminated_by_callback_(false),
       window_(window),
       appid_(app_data->app_id()),
       app_data_(app_data),
@@ -645,13 +635,13 @@ void WebApplication::Suspend() {
 }
 
 void WebApplication::Terminate() {
-  is_terminated_by_callback_ = false;
   if (terminator_) {
     terminator_();
   } else {
     elm_exit();
   }
   auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+  LOGGER(INFO) << "Shutdown extension server";
   extension_server->Shutdown();
 }
 
@@ -677,13 +667,8 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
 }
 
 void WebApplication::RemoveWebViewFromStack(WebView* view) {
-  if (view_stack_.size() == 0) {
-    if (is_terminated_by_callback_) {
-      Terminate();
-    } else {
-      return;
-    }
-  }
+  if (view_stack_.size() == 0)
+    return;
 
   WebView* current = view_stack_.front();
   if (current == view) {
@@ -696,17 +681,11 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
   }
 
   if (view_stack_.size() == 0) {
-    if (is_terminated_by_callback_) {
-      // In order to prevent the crash issue due to the callback
-      // which occur after destroying WebApplication class,
-      // we have to set the 'SetEventListener' to NULL.
-      view->SetEventListener(NULL);
-      Terminate();
-    } else {
-      view->Suspend();
-      ewk_view_page_close(view->evas_object());
-      return;
-    }
+    // In order to prevent the crash issue due to the callback
+    // which occur after destroying WebApplication class,
+    // we have to set the 'SetEventListener' to NULL.
+    view->SetEventListener(NULL);
+    Terminate();
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
@@ -722,12 +701,12 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
 }
 
 void WebApplication::OnClosedWebView(WebView* view) {
-  is_terminated_by_callback_ = true;
   // Reply to javascript dialog for preventing freeze issue.
   view->ReplyToJavascriptDialog();
   RemoveWebViewFromStack(view);
 
   if (runtime::Runtime::is_on_terminate_called) {
+    LOGGER(INFO) << "Execute deferred termination of main loop";
     ecore_main_loop_quit();
   }
 }
@@ -845,7 +824,7 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
       if(enabled)
         view->EvalJavascript(kBackKeyEventScript);
       if (!view->Backward()) {
-        RemoveWebViewFromStack(view_stack_.front());
+        Terminate();
       }
     }
     return;
@@ -860,7 +839,7 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
         (app_data_->widget_info() != NULL &&
          app_data_->widget_info()->view_modes() == "windowed")) {
       if (!view->Backward()) {
-        RemoveWebViewFromStack(view_stack_.front());
+        Terminate();
       }
     }
   } else if (enabled && kKeyNameMenu == keyname) {

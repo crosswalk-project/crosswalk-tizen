@@ -132,7 +132,6 @@ class WebApplication : public WebView::EventListener {
   bool lang_changed_mode_;
   Ewk_Context* ewk_context_;
   bool has_ownership_of_ewk_context_;
-  bool is_terminated_by_callback_;
   NativeWindow* window_;
   std::string appid_;
   std::string app_data_path_;
