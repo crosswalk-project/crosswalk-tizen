@@ -519,12 +519,12 @@ bool ResourceManager::CheckAllowNavigation(const std::string& url) {
     bool prefix_wild = false;
     bool suffix_wild = false;
     std::string a_domain = a_domain_info.domain();
-    if (utils::StartsWith(a_domain, "*.")) {
+    if (utils::StartsWith(a_domain, "*")) {
       prefix_wild = true;
       // *.domain.com -> .domain.com
       a_domain = a_domain.substr(1);
     }
-    if (utils::EndsWith(a_domain, ".*")) {
+    if (utils::EndsWith(a_domain, "*")) {
       suffix_wild = true;
       // domain.* -> domain.
       a_domain = a_domain.substr(0, a_domain.length() - 1);
