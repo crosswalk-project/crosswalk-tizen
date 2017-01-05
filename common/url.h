@@ -38,12 +38,14 @@ class URLImpl;
  *   => domain_, path_
  *
  * If the url does not have specific data, an empty string will be stored
- * in the corresponding variables.
+ * in the corresponding variables.(RFC 1738)
  *
- * ex) http://user:password@www.google.co.kr:8080/market/Item?12345
- * url_ = http://user:password@www.google.co.kr:8080/market/Item?12345
+ * ex) http://user:password@www.tizen.org:8080/market/Item?12345
+ * url_ = http://user:password@www.tizen.org:8080/market/Item?12345
  * scheme_ = http
- * domain_ = user:password@www.google.co.kr
+ * user_ = user
+ * password_ = password
+ * domain_ = www.tizen.org
  * port_ = 8080
  * path_ = /market/Item?12345
 */
