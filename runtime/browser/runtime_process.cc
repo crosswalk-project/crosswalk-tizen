@@ -133,6 +133,7 @@ int real_main(int argc, char* argv[]) {
         runtime::Runtime::MakeRuntime(appdata);
     ret = runtime->Exec(argc, argv);
     if (runtime->is_on_terminate_called) {
+      LOGGER(INFO) << "Defer termination of main loop";
       ecore_main_loop_begin();
     }
     runtime.reset();
