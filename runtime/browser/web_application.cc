@@ -486,7 +486,7 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   // Setup View
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
-  SetupWebViewTizenApplicationInfo(view);
+  SetupWebViewCompatibilitySettings(view);
 
   std::unique_ptr<common::ResourceManager::Resource> res =
       resource_manager_->GetStartResource(appcontrol.get());
@@ -570,7 +570,7 @@ void WebApplication::AppControl(
     ClearViewStack();
     WebView* view = view_stack_.front();
     SetupWebView(view);
-    SetupWebViewTizenApplicationInfo(view);
+    SetupWebViewCompatibilitySettings(view);
     view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri(), res->mime());
     window_->SetContent(view->evas_object());
@@ -664,7 +664,7 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
     view_stack_.front()->SetVisibility(false);
 
   SetupWebView(new_view);
-  SetupWebViewTizenApplicationInfo(new_view);
+  SetupWebViewCompatibilitySettings(new_view);
   view_stack_.push_front(new_view);
   window_->SetContent(new_view->evas_object());
 }
@@ -1047,14 +1047,15 @@ void WebApplication::SetupWebView(WebView* view) {
   }
 }
 
-void WebApplication::SetupWebViewTizenApplicationInfo(WebView* view) {
+void WebApplication::SetupWebViewCompatibilitySettings(WebView* view) {
   if (tizenWebKitCompatibilityEnabled()) {
     Ewk_Settings* settings = ewk_view_settings_get(view->evas_object());
     ewk_settings_tizen_compatibility_mode_set(settings,
             m_tizenCompatibilitySettings.m_major,
             m_tizenCompatibilitySettings.m_minor,
             m_tizenCompatibilitySettings.m_release);
-    }
+    ewk_settings_text_autosizing_enabled_set(settings, EINA_FALSE);
+  }
 }
 
 bool WebApplication::OnDidNavigation(WebView* /*view*/,
