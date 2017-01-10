@@ -32,7 +32,6 @@ class Runtime {
 
   virtual int Exec(int argc, char* argv[]) = 0;
 
-  static bool is_on_terminate_called;
   static std::unique_ptr<Runtime> MakeRuntime(
     common::ApplicationData* app_data);
 

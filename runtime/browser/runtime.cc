@@ -32,8 +32,6 @@
 
 namespace runtime {
 
-bool Runtime::is_on_terminate_called = false;
-
 Runtime::~Runtime() {
 }
 

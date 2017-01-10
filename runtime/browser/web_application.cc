@@ -663,7 +663,6 @@ void WebApplication::ClosePageFromOnTerminate() {
   LOGGER(DEBUG);
   auto it = view_stack_.begin();
   if (it != view_stack_.end()) {
-    runtime::Runtime::is_on_terminate_called = true;
     for (; it != view_stack_.end(); ++it) {
       (*it)->ReplyToJavascriptDialog();
       view_stack_.front()->SetVisibility(false);
