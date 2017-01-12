@@ -142,7 +142,11 @@ bool UiRuntime::OnCreate() {
 }
 
 void UiRuntime::OnTerminate() {
-  ClosePageFromOnTerminate(application_.get());
+}
+
+void UiRuntime::Terminate() {
+  LOGGER(DEBUG);
+  ProcessClosingPage(application_.get());
 }
 
 void UiRuntime::OnPause() {

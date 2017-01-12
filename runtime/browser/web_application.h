@@ -52,7 +52,7 @@ class WebApplication : public WebView::EventListener {
   void Suspend();
   void Terminate();
 
-  void ClosePageFromOnTerminate();
+  void ClosePage();
   std::string data_path() const { return app_data_path_; }
   void set_terminator(std::function<void(void)> terminator) {
     terminator_ = terminator;

@@ -29,6 +29,7 @@ namespace runtime {
 class Runtime {
  public:
   virtual ~Runtime() = 0;
+  virtual void Terminate() = 0;
 
   virtual int Exec(int argc, char* argv[]) = 0;
 
@@ -36,7 +37,15 @@ class Runtime {
     common::ApplicationData* app_data);
 
  protected:
-  void ClosePageFromOnTerminate(WebApplication* app);
+  void ProcessClosingPage(WebApplication* application);
+
+ private:
+  static Eina_Bool ClosePageInExtendedMainLoop(void* user_data);
+  struct Timer
+  {
+    WebApplication* application;
+    Ecore_Timer* timer;
+  };
 };
 
 }  // namespace runtime

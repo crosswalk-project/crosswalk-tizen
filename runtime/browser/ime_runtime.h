@@ -42,6 +42,7 @@ class ImeRuntime : public Runtime {
   virtual void OnHide(int context_id);
   virtual void OnAppControl();
 
+  virtual void Terminate();
  private:
   WebApplication* application_;
   NativeWindow* native_window_;

@@ -659,15 +659,33 @@ void WebApplication::Terminate() {
   extension_server->Shutdown();
 }
 
-void WebApplication::ClosePageFromOnTerminate() {
+void WebApplication::ClosePage() {
   LOGGER(DEBUG);
+  int valid_evas_object_count = 0;
   auto it = view_stack_.begin();
   if (it != view_stack_.end()) {
     for (; it != view_stack_.end(); ++it) {
       (*it)->ReplyToJavascriptDialog();
       view_stack_.front()->SetVisibility(false);
-      LOGGER(DEBUG) << "ewk_view_page_close";
-      ewk_view_page_close((*it)->evas_object());
+      if (ewk_view_page_close((*it)->evas_object())) {
+        LOGGER(DEBUG) << "ewk_view_page_close returns true";
+        valid_evas_object_count++;
+      } else {
+        LOGGER(DEBUG) << "ewk_view_page_close returns false";
+      }
+    }
+  }
+  if (valid_evas_object_count == 0) {
+    if (is_terminate_called_) {
+      ecore_main_loop_quit();
+    } else {
+      if (terminator_) {
+        LOGGER(DEBUG) << "terminator_";
+        terminator_();
+      } else {
+        LOGGER(ERROR) << "There's no registered terminator.";
+        elm_exit();
+      }
     }
   }
 }
@@ -759,11 +777,8 @@ void WebApplication::OnClosedWebView(WebView* view) {
 
   LOGGER(DEBUG) << "plugin_session_count : " <<
       XWalkExtensionRendererController::plugin_session_count;
-  if (XWalkExtensionRendererController::plugin_session_count > 0) {
-    timeout_id = ecore_timer_add(TIMER_INTERVAL, CheckPluginSession, this);
-    if (!timeout_id)
-      LOGGER(ERROR) << "It's failed to create timer";
-  }
+  if (!ecore_timer_add(TIMER_INTERVAL, CheckPluginSession, this))
+    LOGGER(ERROR) << "It's failed to create timer";
 }
 
 void WebApplication::OnReceivedWrtMessage(WebView* view,

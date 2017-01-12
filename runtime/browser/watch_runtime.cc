@@ -99,7 +99,10 @@ bool WatchRuntime::OnCreate() {
 }
 
 void WatchRuntime::OnTerminate() {
-  ClosePageFromOnTerminate(application_);
+}
+
+void WatchRuntime::Terminate() {
+  ProcessClosingPage(application_);
 }
 
 void WatchRuntime::OnPause() {

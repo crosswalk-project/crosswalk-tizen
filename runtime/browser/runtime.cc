@@ -20,6 +20,7 @@
 
 #include "common/application_data.h"
 #include "common/command_line.h"
+#include "common/logger.h"
 #include "runtime/common/constants.h"
 #include "runtime/browser/runtime.h"
 #include "runtime/browser/ui_runtime.h"
@@ -29,6 +30,8 @@
 #ifdef WATCH_FACE_FEATURE_SUPPORT
 #include "runtime/browser/watch_runtime.h"
 #endif  // WATCH_FACE_FEATURE_SUPPORT
+
+#define MAIN_LOOP_INTERVAL 1
 
 namespace runtime {
 
@@ -55,9 +58,25 @@ std::unique_ptr<Runtime> Runtime::MakeRuntime(
   }
 }
 
-void Runtime::ClosePageFromOnTerminate(WebApplication* app) {
-  if (app)
-    app->ClosePageFromOnTerminate();
+// static
+Eina_Bool Runtime::ClosePageInExtendedMainLoop(void* user_data)
+{
+  LOGGER(DEBUG);
+  struct Timer* main_loop = static_cast<Timer*>(user_data);
+  main_loop->application->ClosePage();
+  return ECORE_CALLBACK_CANCEL;
+}
+
+void Runtime::ProcessClosingPage(WebApplication* application) {
+  LOGGER(DEBUG);
+  if (application) {
+    struct Timer main_loop;
+    main_loop.application = application;
+    main_loop.timer = ecore_timer_add(MAIN_LOOP_INTERVAL, ClosePageInExtendedMainLoop, &main_loop);
+    LOGGER(DEBUG) << "Defer termination of main loop";
+    ecore_main_loop_begin();
+    ecore_timer_del(main_loop.timer);
+  }
 }
 
 }  // namespace runtime

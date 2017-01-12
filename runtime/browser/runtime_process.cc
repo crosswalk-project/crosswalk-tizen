@@ -128,20 +128,13 @@ int real_main(int argc, char* argv[]) {
 #endif  // WATCH_FACE_FEATURE_SUPPORT
   }
 
-  int ret = 0;
   // Runtime's destructor should be called before ewk_shutdown()
   {
     std::unique_ptr<runtime::Runtime> runtime =
         runtime::Runtime::MakeRuntime(appdata);
-    ret = runtime->Exec(argc, argv);
-    if (ret)
+    if (runtime->Exec(argc, argv))
       LOGGER(ERROR) << "Exec returns non zero.";
-    LOGGER(DEBUG) << "plugin_session_count : " <<
-        XWalkExtensionRendererController::plugin_session_count;
-    if (XWalkExtensionRendererController::plugin_session_count > 0) {
-      LOGGER(DEBUG) << "Defer termination of main loop";
-      ecore_main_loop_begin();
-    }
+    runtime->Terminate();
     runtime.reset();
   }
   LOGGER(DEBUG) << "ewk_shutdown";

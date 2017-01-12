@@ -633,6 +633,7 @@ void WebViewImpl::InitWindowCreateCallback() {
   auto close_callback = [](void* user_data,
                             Evas_Object*,
                             void*) {
+    LOGGER(DEBUG) << "close_callback is called";
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (!self->listener_) {
       return;
