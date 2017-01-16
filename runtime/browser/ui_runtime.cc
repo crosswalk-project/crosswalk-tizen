@@ -142,8 +142,7 @@ bool UiRuntime::OnCreate() {
 }
 
 void UiRuntime::OnTerminate() {
-  application_.reset();
-  native_window_.reset();
+  ClosePageFromOnTerminate(application_.get());
 }
 
 void UiRuntime::OnPause() {

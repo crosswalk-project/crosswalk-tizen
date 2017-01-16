@@ -164,6 +164,7 @@ void ImeRuntime::OnCreate() {
 
 void ImeRuntime::OnTerminate() {
   LOGGER(DEBUG) << "ime_app_terminate";
+  ClosePageFromOnTerminate(application_);
 }
 
 void ImeRuntime::OnShow(int context_id, ime_context_h context) {

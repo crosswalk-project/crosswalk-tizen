@@ -22,6 +22,7 @@
 #include <string>
 
 #include "common/application_data.h"
+#include "runtime/browser/web_application.h"
 
 namespace runtime {
 
@@ -33,6 +34,9 @@ class Runtime {
 
   static std::unique_ptr<Runtime> MakeRuntime(
     common::ApplicationData* app_data);
+
+ protected:
+  void ClosePageFromOnTerminate(WebApplication* app);
 };
 
 }  // namespace runtime

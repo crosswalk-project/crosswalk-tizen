@@ -55,5 +55,9 @@ std::unique_ptr<Runtime> Runtime::MakeRuntime(
   }
 }
 
+void Runtime::ClosePageFromOnTerminate(WebApplication* app) {
+  if (app)
+    app->ClosePageFromOnTerminate();
+}
 
 }  // namespace runtime
