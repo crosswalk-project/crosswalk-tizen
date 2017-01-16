@@ -37,6 +37,7 @@
 #include "common/profiler.h"
 #include "common/resource_manager.h"
 #include "common/string_utils.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "runtime/browser/native_window.h"
 #include "runtime/browser/notification_manager.h"
 #include "runtime/browser/popup.h"
@@ -50,6 +51,10 @@
 #ifndef INJECTED_BUNDLE_PATH
 #error INJECTED_BUNDLE_PATH is not set.
 #endif
+
+#define TIMER_INTERVAL 0.1
+
+using namespace extensions;
 
 namespace runtime {
 
@@ -221,8 +226,12 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
 
 static Eina_Bool ExitAppIdlerCallback(void* data) {
   WebApplication* app = static_cast<WebApplication*>(data);
-  if (app)
+
+  if (app) {
+    LOGGER(DEBUG) << "Terminate";
     app->Terminate();
+  }
+
   return ECORE_CALLBACK_CANCEL;
 }
 
@@ -317,6 +326,7 @@ WebApplication::~WebApplication() {
   window_->SetContent(NULL);
   auto it = view_stack_.begin();
   for (; it != view_stack_.end(); ++it) {
+    (*it)->Suspend();
     delete *it;
   }
   view_stack_.clear();
@@ -569,6 +579,7 @@ void WebApplication::AppControl(
     ClearViewStack();
     WebView* view = view_stack_.front();
     SetupWebView(view);
+    SetupWebViewCompatibilitySettings(view);
     view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri(), res->mime());
     window_->SetContent(view->evas_object());
@@ -635,12 +646,16 @@ void WebApplication::Suspend() {
 }
 
 void WebApplication::Terminate() {
+  is_terminate_called_ = true;
   if (terminator_) {
+    LOGGER(DEBUG) << "terminator_";
     terminator_();
   } else {
+    LOGGER(ERROR) << "There's no registered terminator.";
     elm_exit();
   }
   auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+  LOGGER(DEBUG) << "Shutdown extension server";
   extension_server->Shutdown();
 }
 
@@ -662,6 +677,7 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
     view_stack_.front()->SetVisibility(false);
 
   SetupWebView(new_view);
+  SetupWebViewCompatibilitySettings(new_view);
   view_stack_.push_front(new_view);
   window_->SetContent(new_view->evas_object());
 }
@@ -689,7 +705,13 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
   }
 
   if (view_stack_.size() == 0) {
-    Terminate();
+    // If |Terminate()| hasn't been called,
+    // main loop shouldn't be terminated here.
+    if (!is_terminate_called_) {
+      auto extension_server = XWalkExtensionServer::GetInstance();
+      LOGGER(DEBUG) << "Shutdown extension server";
+      extension_server->Shutdown();
+    }
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
@@ -704,13 +726,47 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
                   view);
 }
 
-void WebApplication::OnClosedWebView(WebView* view) {
-  // Reply to javascript dialog for preventing freeze issue.
-    view->ReplyToJavascriptDialog();
-    RemoveWebViewFromStack(view);
+Eina_Bool WebApplication::CheckPluginSession(void* user_data)
+{
+  WebApplication* that = static_cast<WebApplication*>(user_data);
+  if(XWalkExtensionRendererController::plugin_session_count > 0) {
+    LOGGER(ERROR) << "plugin_session_count : " <<
+        XWalkExtensionRendererController::plugin_session_count;
+    return ECORE_CALLBACK_RENEW;
+  }
+  LOGGER(DEBUG) << "plugin_session_count : " <<
+      XWalkExtensionRendererController::plugin_session_count;
+  LOGGER(DEBUG) << "Execute deferred termination of main loop";
+  if (that->is_terminate_called_) {
+    ecore_main_loop_quit();
+  } else {
+    if (that->terminator_) {
+      LOGGER(DEBUG) << "terminator_";
+      that->terminator_();
+    } else {
+      LOGGER(ERROR) << "There's no registered terminator.";
+      elm_exit();
+    }
+  }
+  return ECORE_CALLBACK_CANCEL;
 }
 
-void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
+void WebApplication::OnClosedWebView(WebView* view) {
+  Ecore_Timer* timeout_id = NULL;
+  // Reply to javascript dialog for preventing freeze issue.
+  view->ReplyToJavascriptDialog();
+  RemoveWebViewFromStack(view);
+
+  LOGGER(DEBUG) << "plugin_session_count : " <<
+      XWalkExtensionRendererController::plugin_session_count;
+  if (XWalkExtensionRendererController::plugin_session_count > 0) {
+    timeout_id = ecore_timer_add(TIMER_INTERVAL, CheckPluginSession, this);
+    if (!timeout_id)
+      LOGGER(ERROR) << "It's failed to create timer";
+  }
+}
+
+void WebApplication::OnReceivedWrtMessage(WebView* view,
                                           Ewk_IPC_Wrt_Message_Data* msg) {
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
 
@@ -731,6 +787,8 @@ void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
       window_->InActive();
     } else if (TYPE_IS("tizen://exit")) {
       // One Way Message
+      // Reply to javascript dialog for preventing freeze issue.
+      view->ReplyToJavascriptDialog();
       ecore_idler_add(ExitAppIdlerCallback, this);
     } else if (TYPE_IS("tizen://changeUA")) {
       // Async Message
@@ -821,7 +879,8 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
       if(enabled)
         view->EvalJavascript(kBackKeyEventScript);
       if (!view->Backward()) {
-        RemoveWebViewFromStack(view_stack_.front());
+        LOGGER(DEBUG) << "Terminate";
+        Terminate();
       }
     }
     return;
@@ -836,7 +895,8 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
         (app_data_->widget_info() != NULL &&
          app_data_->widget_info()->view_modes() == "windowed")) {
       if (!view->Backward()) {
-        RemoveWebViewFromStack(view_stack_.front());
+        LOGGER(DEBUG) << "Terminate";
+        Terminate();
       }
     }
   } else if (enabled && kKeyNameMenu == keyname) {

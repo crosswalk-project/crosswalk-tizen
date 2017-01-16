@@ -106,6 +106,7 @@ class WebApplication : public WebView::EventListener {
 #ifdef MANUAL_ROTATE_FEATURE_SUPPORT
   virtual void OnRotatePrepared(WebView* view);
 #endif // MANUAL_ROTATE_FEATURE_SUPPORT
+  static Eina_Bool CheckPluginSession(void* user_data);
 
  private:
   bool Initialize();
