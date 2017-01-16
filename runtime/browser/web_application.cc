@@ -235,6 +235,7 @@ WebApplication::WebApplication(
       debug_mode_(false),
       verbose_mode_(false),
       lang_changed_mode_(false),
+      is_terminate_called_(false),
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       has_ownership_of_ewk_context_(true),
@@ -253,6 +254,7 @@ WebApplication::WebApplication(
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
+      is_terminate_called_(false),
       ewk_context_(context),
       has_ownership_of_ewk_context_(false),
       window_(window),
@@ -586,7 +588,8 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
 }
 
 void WebApplication::RemoveWebViewFromStack(WebView* view) {
-  if (view_stack_.size() == 0) return;
+  if (view_stack_.size() == 0)
+    return;
 
   WebView* current = view_stack_.front();
   if (current == view) {

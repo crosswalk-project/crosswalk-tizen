@@ -57,6 +57,7 @@ class WebApplication : public WebView::EventListener {
     terminator_ = terminator;
   }
   bool launched() const { return launched_; }
+  std::list<WebView*> view_stack() const { return view_stack_; }
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView* view);
@@ -119,6 +120,7 @@ class WebApplication : public WebView::EventListener {
   bool debug_mode_;
   bool verbose_mode_;
   bool lang_changed_mode_;
+  bool is_terminate_called_;
   Ewk_Context* ewk_context_;
   bool has_ownership_of_ewk_context_;
   NativeWindow* window_;
