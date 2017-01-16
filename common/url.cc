@@ -109,9 +109,14 @@ void URLImpl::ExtractDomain() {
   size_t start_of_domain = scheme_.empty() ?
                            0 : scheme_.length() + kSchemeIdLen;
   size_t end_of_domain = url_.find_first_of('/', start_of_domain);
+  size_t at = url_.find_first_of('@', start_of_domain);
+  if (at < end_of_domain) {
+    start_of_domain = at + 1;
+  }
   domain_ =
     url_.substr(start_of_domain, end_of_domain == std::string::npos ?
                 std::string::npos : end_of_domain - start_of_domain);
+  LOGGER(INFO) << "Extract Domain is " << domain_;
 }
 
 void URLImpl::ExtractDomainPort() {
