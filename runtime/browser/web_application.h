@@ -113,8 +113,17 @@ class WebApplication : public WebView::EventListener {
   void SendAppControlEvent();
   void LaunchInspector(common::AppControl* appcontrol);
   void SetupWebView(WebView* view);
-  void SetupWebViewTizenApplicationInfo(WebView* view);
+  void SetupWebViewCompatibilitySettings(WebView* view);
   void RemoveWebViewFromStack(WebView* view);
+
+  void SetupTizenVersion();
+  bool tizenWebKitCompatibilityEnabled() const;
+  struct {
+      unsigned m_major;
+      unsigned m_minor;
+      unsigned m_release;
+      bool tizenWebKitCompatibilityEnabled() const { return (m_major && m_major < 3); }
+  } m_tizenCompatibilitySettings;
 
   bool launched_;
   bool debug_mode_;
