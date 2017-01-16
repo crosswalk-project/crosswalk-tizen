@@ -116,6 +116,7 @@ class WebView {
   WebView(NativeWindow* window, Ewk_Context* context);
   virtual ~WebView();
 
+  void ReplyToJavascriptDialog();
   void LoadUrl(const std::string& url, const std::string& mime = std::string());
   std::string GetUrl();
 

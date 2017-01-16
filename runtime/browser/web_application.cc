@@ -691,6 +691,8 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
 }
 
 void WebApplication::OnClosedWebView(WebView* view) {
+  // Reply to javascript dialog for preventing freeze issue.
+    view->ReplyToJavascriptDialog();
     RemoveWebViewFromStack(view);
 }
 
