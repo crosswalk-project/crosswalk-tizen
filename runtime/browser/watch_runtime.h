@@ -24,7 +24,6 @@
 #include "common/application_data.h"
 #include "runtime/browser/runtime.h"
 #include "runtime/browser/native_window.h"
-#include "runtime/browser/web_application.h"
 
 namespace runtime {
 

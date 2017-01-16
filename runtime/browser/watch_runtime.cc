@@ -99,14 +99,7 @@ bool WatchRuntime::OnCreate() {
 }
 
 void WatchRuntime::OnTerminate() {
-  if (application_) {
-    delete application_;
-    application_ = nullptr;
-  }
-  if (native_window_) {
-    delete native_window_;
-    native_window_ = nullptr;
-  }
+  ClosePageFromOnTerminate(application_);
 }
 
 void WatchRuntime::OnPause() {

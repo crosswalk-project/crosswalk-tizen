@@ -44,6 +44,7 @@
 #include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/web_view.h"
 #include "runtime/browser/splash_screen.h"
+#include "runtime/browser/ui_runtime.h"
 #include "extensions/common/xwalk_extension_server.h"
 
 #ifndef INJECTED_BUNDLE_PATH

@@ -33,6 +33,7 @@
 #include "runtime/browser/prelauncher.h"
 #include "runtime/browser/preload_manager.h"
 
+#include "runtime/browser/ui_runtime.h"
 bool g_prelaunch = false;
 
 #ifdef WATCH_FACE_FEATURE_SUPPORT
