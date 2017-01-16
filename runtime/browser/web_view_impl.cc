@@ -993,7 +993,7 @@ void WebViewImpl::OnKeyEvent(Eext_Callback_Type key_type) {
     return;
   }
 
-  if (listener_) {
+  if (listener_ && !internal_popup_opened_) {
     listener_->OnHardwareKey(view_, keyname);
   }
 }
