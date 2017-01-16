@@ -133,7 +133,8 @@ int real_main(int argc, char* argv[]) {
     runtime.reset();
   }
   ewk_shutdown();
-  exit(ret);
+  elm_shutdown();
+  elm_exit();
 
   return EXIT_SUCCESS;
 }
