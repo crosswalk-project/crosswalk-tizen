@@ -430,6 +430,7 @@ bool WebApplication::Initialize() {
 
   if (app_data_->widget_info() != NULL &&
         app_data_->widget_info()->view_modes() == "fullscreen") {
+      window_->SetCurrentViewModeFullScreen(true);
       window_->FullScreen(true);
   }
 
