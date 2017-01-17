@@ -72,6 +72,7 @@ NativeWindow::NativeWindow()
     : window_(NULL),
       window_type_(Type::NORMAL),
       initialized_(false),
+      currentViewModeFullScreen_(false),
       focus_(NULL),
       content_(NULL),
       rotation_(0),
@@ -134,6 +135,7 @@ void NativeWindow::Initialize() {
   elm_object_part_content_set(top_layout, "elm.swallow.content", focus);
   EVAS_SIZE_EXPAND_FILL(focus);
   elm_access_object_unregister(focus);
+  elm_atspi_accessible_role_set(focus, ELM_ATSPI_ROLE_FILLER);
   evas_object_show(focus);
   focus_ = focus;
 
@@ -270,6 +272,10 @@ void NativeWindow::SetAutoRotation() {
   rotation_ = elm_win_rotation_get(window_);
 }
 
+void NativeWindow::SetCurrentViewModeFullScreen(bool mode) {
+  currentViewModeFullScreen_ = mode;
+}
+
 void NativeWindow::Show() {
   evas_object_show(window_);
 }
@@ -284,7 +290,7 @@ void NativeWindow::InActive() {
 
 void NativeWindow::FullScreen(bool enable) {
   elm_win_indicator_opacity_set(window_,
-      enable ? ELM_WIN_INDICATOR_TRANSPARENT : ELM_WIN_INDICATOR_OPAQUE);
+      (enable || currentViewModeFullScreen_) ? ELM_WIN_INDICATOR_TRANSPARENT : ELM_WIN_INDICATOR_OPAQUE);
 }
 
 #ifdef MANUAL_ROTATE_FEATURE_SUPPORT

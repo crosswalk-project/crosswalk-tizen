@@ -1,4 +1,5 @@
 #!/bin/sh
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 #excute upgrade application
 /usr/bin/wrt-upgrade

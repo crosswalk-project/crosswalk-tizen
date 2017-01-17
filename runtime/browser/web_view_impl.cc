@@ -87,12 +87,20 @@ WebViewImpl::WebViewImpl(WebView* view,
 
 WebViewImpl::~WebViewImpl() {
   if (internal_popup_opened_) {
+    internal_popup_opened_ = false;
     ewk_view_javascript_alert_reply(ewk_view_);
   }
   Deinitialize();
   evas_object_del(ewk_view_);
   if (evas_smart_class_ != NULL)
     evas_smart_free(evas_smart_class_);
+}
+
+void WebViewImpl::ReplyToJavascriptDialog() {
+  if (internal_popup_opened_) {
+    internal_popup_opened_ = false;
+    ewk_view_javascript_alert_reply(ewk_view_);
+  }
 }
 
 void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {
@@ -117,6 +125,10 @@ void WebViewImpl::LoadUrl(const std::string& url, const std::string& mime) {
       return view->mime_set_cb_(url, mime, new_mime, data);
     };
     ewk_context_mime_override_callback_set(context_, mime_override_cb, this);
+  } else {
+    // In order to prevent crash issue, the callback should be released
+    // when the mime is empty.
+    ewk_context_mime_override_callback_set(context_, nullptr, nullptr);
   }
   ewk_view_url_set(ewk_view_, url.c_str());
 }
@@ -574,6 +586,7 @@ void WebViewImpl::InitCustomContextMenuCallback() {
       Ewk_Context_Menu_Item_Tag tag = ewk_context_menu_item_tag_get(item);
       switch (tag) {
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_IMAGE_IN_CURRENT_WINDOW:
+        case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_LINK:
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_IMAGE_IN_NEW_WINDOW:
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_LINK_IN_NEW_WINDOW:
         case EWK_CONTEXT_MENU_ITEM_TAG_OPEN_FRAME_IN_NEW_WINDOW:
@@ -620,6 +633,7 @@ void WebViewImpl::InitWindowCreateCallback() {
   auto close_callback = [](void* user_data,
                             Evas_Object*,
                             void*) {
+    LOGGER(DEBUG) << "close_callback is called";
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
     if (!self->listener_) {
       return;
@@ -884,6 +898,8 @@ void WebViewImpl::InitEditorClientImeCallback() {
                            Evas_Object*,
                            void* event_info) {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_)
+      return;
 
     SoftKeyboardChangeEventValue softkeyboard_value;
     softkeyboard_value.state = "on";
@@ -897,6 +913,8 @@ void WebViewImpl::InitEditorClientImeCallback() {
                            Evas_Object*,
                            void* event_info) {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_)
+      return;
 
     SoftKeyboardChangeEventValue softkeyboard_value;
     softkeyboard_value.state = "off";
@@ -926,6 +944,9 @@ void WebViewImpl::InitRotaryEventCallback() {
                          Evas_Object*,
                          Eext_Rotary_Event_Info* event_info) -> Eina_Bool {
     WebViewImpl* self = static_cast<WebViewImpl*>(user_data);
+    if (!self->listener_)
+      return EINA_FALSE;
+
     Eext_Rotary_Event_Info* rotary = event_info;
 
     RotaryEventType type;
@@ -973,7 +994,7 @@ void WebViewImpl::OnKeyEvent(Eext_Callback_Type key_type) {
     return;
   }
 
-  if (listener_) {
+  if (listener_ && !internal_popup_opened_) {
     listener_->OnHardwareKey(view_, keyname);
   }
 }
@@ -1003,6 +1024,10 @@ void WebViewImpl::SetDefaultEncoding(const std::string& encoding) {
     Ewk_Settings* settings = ewk_view_settings_get(ewk_view_);
     ewk_settings_default_text_encoding_name_set(settings, encoding.c_str());
   }
+}
+
+void WebViewImpl::SetLongPolling(unsigned long longpolling) {
+    ewk_view_session_timeout_set(ewk_view_, longpolling);
 }
 
 #ifdef PROFILE_WEARABLE

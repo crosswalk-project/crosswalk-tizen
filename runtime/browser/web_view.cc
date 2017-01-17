@@ -32,6 +32,10 @@ WebView::~WebView() {
   delete impl_;
 }
 
+void WebView::ReplyToJavascriptDialog() {
+  impl_->ReplyToJavascriptDialog();
+}
+
 void WebView::LoadUrl(const std::string& url, const std::string& mime) {
   impl_->LoadUrl(url, mime);
 }
@@ -87,6 +91,10 @@ void WebView::SetCSPRule(const std::string& rule, bool report_only) {
 
 void WebView::SetDefaultEncoding(const std::string& encoding) {
   impl_->SetDefaultEncoding(encoding);
+}
+
+void WebView::SetLongPolling(unsigned long longpolling) {
+  impl_->SetLongPolling(longpolling);
 }
 
 #ifdef PROFILE_WEARABLE

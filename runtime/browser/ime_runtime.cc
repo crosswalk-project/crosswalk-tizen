@@ -163,7 +163,11 @@ void ImeRuntime::OnCreate() {
 }
 
 void ImeRuntime::OnTerminate() {
+}
+
+void ImeRuntime::Terminate() {
   LOGGER(DEBUG) << "ime_app_terminate";
+  ProcessClosingPage(application_);
 }
 
 void ImeRuntime::OnShow(int context_id, ime_context_h context) {

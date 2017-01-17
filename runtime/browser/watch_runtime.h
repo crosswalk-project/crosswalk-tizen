@@ -24,7 +24,6 @@
 #include "common/application_data.h"
 #include "runtime/browser/runtime.h"
 #include "runtime/browser/native_window.h"
-#include "runtime/browser/web_application.h"
 
 namespace runtime {
 
@@ -47,6 +46,7 @@ class WatchRuntime : public Runtime {
   virtual void OnAmbientTick(watch_time_h watch_time);
   virtual void OnAmbientChanged(bool ambient_mode);
 
+  virtual void Terminate();
  private:
   WebApplication* application_;
   NativeWindow* native_window_;

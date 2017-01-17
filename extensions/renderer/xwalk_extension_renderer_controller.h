@@ -20,6 +20,7 @@ class XWalkExtensionClient;
 class XWalkExtensionRendererController {
  public:
   static XWalkExtensionRendererController& GetInstance();
+  static int plugin_session_count;
 
   void DidCreateScriptContext(v8::Handle<v8::Context> context);
   void WillReleaseScriptContext(v8::Handle<v8::Context> context);

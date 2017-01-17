@@ -17,12 +17,14 @@
 #include "runtime/browser/web_application.h"
 
 #include <app.h>
-#include <Ecore.h>
 #include <aul.h>
+#include <cynara-client.h>
+#include <Ecore.h>
 
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <fstream>
 #include <sstream>
 #include <vector>
 
@@ -35,6 +37,7 @@
 #include "common/profiler.h"
 #include "common/resource_manager.h"
 #include "common/string_utils.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "runtime/browser/native_window.h"
 #include "runtime/browser/notification_manager.h"
 #include "runtime/browser/popup.h"
@@ -42,11 +45,16 @@
 #include "runtime/browser/vibration_manager.h"
 #include "runtime/browser/web_view.h"
 #include "runtime/browser/splash_screen.h"
+#include "runtime/browser/ui_runtime.h"
 #include "extensions/common/xwalk_extension_server.h"
 
 #ifndef INJECTED_BUNDLE_PATH
 #error INJECTED_BUNDLE_PATH is not set.
 #endif
+
+#define TIMER_INTERVAL 0.1
+
+using namespace extensions;
 
 namespace runtime {
 
@@ -98,10 +106,12 @@ const char* kAmbientTickEventScript =
     "for (var i=0; i < window.frames.length; i++)\n"
     "{ window.frames[i].document.dispatchEvent(__event); }"
     "})()";
+const char* kCameraPrivilege = "http://tizen.org/privilege/camera";
 const char* kFullscreenPrivilege = "http://tizen.org/privilege/fullscreen";
 const char* kFullscreenFeature = "fullscreen";
 const char* kNotificationPrivilege = "http://tizen.org/privilege/notification";
 const char* kLocationPrivilege = "http://tizen.org/privilege/location";
+const char* kRecordPrivilege = "http://tizen.org/privilege/recorder";
 const char* kStoragePrivilege = "http://tizen.org/privilege/unlimitedstorage";
 const char* kUsermediaPrivilege = "http://tizen.org/privilege/mediacapture";
 const char* kNotiIconFile = "noti_icon.png";
@@ -128,15 +138,58 @@ const char* kDefaultCSPRule =
 const char* kResWgtPath = "res/wgt/";
 const char* kAppControlMain = "http://tizen.org/appcontrol/operation/main";
 
-bool FindPrivilege(common::ApplicationData* app_data,
+// Looking for added privilege by Application developer in config.xml.
+bool FindPrivilegeFromConfig(common::ApplicationData* app_data,
                    const std::string& privilege) {
   if (app_data->permissions_info().get() == NULL) return false;
+  LOGGER(INFO) << "Finding privilege from config.xml";
   auto it = app_data->permissions_info()->GetAPIPermissions().begin();
   auto end = app_data->permissions_info()->GetAPIPermissions().end();
   for (; it != end; ++it) {
     if (*it == privilege) return true;
   }
   return false;
+}
+
+// Looking for given default privilege when application installed.
+bool FindPrivilegeFromCynara(const std::string& privilege_name) {
+  LOGGER(INFO) << "Finding privilege from cynara db";
+  static constexpr char kSmackLabelFilePath[] = "/proc/self/attr/current";
+  std::ifstream file(kSmackLabelFilePath);
+  if (!file.is_open()) {
+    LOGGER(ERROR) << "Failed to open " << kSmackLabelFilePath;
+    return false;
+  }
+
+  int ret;
+  cynara* p_cynara = NULL;
+  ret = cynara_initialize(&p_cynara, 0);
+  if (CYNARA_API_SUCCESS != ret) {
+    LOGGER(ERROR) << "Failed. The result of cynara_initialize() : " << ret;
+    return false;
+  }
+
+  std::string uid = std::to_string(getuid());
+  std::string smack_label{std::istreambuf_iterator<char>(file),
+                          std::istreambuf_iterator<char>()};
+
+  bool result = false;
+  ret = cynara_check(p_cynara, smack_label.c_str(), "", uid.c_str(), privilege_name.c_str());
+  if (CYNARA_API_ACCESS_ALLOWED != ret) {
+    LOGGER(ERROR) << "Access denied. The result of cynara_check() : " << ret;
+  } else {
+    LOGGER(INFO) << "Access allowed! The result of cynara_check() : " << ret;
+    result = true;
+  }
+
+  if (p_cynara) {
+    ret = cynara_finish(p_cynara);
+    if (CYNARA_API_SUCCESS != ret) {
+      LOGGER(ERROR) << "Failed. The result of cynara_finish() : " << ret;
+    }
+  }
+
+  return result;
 }
 
 static void SendDownloadRequest(const std::string& url) {
@@ -173,8 +226,12 @@ static void InitializeNotificationCallback(Ewk_Context* ewk_context,
 
 static Eina_Bool ExitAppIdlerCallback(void* data) {
   WebApplication* app = static_cast<WebApplication*>(data);
-  if (app)
+
+  if (app) {
+    LOGGER(DEBUG) << "Terminate";
     app->Terminate();
+  }
+
   return ECORE_CALLBACK_CANCEL;
 }
 
@@ -214,12 +271,28 @@ static bool ProcessWellKnownScheme(const std::string& url) {
 
 }  // namespace
 
+std::vector<unsigned> ParseTizenVersion(const std::string& tizen_string) {
+  std::vector<unsigned> version(3, 0);
+  for (unsigned i = 0, index = 0; i < tizen_string.size(); i++) {
+    if ((i % 2) == 0) {
+      if (isdigit(tizen_string[i]) && index < version.size())
+        version[index++] = atoi(&tizen_string[i]);
+      else
+        return std::vector<unsigned>(3, 0);
+     } else if (tizen_string[i] != '.')
+        return std::vector<unsigned>(3, 0);
+  }
+  return version;
+}
+
 WebApplication::WebApplication(
     NativeWindow* window,
     common::ApplicationData* app_data)
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
+      lang_changed_mode_(false),
+      is_terminate_called_(false),
       ewk_context_(
           ewk_context_new_with_injected_bundle_path(INJECTED_BUNDLE_PATH)),
       has_ownership_of_ewk_context_(true),
@@ -238,6 +311,7 @@ WebApplication::WebApplication(
     : launched_(false),
       debug_mode_(false),
       verbose_mode_(false),
+      is_terminate_called_(false),
       ewk_context_(context),
       has_ownership_of_ewk_context_(false),
       window_(window),
@@ -252,6 +326,7 @@ WebApplication::~WebApplication() {
   window_->SetContent(NULL);
   auto it = view_stack_.begin();
   for (; it != view_stack_.end(); ++it) {
+    (*it)->Suspend();
     delete *it;
   }
   view_stack_.clear();
@@ -322,7 +397,7 @@ bool WebApplication::Initialize() {
                                               this);
   InitializeNotificationCallback(ewk_context_, this);
 
-  if (FindPrivilege(app_data_, kFullscreenPrivilege)) {
+  if (FindPrivilegeFromConfig(app_data_, kFullscreenPrivilege)) {
     ewk_context_tizen_extensible_api_string_set(ewk_context_,
                                                 kFullscreenFeature, true);
   }
@@ -363,6 +438,12 @@ bool WebApplication::Initialize() {
         app_data_->widget_info()->default_locale());
   }
 
+  if (app_data_->widget_info() != NULL &&
+        app_data_->widget_info()->view_modes() == "fullscreen") {
+      window_->SetCurrentViewModeFullScreen(true);
+      window_->FullScreen(true);
+  }
+
   if (app_data_->csp_info() != NULL || app_data_->csp_report_info() != NULL ||
       app_data_->allowed_navigation_info() != NULL) {
     security_model_version_ = 2;
@@ -390,13 +471,31 @@ bool WebApplication::Initialize() {
   return true;
 }
 
+void WebApplication::SetupTizenVersion() {
+    if (app_data_->tizen_application_info() != NULL &&
+            !app_data_->tizen_application_info()->required_version().empty()) {
+        std::string tizen_version = app_data_->tizen_application_info()->required_version();
+        std::vector<unsigned> parsed_tizen_version = ParseTizenVersion(tizen_version);
+        m_tizenCompatibilitySettings.m_major = parsed_tizen_version[0];
+        m_tizenCompatibilitySettings.m_minor = parsed_tizen_version[1];
+        m_tizenCompatibilitySettings.m_release = parsed_tizen_version[2];
+    }
+}
+
+bool WebApplication::tizenWebKitCompatibilityEnabled() const {
+  return m_tizenCompatibilitySettings.tizenWebKitCompatibilityEnabled();
+}
+
 void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   // send widget info to injected bundle
   ewk_context_tizen_app_id_set(ewk_context_, appid_.c_str());
 
+  SetupTizenVersion();
+
   // Setup View
   WebView* view = new WebView(window_, ewk_context_);
   SetupWebView(view);
+  SetupWebViewCompatibilitySettings(view);
 
   std::unique_ptr<common::ResourceManager::Resource> res =
       resource_manager_->GetStartResource(appcontrol.get());
@@ -438,6 +537,14 @@ void WebApplication::Launch(std::unique_ptr<common::AppControl> appcontrol) {
   }
 
   launched_ = true;
+
+#ifdef PROFILE_MOBILE
+  if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
+    LOGGER(DEBUG) << "Show window after launch for remote URL";
+    window_->Show();
+    window_->Active();
+  }
+#endif  // PROFILE_MOBILE
 }
 
 void WebApplication::AppControl(
@@ -449,8 +556,8 @@ void WebApplication::AppControl(
 
   if (!do_reset) {
     std::string current_page = view_stack_.front()->GetUrl();
-    std::string localized_page =
-        resource_manager_->GetLocalizedPath(res->uri());
+    std::string localized_page = res->uri();
+
     if (current_page != localized_page) {
       do_reset = true;
     } else {
@@ -472,6 +579,7 @@ void WebApplication::AppControl(
     ClearViewStack();
     WebView* view = view_stack_.front();
     SetupWebView(view);
+    SetupWebViewCompatibilitySettings(view);
     view->SetDefaultEncoding(res->encoding());
     view->LoadUrl(res->uri(), res->mime());
     window_->SetContent(view->evas_object());
@@ -538,13 +646,48 @@ void WebApplication::Suspend() {
 }
 
 void WebApplication::Terminate() {
+  is_terminate_called_ = true;
   if (terminator_) {
+    LOGGER(DEBUG) << "terminator_";
     terminator_();
   } else {
+    LOGGER(ERROR) << "There's no registered terminator.";
     elm_exit();
   }
   auto extension_server = extensions::XWalkExtensionServer::GetInstance();
+  LOGGER(DEBUG) << "Shutdown extension server";
   extension_server->Shutdown();
+}
+
+void WebApplication::ClosePage() {
+  LOGGER(DEBUG);
+  int valid_evas_object_count = 0;
+  auto it = view_stack_.begin();
+  if (it != view_stack_.end()) {
+    for (; it != view_stack_.end(); ++it) {
+      (*it)->ReplyToJavascriptDialog();
+      view_stack_.front()->SetVisibility(false);
+      if (ewk_view_page_close((*it)->evas_object())) {
+        LOGGER(DEBUG) << "ewk_view_page_close returns true";
+        valid_evas_object_count++;
+      } else {
+        LOGGER(DEBUG) << "ewk_view_page_close returns false";
+      }
+    }
+  }
+  if (valid_evas_object_count == 0) {
+    if (is_terminate_called_) {
+      ecore_main_loop_quit();
+    } else {
+      if (terminator_) {
+        LOGGER(DEBUG) << "terminator_";
+        terminator_();
+      } else {
+        LOGGER(ERROR) << "There's no registered terminator.";
+        elm_exit();
+      }
+    }
+  }
 }
 
 void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
@@ -552,25 +695,41 @@ void WebApplication::OnCreatedNewWebView(WebView* /*view*/, WebView* new_view) {
     view_stack_.front()->SetVisibility(false);
 
   SetupWebView(new_view);
+  SetupWebViewCompatibilitySettings(new_view);
   view_stack_.push_front(new_view);
   window_->SetContent(new_view->evas_object());
 }
 
 void WebApplication::RemoveWebViewFromStack(WebView* view) {
-  if (view_stack_.size() == 0) return;
+  if (view_stack_.size() == 0)
+    return;
 
   WebView* current = view_stack_.front();
   if (current == view) {
+    // In order to prevent the crash issue due to the callback
+    // which occur after destroying WebApplication class,
+    // we have to set the 'SetEventListener' to NULL.
+    view->SetEventListener(NULL);
     view_stack_.pop_front();
   } else {
     auto found = std::find(view_stack_.begin(), view_stack_.end(), view);
     if (found != view_stack_.end()) {
+      // In order to prevent the crash issue due to the callback
+      // which occur after destroying WebApplication class,
+      // we have to set the 'SetEventListener' to NULL.
+      view->SetEventListener(NULL);
       view_stack_.erase(found);
     }
   }
 
   if (view_stack_.size() == 0) {
-    Terminate();
+    // If |Terminate()| hasn't been called,
+    // main loop shouldn't be terminated here.
+    if (!is_terminate_called_) {
+      auto extension_server = XWalkExtensionServer::GetInstance();
+      LOGGER(DEBUG) << "Shutdown extension server";
+      extension_server->Shutdown();
+    }
   } else if (current != view_stack_.front()) {
     view_stack_.front()->SetVisibility(true);
     window_->SetContent(view_stack_.front()->evas_object());
@@ -585,11 +744,44 @@ void WebApplication::RemoveWebViewFromStack(WebView* view) {
                   view);
 }
 
-void WebApplication::OnClosedWebView(WebView* view) {
-    RemoveWebViewFromStack(view);
+Eina_Bool WebApplication::CheckPluginSession(void* user_data)
+{
+  WebApplication* that = static_cast<WebApplication*>(user_data);
+  if(XWalkExtensionRendererController::plugin_session_count > 0) {
+    LOGGER(ERROR) << "plugin_session_count : " <<
+        XWalkExtensionRendererController::plugin_session_count;
+    return ECORE_CALLBACK_RENEW;
+  }
+  LOGGER(DEBUG) << "plugin_session_count : " <<
+      XWalkExtensionRendererController::plugin_session_count;
+  LOGGER(DEBUG) << "Execute deferred termination of main loop";
+  if (that->is_terminate_called_) {
+    ecore_main_loop_quit();
+  } else {
+    if (that->terminator_) {
+      LOGGER(DEBUG) << "terminator_";
+      that->terminator_();
+    } else {
+      LOGGER(ERROR) << "There's no registered terminator.";
+      elm_exit();
+    }
+  }
+  return ECORE_CALLBACK_CANCEL;
 }
 
-void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
+void WebApplication::OnClosedWebView(WebView* view) {
+  Ecore_Timer* timeout_id = NULL;
+  // Reply to javascript dialog for preventing freeze issue.
+  view->ReplyToJavascriptDialog();
+  RemoveWebViewFromStack(view);
+
+  LOGGER(DEBUG) << "plugin_session_count : " <<
+      XWalkExtensionRendererController::plugin_session_count;
+  if (!ecore_timer_add(TIMER_INTERVAL, CheckPluginSession, this))
+    LOGGER(ERROR) << "It's failed to create timer";
+}
+
+void WebApplication::OnReceivedWrtMessage(WebView* view,
                                           Ewk_IPC_Wrt_Message_Data* msg) {
   Eina_Stringshare* msg_type = ewk_ipc_wrt_message_data_type_get(msg);
 
@@ -610,6 +802,8 @@ void WebApplication::OnReceivedWrtMessage(WebView* /*view*/,
       window_->InActive();
     } else if (TYPE_IS("tizen://exit")) {
       // One Way Message
+      // Reply to javascript dialog for preventing freeze issue.
+      view->ReplyToJavascriptDialog();
       ecore_idler_add(ExitAppIdlerCallback, this);
     } else if (TYPE_IS("tizen://changeUA")) {
       // Async Message
@@ -665,13 +859,20 @@ void WebApplication::OnOrientationLock(
   // Only top-most view can set the orientation relate operation
   if (view_stack_.front() != view) return;
 
-  auto orientaion_setting =
-      app_data_->setting_info() != NULL
-          ? app_data_->setting_info()->screen_orientation()
-          :
-          wgt::parse::SettingInfo::ScreenOrientation::AUTO;
-  if (orientaion_setting != wgt::parse::SettingInfo::ScreenOrientation::AUTO) {
-    return;
+  // This is for 2.4 compatibility. Requested by Webengine Team.
+  //
+  // In Tizen 2.4 WebKit locking screen orientation was possible with Web API
+  // screen.lockOrientation(). This API was deprecated and replaced with
+  // screen.orientation.lock(). But for compatibility case we need to support
+  // old API.
+  if(!tizenWebKitCompatibilityEnabled()) {
+    auto orientaion_setting = app_data_->setting_info() != NULL
+        ? app_data_->setting_info()->screen_orientation()
+        : wgt::parse::SettingInfo::ScreenOrientation::AUTO;
+    if (wgt::parse::SettingInfo::ScreenOrientation::AUTO != orientaion_setting) {
+        // If Tizen version is 3.0, it return.
+        return;
+    }
   }
 
   if (lock) {
@@ -683,27 +884,34 @@ void WebApplication::OnOrientationLock(
 
 void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
   // NOTE: This code is added to enable back-key on remote URL
+  bool enabled = app_data_->setting_info() != NULL
+                     ? app_data_->setting_info()->hwkey_enabled()
+                     : true;
+
   if (!common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
     if (kKeyNameBack == keyname) {
       LOGGER(DEBUG) << "Back to previous page for remote URL";
+      if(enabled)
+        view->EvalJavascript(kBackKeyEventScript);
       if (!view->Backward()) {
-        RemoveWebViewFromStack(view_stack_.front());
+        LOGGER(DEBUG) << "Terminate";
+        Terminate();
       }
     }
     return;
   }
 
-  bool enabled = app_data_->setting_info() != NULL
-                     ? app_data_->setting_info()->hwkey_enabled()
-                     : true;
   if (enabled && kKeyNameBack == keyname) {
     view->EvalJavascript(kBackKeyEventScript);
     // NOTE: This code is added for backward compatibility.
     // If the 'backbutton_presence' is true, WebView should be navigated back.
-    if (app_data_->setting_info() &&
-        app_data_->setting_info()->backbutton_presence()) {
+    if ((app_data_->setting_info() != NULL &&
+         app_data_->setting_info()->backbutton_presence()) ||
+        (app_data_->widget_info() != NULL &&
+         app_data_->widget_info()->view_modes() == "windowed")) {
       if (!view->Backward()) {
-        RemoveWebViewFromStack(view_stack_.front());
+        LOGGER(DEBUG) << "Terminate";
+        Terminate();
       }
     }
   } else if (enabled && kKeyNameMenu == keyname) {
@@ -712,6 +920,7 @@ void WebApplication::OnHardwareKey(WebView* view, const std::string& keyname) {
 }
 
 void WebApplication::OnLanguageChanged() {
+  lang_changed_mode_ = true;
   locale_manager_->UpdateSystemLocale();
   ewk_context_cache_clear(ewk_context_);
   auto it = view_stack_.begin();
@@ -848,15 +1057,28 @@ void WebApplication::OnLoadFinished(WebView* /*view*/) {
   splash_screen_->HideSplashScreen(SplashScreen::HideReason::LOADFINISHED);
 }
 
-void WebApplication::OnRendered(WebView* /*view*/) {
+void WebApplication::OnRendered(WebView* view) {
   STEP_PROFILE_END("URL Set -> Rendered");
   STEP_PROFILE_END("Start -> Launch Completed");
   LOGGER(DEBUG) << "Rendered";
   splash_screen_->HideSplashScreen(SplashScreen::HideReason::RENDERED);
 
-  // Show window after frame rendered.
-  window_->Show();
-  window_->Active();
+  // Do not show(), active() for language change
+  if(lang_changed_mode_ == false){
+      // Show window after frame rendered.
+#ifdef PROFILE_MOBILE
+      if (common::utils::StartsWith(view->GetUrl(), kFileScheme)) {
+        window_->Show();
+        window_->Active();
+      }
+#else  // PROFILE_MOBILE
+      window_->Show();
+      window_->Active();
+#endif
+  }
+  else{
+      lang_changed_mode_ = false;
+  }
 }
 
 #ifdef MANUAL_ROTATE_FEATURE_SUPPORT
@@ -883,6 +1105,25 @@ void WebApplication::SetupWebView(WebView* view) {
     if (!csp_report_rule_.empty()) {
       view->SetCSPRule(csp_report_rule_, true);
     }
+  }
+
+// Setup longpolling value
+  if (app_data_->setting_info() != NULL &&
+     app_data_->setting_info()->long_polling()) {
+    boost::optional <unsigned int> polling_val(app_data_->setting_info()->long_polling());
+    unsigned long *ptr =  reinterpret_cast <unsigned long *> (&polling_val.get());
+    view->SetLongPolling(*ptr);
+  }
+}
+
+void WebApplication::SetupWebViewCompatibilitySettings(WebView* view) {
+  if (tizenWebKitCompatibilityEnabled()) {
+    Ewk_Settings* settings = ewk_view_settings_get(view->evas_object());
+    ewk_settings_tizen_compatibility_mode_set(settings,
+            m_tizenCompatibilitySettings.m_major,
+            m_tizenCompatibilitySettings.m_minor,
+            m_tizenCompatibilitySettings.m_release);
+    ewk_settings_text_autosizing_enabled_set(settings, EINA_FALSE);
   }
 }
 
@@ -925,7 +1166,7 @@ void WebApplication::OnNotificationPermissionRequest(
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_, kNotificationPrivilege)) {
+      FindPrivilegeFromConfig(app_data_, kNotificationPrivilege)) {
     result_handler(true);
     return;
   }
@@ -965,7 +1206,8 @@ void WebApplication::OnGeolocationPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_, kLocationPrivilege)) {
+  if (!FindPrivilegeFromConfig(app_data_, kLocationPrivilege) &&
+      !FindPrivilegeFromCynara(kLocationPrivilege)) {
     result_handler(false);
     return;
   }
@@ -1010,7 +1252,7 @@ void WebApplication::OnQuotaExceed(WebView*, const std::string& url,
   // Local Domain: Grant permission if defined, otherwise Popup user prompt.
   // Remote Domain: Popup user prompt.
   if (common::utils::StartsWith(url, "file://") &&
-      FindPrivilege(app_data_, kStoragePrivilege)) {
+      FindPrivilegeFromConfig(app_data_, kStoragePrivilege)) {
     result_handler(true);
     return;
   }
@@ -1106,7 +1348,8 @@ void WebApplication::OnUsermediaPermissionRequest(
 
   // Local Domain: Grant permission if defined, otherwise block execution.
   // Remote Domain: Popup user prompt if defined, otherwise block execution.
-  if (!FindPrivilege(app_data_, kUsermediaPrivilege)) {
+  if (!FindPrivilegeFromConfig(app_data_, kUsermediaPrivilege) &&
+      !(FindPrivilegeFromCynara(kCameraPrivilege) && FindPrivilegeFromCynara(kRecordPrivilege))) {
     result_handler(false);
     return;
   }

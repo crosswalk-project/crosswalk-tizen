@@ -50,6 +50,7 @@ class NativeWindow {
   void SetRotationLock(int degree);
   void SetRotationLock(ScreenOrientation orientation);
   void SetAutoRotation();
+  void SetCurrentViewModeFullScreen(bool mode);
   int AddRotationHandler(RotationHandler handler);
   void RemoveRotationHandler(int id);
   int rotation() const { return rotation_; }
@@ -78,6 +79,7 @@ class NativeWindow {
   void DidFocusChanged(bool got);
 
   bool initialized_;
+  bool currentViewModeFullScreen_;
   Evas_Object* focus_;
   Evas_Object* content_;
   int rotation_;

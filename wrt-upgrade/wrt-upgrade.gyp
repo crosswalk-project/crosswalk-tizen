@@ -26,7 +26,7 @@
         {
           'destination': '<(SHARED_INTERMEDIATE_DIR)',
           'files': [
-            '310.wrt.upgrade.sh'
+            '720.wrt.upgrade.sh'
           ],
         },
       ],

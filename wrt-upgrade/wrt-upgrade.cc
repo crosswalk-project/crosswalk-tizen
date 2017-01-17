@@ -34,7 +34,6 @@ void WrtUpgrade::Run() {
   ParseCertificatenDatabase();
   CreateMigrationFile();
   RemoveDatabases();
-  RedirectSymlink();
 }
 void WrtUpgrade::ParseWrtDatabse() {
   std::cout << "parseWrtDatabse" << std::endl;
@@ -285,12 +284,6 @@ bool WrtUpgrade::RemoveFile(const std::string& path) {
     return false;
   }
   return (remove(path.c_str()) == 0);
-}
-void WrtUpgrade::RedirectSymlink() {
-  std::string xwalk_runtime = "/usr/bin/xwalk_runtime";
-  std::string wrt_client = "/usr/bin/wrt-client";
-
-  symlink(xwalk_runtime.c_str(), wrt_client.c_str());
 }
 }  // namespace upgrade
 int main() {

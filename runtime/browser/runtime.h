@@ -22,17 +22,30 @@
 #include <string>
 
 #include "common/application_data.h"
+#include "runtime/browser/web_application.h"
 
 namespace runtime {
 
 class Runtime {
  public:
   virtual ~Runtime() = 0;
+  virtual void Terminate() = 0;
 
   virtual int Exec(int argc, char* argv[]) = 0;
 
   static std::unique_ptr<Runtime> MakeRuntime(
     common::ApplicationData* app_data);
+
+ protected:
+  void ProcessClosingPage(WebApplication* application);
+
+ private:
+  static Eina_Bool ClosePageInExtendedMainLoop(void* user_data);
+  struct Timer
+  {
+    WebApplication* application;
+    Ecore_Timer* timer;
+  };
 };
 
 }  // namespace runtime

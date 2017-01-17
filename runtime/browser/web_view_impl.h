@@ -36,6 +36,7 @@ class WebViewImpl {
   WebViewImpl(WebView* view, NativeWindow* window, Ewk_Context* context);
   virtual ~WebViewImpl();
 
+  void ReplyToJavascriptDialog();
   void LoadUrl(const std::string& url, const std::string& mime = std::string());
   std::string GetUrl();
 
@@ -49,6 +50,7 @@ class WebViewImpl {
   bool SetUserAgent(const std::string& user_agent);
   void SetCSPRule(const std::string& rule, bool report_only);
   void SetDefaultEncoding(const std::string& encoding);
+  void SetLongPolling(unsigned long longpolling);
 #ifdef PROFILE_WEARABLE
   void SetBGColor(int r, int g, int b, int a);
 #endif

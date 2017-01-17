@@ -28,11 +28,15 @@
 #include "common/command_line.h"
 #include "common/logger.h"
 #include "common/profiler.h"
+#include "extensions/renderer/xwalk_extension_renderer_controller.h"
 #include "runtime/browser/runtime.h"
 #include "runtime/common/constants.h"
 #include "runtime/browser/prelauncher.h"
 #include "runtime/browser/preload_manager.h"
 
+#include "runtime/browser/ui_runtime.h"
+
+using namespace extensions;
 bool g_prelaunch = false;
 
 #ifdef WATCH_FACE_FEATURE_SUPPORT
@@ -124,17 +128,21 @@ int real_main(int argc, char* argv[]) {
 #endif  // WATCH_FACE_FEATURE_SUPPORT
   }
 
-  int ret = 0;
   // Runtime's destructor should be called before ewk_shutdown()
   {
     std::unique_ptr<runtime::Runtime> runtime =
         runtime::Runtime::MakeRuntime(appdata);
-    ret = runtime->Exec(argc, argv);
+    if (runtime->Exec(argc, argv))
+      LOGGER(ERROR) << "Exec returns non zero.";
+    runtime->Terminate();
     runtime.reset();
   }
+  LOGGER(DEBUG) << "ewk_shutdown";
   ewk_shutdown();
-  exit(ret);
+  elm_shutdown();
+  elm_exit();
 
+  LOGGER(DEBUG) << "EXIT_SUCCESS";
   return EXIT_SUCCESS;
 }
 

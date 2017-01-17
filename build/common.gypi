@@ -28,6 +28,7 @@
       }],
     ],
     'includes': [
+      'cynara-client.gypi',
       'pkg-config.gypi',
       'xwalk_js2c.gypi',
     ],

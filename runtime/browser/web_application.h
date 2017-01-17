@@ -52,11 +52,13 @@ class WebApplication : public WebView::EventListener {
   void Suspend();
   void Terminate();
 
+  void ClosePage();
   std::string data_path() const { return app_data_path_; }
   void set_terminator(std::function<void(void)> terminator) {
     terminator_ = terminator;
   }
   bool launched() const { return launched_; }
+  std::list<WebView*> view_stack() const { return view_stack_; }
 
   virtual void OnCreatedNewWebView(WebView* view, WebView* new_view);
   virtual void OnClosedWebView(WebView* view);
@@ -104,6 +106,7 @@ class WebApplication : public WebView::EventListener {
 #ifdef MANUAL_ROTATE_FEATURE_SUPPORT
   virtual void OnRotatePrepared(WebView* view);
 #endif // MANUAL_ROTATE_FEATURE_SUPPORT
+  static Eina_Bool CheckPluginSession(void* user_data);
 
  private:
   bool Initialize();
@@ -112,11 +115,23 @@ class WebApplication : public WebView::EventListener {
   void SendAppControlEvent();
   void LaunchInspector(common::AppControl* appcontrol);
   void SetupWebView(WebView* view);
+  void SetupWebViewCompatibilitySettings(WebView* view);
   void RemoveWebViewFromStack(WebView* view);
+
+  void SetupTizenVersion();
+  bool tizenWebKitCompatibilityEnabled() const;
+  struct {
+      unsigned m_major;
+      unsigned m_minor;
+      unsigned m_release;
+      bool tizenWebKitCompatibilityEnabled() const { return (m_major && m_major < 3); }
+  } m_tizenCompatibilitySettings;
 
   bool launched_;
   bool debug_mode_;
   bool verbose_mode_;
+  bool lang_changed_mode_;
+  bool is_terminate_called_;
   Ewk_Context* ewk_context_;
   bool has_ownership_of_ewk_context_;
   NativeWindow* window_;

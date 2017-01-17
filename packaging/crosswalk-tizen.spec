@@ -30,6 +30,7 @@ BuildRequires: pkgconfig(capi-appfw-package-manager)
 BuildRequires: pkgconfig(capi-system-system-settings)
 BuildRequires: pkgconfig(capi-ui-efl-util)
 BuildRequires: pkgconfig(chromium-efl)
+BuildRequires: pkgconfig(cynara-client)
 BuildRequires: pkgconfig(deviced)
 BuildRequires: pkgconfig(dlog)
 BuildRequires: pkgconfig(ecore)
@@ -155,6 +156,7 @@ install -p -m 644 out/Default/gen/splash_screen.json %{buildroot}%{extension_pat
 # xwalk_runtime
 install -p -m 755 out/Default/xwalk_runtime %{buildroot}%{_bindir}
 ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt
+ln -s %{_bindir}/xwalk_runtime %{buildroot}%{_bindir}/wrt-client
 
 # xwalk extension shared
 install -p -m 644 out/Default/lib/libxwalk_extension_shared.so %{buildroot}%{_libdir}
@@ -173,7 +175,7 @@ install -p -m 755 out/Default/wrt-loader %{buildroot}%{_bindir}
 
 # wrt-upgrade
 install -p -m 755 out/Default/wrt-upgrade %{buildroot}%{_bindir}
-install -p -m 644 out/Default/gen/310.wrt.upgrade.sh %{buildroot}%{_datadir}/upgrade/scripts/310.wrt.upgrade.sh
+install -p -m 644 out/Default/gen/720.wrt.upgrade.sh %{buildroot}%{_datadir}/upgrade/scripts/720.wrt.upgrade.sh
 
 %clean
 rm -fr %{buildroot}
@@ -193,8 +195,9 @@ rm -fr %{buildroot}
 %attr(644,root,root) %{extension_path}/splash_screen.json
 %attr(755,root,root) %{_bindir}/xwalk_runtime
 %attr(755,root,root) %{_bindir}/wrt
+%attr(755,root,root) %{_bindir}/wrt-client
 %attr(755,root,root) %{_bindir}/wrt-loader
 %attr(644,root,root) %{_datadir}/aul/wrt.loader
 %attr(755,root,root) %{_bindir}/wrt-upgrade
-%attr(755,root,root) %{_datadir}/upgrade/scripts/310.wrt.upgrade.sh
+%attr(755,root,root) %{_datadir}/upgrade/scripts/720.wrt.upgrade.sh
 %caps(cap_sys_admin,cap_setgid=ei) %{_bindir}/wrt-loader
