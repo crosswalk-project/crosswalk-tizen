@@ -1,3 +1,6 @@
+# This project is archived. Please contact Tizen Forum (https://developer.tizen.org/forums/web-application-development/active) instead.
+
+
 ## Introduction
 Crosswalk Project for Tizen is a sub-project of [Crosswalk](https://crosswalk-project.org), it aims to provide a web runtime for Tizen 3.0 and later.
 
